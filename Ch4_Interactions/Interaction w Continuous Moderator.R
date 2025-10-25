@@ -11,6 +11,9 @@ library(ggplot2)
 # load data from the internet
 connect <- url('https://raw.githubusercontent.com/craigenders/ies/main/behaviorachievement.Rdata', 'rb')
 load(connect); close(connect)
+library(fdir)
+set()
+write.csv(reading, 'reading.csv', row.names = F)
 
 # analysis 1: regression with all numeric variables
 model1 <- rblimp(
