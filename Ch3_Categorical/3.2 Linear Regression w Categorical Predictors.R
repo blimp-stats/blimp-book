@@ -1,23 +1,27 @@
-# EXAMPLE 6.8 - Bayes Regression w Multicategorical Predictor
+# LINEAR REGRESSION WITH CATEGORICAL PREDICTORS ----
 
-# requires blimp installation from www.appliedmissingdata.com/blimp
-# remotes::install_github('blimp-stats/rblimp')
-# remotes::update_packages('rblimp')
+# LOAD R PACKAGES ----
 
 library(rblimp)
 
-data_url <- "https://raw.githubusercontent.com/craigenders/amd-book-examples/main/Data/smoking.rda"
-load(gzcon(url(data_url, open = "rb")))
+# READ DATA ----
 
-analysis <- rblimp(
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/smoking.csv'
+
+# create data frame from github data
+smoking <- read.csv(data_url)
+
+# FIT MODEL ----
+
+model <- rblimp(
     data = smoking,
     ordinal = 'parsmoke',
     nominal = 'educ',
-    fixed = 'age',
     center = 'age',
-    model = 'intensity ~ parsmoke educ age', # automatic multivariate distribution for incomplete predictors and latent response scores 
+    model = 'intensity ~ parsmoke educ age', 
     seed = 90291,
     burn = 10000,
     iter = 10000)
 
-output(analysis)
+output(model)
