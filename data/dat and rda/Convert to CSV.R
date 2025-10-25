@@ -7,9 +7,9 @@ load('smokingcomplete.rda')
 
 summarytools::freq(alcoholuse$alcdays)
 
-alcoholuse$drinkingfreq[alcoholuse$alcdays <= 3] <- 1
-alcoholuse$drinkingfreq[alcoholuse$alcdays >= 16] <- 3
-alcoholuse$drinkingfreq[alcoholuse$alcdays >= 4 & alcoholuse$alcdays <= 15] <- 2
+alcoholuse$drinkingfreq[alcoholuse$alcdays <= 0] <- 0
+alcoholuse$drinkingfreq[alcoholuse$alcdays >= 16] <- 2
+alcoholuse$drinkingfreq[alcoholuse$alcdays >= 1 & alcoholuse$alcdays <= 15] <- 1
 
 summarytools::freq(alcoholuse$drinkingfreq)
 
