@@ -1,22 +1,28 @@
-# EXAMPLE 10.10 - Bayes Regression w Count Outcome
+# NEGATIVE BINOMIAL REGRESSION FOR A COUNT OUTCOME ----
 
-# requires blimp installation from www.appliedmissingdata.com/blimp
-# remotes::install_github('blimp-stats/rblimp')
-# remotes::update_packages('rblimp')
+# LOAD R PACKAGES ----
 
 library(rblimp)
 
-data_url <- "https://raw.githubusercontent.com/craigenders/amd-book-examples/main/Data/alcoholuse.rda"
-load(gzcon(url(data_url, open = "rb")))
+# READ DATA ----
 
-analysis <- rblimp(
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv'
+
+# create data frame from github data
+alcoholuse <- read.csv(data_url)
+
+# FIT MODEL ----
+
+# negative binomial regression
+model <- rblimp(
     data = alcoholuse,
-    ordinal = 'college male',
+    nominal = 'college male',
     count = 'alcdays',
-    fixed = 'male',
+    # fixed = 'male',
     model = 'alcdays ~ alcage college age male', 
     seed = 90291,
     burn = 10000,
     iter = 10000)
 
-output(analysis)
+output(model)
