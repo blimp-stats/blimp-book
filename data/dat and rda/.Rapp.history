@@ -1,0 +1,2 @@
+load("/Users/craig/Documents/GitHub/blimp-book/data/dat and rda/smoking.rda")
+head(smoking)
