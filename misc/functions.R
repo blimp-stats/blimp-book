@@ -1,6 +1,6 @@
-# PLOT IMPUTATIONS OVERLAY HISTOGRAM ----
+# IMPUTED VS. OBS OVERLAY HISTOGRAM ----
 
-plot_imputations <- function(model, raw_df, var, bins = 50, main = NULL) {
+plot_imputations_overlay <- function(model, raw_df, var, bins = 50, main = NULL) {
   stopifnot(is.character(var), length(var) == 1)
   if (!var %in% names(raw_df)) stop("Variable not found in raw data: ", var)
   if (!is.list(model@imputations) || length(model@imputations) == 0)
@@ -40,4 +40,31 @@ plot_imputations <- function(model, raw_df, var, bins = 50, main = NULL) {
          text.col = "black",
          xpd = NA)
   par(xpd = FALSE)
+}
+
+# IMPUTATION HISTOGRAM ----
+plot_imputations <- function(model, var, bins = 50, main = NULL) {
+  # --- check inputs
+  if (!is.list(model@imputations) || length(model@imputations) == 0)
+    stop("@imputations must be a non-empty list of data frames")
+  if (!is.character(var) || length(var) != 1)
+    stop("Specify one variable name as a character string.")
+  if (!var %in% names(model@imputations[[1]]))
+    stop("Variable not found in imputations: ", var)
+  
+  # --- stack all imputed datasets into one vector
+  imps_list <- model@imputations
+  imp_vals <- unlist(lapply(imps_list, `[[`, var), use.names = FALSE)
+  
+  # --- create plot title if not specified
+  if (is.null(main)) main <- paste("Distribution of Imputed Values:", var)
+  
+  # --- plot histogram
+  hist(imp_vals,
+       breaks = bins,
+       col = "grey70",
+       border = "white",
+       main = main,
+       xlab = var,
+       freq = FALSE)
 }
