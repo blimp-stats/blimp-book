@@ -14,11 +14,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 reading <- read.csv(data_url)
 
-# SUMMARIZE DATA ----
-
-dfSummary(reading)
-describe(reading)
-
 # FIT MODEL WITH BINARY MODERATOR ----
 
 # linear regression with a binary moderator
