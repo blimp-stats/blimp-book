@@ -15,7 +15,7 @@ employee <- read.csv(data_url)
 # FIT MODEL ----
 
 # linear regression
-model <- rblimp(
+model1 <- rblimp(
     data = employee,
     ordinal = 'male',
     fixed = 'male',
@@ -24,9 +24,15 @@ model <- rblimp(
     burn = 10000,
     iter = 10000)
 
-output(model)
+output(model1)
 
-# CUSTOM WALD TEST ----
+# plot parameter distributions
+posterior_plot(model1)
+
+# plot estimates during burn-in period
+trace_plot(model1)
+
+# FIT MODEL WITH CUSTOM WALD TEST ----
 
 model2 <- rblimp(
   data = employee,

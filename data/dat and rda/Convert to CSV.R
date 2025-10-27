@@ -2,8 +2,11 @@ library(fdir)
 
 set()
 
-load('alcoholuse.rda')
-load('smokingcomplete.rda')
+load('math.rda')
+load('mathcomplete.rda')
+
+write.csv(math, 'math.csv', row.names = F)
+write.csv(mathcomplete, 'math_complete.csv', row.names = F)
 
 summarytools::freq(alcoholuse$alcdays)
 
