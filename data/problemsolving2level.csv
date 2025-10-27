@@ -1,4 +1,4 @@
-"school","student","condition","teachexp","eslpct","ethnic","male","frlunch","achievegrp","stanmath","efficacy1","efficacy2","probsolve1","probsolve2"
+school,student,condition,teachexp,eslpct,ethnic,male,frlunch,achievegrp,stanmath,efficacypre,efficacypost,probsolvpre,probsolvpost
 1,127,1,7.27,41,3,0,1,2,56.5,9,NA,55,NA
 1,128,1,7.27,41,2,0,0,2,49.2,9,NA,49,NA
 1,129,1,7.27,41,2,1,1,2,45.9,10,11,46,46
