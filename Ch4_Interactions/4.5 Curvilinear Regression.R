@@ -1,4 +1,4 @@
-# INTERACTION INVOLVING A CATEGORICAL MODERATOR
+# CURVILINEAR REGRESSION
 
 # LOAD R PACKAGES ----
 
@@ -30,3 +30,15 @@ model <- rblimp(
 output(model)
 
 # ADD SOME DISPLAY TO PLOT CURVILINEAR EFFECT ----
+
+library(ggplot2)
+
+ggplot(model@average_imp, aes(x = anxiety, y = mathpost.predicted)) +
+  geom_point(color = "grey60", size = 2) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE),
+              color = "blue", linewidth = 1.3, se = FALSE) +
+  labs(x = "Anxiety",
+       y = "Predicted Math Score",
+       title = "Quadratic Fit: Predicted Math Achievement by Anxiety") +
+  theme_minimal()
+
