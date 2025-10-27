@@ -25,6 +25,8 @@ model1 <- rblimp(
 
 output(model1)
 
+# ADD PLOTS OF LATENT SCORES ----
+
 # probit regression with an ordinal outcome
 model2 <- rblimp(
   data = employee,
@@ -35,3 +37,5 @@ model2 <- rblimp(
   iter = 20000)
 
 output(model2)
+
+# ADD PLOTS OF LATENT SCORES ----
