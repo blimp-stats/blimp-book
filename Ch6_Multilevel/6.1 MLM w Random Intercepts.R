@@ -1,66 +1,53 @@
-# EXAMPLE 8.2 - Bayes MLM w Random Intercepts
+# RANDOM INTERCEPT REGRESSION
 
-# requires blimp installation from www.appliedmissingdata.com/blimp
-# remotes::install_github('blimp-stats/rblimp')
-# remotes::update_packages('rblimp')
+# LOAD R PACKAGES ----
 
 library(rblimp)
+library(psych)
+library(summarytools)
 
-data_url <- "https://raw.githubusercontent.com/craigenders/amd-book-examples/main/Data/problemsolving2level.rda"
-load(gzcon(url(data_url, open = "rb")))
+# READ DATA ----
 
-# default prior2 (igamma ss = 0 and df = -2) with multivariate specification for incomplete predictors
-analysis1 <- rblimp(
-    data = problemsolving2level,
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving2level.csv'
+
+# create data frame from github data
+probsolve <- read.csv(data_url)
+
+# FIT MODEL WITH MIXED MODEL SPECIFICATION ----
+
+# mixed model specification
+model1 <- rblimp(
+    data = probsolve,
     clusterid = 'school',
-    ordinal = 'frlunch',
-    fixed = 'probsolve1 condition',
-    model = 'probsolve2 ~ probsolve1 stanmath frlunch teachexp condition', # automatic multivariate distribution for incomplete predictors and latent response scores 
+    nominal = 'condition frlunch',
+    # fixed = 'probsolve1 condition',
+    model = 'probsolvpost ~ probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition', 
     seed = 90291,
     burn = 10000,
     iter = 10000)
 
-output(analysis1)
+output(model1)
 
-# prior1 (igamma ss = 1 and df = 2) with multivariate specification for incomplete predictors
-analysis2 <- rblimp(
-  data = problemsolving2level,
+# FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+
+# random intercept as level-2 latent variable
+model2 <- rblimp(
+  data = probsolve,
   clusterid = 'school',
-  ordinal = 'frlunch',
-  fixed = 'probsolve1 condition',
-  model = 'probsolve2 ~ probsolve1 stanmath frlunch teachexp condition', # automatic multivariate distribution for incomplete predictors and latent response scores 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'prior1')
-
-output(analysis2)
-
-# prior3 (igamma ss = 0 and df = 0) with multivariate specification for incomplete predictors
-analysis3 <- rblimp(
-  data = problemsolving2level,
-  clusterid = 'school',
-  ordinal = 'frlunch',
-  fixed = 'probsolve1 condition',
-  model = 'probsolve2 ~ probsolve1 stanmath frlunch teachexp condition', # automatic multivariate distribution for incomplete predictors and latent response scores 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'prior3')
-
-output(analysis3)
-
-# default prior2 with sequential specification for incomplete predictors
-analysis4 <- rblimp(
-  data = problemsolving2level,
-  clusterid = 'school',
-  ordinal = 'frlunch',
-  fixed = 'condition',
+  nominal = 'condition frlunch',
+  latent = 'school = ranicept',
+  # fixed = 'probsolve1 condition',
   model = '
-      focal.model: probsolve2 ~ probsolve1 stanmath frlunch teachexp condition;
-      predictor.models: stanmath frlunch probsolve1 teachexp ~ condition', # automatic sequential specification for level-2 variables followed by level-1 variables 
+    ranicept ~ probsolvpre.mean stanmath.mean frlunch.mean condition;
+    probsolvpost ~ intercept@ranicept probsolvpre stanmath frlunch;',
+  parameters = '
+    rsq_total = ranicept.coefvar / (ranicept.totalvar + probsolvpost.totalvar);
+    rsq_between = ranicept.coefvar / ranicept.totalvar;',
   seed = 90291,
   burn = 10000,
   iter = 10000)
 
-output(analysis4)
+output(model2)
+
+# NEED TO REVIST TOTAL VARIANCE AND ADD EFFECT SIZES ----
