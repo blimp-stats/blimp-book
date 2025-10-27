@@ -11,19 +11,6 @@ library(summarytools)
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
 
-# create data frame from github data
-reading <- read.csv(data_url)
-
-reading$lrnprob1_grp <- with(reading, ifelse(
-  is.na(lrnprob1), NA,
-  ifelse(lrnprob1 >= 63, 3,
-         ifelse(lrnprob1 >= 55 & lrnprob1 <= 62, 2,
-                ifelse(lrnprob1 <= 54, 1, NA)
-         )
-  )
-))
-
-
 # SUMMARIZE DATA ----
 
 dfSummary(reading)
@@ -34,9 +21,9 @@ describe(reading)
 # linear regression with continuous moderator
 model <- rblimp(
   data = reading, 
-  nominal = 'atrisk',
+  nominal = 'male hispanic',
   center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 atrisk read1*lrnprob1',  
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 male hispanic',  
   simple = 'read1 | lrnprob1',      
   seed = 90291,                                              
   burn = 10000,                                              
