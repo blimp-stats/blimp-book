@@ -1,47 +1,58 @@
-# EXAMPLE 8.5 - Bayes 3-Level MLM w Cross-Level Interaction
+# THREE-LEVEL GROWTH MODEL
 
-# requires blimp installation from www.appliedmissingdata.com/blimp
-# remotes::install_github('blimp-stats/rblimp')
-# remotes::update_packages('rblimp')
+# LOAD R PACKAGES ----
 
 library(rblimp)
+library(psych)
+library(summarytools)
 
-data_url <- "https://raw.githubusercontent.com/craigenders/amd-book-examples/main/Data/problemsolving3level.rda"
-load(gzcon(url(data_url, open = "rb")))
+# READ DATA ----
 
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving3level.csv'
 
-problemsolving3level[problemsolving3level == 999] <- NA
-save(problemsolving3level, file = '~/desktop/problemsolving3level.rda')
+# create data frame from github data
+probsolve <- read.csv(data_url)
 
-# default prior2: wishart prior for level-2 covariance matrix with  ss = 0 and df = -(v + 1)
-analysis1 <- rblimp(
-    data = problemsolving3level,
+# FIT MODEL ----
+
+# mixed model specification
+model1 <- rblimp(
+    data = probsolve,
     clusterid = 'school student',
     ordinal = 'frlunch condition',
-    fixed = 'month7 condition',
-    center = 'grandmean = stanmath frlunch teachexp',
-    model = 'probsolve ~ month7 stanmath frlunch teachexp condition month7*condition | month7', # random intercepts and slopes at level-2 and level-3 
-    simple = ' month7 | condition', # conditional effect of time within condition 
+    # fixed = 'month7 condition',
+    center = 'grandmean = stanmath frlunch',
+    model = 'probsolve ~ month7 stanmath frlunch condition month7*condition | month7', 
+    simple = ' month7 | condition', 
     seed = 90291,
-    burn = 15000,
-    iter = 20000)
+    burn = 25000,
+    iter = 25000)
 
-output(analysis1)
-simple_plot(probsolve ~ month7 | condition, analysis1)
+output(model1)
+simple_plot(probsolve ~ month7 | condition, model1)
 
-# prior1: wishart prior for level-2 covariance matrix with  ss = 0 and df = v + 1
-analysis2 <- rblimp(
-  data = problemsolving3level,
+# latent variable specification
+model2 <- rblimp(
+  data = probsolve,
   clusterid = 'school student',
   ordinal = 'frlunch condition',
-  fixed = 'month7 condition',
-  center = 'grandmean = stanmath frlunch teachexp',
-  model = 'probsolve ~ month7 stanmath frlunch teachexp condition month7*condition | month7', # random intercepts and slopes at level-2 and level-3 
-  simple = ' month7 | condition', # conditional effect of time within condition 
+  latent = 'student = raniceptl2 ranslopel2; school = raniceptl3 ranslopel3',
+  model = ' 
+    level3:
+    raniceptl3 ~ intercept condition;
+    ranslopel3 ~ intercept condition;
+    raniceptl3 ~~ ranslopel3;
+    level2:
+    raniceptl2 ~ intercept@raniceptl3 stanmath frlunch;
+    ranslopel2 ~ intercept@ranslopel3;
+    raniceptl2 ~~ ranslopel2;
+    level1:
+    probsolve ~ intercept@raniceptl2 month7@ranslopel2',
   seed = 90291,
-  burn = 15000,
-  iter = 20000,
-  options = 'prior1')
+  burn = 40000,
+  iter = 40000
+)
 
-output(analysis2)
-simple_plot(probsolve ~ month7 | condition, analysis2)
+output(model2)
+
