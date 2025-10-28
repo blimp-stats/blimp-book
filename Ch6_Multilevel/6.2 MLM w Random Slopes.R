@@ -1,78 +1,114 @@
-# EXAMPLE 8.3 - Bayes MLM w Random Slopes
+# MULTILEVEL MODEL WITH RANDOM SLOPES AND INTERACTIONS
 
-# requires blimp installation from www.appliedmissingdata.com/blimp
-# remotes::install_github('blimp-stats/rblimp')
-# remotes::update_packages('rblimp')
+# LOAD R PACKAGES ----
 
 library(rblimp)
+library(psych)
+library(summarytools)
 
-data_url <- "https://raw.githubusercontent.com/craigenders/amd-book-examples/main/Data/diary.rda"
-load(gzcon(url(data_url, open = "rb")))
+# READ DATA ----
 
-# default prior2 (wishart prior for level-2 covariance matrix with  ss = 0 and df = -v - 1)
-analysis1 <- rblimp(
-    data = diary,
-    clusterid = 'person',
-    fixed = 'female',
-    center = '
-      groupmean = pain;  # center at latent group means
-      grandmean = pain.mean sleep painaccept',  # center at grand means
-    model = 'posaff ~ pain@b1 sleep pain.mean@b3 painaccept female | pain', # label within- and between-cluster slope coefficients 
-    waldtest = 'b1 = b3', # test whether within- and between-cluster regressions differ
-    seed = 90291,
-    burn = 10000,
-    iter = 10000)
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/diary.csv'
 
-output(analysis1)
+# create data frame from github data
+diary <- read.csv(data_url)
 
-# prior1 (wishart prior for level-2 covariance matrix with  ss = 0 and df = v + 1)
-analysis2 <- rblimp(
+# FIT RANDOM SLOPE MODEL ----
+
+# mixed model specification
+model1 <- rblimp(
   data = diary,
   clusterid = 'person',
-  fixed = 'female',
-  center = '
-      groupmean = pain;  # center at latent group means
-      grandmean = pain.mean sleep painaccept',  # center at grand means
-  model = 'posaff ~ pain@b1 sleep pain.mean@b3 painaccept female | pain', # label within- and between-cluster slope coefficients 
-  waldtest = 'b1 = b3', # test whether within- and between-cluster regressions differ
+  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  model = 'posaff ~ pain pain.mean stress female | pain',
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  options = 'prior1')
+  iter = 10000
+)
+output(model1)
 
-output(analysis2)
-
-# prior3 (wishart prior for level-2 covariance matrix with  ss = 0 and df = v + 1)
-analysis3 <- rblimp(
+model2 <- rblimp(
   data = diary,
   clusterid = 'person',
-  fixed = 'female',
-  center = '
-      groupmean = pain;  # center at latent group means
-      grandmean = pain.mean sleep painaccept',  # center at grand means
-  model = 'posaff ~ pain@b1 sleep pain.mean@b3 painaccept female | pain', # label within- and between-cluster slope coefficients 
-  waldtest = 'b1 = b3', # test whether within- and between-cluster regressions differ
+  nominal = 'female',
+  latent = 'person = ranicept ranslope;',
+  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  model = '
+    level2:
+    ranicept ~ intercept stress pain.mean female;
+    ranslope ~ intercept;
+    ranicept ~~ ranslope;
+    level1:
+    posaff ~ intercept@ranicept pain@ranslope;',
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  options = 'prior3')
+  iter = 10000
+)
+output(model2)
 
-output(analysis3)
+# FIT RANDOM SLOPE MODEL WITH INTERACTION EFFECTS ----
 
-# separation prior
-analysis4 <- rblimp(
+# mixed model specification
+model3 <- rblimp(
   data = diary,
   clusterid = 'person',
-  latent = 'person = painslp',  # define random slope as a separate level-2 latent variable
-  fixed = 'female',
-  center = '
-      groupmean = pain;  # center at latent group means
-      grandmean = pain.mean sleep painaccept',  # center at grand means
-  model = 'posaff ~ pain@b1 sleep pain.mean@b3 painaccept female pain*painslp@1', # label within- and between-cluster slope coefficients painslp ~ 1@0, # fix mean of random slope latent variable to 0 posaff[person] ~~ painslp', # correlation between random intercepts and random slope latent variable 
-  waldtest = 'b1 = b3', # test whether within- and between-cluster regressions differ
+  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  model = 'posaff ~ pain pain.mean stress female pain*stress pain.mean*stress | pain',
+  simple = 'pain | stress; pain.mean | stress;',
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  options = 'use_phantom')
+  iter = 10000
+)
+output(model3)
 
-output(analysis4)
+# plot conditional effects
+simple_plot(posaff ~ pain | stress, model3)
+simple_plot(posaff ~ pain.mean[person] | stress, model3)
+
+# latent variable specification
+model4 <- rblimp(
+  data = diary,
+  clusterid = 'person',
+  nominal = 'female',
+  latent = 'person = ranicept ranslope;',
+  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  model = '
+    level2:
+    ranicept ~ intercept stress pain.mean female stress*pain.mean;
+    ranslope ~ intercept stress;
+    ranicept ~~ ranslope;
+    level1:
+    posaff ~ intercept@ranicept pain@ranslope;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000
+)
+output(model4)
+
+# latent variable specification with conditional effects
+model5 <- rblimp(
+  data = diary,
+  clusterid = 'person',
+  nominal = 'female',
+  latent = 'person = ranicept ranslope;',
+  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  model = '
+    level2:
+    ranicept ~ intercept stress pain.mean female stress*pain.mean;
+    ranslope ~ intercept@b1 stress@b2;
+    ranicept ~~ ranslope;
+    level1:
+    posaff ~ intercept@ranicept pain@ranslope;
+    predictor:
+    stress ~ pain.mean female;',
+  parameter = '
+    painslp_low = b1 - b2*sqrt(stress.totalvar);
+    painslp_mean = b1;
+    painslp_hi = b1 + b2*sqrt(stress.totalvar);
+  ',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000
+)
+output(model5)

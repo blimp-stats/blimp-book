@@ -8,6 +8,11 @@ load('mathcomplete.rda')
 write.csv(math, 'math.csv', row.names = F)
 write.csv(mathcomplete, 'math_complete.csv', row.names = F)
 
+load('diary.rda')
+write.csv(diary, 'diary.csv', row.names = F)
+
+
+
 summarytools::freq(alcoholuse$alcdays)
 
 # National Institute on Alcohol Abuse and Alcoholism
