@@ -25,9 +25,13 @@ model1 <- rblimp(
     model = 'probsolvpost ~ probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition', 
     seed = 90291,
     burn = 10000,
-    iter = 10000)
+    iter = 10000,
+    nimps = 20)
 
 output(model1)
+
+
+residual_plot(model1, 'probsolvpost')
 
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
 

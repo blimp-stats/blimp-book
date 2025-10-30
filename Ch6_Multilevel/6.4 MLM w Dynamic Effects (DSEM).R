@@ -1,4 +1,4 @@
-# MULTILEVEL MODEL WITH HETEROGENEOUS WITHIN-CLUSTER VARIATION
+# MULTILEVEL MODEL WITH DYNAMIC EFFECT
 
 # LOAD R PACKAGES ----
 
@@ -14,42 +14,23 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 diary <- read.csv(data_url)
 
-# FIT RANDOM SLOPE MODEL WITH HETERGENEOUS VARIATION ----
+# FIT MODEL ----
 
-# mixed model specification with heterogeneous variation
-model1 <- rblimp(
+set_blimp('/applications/blimp/blimp-nightly')
+
+# dsem with lagged predictors
+model <- rblimp(
   data = diary,
-  clusterid = 'person',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
-  model = 'posaff ~ pain pain.mean stress female pain*stress | pain',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'hev'
-)
-output(model1)
-
-# FIT LOCATION SCALE MODEL ----
-
-# latent variable specificaton
-model2 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  nominal = 'female',
-  latent = 'person = ranicept ranslope logvar;',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
+  clusterid = 'person; timeid: day;',
+  latent = 'person = pain_icept posaff_icept',
   model = '
-    level2:
-    ranicept ~ intercept pain.mean stress female;
-    ranslope ~ intercept stress;
-    logvar ~ intercept stress;
-    ranicept ranslope logvar ~~ ranicept ranslope logvar;
-    level1:
-    posaff ~ intercept@ranicept pain@ranslope;
-    scale:
-    var(posaff) ~ intercept@logvar pain;',
+        pain ~ intercept@pain_icept (pain.lag - pain_icept) (posaff.lag - posaff_icept);
+        posaff ~ intercept@posaff_icept (posaff.lag - posaff_icept) (pain.lag - pain_icept);
+        pain ~~ posaff;
+        intercept -> pain_icept posaff_icept;
+        pain_icept ~~ posaff_icept;',
   seed = 90291,
   burn = 10000,
   iter = 10000
 )
-output(model2)
+output(model)
