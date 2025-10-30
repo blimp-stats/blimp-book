@@ -23,9 +23,9 @@ model <- rblimp(
     # fixed = 'male',
     model = '
       mediation.models: 
-      interfere ~ pain@apath male age;
-      depress ~ interfere@bpath pain male age;',
-    parameters = 'indirect = apath*bpath',
+      interfere ~ pain@a male age;
+      depress ~ interfere@b pain male age;',
+    parameters = 'indirect = a*b',
     seed = 90291,
     burn = 10000,
     iter = 10000)

@@ -22,13 +22,13 @@ set_blimp('/applications/blimp/blimp-nightly')
 model <- rblimp(
   data = diary,
   clusterid = 'person; timeid: day;',
-  latent = 'person = pain_icept posaff_icept',
+  latent = 'person = pain_ranicept posaff_ranicept',
   model = '
-        pain ~ intercept@pain_icept (pain.lag - pain_icept) (posaff.lag - posaff_icept);
-        posaff ~ intercept@posaff_icept (posaff.lag - posaff_icept) (pain.lag - pain_icept);
+        pain ~ intercept@pain_ranicept (pain.lag - pain_ranicept) (posaff.lag - posaff_ranicept);
+        posaff ~ intercept@posaff_ranicept (posaff.lag - posaff_ranicept) (pain.lag - pain_ranicept);
         pain ~~ posaff;
-        intercept -> pain_icept posaff_icept;
-        pain_icept ~~ posaff_icept;',
+        intercept -> pain_ranicept posaff_ranicept;
+        pain_ranicept ~~ posaff_ranicept;',
   seed = 90291,
   burn = 10000,
   iter = 10000
