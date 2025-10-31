@@ -68,7 +68,7 @@ plot_imputations(model2, var = "yjt.dpdd.6.")
 
 # FIT MODEL WITH NORMALIZED PREDICTOR ----
 
-# normalized outcome and predictor with yeo-johnson transformation
+# predictor is normalized in its missing data model but skewed in the focal model
 model3 <- rblimp(
   data = inflamm,
   nominal = 'female els',
@@ -89,3 +89,25 @@ output(model3)
 # imputed vs. observed distributions
 plot_imputations_overlay(model3, inflamm, var = "dpdd")
 plot_imputations_overlay(model3, inflamm, var = "inflam_sum")
+
+# predictor is normalized in its missing data model and normalized in the focal model
+model4 <- rblimp(
+  data = inflamm,
+  nominal = 'female els',
+  center = 'age',
+  # fixed = 'age female',
+  model = '
+  focal:
+  yjt(dpdd - 6) ~ female els age yjt(inflam_sum, lam_prior);
+  predictor:
+  yjt(inflam_sum, lam_prior) ~ female els age;', 
+  parameters = 'lam_prior ~ uniform(0, 2);',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 100)
+
+output(model4)
+
+# EXAMPLE FOR BRIAN OF NAMING CONVENTIONS THAT NEED CLEANUP ---
+# names(model4@average_imp)
