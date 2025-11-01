@@ -14,7 +14,7 @@ alcoholuse <- read.csv(data_url)
 
 # FIT MEDIATION MODEL WITH DISCRETE MEDIATOR ----
 
-# mediation with a binary logistic outcome
+# mediation with a binary logistic mediator
 model_lm <- rblimp(
   data = alcoholuse,
   nominal = 'college male alcearly', 
@@ -99,3 +99,37 @@ posterior_plot(model_co, 'ind_male')
 posterior_plot(model_co, 'ind_female')
 posterior_plot(model_co, 'ind_diff')
 
+# FIT MEDIATION MODEL WITH CAUSAL INDIRECT EFFECT DEFINITIONS ----
+
+# mediation with a binary probit outcome
+model_oo <- rblimp(
+  data = alcoholuse,
+  nominal = 'college male', 
+  ordinal = 'drinker',
+  center  = 'college age',
+  # fixed = 'male',
+  model = '
+    apath:
+    alcage ~ intercept@m_icept male@a college age;
+    alcage ~~ alcage@m_resvar;
+    bpath:
+    drinker ~ intercept@y_icept alcage@b male@tau college age',
+  parameters = '
+    denom = sqrt(b^2*m_resvar + 1);
+    p_x0 = phi( ( y_icept + b*(m_icept + a*0) + tau*0 ) / denom );
+    p_x1 = phi( ( y_icept + b*(m_icept + a*1) + tau*1 ) / denom );
+    nie = phi( ( y_icept + b*(m_icept + a*1) + tau*1 ) / denom )
+      - phi( ( y_icept + b*(m_icept + a*0) + tau*1 ) / denom );
+    nde = phi( ( y_icept + b*(m_icept + a*0) + tau*1 ) / denom )
+      - phi( ( y_icept + b*(m_icept + a*0) + tau*0 ) / denom );
+    te  = p_x1 - p_x0;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(model_oo)
+
+# plot distribution of indirect effects
+posterior_plot(model_co, 'nie')
+posterior_plot(model_co, 'nde')
+posterior_plot(model_co, 'te')
