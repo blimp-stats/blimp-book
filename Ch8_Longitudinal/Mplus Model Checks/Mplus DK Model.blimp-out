@@ -1,0 +1,369 @@
+Mplus VERSION 8.11 (Mac)
+MUTHEN & MUTHEN
+11/02/2025   8:58 AM
+
+INPUT INSTRUCTIONS
+
+  ! EXAMPLE 9.13 - FIML Diggle-Kenward MNAR Selection Model for SEM Growth Curve
+
+  DATA:
+  file = trial_wide_nohead.csv;
+  VARIABLE:
+  names = id male drug severe0-severe6 drop0-drop6;
+  usevariables = severe0-severe6 drop2-drop6;
+  categorical = drop2-drop6;
+  missing = all(999);
+  ANALYSIS:
+  estimator = ml;
+  link = probit;
+  integration = montecarlo;
+  ! starts = 5 5;
+  ! estimator = bayes;
+  ! fbiterations = 20000;
+  ! bseed = 90291;
+  MODEL:
+  icept with linear;
+  icept linear | severe0@0 severe1@1 severe2@2 severe3@3 severe4@4 severe5@5 severe6@6;
+  ! severe0-severe6 (res);
+  drop2 on severe1 (mar)
+  	severe2 (mnar);
+  drop3 on severe2 (mar)
+  	severe3 (mnar);
+  drop4 on severe3 (mar)
+  	severe4 (mnar);
+  drop5 on severe4 (mar)
+  	severe5 (mnar);
+  drop6 on severe5 (mar)
+  	severe6 (mnar);
+  ! OUTPUT:
+  ! sampstat stdyx residual;
+  ! save likelihood values for individual influence diagnostics
+  ! SAVEDATA:
+  ! file = influence.dat;
+  ! save = loglikelihood;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         437
+
+Number of dependent variables                                   12
+Number of independent variables                                  0
+Number of continuous latent variables                            2
+
+Observed dependent variables
+
+  Continuous
+   SEVERE0     SEVERE1     SEVERE2     SEVERE3     SEVERE4     SEVERE5
+   SEVERE6
+
+  Binary and ordered categorical (ordinal)
+   DROP2       DROP3       DROP4       DROP5       DROP6
+
+Continuous latent variables
+   ICEPT       LINEAR
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-02
+    Relative loglikelihood change                        0.100D-05
+    Derivative                                           0.100D-02
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-02
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-02
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            10
+  Minimum value for logit thresholds                           -10
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Integration Specifications
+  Type                                                  MONTECARLO
+  Number of integration points                                1250
+  Dimensions of numerical integration                            5
+  Adaptive quadrature                                           ON
+  Monte Carlo integration seed                                   0
+Link                                                        PROBIT
+Cholesky                                                        ON
+
+Input data file(s)
+  trial_wide_nohead.csv
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             6
+     Number of y missing data patterns           6
+     Number of u missing data patterns           5
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              DROP2         DROP3         DROP4         DROP5         DROP6
+              ________      ________      ________      ________      ________
+ DROP2          1.000
+ DROP3          0.950         0.950
+ DROP4          0.890         0.890         0.890
+ DROP5          0.847         0.847         0.847         0.847
+ DROP6          0.799         0.799         0.799         0.799         0.799
+ SEVERE0        1.000         0.950         0.890         0.847         0.799
+ SEVERE1        1.000         0.950         0.890         0.847         0.799
+ SEVERE2        0.950         0.950         0.890         0.847         0.799
+ SEVERE3        0.890         0.890         0.890         0.847         0.799
+ SEVERE4        0.847         0.847         0.847         0.847         0.799
+ SEVERE5        0.799         0.799         0.799         0.799         0.799
+ SEVERE6        0.767         0.767         0.767         0.767         0.767
+
+
+           Covariance Coverage
+              SEVERE0       SEVERE1       SEVERE2       SEVERE3       SEVERE4
+              ________      ________      ________      ________      ________
+ SEVERE0        1.000
+ SEVERE1        1.000         1.000
+ SEVERE2        0.950         0.950         0.950
+ SEVERE3        0.890         0.890         0.890         0.890
+ SEVERE4        0.847         0.847         0.847         0.847         0.847
+ SEVERE5        0.799         0.799         0.799         0.799         0.799
+ SEVERE6        0.767         0.767         0.767         0.767         0.767
+
+
+           Covariance Coverage
+              SEVERE5       SEVERE6
+              ________      ________
+ SEVERE5        0.799
+ SEVERE6        0.767         0.767
+
+
+     PROPORTION OF DATA PRESENT FOR U
+
+
+           Covariance Coverage
+              DROP2         DROP3         DROP4         DROP5         DROP6
+              ________      ________      ________      ________      ________
+ DROP2          1.000
+ DROP3          0.950         0.950
+ DROP4          0.890         0.890         0.890
+ DROP5          0.847         0.847         0.847         0.847
+ DROP6          0.799         0.799         0.799         0.799         0.799
+
+
+     PROPORTION OF DATA PRESENT FOR Y
+
+
+           Covariance Coverage
+              SEVERE0       SEVERE1       SEVERE2       SEVERE3       SEVERE4
+              ________      ________      ________      ________      ________
+ SEVERE0        1.000
+ SEVERE1        1.000         1.000
+ SEVERE2        0.950         0.950         0.950
+ SEVERE3        0.890         0.890         0.890         0.890
+ SEVERE4        0.847         0.847         0.847         0.847         0.847
+ SEVERE5        0.799         0.799         0.799         0.799         0.799
+ SEVERE6        0.767         0.767         0.767         0.767         0.767
+
+
+           Covariance Coverage
+              SEVERE5       SEVERE6
+              ________      ________
+ SEVERE5        0.799
+ SEVERE6        0.767         0.767
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    DROP2
+      Category 1    0.950          415.000
+      Category 2    0.050           22.000
+    DROP3
+      Category 1    0.937          389.000
+      Category 2    0.063           26.000
+    DROP4
+      Category 1    0.951          370.000
+      Category 2    0.049           19.000
+    DROP5
+      Category 1    0.943          349.000
+      Category 2    0.057           21.000
+    DROP6
+      Category 1    0.960          335.000
+      Category 2    0.040           14.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     SEVERE0               6.363      -0.450       3.000    0.23%       5.500      6.000      6.500
+             437.000       0.749       0.058       8.000    4.35%       6.500      7.000
+     SEVERE1               5.574      -0.543       2.000    0.92%       4.500      5.500      5.500
+             437.000       1.487      -0.002       8.000    1.83%       6.000      6.500
+     SEVERE2               5.248      -0.071       1.600    0.24%       4.100      4.900      5.200
+             415.000       1.758      -0.378       8.000    2.65%       5.600      6.500
+     SEVERE3               4.993      -0.428       1.100    0.26%       3.500      5.000      5.300
+             389.000       2.125      -0.663       8.000    0.51%       5.500      6.000
+     SEVERE4               4.606       0.037       1.000    0.27%       3.200      4.200      4.600
+             370.000       2.372      -0.675       8.000    1.35%       5.000      6.000
+     SEVERE5               4.427       0.050       1.000    1.43%       3.200      4.000      4.400
+             349.000       2.293      -0.425       8.000    1.15%       4.800      5.700
+     SEVERE6               4.309       0.215       2.000    8.96%       3.000      3.500      4.000
+             335.000       2.195      -0.928       8.000    0.30%       5.000      6.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       19
+
+Loglikelihood
+
+          H0 Value                       -4274.253
+
+Information Criteria
+
+          Akaike (AIC)                    8586.506
+          Bayesian (BIC)                  8664.025
+          Sample-Size Adjusted BIC        8603.728
+            (n* = (n + 2) / 24)
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ ICEPT    |
+    SEVERE0            1.000      0.000    999.000    999.000
+    SEVERE1            1.000      0.000    999.000    999.000
+    SEVERE2            1.000      0.000    999.000    999.000
+    SEVERE3            1.000      0.000    999.000    999.000
+    SEVERE4            1.000      0.000    999.000    999.000
+    SEVERE5            1.000      0.000    999.000    999.000
+    SEVERE6            1.000      0.000    999.000    999.000
+
+ LINEAR   |
+    SEVERE0            0.000      0.000    999.000    999.000
+    SEVERE1            1.000      0.000    999.000    999.000
+    SEVERE2            2.000      0.000    999.000    999.000
+    SEVERE3            3.000      0.000    999.000    999.000
+    SEVERE4            4.000      0.000    999.000    999.000
+    SEVERE5            5.000      0.000    999.000    999.000
+    SEVERE6            6.000      0.000    999.000    999.000
+
+ DROP2      ON
+    SEVERE1            0.592      0.135      4.375      0.000
+    SEVERE2           -0.731      0.166     -4.398      0.000
+
+ DROP3      ON
+    SEVERE2            0.592      0.135      4.375      0.000
+    SEVERE3           -0.731      0.166     -4.398      0.000
+
+ DROP4      ON
+    SEVERE3            0.592      0.135      4.375      0.000
+    SEVERE4           -0.731      0.166     -4.398      0.000
+
+ DROP5      ON
+    SEVERE4            0.592      0.135      4.375      0.000
+    SEVERE5           -0.731      0.166     -4.398      0.000
+
+ DROP6      ON
+    SEVERE5            0.592      0.135      4.375      0.000
+    SEVERE6           -0.731      0.166     -4.398      0.000
+
+ ICEPT    WITH
+    LINEAR             0.037      0.015      2.506      0.012
+
+ Means
+    ICEPT              6.094      0.049    124.899      0.000
+    LINEAR            -0.386      0.018    -21.185      0.000
+
+ Intercepts
+    SEVERE0            0.000      0.000    999.000    999.000
+    SEVERE1            0.000      0.000    999.000    999.000
+    SEVERE2            0.000      0.000    999.000    999.000
+    SEVERE3            0.000      0.000    999.000    999.000
+    SEVERE4            0.000      0.000    999.000    999.000
+    SEVERE5            0.000      0.000    999.000    999.000
+    SEVERE6            0.000      0.000    999.000    999.000
+
+ Thresholds
+    DROP2$1            1.537      0.259      5.928      0.000
+    DROP3$1            1.399      0.236      5.928      0.000
+    DROP4$1            1.725      0.248      6.967      0.000
+    DROP5$1            1.539      0.236      6.519      0.000
+    DROP6$1            1.785      0.259      6.901      0.000
+
+ Variances
+    ICEPT              0.557      0.066      8.477      0.000
+    LINEAR             0.062      0.008      7.494      0.000
+
+ Residual Variances
+    SEVERE0            0.681      0.073      9.386      0.000
+    SEVERE1            0.629      0.057     11.079      0.000
+    SEVERE2            0.598      0.054     11.003      0.000
+    SEVERE3            0.542      0.051     10.657      0.000
+    SEVERE4            0.638      0.062     10.313      0.000
+    SEVERE5            0.518      0.063      8.269      0.000
+    SEVERE6            0.937      0.109      8.576      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.235E-03
+       (ratio of smallest to largest eigenvalue)
+
+
+     Beginning Time:  08:58:29
+        Ending Time:  08:58:53
+       Elapsed Time:  00:00:24
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2024 Muthen & Muthen

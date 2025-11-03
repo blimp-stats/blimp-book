@@ -1,0 +1,37 @@
+! EXAMPLE 9.13 - FIML Diggle-Kenward MNAR Selection Model for SEM Growth Curve
+
+DATA:
+file = trial_wide_nohead.csv;
+VARIABLE:
+names = id male drug severe0-severe6 drop0-drop6;
+usevariables = severe0-severe6 drop2-drop6;
+categorical = drop2-drop6;
+missing = all(999);
+ANALYSIS:
+estimator = ml;
+link = probit;
+integration = montecarlo;
+! starts = 5 5;
+! estimator = bayes;
+! fbiterations = 20000;
+! bseed = 90291;
+MODEL:
+icept with linear;
+icept linear | severe0@0 severe1@1 severe2@2 severe3@3 severe4@4 severe5@5 severe6@6;
+! severe0-severe6 (res);
+drop2 on severe1 (mar)
+	severe2 (mnar);
+drop3 on severe2 (mar)
+	severe3 (mnar);
+drop4 on severe3 (mar)
+	severe4 (mnar);
+drop5 on severe4 (mar)
+	severe5 (mnar);
+drop6 on severe5 (mar)
+	severe6 (mnar);
+! OUTPUT:
+! sampstat stdyx residual;
+! save likelihood values for individual influence diagnostics
+! SAVEDATA:
+! file = influence.dat;
+! save = loglikelihood;
