@@ -1,0 +1,30 @@
+TITLE:      The basic RI-CLPM (5 waves), using residual-language of Mplus.
+     
+DATA:       FILE = ~/desktop/RICLPM.csv;
+                
+VARIABLE:   NAMES = id g x1-x4 y1-y4;
+USEVARIABLES = x1-x4 y1-y4;
+            
+ANALYSIS:   MODEL = NOCOV; ! Sets all default covariances to zero
+        
+MODEL:      ! Create between-components (random intercepts)
+            RIx BY x1-x4@1;
+            RIy BY y1-y4@1;
+    
+            ! Estimate covariance between random intercepts
+            RIx WITH RIy;
+        
+            ! Using residual-language ("^"-notation) Mplus automatically creates 
+            ! within-person centered variables with measurement error variances 
+            ! constrained at 0
+
+            ! Estimate lagged effects between within-person centered variables using 
+            ! "Pairwise ON"-notation.
+            x2^-x4^ y2^-y4^ PON x1^-x3^ y1^-y3^; ! Autoregressive effects
+            x2^-x4^ y2^-y4^ PON y1^-y3^ x1^-x3^; ! Cross-lagged effects
+    
+            ! Estimate covariance between within-person components using 
+            ! "Pairwise WITH"-notation
+            x1^-x4^ PWITH y1^-y4^;
+                
+OUTPUT:     TECH1 STDYX SAMPSTAT CINTERVAL;
