@@ -52,9 +52,9 @@ model3 <- rblimp(
   model = 'severity ~ intercept@b0 week@b1 drug@b01 drug*week@b11 male | week;',
   simple = 'week | drug',
   parameters = '
-    mu6_drug0 = b0 + b1*3;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
   iter = 10000
@@ -97,9 +97,9 @@ model6 <- rblimp(
   center = 'grandmean = male',
   model = 'severity ~ intercept@b0 week@b1 week^2@b2 drug@b01 drug*week@b11 drug*week^2@b21 male | week',
   parameters = '
-    mu6_drug0 = b0 + b1*3 + b2*9;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
   iter = 10000
@@ -142,9 +142,9 @@ model8 <- rblimp(
     level1:
     severity ~ intercept@icept week@linear;',
   parameters = '
-    mu6_drug0 = b0 + b1*3;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
   iter = 10000
@@ -203,9 +203,9 @@ model11 <- rblimp(
     level1:
     severity ~ intercept@icept week@linear week^2@b2 week^2*drug@b21;',
   parameters = '
-    mu6_drug0 = b0 + b1*3 + b2*9;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 20000,
   iter = 20000

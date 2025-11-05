@@ -36,9 +36,9 @@ model1 <- rblimp(
       (week==1)*drug (week==2)*drug (week==3)*drug
       (week > 0)*icept (week > 0)*linear | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + b1*3;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 40000,
   iter = 40000
@@ -67,9 +67,9 @@ model2 <- rblimp(
       (week==1)*drug (week==2)*drug (week==3)*drug
       (week > 0)*icept (week > 0)*linear | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + b1*3 + b2*9;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 30000,
   iter = 30000
@@ -98,9 +98,9 @@ model3 <- rblimp(
       (week==1)*drug (week==2)*drug (week==3)*drug
       (week > 0)*severity (week > 0)*severity.lag | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + b1*3;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 50000,
   iter = 50000
@@ -129,9 +129,9 @@ model4 <- rblimp(
       (week==1)*drug (week==2)*drug (week==3)*drug
       (week > 0)*severity (week > 0)*severity.lag | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + b1*3 + b2*9;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 30000,
   iter = 30000

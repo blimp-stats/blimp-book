@@ -74,9 +74,9 @@ model3 <- rblimp(
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;',
   parameters = '
-    mu6_drug0 = b0 + b1*3;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291, # integer random number seed
   burn = 20000, # warm up iterations
   iter = 20000) # iterations for analysis
@@ -159,9 +159,9 @@ model6 <- rblimp(
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;',
   parameters = '
-    mu6_drug0 = b0 + b1*3 + b2*9;
-    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291, # integer random number seed
   burn = 40000, # warm up iterations
   iter = 40000) # iterations for analysis

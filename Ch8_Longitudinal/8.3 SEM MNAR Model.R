@@ -14,191 +14,154 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-describeBy(trial[,c('dropout2','dropout3','dropout4','dropout5','dropout6')], trial$drug)
+# FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
-names(trial)
-
-# FIT SHARED PARAMETER MODEL ----
-
-# linear growth
+# linear growth model with predictors
+# equality constraints produce low N_eff
 model1 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout2:dropout6',
-  latent = 'icept linear',
+  ordinal = 'male drug dropout1:dropout3',
+  latent = 'icept linear', 
   center = 'male',
-  fixed = 'male drug',
   model = '
     structural:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0;
-    severity1 ~ intercept@0 icept@1 linear@1;
-    severity2 ~ intercept@0 icept@1 linear@2;
-    severity3 ~ intercept@0 icept@1 linear@3;
-    severity4 ~ intercept@0 icept@1 linear@4; 
-    severity5 ~ intercept@0 icept@1 linear@5; 
-    severity6 ~ intercept@0 icept@1 linear@6;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;
     missingness:
+    dropout1 ~ icept@bi linear@bl drug;
     dropout2 ~ icept@bi linear@bl drug;
-    dropout3 ~ icept@bi linear@bl drug;
-    dropout4 ~ icept@bi linear@bl drug;
-    dropout5 ~ icept@bi linear@bl drug;
-    dropout6 ~ icept@bi linear@bl drug;',
+    dropout3 ~ icept@bi linear@bl drug;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291, # integer random number seed
-  burn = 300000, # warm up iterations
-  iter = 300000) # iterations for analysis
+  burn = 100000, # warm up iterations
+  iter = 100000) # iterations for analysis
 
 output(model1)
 
-# quadratic growth
+# FIT WU-CARROL SHARED PARAMETER QUADRATIC GROWTH MODEL ----
+
+# quadratic fixed effect with predictors
 model2 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout2:dropout6',
+  ordinal = 'male drug dropout1:dropout3',
   latent = 'icept linear quad', 
   center = 'male',
-  fixed = 'male drug',
   model = '
     structural:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
     quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
+    quad ~~ quad@.01;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0 quad@0; 
-    severity1 ~ intercept@0 icept@1 linear@1 quad@1; 
-    severity2 ~ intercept@0 icept@1 linear@2 quad@4; 
-    severity3 ~ intercept@0 icept@1 linear@3 quad@9; 
-    severity4 ~ intercept@0 icept@1 linear@4 quad@16; 
-    severity5 ~ intercept@0 icept@1 linear@5 quad@25; 
-    severity6 ~ intercept@0 icept@1 linear@6 quad@36;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;
-    missingness: 
+    missingness:
+    dropout1 ~ icept@bi linear@bl drug;
     dropout2 ~ icept@bi linear@bl drug;
-    dropout3 ~ icept@bi linear@bl drug;
-    dropout4 ~ icept@bi linear@bl drug;
-    dropout5 ~ icept@bi linear@bl drug;
-    dropout6 ~ icept@bi linear@bl drug;',
+    dropout3 ~ icept@bi linear@bl drug;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291, # integer random number seed
   burn = 300000, # warm up iterations
   iter = 300000) # iterations for analysis
 
 output(model2)
 
-# FIT DIGGLE-KENWARD MODEL ----
+# FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
 
-# linear growth
+# linear growth model with predictors
 model3 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout2:dropout6',
-  latent = 'icept linear',
+  ordinal = 'male drug dropout1:dropout3',
+  latent = 'icept linear', 
   center = 'male',
-  fixed = 'male drug',
   model = '
     structural:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0;
-    severity1 ~ intercept@0 icept@1 linear@1;
-    severity2 ~ intercept@0 icept@1 linear@2;
-    severity3 ~ intercept@0 icept@1 linear@3;
-    severity4 ~ intercept@0 icept@1 linear@4; 
-    severity5 ~ intercept@0 icept@1 linear@5; 
-    severity6 ~ intercept@0 icept@1 linear@6;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;
     missingness:
+    dropout1 ~ severity0@mar severity1@mnar drug;
     dropout2 ~ severity1@mar severity2@mnar drug;
-    dropout3 ~ severity2@mar severity3@mnar drug;
-    dropout4 ~ severity3@mar severity4@mnar drug;
-    dropout5 ~ severity4@mar severity5@mnar drug;
-    dropout6 ~ severity5@mar severity6@mnar drug;',
+    dropout3 ~ severity2@mar severity3@mnar drug;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
-  seed = 90291, # Integer random number seed
-  burn = 300000, # Warm up iterations
-  iter = 300000) # Iterations for analysis
+    mu3_drug0 = b0 + b1*3;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
+  seed = 90291, # integer random number seed
+  burn = 200000, # warm up iterations
+  iter = 200000) # iterations for analysis
 
 output(model3)
 
-# quadratic growth
+# FIT DIGGLE-KENWARD QUADRATIC GROWTH MODEL ----
+
+# quadratic fixed effect with predictors
 model4 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout2:dropout6',
-  latent = 'icept linear quad',
+  ordinal = 'male drug dropout1:dropout3',
+  latent = 'icept linear quad', 
   center = 'male',
-  fixed = 'male drug',
   model = '
     structural:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
     quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
+    quad ~~ quad@.01;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0 quad@0; 
-    severity1 ~ intercept@0 icept@1 linear@1 quad@1; 
-    severity2 ~ intercept@0 icept@1 linear@2 quad@4; 
-    severity3 ~ intercept@0 icept@1 linear@3 quad@9; 
-    severity4 ~ intercept@0 icept@1 linear@4 quad@16; 
-    severity5 ~ intercept@0 icept@1 linear@5 quad@25; 
-    severity6 ~ intercept@0 icept@1 linear@6 quad@36;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
     severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;
     missingness:
+    dropout1 ~ severity0@mar severity1@mnar drug;
     dropout2 ~ severity1@mar severity2@mnar drug;
-    dropout3 ~ severity2@mar severity3@mnar drug;
-    dropout4 ~ severity3@mar severity4@mnar drug;
-    dropout5 ~ severity4@mar severity5@mnar drug;
-    dropout6 ~ severity5@mar severity6@mnar drug;',
+    dropout3 ~ severity2@mar severity3@mnar drug;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
-  seed = 90291, # Integer random number seed
-  burn = 300000, # Warm up iterations
-  iter = 300000) # Iterations for analysis
+    mu3_drug0 = b0 + b1*3 + b2*9;
+    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
+  seed = 90291, # integer random number seed
+  burn = 120000, # warm up iterations
+  iter = 120000) # iterations for analysis
 
 output(model4)
 
