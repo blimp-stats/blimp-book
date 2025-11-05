@@ -36,28 +36,20 @@ model2 <- rblimp(
   latent = 'icept linear',
   model = '
     structural:
-    icept ~ intercept;
-    linear ~ intercept;
-    icept ~ linear;
+    intercept -> icept linear;
+    icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0; 
-    severity1 ~ intercept@0 icept@1 linear@1; 
-    severity2 ~ intercept@0 icept@1 linear@2; 
-    severity3 ~ intercept@0 icept@1 linear@3; 
-    severity4 ~ intercept@0 icept@1 linear@4; 
-    severity5 ~ intercept@0 icept@1 linear@5; 
-    severity6 ~ intercept@0 icept@1 linear@6;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;',
+    severity3 ~~ severity3@res;',
   seed = 90291, # integer random number seed
-  burn = 10000, # warm up iterations
-  iter = 10000) # iterations for analysis
+  burn = 30000, # warm up iterations
+  iter = 30000) # iterations for analysis
 
 output(model2)
 
@@ -73,28 +65,21 @@ model3 <- rblimp(
     linear ~ intercept@b1 drug@b11;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0; 
-    severity1 ~ intercept@0 icept@1 linear@1; 
-    severity2 ~ intercept@0 icept@1 linear@2; 
-    severity3 ~ intercept@0 icept@1 linear@3; 
-    severity4 ~ intercept@0 icept@1 linear@4; 
-    severity5 ~ intercept@0 icept@1 linear@5; 
-    severity6 ~ intercept@0 icept@1 linear@6;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;',
+    severity3 ~~ severity3@res;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
+    mu6_drug0 = b0 + b1*3;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291, # integer random number seed
-  burn = 10000, # warm up iterations
-  iter = 10000) # iterations for analysis
+  burn = 20000, # warm up iterations
+  iter = 20000) # iterations for analysis
 
 output(model3)
 
@@ -107,27 +92,21 @@ model4 <- rblimp(
   model = '
     structural:
     intercept -> icept linear quad;
-    quad ~~ quad@.001;
+    quad ~~ quad@.01;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0 quad@0; 
-    severity1 ~ intercept@0 icept@1 linear@1 quad@1; 
-    severity2 ~ intercept@0 icept@1 linear@2 quad@4; 
-    severity3 ~ intercept@0 icept@1 linear@3 quad@9; 
-    severity4 ~ intercept@0 icept@1 linear@4 quad@16; 
-    severity5 ~ intercept@0 icept@1 linear@5 quad@25; 
-    severity6 ~ intercept@0 icept@1 linear@6 quad@36;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;',
+    severity3 ~~ severity3@res;',
   seed = 90291, # integer random number seed
-  burn = 20000, # warm up iterations
-  iter = 20000) # iterations for analysis
+  burn = 30000, # warm up iterations
+  iter = 30000) # iterations for analysis
 
 output(model4)
 
@@ -141,61 +120,51 @@ model5 <- rblimp(
     intercept -> icept linear quad;
     icept linear quad ~~ icept linear quad;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0 quad@0; 
-    severity1 ~ intercept@0 icept@1 linear@1 quad@1; 
-    severity2 ~ intercept@0 icept@1 linear@2 quad@4; 
-    severity3 ~ intercept@0 icept@1 linear@3 quad@9; 
-    severity4 ~ intercept@0 icept@1 linear@4 quad@16; 
-    severity5 ~ intercept@0 icept@1 linear@5 quad@25; 
-    severity6 ~ intercept@0 icept@1 linear@6 quad@36;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;',
+    severity3 ~~ severity3@res;',
   seed = 90291, # integer random number seed
-  burn = 20000, # warm up iterations
-  iter = 20000) # iterations for analysis
+  burn = 30000, # warm up iterations
+  iter = 30000) # iterations for analysis
 
 output(model5)
 
 # quadratic fixed effect with predictors
 model6 <- rblimp(
   data = trial,
-  latent = 'icept linear quad',
+  ordinal = 'male drug',
+  latent = 'icept linear quad', 
+  center = 'male',
   model = '
     structural:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
     quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
+    quad ~~ quad@.01;
     icept ~~ linear;
     measurement:
-    severity0 ~ intercept@0 icept@1 linear@0 quad@0; 
-    severity1 ~ intercept@0 icept@1 linear@1 quad@1; 
-    severity2 ~ intercept@0 icept@1 linear@2 quad@4; 
-    severity3 ~ intercept@0 icept@1 linear@3 quad@9; 
-    severity4 ~ intercept@0 icept@1 linear@4 quad@16; 
-    severity5 ~ intercept@0 icept@1 linear@5 quad@25; 
-    severity6 ~ intercept@0 icept@1 linear@6 quad@36;
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
     residual:
     severity0 ~~ severity0@res;
     severity1 ~~ severity1@res;
     severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    severity4 ~~ severity4@res;
-    severity5 ~~ severity5@res;
-    severity6 ~~ severity6@res;',
+    severity3 ~~ severity3@res;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
+    mu6_drug0 = b0 + b1*3 + b2*9;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291, # integer random number seed
-  burn = 30000, # warm up iterations
-  iter = 30000) # iterations for analysis
+  burn = 40000, # warm up iterations
+  iter = 40000) # iterations for analysis
 
 output(model6)
 

@@ -15,16 +15,15 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-# FIT SHARED PARAMETER MODEL ----
+# FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
-# linear growth model
+# linear growth model with predictors
 model1 <- rblimp(
   data = trial,
   ordinal = 'male drug dropout',
   clusterid = 'person',
-  latent = 'person = icept linear;',
   center = 'grandmean = male',
-  fixed = 'male drug',
+  latent = 'person = icept linear;',
   model = '
     level2:
     icept ~ intercept@b0 drug@b01 male;
@@ -33,62 +32,60 @@ model1 <- rblimp(
     level1:
     severity ~ intercept@icept week@linear;
     missingness:
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*icept (week > 1)*linear | 1@0',
+    dropout ~ intercept@-3 (week==1) (week==2) (week==3) 
+      (week==1)*drug (week==2)*drug (week==3)*drug
+      (week > 0)*icept (week > 0)*linear | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
+    mu6_drug0 = b0 + b1*3;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291,
-  burn = 20000,
-  iter = 20000
+  burn = 40000,
+  iter = 40000
 )
 
 output(model1)
 
-# quadratic growth model
+# FIT WU-CARROL SHARED PARAMETER QUADRATIC GROWTH MODEL ----
+
+# quadratic growth model with predictors
 model2 <- rblimp(
   data = trial,
   ordinal = 'male drug dropout',
   clusterid = 'person',
-  latent = 'person = icept linear quad;',
   center = 'grandmean = male',
-  fixed = 'male drug',
+  latent = 'person = icept linear;',
   model = '
     level2:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
     icept ~~ linear;
     level1:
-    severity ~ intercept@icept week@linear week^2@quad;
+    severity ~ intercept@icept week@linear week^2@b2 week^2*drug@b21;
     missingness:
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*icept (week > 1)*linear | 1@0',
+    dropout ~ intercept@-3 (week==1) (week==2) (week==3) 
+      (week==1)*drug (week==2)*drug (week==3)*drug
+      (week > 0)*icept (week > 0)*linear | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
+    mu6_drug0 = b0 + b1*3 + b2*9;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291,
-  burn = 20000,
-  iter = 20000
+  burn = 30000,
+  iter = 30000
 )
 
 output(model2)
 
-# FIT DIGGLE-KENWARD MODEL ----
+# FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
 
-# linear growth model
+# linear growth model with predictors
 model3 <- rblimp(
   data = trial,
   ordinal = 'male drug dropout',
   clusterid = 'person; timeid: week;',
-  latent = 'person = icept linear;',
   center = 'grandmean = male',
-  fixed = 'male drug',
+  latent = 'person = icept linear;',
   model = '
     level2:
     icept ~ intercept@b0 drug@b01 male;
@@ -97,115 +94,48 @@ model3 <- rblimp(
     level1:
     severity ~ intercept@icept week@linear;
     missingness:
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*severity (week > 1)*severity.lag | 1@0',
+    dropout ~ intercept@-3 (week==1) (week==2) (week==3) 
+      (week==1)*drug (week==2)*drug (week==3)*drug
+      (week > 0)*severity (week > 0)*severity.lag | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
+    mu6_drug0 = b0 + b1*3;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291,
-  burn = 100000,
-  iter = 100000
+  burn = 50000,
+  iter = 50000
 )
 
 output(model3)
 
-# quadratic growth model
+# FIT DIGGLE-KENWARD QUADRATIC GROWTH MODEL ----
+
+# quadratic growth model with predictors
 model4 <- rblimp(
   data = trial,
   ordinal = 'male drug dropout',
   clusterid = 'person; timeid: week;',
-  latent = 'person = icept linear quad;',
   center = 'grandmean = male',
-  fixed = 'male drug',
+  latent = 'person = icept linear;',
   model = '
     level2:
     icept ~ intercept@b0 drug@b01 male;
     linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
     icept ~~ linear;
     level1:
-    severity ~ intercept@icept week@linear week^2@quad;
+    severity ~ intercept@icept week@linear week^2@b2 week^2*drug@b21;
     missingness:
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*severity (week > 1)*severity.lag | 1@0',
+    dropout ~ intercept@-3 (week==1) (week==2) (week==3) 
+      (week==1)*drug (week==2)*drug (week==3)*drug
+      (week > 0)*severity (week > 0)*severity.lag | 1@0;',
   parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
+    mu6_drug0 = b0 + b1*3 + b2*9;
+    mu6_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
     mu6_diff = mu6_drug1 - mu6_drug0;',
   seed = 90291,
-  burn = 100000,
-  iter = 100000
+  burn = 30000,
+  iter = 30000
 )
 
 output(model4)
 
-# FIT DETRENDED DIGGLE-KENWARD MODEL ----
-
-# linear growth model
-model5 <- rblimp(
-  data = trial,
-  ordinal = 'male drug dropout',
-  clusterid = 'person; timeid: week;',
-  latent = 'person = icept linear;',
-  center = 'grandmean = male',
-  fixed = 'male drug',
-  model = '
-    level2:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
-    icept ~~ linear;
-    level1:
-    severity ~ intercept@icept week@linear;
-    missingness:
-    sev_hat = icept + linear*week;
-    sevlag_hat = icept + linear*(week - 1);
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*(severity - sev_hat) (week > 1)*(severity.lag - sevlag_hat) | 1@0',
-  parameters = '
-    mu6_drug0 = b0 + 6*b1;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
-  seed = 90291,
-  burn = 400000,
-  iter = 400000
-)
-
-output(model5)
-
-# quadratic growth model
-model6 <- rblimp(
-  data = trial,
-  ordinal = 'male drug dropout',
-  clusterid = 'person; timeid: week;',
-  latent = 'person = icept linear quad;',
-  center = 'grandmean = male',
-  model = '
-    level2:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.001;
-    icept ~~ linear;
-    level1:
-    severity ~ intercept@icept week@linear week^2@quad;
-    missingness:
-    sev_hat = icept + linear*week + quad*week;
-    sevlag_hat = icept + linear*(week - 1) + quad*(week - 1);
-    dropout ~ intercept@-3 (week==1)@0 (week==2) (week==3) (week==4) (week==5) (week==6)
-      (week==2)*drug (week==3)*drug (week==4)*drug (week==5)*drug (week==6)*drug
-      (week > 1)*(severity - sev_hat) (week > 1)*(severity.lag - sevlag_hat) | 1@0',
-  parameters = '
-    mu6_drug0 = b0 + 6*b1 + 36*b2;
-    mu6_drug1 = (b0 + b01) + 6*(b1 + b11) + 36*(b2 + b21);
-    mu6_diff = mu6_drug1 - mu6_drug0;',
-  seed = 90291,
-  burn = 300000,
-  iter = 300000
-)
-
-output(model6)
