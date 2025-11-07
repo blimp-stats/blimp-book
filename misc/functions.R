@@ -64,6 +64,108 @@ blimp_theme <- function(font_size = 14) {
   unique(vars)
 }
 
+# STANDARDIZE RESIDUALS HELPER FUNCTION (MI) ----
+# Pools residual mean/variance across imputations and returns stacked z-scores.
+# For each residual set r_ij (case i, imputation j):
+#   pooled_mean = mean_j(mean(r_j))
+#   pooled_var  = mean_j(var(r_j))
+#   z_ij        = (r_ij - pooled_mean) / sqrt(pooled_var)
+
+standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
+  # --- checks
+  if (!is.list(model@imputations) || length(model@imputations) == 0)
+    stop("@imputations must be a non-empty list of data frames")
+  cols1 <- names(model@imputations[[1]])
+  
+  # --- detect all *.residual columns in the first imputation
+  resid_cols <- grep("\\.residual$", cols1, value = TRUE)
+  
+  # --- resolve which variables to use
+  # allow 'vars' as bases (e.g., "dpdd") or full names ("dpdd.residual")
+  if (is.null(vars)) {
+    bases <- sub("\\.residual$", "", resid_cols)
+  } else {
+    stopifnot(is.character(vars), length(vars) >= 1)
+    bases <- unique(sub("\\.residual$", "", vars))
+    # keep only those that actually exist
+    have <- paste0(bases, ".residual")
+    bases <- bases[have %in% resid_cols]
+    if (!length(bases))
+      stop("None of the requested variables have a corresponding '*.residual' column in imputations.")
+  }
+  
+  # --- helper to pull a residual vector from one imputation
+  get_resid <- function(imp_df, base) {
+    nm <- paste0(base, ".residual")
+    if (!nm %in% names(imp_df)) return(NULL)
+    imp_df[[nm]]
+  }
+  
+  # --- loop over bases, compute pooled mean/sd, and stack z's
+  out_rows <- list()
+  stats    <- data.frame(
+    base        = bases,
+    pooled_mean = NA_real_,
+    pooled_sd   = NA_real_,
+    m           = NA_integer_,
+    n_total     = NA_integer_,
+    stringsAsFactors = FALSE
+  )
+  
+  row_counter <- 1L
+  for (b in bases) {
+    # gather per-imputation residual vectors
+    r_list <- lapply(model@imputations, get_resid, base = b)
+    # drop NULLs (in case some imputations lack the column)
+    keep   <- vapply(r_list, function(x) !is.null(x), logical(1L))
+    r_list <- r_list[keep]
+    m      <- length(r_list)
+    if (m == 0L) next
+    
+    # per-imputation means/vars
+    mu_j <- vapply(r_list, function(x) mean(x, na.rm = na.rm),  numeric(1L))
+    v_j  <- vapply(r_list, function(x) stats::var(x,  na.rm = na.rm), numeric(1L))
+    
+    # pooled parameters (what we want for standardization)
+    pooled_mean <- mean(mu_j, na.rm = TRUE)
+    pooled_var  <- mean(v_j,  na.rm = TRUE)
+    pooled_sd   <- sqrt(pooled_var)
+    
+    # stack all residuals and compute z
+    for (j in seq_len(m)) {
+      r <- r_list[[j]]
+      n <- length(r)
+      z <- if (is.finite(pooled_sd) && pooled_sd > 0) (r - pooled_mean) / pooled_sd else rep(NA_real_, n)
+      
+      out_rows[[row_counter]] <- data.frame(
+        base   = b,
+        imp    = j,
+        row    = seq_len(n),
+        resid  = r,
+        z      = z,
+        stringsAsFactors = FALSE
+      )
+      row_counter <- row_counter + 1L
+    }
+    
+    # record stats
+    stats[stats$base == b, c("pooled_mean","pooled_sd","m","n_total")] <-
+      list(pooled_mean, pooled_sd, m, sum(vapply(r_list, length, integer(1L))))
+    if (!is.finite(pooled_sd) || pooled_sd <= 0)
+      warning("Pooled SD is non-positive for '", b, "'. z-scores set to NA.")
+  }
+  
+  data_stacked <- if (length(out_rows)) do.call(rbind, out_rows) else
+    data.frame(base=character(), imp=integer(), row=integer(),
+               resid=numeric(), z=numeric(), stringsAsFactors = FALSE)
+  
+  # return both the z's and the pooling summary
+  structure(
+    list(data = data_stacked, stats = stats),
+    class = "blimp_stdres"
+  )
+}
+
 
 # IMPUTATION HISTOGRAM(S) ----
 
@@ -216,14 +318,16 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
   invisible(plots)
 }
 
-# RESIDUALS VS. PREDICTED ----
-# Rubin-pooled LOESS with robust options and support-aware trimming
+# RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS ----
+# Rubin-pooled LOESS with robust options, support-aware trimming, consistent theme spacing,
+# PLUS standardized-residual index plots & concise outlier table (per DV).
 
 plot_residuals <- function(
     model,
+    # smoother & pooling
     smoother      = "loess",     # "loess" (default) or "poly"
     degree        = 4,           # if smoother = "poly"
-    span          = 0.9,         # loess span (a bit larger for stability)
+    span          = 0.9,         # loess span (slightly larger for stability)
     robust        = TRUE,        # loess family = "symmetric" if TRUE
     ci            = TRUE,        # draw Rubin-pooled CI band for loess
     level         = 0.95,        # CI level
@@ -235,7 +339,7 @@ plot_residuals <- function(
     min_n_prop    = 0.01,        # used if support = "density" (min fraction of N inside the window)
     
     # robustification for FITTING ONLY (points are unchanged)
-    center_by_imp = FALSE,       # <- keep FALSE for this diagnostic
+    center_by_imp = FALSE,       # keep FALSE for this diagnostic
     winsor_fit    = TRUE,        # winsorize residuals for fitting only
     winsor_k      = 3,           # ±k * MAD for winsorization
     
@@ -244,12 +348,24 @@ plot_residuals <- function(
     k             = 5,           # multiplier for MAD/SD display limits
     q_clip        = 0.005,       # tail prob for quantile clipping (both tails)
     
+    # styling
     point_alpha   = 0.15,
     point_size    = 1.2,
     curve_color   = "violet",    # names in plot_colors
     band_fill     = "violet",
     band_alpha    = 0.15,
-    font_size     = 14
+    font_size     = 14,
+    
+    # NEW: standardized residual index options
+    show_index    = TRUE,        # whether to also draw standardized residual index plots
+    signed_index  = TRUE,        # TRUE: mean signed z; FALSE: |z| (mean/max)
+    index_cutoff  = if (signed_index) c(-3, -2, 0, 2, 3) else c(2, 3),
+    index_aggregate = c("mean", "max"), # used only when signed_index = FALSE
+    index_order   = c("rank", "row"),
+    index_point_color = "teal",
+    index_line_color  = "violet",
+    print_threshold   = 3,       # table uses |z| > print_threshold
+    print_head        = 20       # rows to print per DV summary
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE))
     stop("Package 'ggplot2' is required.")
@@ -259,29 +375,36 @@ plot_residuals <- function(
     stop("curve_color and band_fill must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
   
-  support <- match.arg(support)
-  y_clip  <- match.arg(y_clip)
+  support        <- match.arg(support)
+  y_clip         <- match.arg(y_clip)
+  index_aggregate<- match.arg(index_aggregate)
+  index_order    <- match.arg(index_order)
   
-  # --- find *.residual / *.predicted bases in the first imputation
+  # FIND BASES FOR *.RESIDUAL / *.PREDICTED ----
   cols1  <- names(model@imputations[[1]])
-  bases  <- unique(sub("\\.(residual|predicted)$", "", grep("\\.(residual|predicted)$", cols1, value = TRUE)))
-  has_pair <- vapply(bases, function(b)
-    all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1), logical(1L))
+  bases  <- unique(sub("\\.(residual|predicted)$", "",
+                       grep("\\.(residual|predicted)$", cols1, value = TRUE)))
+  has_pair <- vapply(
+    bases,
+    function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1),
+    logical(1L)
+  )
   bases <- bases[has_pair]
-  if (!length(bases)) { message("No *.residual / *.predicted pairs found."); return(invisible(list())) }
+  if (!length(bases)) {
+    message("No *.residual / *.predicted pairs found.")
+  }
   
-  # --- helper: stack residual/predicted across imputations
-  stack_pairs <- function(base) {
-    r <- paste0(base, ".residual"); p <- paste0(base, ".predicted")
+  # STACK ANY Y/X PAIR ACROSS IMPUTATIONS ----
+  stack_cols <- function(ycol, xcol) {
     dfs <- lapply(seq_along(model@imputations), function(i) {
       d <- model@imputations[[i]]
-      if (!all(c(r, p) %in% names(d))) return(NULL)
-      data.frame(pred = d[[p]], resid = d[[r]], imp = i)
+      if (!all(c(ycol, xcol) %in% names(d))) return(NULL)
+      data.frame(x = d[[xcol]], y = d[[ycol]], imp = i)
     })
     do.call(rbind, dfs)
   }
   
-  # --- helper: winsorize by MAD (for fitting only)
+  # WINSORIZE BY MAD (FOR FITTING ONLY) ----
   winsor_mad <- function(x, k = 3) {
     med <- stats::median(x, na.rm = TRUE)
     mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
@@ -290,33 +413,59 @@ plot_residuals <- function(
     pmin(pmax(x, lo), hi)
   }
   
-  # --- pooled loess (degree = 1) with Rubin-pooled CI at a common x-grid
-  loess_pooled <- function(df, span, level, center_by_imp, winsor_fit, winsor_k, robust) {
-    # prepare fitting copy (optionally robustify residuals for fitting ONLY)
-    df_fit <- df
+  # POOLED LOESS WITH RUBIN CIs (STABILITY-ENHANCED) ----
+  loess_pooled <- function(df_xy, span, level, center_by_imp, winsor_fit, winsor_k, robust) {
+    fitdat <- df_xy
     if (center_by_imp) {
-      df_fit$resid <- df_fit$resid - ave(df_fit$resid, df_fit$imp, FUN = function(z) mean(z, na.rm = TRUE))
+      fitdat$y <- fitdat$y - ave(fitdat$y, fitdat$imp, FUN = function(z) mean(z, na.rm = TRUE))
     }
     if (winsor_fit) {
-      df_fit$resid <- ave(df_fit$resid, df_fit$imp, FUN = function(z) winsor_mad(z, k = winsor_k))
+      fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = winsor_k))
     }
     
-    rng_x <- range(df_fit$pred, na.rm = TRUE)
+    rng_x <- range(fitdat$x, na.rm = TRUE)
     xgrid <- if (!is.finite(diff(rng_x)) || diff(rng_x) == 0) rng_x else seq(rng_x[1], rng_x[2], length.out = 200)
-    imps  <- split(df_fit, df_fit$imp)
+    imps  <- split(fitdat, fitdat$imp)
     fam   <- if (robust) "symmetric" else "gaussian"
     
+    min_span_n   <- 50L
+    min_span     <- 0.12
+    min_unique_x <- 25L
+    jitter_frac  <- 1e-7
+    
+    collapse_dupes <- function(d) {
+      d <- stats::na.omit(d[, c("y","x")])
+      if (!nrow(d)) return(d)
+      agg <- aggregate(y ~ x, data = d, FUN = mean)
+      agg[order(agg$x), , drop = FALSE]
+    }
+    
     preds <- lapply(imps, function(d) {
-      dd <- stats::na.omit(d[, c("resid", "pred")])
-      if (nrow(dd) < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      fit <- try(stats::loess(resid ~ pred, data = dd, span = span, degree = 1,
-                              family = fam, control = stats::loess.control(surface = "direct")), silent = TRUE)
-      if (inherits(fit, "try-error")) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      pr  <- try(stats::predict(fit, newdata = data.frame(pred = xgrid), se = TRUE), silent = TRUE)
+      d0 <- collapse_dupes(d)
+      n  <- nrow(d0)
+      if (n < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      u  <- length(unique(d0$x))
+      span_eff <- max(span, min_span, min_span_n / max(10L, n))
+      if (u < min_unique_x) {
+        span_eff <- max(span_eff, min(1, min_unique_x / max(5L, u)))
+      }
+      if (anyDuplicated(d0$x)) {
+        xr <- diff(range(d0$x))
+        j  <- if (is.finite(xr) && xr > 0) xr * jitter_frac else jitter_frac
+        set.seed(1L); d0$x <- d0$x + stats::rnorm(n, 0, j)
+      }
+      ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
+      fit <- try(suppressWarnings(
+        stats::loess(y ~ x, data = d0, span = min(1, span_eff), degree = 1, family = fam, control = ctl)
+      ), silent = TRUE)
+      if (inherits(fit, "try-error")) {
+        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      }
+      pr <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)), silent = TRUE)
       if (inherits(pr, "try-error") || is.null(pr$se.fit)) {
-        yhat <- try(stats::predict(fit, newdata = data.frame(pred = xgrid)), silent = TRUE)
-        return(list(fit = if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat),
-                    se2 = rep(NA_real_, length(xgrid))))
+        yhat <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid))), silent = TRUE)
+        yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
+        return(list(fit = yhat, se2 = rep(NA_real_, length(xgrid))))
       } else {
         return(list(fit = as.numeric(pr$fit), se2 = as.numeric(pr$se.fit)^2))
       }
@@ -331,9 +480,10 @@ plot_residuals <- function(
     m    <- ncol(Fmat)
     
     mean_fit <- rowMeans(Fmat, na.rm = TRUE)
-    W <- rowMeans(Wmat, na.rm = TRUE)                       # within
-    B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0  # between
-    Tvar <- W + (1 + 1/m) * B                               # total
+    W <- rowMeans(Wmat, na.rm = TRUE)
+    B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
+    Tvar <- W + (1 + 1/m) * B
+    
     r  <- ifelse(W > 0, ((1 + 1/m) * B) / W, Inf)
     nu <- (m - 1) * (1 + 1/r)^2; nu[!is.finite(nu) | nu <= 0] <- m - 1
     tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, nu))
@@ -344,96 +494,351 @@ plot_residuals <- function(
                upr = mean_fit + tcrit * seTot)
   }
   
+  # ROBUST DISPLAY Y-LIMITS (VIEW ONLY) ----
+  y_limits <- function(y) {
+    switch(
+      y_clip,
+      "mad" = {
+        m0 <- stats::median(y, na.rm = TRUE)
+        md <- stats::mad(y, constant = 1.4826, na.rm = TRUE)
+        c(m0 - k * md, m0 + k * md)
+      },
+      "sd" = {
+        mu <- mean(y, na.rm = TRUE); s <- stats::sd(y, na.rm = TRUE)
+        c(mu - k * s, mu + k * s)
+      },
+      "quantile" = stats::quantile(y, c(q_clip, 1 - q_clip), na.rm = TRUE),
+      "none" = range(y, na.rm = TRUE)
+    )
+  }
+  
   curve_col <- unname(plot_colors[curve_color])
   band_col  <- unname(plot_colors[band_fill])
   n_imps    <- length(model@imputations)
   
-  # --- build plot per base variable
-  build_one <- function(base) {
-    df <- stack_pairs(base)
-    if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base); return(NULL) }
-    if (!is.numeric(df$pred) || !is.numeric(df$resid)) { message("Skipping non-numeric residual/predicted pair: ", base); return(NULL) }
-    
-    # smoother
-    if (tolower(smoother) == "loess") {
-      curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
+  plots <- list()
+  
+  # A) RESIDUALS VS. PREDICTED ----
+  if (length(bases)) {
+    build_rvp <- function(base) {
+      ycol <- paste0(base, ".residual")
+      xcol <- paste0(base, ".predicted")
+      if (!all(c(ycol, xcol) %in% cols1)) { message("Skipping (columns missing): ", base); return(NULL) }
+      df <- stack_cols(ycol, xcol)
+      if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base); return(NULL) }
+      if (!is.numeric(df$x) || !is.numeric(df$y)) { message("Skipping non-numeric: ", base); return(NULL) }
       
-      # support-aware trimming
-      if (support == "quantile") {
-        pr <- stats::quantile(df$pred, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
-        curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
+      if (tolower(smoother) == "loess") {
+        curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
+        if (support == "quantile") {
+          pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
+          curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
+        } else {
+          xr <- range(df$x, na.rm = TRUE); win <- window_prop * diff(xr)
+          min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
+          counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
+          curve_df <- curve_df[counts >= min_n, , drop = FALSE]
+        }
       } else {
-        xr <- range(df$pred, na.rm = TRUE); win <- window_prop * diff(xr)
-        min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
-        counts <- vapply(curve_df$x, function(x0) sum(abs(df$pred - x0) <= win/2), integer(1))
-        curve_df <- curve_df[counts >= min_n, , drop = FALSE]
+        rng_x <- range(df$x, na.rm = TRUE); xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
+        imps  <- split(df, df$imp)
+        coef_mat <- lapply(imps, function(d) {
+          dd <- stats::na.omit(d[, c("y","x")])
+          if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
+          fit <- try(stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd), silent = TRUE)
+          if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
+          stats::coef(fit)
+        })
+        coef_mat <- do.call(rbind, coef_mat)
+        coef_mat <- coef_mat[stats::complete.cases(coef_mat), , drop = FALSE]
+        if (!nrow(coef_mat)) {
+          curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
+        } else {
+          beta <- colMeans(coef_mat)
+          yhat <- beta[1] + sapply(xgrid, function(x) sum(beta[-1] * x^(seq_along(beta[-1]))))
+          curve_df <- data.frame(x = xgrid, mean = as.numeric(yhat), lwr = NA, upr = NA)
+        }
       }
       
-    } else {
-      # polynomial (no MI CI here)
-      rng_x <- range(df$pred, na.rm = TRUE)
-      xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
-      imps  <- split(df, df$imp)
-      coef_mat <- lapply(imps, function(d) {
-        dd <- stats::na.omit(d[, c("resid","pred")])
-        if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
-        fit <- try(stats::lm(resid ~ stats::poly(pred, degree = degree, raw = TRUE), data = dd), silent = TRUE)
-        if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
-        stats::coef(fit)
-      })
-      coef_mat <- do.call(rbind, coef_mat)
-      coef_mat <- coef_mat[stats::complete.cases(coef_mat), , drop = FALSE]
-      if (!nrow(coef_mat)) {
-        curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
-      } else {
-        beta <- colMeans(coef_mat)
-        yhat <- beta[1] + sapply(xgrid, function(x) sum(beta[-1] * x^(seq_along(beta[-1]))))
-        curve_df <- data.frame(x = xgrid, mean = as.numeric(yhat), lwr = NA, upr = NA)
+      ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
+        ggplot2::geom_point(alpha = point_alpha, size = point_size,
+                            color = unname(plot_colors["teal"])) +
+        ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
+        { if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
+          ggplot2::geom_ribbon(
+            data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+            inherit.aes = FALSE, fill = band_col, alpha = band_alpha
+          ) else NULL } +
+        ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
+                           inherit.aes = FALSE, color = curve_col, linewidth = 1.2) +
+        ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
+        ggplot2::labs(
+          title = paste0("Residuals vs. Predicted Values Over ", n_imps,
+                         " Imputed Data Sets: ", base),
+          x = paste0(base, ".predicted"),
+          y = paste0(base, ".residual")
+        ) +
+        blimp_theme(font_size) +
+        ggplot2::theme(
+          axis.text.y  = ggplot2::element_text(size = font_size),
+          axis.ticks.y = ggplot2::element_line(),
+          axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
+          axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+        )
+    }
+    rvp_plots <- setNames(lapply(bases, build_rvp), paste0(bases, "_vs_pred"))
+    plots <- c(plots, rvp_plots)
+    lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
+  }
+  
+  # PARSE MODEL: FOR RESIDUALS VS. PREDICTORS ----
+  get_model_lines <- function(sx) {
+    if (inherits(sx, "blimp_syntax")) {
+      val <- sx$model
+      if (is.null(val)) character(0) else as.character(val)
+    } else if (is.character(sx)) {
+      sx
+    } else character(0)
+  }
+  model_lines <- get_model_lines(model@syntax)
+  
+  if (length(model_lines)) {
+    chunks <- unlist(strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
+    chunks <- gsub("\\s+", " ", trimws(chunks))
+    chunks <- chunks[nzchar(chunks)]
+    
+    parse_rhs_vars <- function(rhs) {
+      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]   # keep before vertical pipe
+      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
+      toks <- toks[nzchar(toks)]
+      unique(toks)
+    }
+    
+    dv_pred_pairs <- list()
+    for (ch in chunks) {
+      if (!grepl("~", ch, fixed = TRUE)) next
+      parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
+      dv   <- trimws(parts[1])
+      rhs  <- trimws(parts[2])
+      preds <- parse_rhs_vars(rhs)
+      if (length(preds)) {
+        dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
       }
     }
     
-    # robust display y-limits (view only)
-    ylim <- switch(
-      y_clip,
-      "mad" = {
-        m0 <- stats::median(df$resid, na.rm = TRUE)
-        md <- stats::mad(df$resid, constant = 1.4826, na.rm = TRUE)
-        c(m0 - k * md, m0 + k * md)
-      },
-      "sd" = {
-        mu <- mean(df$resid, na.rm = TRUE); s <- stats::sd(df$resid, na.rm = TRUE)
-        c(mu - k * s, mu + k * s)
-      },
-      "quantile" = stats::quantile(df$resid, c(q_clip, 1 - q_clip), na.rm = TRUE),
-      "none" = range(df$resid, na.rm = TRUE)
-    )
-    
-    ggplot2::ggplot(df, ggplot2::aes(x = pred, y = resid)) +
-      ggplot2::geom_point(alpha = point_alpha, size = point_size,
-                          color = unname(plot_colors["teal"])) +
-      ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
-      { if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
-        ggplot2::geom_ribbon(
-          data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-          inherit.aes = FALSE, fill = band_col, alpha = band_alpha
-        ) else NULL } +
-      ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
-                         inherit.aes = FALSE, color = curve_col, linewidth = 1.2) +
-      ggplot2::coord_cartesian(ylim = ylim) +
-      ggplot2::labs(
-        title = paste0("Residuals vs. Predicted Values Over ", length(model@imputations),
-                       " Imputed Data Sets: ", base),
-        x = paste0(base, ".predicted"),
-        y = paste0(base, ".residual")
-      ) +
-      blimp_theme(font_size) +
-      ggplot2::theme(
-        axis.text.y  = ggplot2::element_text(size = font_size),
-        axis.ticks.y = ggplot2::element_line()
-      )
+    if (length(dv_pred_pairs)) {
+      build_rvx <- function(dv, xname) {
+        ycol <- paste0(dv, ".residual"); xcol <- xname
+        if (!ycol %in% cols1) { message("Skipping (residual missing): ", ycol); return(NULL) }
+        if (!xcol %in% cols1) { message("Skipping (predictor missing): ", xcol); return(NULL) }
+        df <- stack_cols(ycol, xcol)
+        if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", dv, " ~ ", xname); return(NULL) }
+        if (!is.numeric(df$x) || !is.numeric(df$y)) { message("Skipping non-numeric: ", dv, " ~ ", xname); return(NULL) }
+        
+        if (tolower(smoother) == "loess") {
+          curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
+          if (support == "quantile") {
+            pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
+            curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
+          } else {
+            xr <- range(df$x, na.rm = TRUE); win <- window_prop * diff(xr)
+            min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
+            counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
+            curve_df <- curve_df[counts >= min_n, , drop = FALSE]
+          }
+        } else {
+          rng_x <- range(df$x, na.rm = TRUE); xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
+          imps  <- split(df, df$imp)
+          coef_mat <- lapply(imps, function(d) {
+            dd <- stats::na.omit(d[, c("y","x")])
+            if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
+            fit <- try(stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd), silent = TRUE)
+            if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
+            stats::coef(fit)
+          })
+          coef_mat <- do.call(rbind, coef_mat)
+          coef_mat <- coef_mat[stats::complete.cases(coef_mat), , drop = FALSE]
+          if (!nrow(coef_mat)) {
+            curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
+          } else {
+            beta <- colMeans(coef_mat)
+            yhat <- beta[1] + sapply(xgrid, function(x) sum(beta[-1] * x^(seq_along(beta[-1]))))
+            curve_df <- data.frame(x = xgrid, mean = as.numeric(yhat), lwr = NA, upr = NA)
+          }
+        }
+        
+        ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
+          ggplot2::geom_point(alpha = point_alpha, size = point_size,
+                              color = unname(plot_colors["teal"])) +
+          ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
+          { if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
+            ggplot2::geom_ribbon(
+              data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+              inherit.aes = FALSE, fill = band_col, alpha = band_alpha
+            ) else NULL } +
+          ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
+                             inherit.aes = FALSE, color = curve_col, linewidth = 1.2) +
+          ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
+          ggplot2::labs(
+            title = paste0("Residuals vs. Predictor Over ", n_imps,
+                           " Imputed Data Sets: ", dv, " vs. ", xname),
+            x = xname,
+            y = paste0(dv, ".residual")
+          ) +
+          blimp_theme(font_size) +
+          ggplot2::theme(
+            axis.text.y  = ggplot2::element_text(size = font_size),
+            axis.ticks.y = ggplot2::element_line(),
+            axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
+            axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+          )
+      }
+      
+      rvx_list <- list()
+      for (dv in names(dv_pred_pairs)) {
+        for (xname in dv_pred_pairs[[dv]]) {
+          p <- build_rvx(dv, xname)
+          nm <- paste0(dv, "_vs_", xname)
+          rvx_list[[nm]] <- p
+          if (!is.null(p)) print(p)
+        }
+      }
+      plots <- c(plots, rvx_list)
+    }
   }
   
-  plots <- setNames(lapply(bases, build_one), bases)
-  for (p in plots) if (!is.null(p)) print(p)
+  # C) STANDARDIZED RESIDUAL INDEX PLOTS + CONCISE TABLE (PER DV) ----
+  if (isTRUE(show_index)) {
+    # uses your external helper; keep it separate
+    sr  <- standardize_residuals(model, vars = bases)
+    dat <- sr$data
+    
+    if (nrow(dat)) {
+      n_sets <- length(model@imputations)
+      
+      # build pooled case-level values that drive the plot
+      split_idx <- interaction(dat$base, dat$row, drop = TRUE)
+      if (signed_index) {
+        z_case <- tapply(dat$z, split_idx, mean, na.rm = TRUE)
+        yval   <- as.numeric(z_case)
+        ylab   <- "Standardized Residual"
+        keys   <- strsplit(names(z_case), split = ".", fixed = TRUE)
+      } else {
+        absz <- abs(dat$z)
+        agg  <- if (index_aggregate == "mean") tapply(absz, split_idx, mean, na.rm = TRUE)
+        else                            tapply(absz, split_idx, max,  na.rm = TRUE)
+        yval <- as.numeric(agg)
+        ylab <- "Absolute Value of Standardized Residual"
+        keys <- strsplit(names(tapply(dat$row, split_idx, length)), split = ".", fixed = TRUE)
+      }
+      base_i <- vapply(keys, `[`, character(1L), 1L)
+      row_i  <- as.integer(vapply(keys, `[`, character(1L), 2L))
+      df_idx <- data.frame(base = base_i, row = row_i, y = yval, stringsAsFactors = FALSE)
+      
+      # concise per-row outlier summary per DV (|z| > print_threshold)
+      bases_idx <- unique(dat$base)
+      summaries <- lapply(bases_idx, function(b) {
+        d <- dat[dat$base == b, , drop = FALSE]
+        if (!nrow(d)) return(NULL)
+        rows <- sort(unique(d$row))
+        tab <- data.frame(
+          variable    = b,
+          row         = rows,
+          num_outlier = NA_integer_,
+          num_imps    = NA_integer_,
+          mean_abs_z  = NA_real_,
+          min_abs_z   = NA_real_,
+          max_abs_z   = NA_real_,
+          stringsAsFactors = FALSE
+        )
+        for (i in seq_along(rows)) {
+          rr   <- rows[i]
+          zi   <- d$z[d$row == rr]
+          a    <- abs(zi)
+          tab$num_outlier[i] <- sum(a > print_threshold, na.rm = TRUE)
+          tab$num_imps[i]    <- sum(is.finite(a))
+          tab$mean_abs_z[i]  <- mean(a, na.rm = TRUE)
+          tab$min_abs_z[i]   <- suppressWarnings(min(a, na.rm = TRUE))
+          tab$max_abs_z[i]   <- suppressWarnings(max(a, na.rm = TRUE))
+        }
+        tab <- tab[tab$num_outlier > 0, , drop = FALSE]
+        if (!nrow(tab)) { message("No rows with |z| > ", print_threshold, " for ", b, "."); return(NULL) }
+        tab[, c("mean_abs_z","min_abs_z","max_abs_z")] <- round(tab[, c("mean_abs_z","min_abs_z","max_abs_z")], 2)
+        tab <- tab[order(-tab$num_outlier, -tab$mean_abs_z, tab$row), , drop = FALSE]
+        message("Outlier summary for ", b, " (|z| > ", print_threshold, "): n rows = ", nrow(tab))
+        print(utils::head(tab, print_head), row.names = FALSE)
+        tab
+      })
+      names(summaries) <- bases_idx
+      
+      # plot builder
+      build_index <- function(b) {
+        d <- df_idx[df_idx$base == b, , drop = FALSE]
+        if (!nrow(d)) return(NULL)
+        if (index_order == "rank") {
+          d <- d[order(d$y), ]
+          d$index <- seq_len(nrow(d))
+          xtitle <- "Cases Ranked by Standardized Residual"
+        } else {
+          d$index <- d$row
+          xtitle <- "Case (row order)"
+        }
+        cutoff_layer <- NULL
+        if (length(index_cutoff)) {
+          if (signed_index) {
+            cutoff_layer <- list(
+              ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 0.8),
+              ggplot2::geom_hline(
+                yintercept = index_cutoff[index_cutoff != 0],
+                color = unname(plot_colors[index_line_color]),
+                linewidth = 0.7, linetype = "dashed"
+              )
+            )
+          } else {
+            cutoff_layer <- list(
+              ggplot2::geom_hline(
+                yintercept = index_cutoff,
+                color = unname(plot_colors[index_line_color]),
+                linewidth = 0.7, linetype = "dashed"
+              )
+            )
+          }
+        }
+        ggplot2::ggplot(d, ggplot2::aes(x = index, y = y)) +
+          ggplot2::geom_point(size = 1.4, alpha = 0.85, color = unname(plot_colors[index_point_color])) +
+          cutoff_layer +
+          ggplot2::scale_y_continuous(breaks = scales::pretty_breaks()) +
+          ggplot2::labs(
+            title = paste0("Standardized Residual Index Plot Over ", n_imps,
+                           " Imputed Data Sets: ", b),
+            x = xtitle,
+            y = ylab
+          ) +
+          blimp_theme(font_size) +
+          ggplot2::theme(
+            axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+            axis.ticks.y = ggplot2::element_line(),
+            axis.title.y = ggplot2::element_text(size = font_size),
+            axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
+            axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12)),
+            panel.border = ggplot2::element_blank(),
+            panel.grid.major = ggplot2::element_blank(),
+            panel.grid.minor = ggplot2::element_blank()
+          )
+      }
+      
+      idx_plots <- setNames(lapply(bases_idx, build_index), paste0(bases_idx, "_index"))
+      plots <- c(plots, idx_plots)
+      lapply(idx_plots, function(p) if (!is.null(p)) print(p))
+      
+      # return summaries/plots invisibly alongside earlier plots
+      return(invisible(list(plots = plots, summaries = summaries)))
+    } else {
+      message("No standardized residuals available for index plots.")
+      return(invisible(plots))
+    }
+  }
+  
   invisible(plots)
 }
+
