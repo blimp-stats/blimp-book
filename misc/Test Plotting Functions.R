@@ -44,15 +44,38 @@ model2 <- rblimp(
 
 output(model2)
 
+# test <- rblimp(
+#   data = inflamm,
+#   ordinal = 'female els',
+#   center = 'female els age inflam_sum',
+#   model = '
+#   inflam_sum ~ female els age;
+#   dpdd ~ female els age inflam_sum', 
+#   seed = 90291,
+#   burn = 10000,
+#   iter = 10000,
+#   nimps = 100)
+# 
+# output(test)
+
 # GRAPHICAL DIAGNOSTICS ----
 
+# inspect contents of imputed data
+names(model2@imputations[[1]])
+
 # plot distributions
+plot_imputations(model2, var = 'dpdd')
+plot_imputations(model2, var = c('dpdd','dpdd.residual'))
 plot_imputations(model2)
 
 # plot observed vs. imputed scores
+plot_imputed_vs_observed(model2, var = 'dpdd')
+plot_imputed_vs_observed(model2, var = c('dpdd','dpdd.residual','age'))
 plot_imputed_vs_observed(model2)
 
 # plot residuals
+plot_residuals(model2, var = 'dpdd')
+plot_residuals(model2, var = c('dpdd','inflam_sum'))
 plot_residuals(model2)
 
 

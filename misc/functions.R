@@ -11,10 +11,10 @@ plot_colors <- c(
   pink   = "#FF61C3"
 )
 
-# alpha used for filled layers (e.g., observed histogram fill)
+# alpha used for filled layers (bars, ribbons, etc.) across every plot
 plot_shading <- 0.25
 
-# shared ggplot theme for all diagnostics
+# SHARED THEME ----
 blimp_theme <- function(font_size = 14) {
   ggplot2::theme_minimal(base_size = font_size) %+replace%
     ggplot2::theme(
@@ -36,72 +36,72 @@ blimp_theme <- function(font_size = 14) {
     )
 }
 
-# extract variable names referenced in the MODEL section of the blimp syntax
+# EXTRACT VARIABLES FROM MODEL SECTION ----
+
 .extract_model_vars <- function(model) {
   # ensure @syntax exists
-  if (is.null(model@syntax)) stop("@syntax not found on model object")
+  if (is.null(model@syntax))
+    stop("@syntax not found on model object")
   
-  syntax_obj <- model@syntax
+  sx <- model@syntax
   
-  # case 1: blimp_syntax/list with a 'model' element (modern objects)
-  if ((inherits(syntax_obj, "blimp_syntax") || is.list(syntax_obj)) &&
-      "model" %in% names(syntax_obj)) {
-    model_text <- syntax_obj$model
+  # Case 1: modern objects — list/`blimp_syntax` with a `model` element
+  if ((inherits(sx, "blimp_syntax") || is.list(sx)) && "model" %in% names(sx)) {
+    model_text <- as.character(sx$model)
+    model_text <- paste(model_text, collapse = " ")
   } else {
-    # case 2: fallback to text parsing (legacy/other forms)
-    syntax_text  <- as.character(syntax_obj)
-    syntax_lines <- unlist(strsplit(paste(syntax_text, collapse = "\n"), "\n"))
-    model_lines  <- grep("^\\s*MODEL\\s*:", syntax_lines, value = TRUE)
-    if (!length(model_lines)) stop("No MODEL section found in @syntax")
-    model_text <- paste(model_lines, collapse = " ")
+    # Case 2: legacy text — try to find lines beginning with 'MODEL:'
+    sx_chr <- as.character(sx)
+    lines  <- unlist(strsplit(paste(sx_chr, collapse = "\n"), "\n", fixed = TRUE))
+    if (!length(lines))
+      stop("Could not coerce @syntax to character.")
+    model_lines <- grep("^\\s*MODEL\\s*:", lines, value = TRUE, ignore.case = TRUE)
+    if (!length(model_lines))
+      stop("No MODEL section found in @syntax")
+    # strip the leading 'MODEL:' label and join
+    model_text <- gsub("^\\s*MODEL\\s*:\\s*", "", paste(model_lines, collapse = " "), ignore.case = TRUE)
   }
   
-  # parse variables after '~' and before ';'
-  model_rhs <- sub(".*~", "", model_text)
-  model_rhs <- gsub(";", "", model_rhs)
-  vars <- strsplit(model_rhs, "\\s+")[[1]]
-  vars <- vars[nzchar(vars)]
-  unique(vars)
+  # Tokenize variable names appearing anywhere in the MODEL section
+  # We want BOTH DVs (left of ~) and predictors (right of ~), and we’ll ignore operators.
+  # Keep letters, digits, underscore, and dot (so 'dpdd.residual' patterns can be matched later).
+  clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
+  toks  <- unlist(strsplit(clean, "\\s+"))
+  toks  <- toks[nzchar(toks)]
+  
+  # Drop reserved tokens if they slipped through
+  toks  <- setdiff(toks, c("~", "|"))
+  
+  unique(toks)
 }
 
-# STANDARDIZE RESIDUALS HELPER FUNCTION (MI) ----
+# STANDARDIZE RESIDUALS (MI) ----
 # Pools residual mean/variance across imputations and returns stacked z-scores.
-# For each residual set r_ij (case i, imputation j):
-#   pooled_mean = mean_j(mean(r_j))
-#   pooled_var  = mean_j(var(r_j))
-#   z_ij        = (r_ij - pooled_mean) / sqrt(pooled_var)
 
 standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
-  # --- checks
   if (!is.list(model@imputations) || length(model@imputations) == 0)
     stop("@imputations must be a non-empty list of data frames")
   cols1 <- names(model@imputations[[1]])
   
-  # --- detect all *.residual columns in the first imputation
   resid_cols <- grep("\\.residual$", cols1, value = TRUE)
   
-  # --- resolve which variables to use
-  # allow 'vars' as bases (e.g., "dpdd") or full names ("dpdd.residual")
   if (is.null(vars)) {
     bases <- sub("\\.residual$", "", resid_cols)
   } else {
     stopifnot(is.character(vars), length(vars) >= 1)
     bases <- unique(sub("\\.residual$", "", vars))
-    # keep only those that actually exist
     have <- paste0(bases, ".residual")
     bases <- bases[have %in% resid_cols]
     if (!length(bases))
       stop("None of the requested variables have a corresponding '*.residual' column in imputations.")
   }
   
-  # --- helper to pull a residual vector from one imputation
   get_resid <- function(imp_df, base) {
     nm <- paste0(base, ".residual")
     if (!nm %in% names(imp_df)) return(NULL)
     imp_df[[nm]]
   }
   
-  # --- loop over bases, compute pooled mean/sd, and stack z's
   out_rows <- list()
   stats    <- data.frame(
     base        = bases,
@@ -114,24 +114,19 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   
   row_counter <- 1L
   for (b in bases) {
-    # gather per-imputation residual vectors
     r_list <- lapply(model@imputations, get_resid, base = b)
-    # drop NULLs (in case some imputations lack the column)
     keep   <- vapply(r_list, function(x) !is.null(x), logical(1L))
     r_list <- r_list[keep]
     m      <- length(r_list)
     if (m == 0L) next
     
-    # per-imputation means/vars
     mu_j <- vapply(r_list, function(x) mean(x, na.rm = na.rm),  numeric(1L))
     v_j  <- vapply(r_list, function(x) stats::var(x,  na.rm = na.rm), numeric(1L))
     
-    # pooled parameters (what we want for standardization)
     pooled_mean <- mean(mu_j, na.rm = TRUE)
     pooled_var  <- mean(v_j,  na.rm = TRUE)
     pooled_sd   <- sqrt(pooled_var)
     
-    # stack all residuals and compute z
     for (j in seq_len(m)) {
       r <- r_list[[j]]
       n <- length(r)
@@ -148,7 +143,6 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
       row_counter <- row_counter + 1L
     }
     
-    # record stats
     stats[stats$base == b, c("pooled_mean","pooled_sd","m","n_total")] <-
       list(pooled_mean, pooled_sd, m, sum(vapply(r_list, length, integer(1L))))
     if (!is.finite(pooled_sd) || pooled_sd <= 0)
@@ -159,27 +153,19 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
     data.frame(base=character(), imp=integer(), row=integer(),
                resid=numeric(), z=numeric(), stringsAsFactors = FALSE)
   
-  # return both the z's and the pooling summary
-  structure(
-    list(data = data_stacked, stats = stats),
-    class = "blimp_stdres"
-  )
+  structure(list(data = data_stacked, stats = stats), class = "blimp_stdres")
 }
-
 
 # IMPUTATION HISTOGRAM(S) ----
 
 plot_imputations <- function(model, var = NULL, bins = 50, main = NULL,
                              fill_color = "teal", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  # basic checks
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
   
-  # available variables from first completed data set
   vars_all <- names(model@imputations[[1]])
   
-  # derive variable list if var = NULL (based on MODEL variables + suffix matches)
   if (is.null(var)) {
     model_vars <- .extract_model_vars(model)
     var <- vars_all[vapply(
@@ -198,11 +184,9 @@ plot_imputations <- function(model, var = NULL, bins = 50, main = NULL,
   n_sets   <- length(model@imputations)
   
   build_one <- function(v) {
-    # stack all imputed values across sets
     imp_vals <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
     if (!is.numeric(imp_vals)) { message("Skipping non-numeric variable: ", v); return(NULL) }
     
-    # default title if not specified
     main_text <- if (is.null(main))
       paste0("Distribution Over ", n_sets, " Imputed Data Sets: ", v)
     else main
@@ -224,24 +208,20 @@ plot_imputations <- function(model, var = NULL, bins = 50, main = NULL,
   invisible(plots)
 }
 
-
 # OBSERVED VS. IMPUTED ----
 
 plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
                                      observed_fill = "teal", imputed_line = "violet",
                                      font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  # basic checks
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (is.null(model@variance_imp)) stop("@variance_imp not found on model object")
   if (!observed_fill %in% names(plot_colors) || !imputed_line %in% names(plot_colors))
     stop("observed_fill and imputed_line must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
   
-  # candidate variables: present in both variance_imp and imputed data
   vars_all <- intersect(names(model@variance_imp), names(model@imputations[[1]]))
   
-  # derive variable list if var = NULL (MODEL variables + suffix matches)
   if (is.null(var)) {
     model_vars <- .extract_model_vars(model)
     var <- vars_all[vapply(
@@ -255,6 +235,7 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
   
   obs_col <- unname(plot_colors[observed_fill])
   imp_col <- unname(plot_colors[imputed_line])
+  n_imps  <- length(model@imputations)
   
   build_one <- function(v) {
     vimp <- model@variance_imp[[v]]
@@ -263,23 +244,9 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
     obs_vals <- model@imputations[[1]][[v]][!miss_idx]
     imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]), use.names = FALSE)
     
-    # skip if no observed data
-    if (!length(obs_vals) || all(is.na(obs_vals))) {
-      message("Skipping variable with no observed data: ", v)
-      return(NULL)
-    }
-    
-    # skip if no imputed data
-    if (!length(imp_vals) || all(is.na(imp_vals))) {
-      message("Skipping variable with no imputed data: ", v)
-      return(NULL)
-    }
-    
-    # ensure numeric
-    if (!is.numeric(obs_vals) || !is.numeric(imp_vals)) {
-      message("Skipping non-numeric variable: ", v)
-      return(NULL)
-    }
+    if (!length(obs_vals) || all(is.na(obs_vals))) { message("Skipping variable with no observed data: ", v); return(NULL) }
+    if (!length(imp_vals) || all(is.na(imp_vals))) { message("Skipping variable with no imputed data: ", v); return(NULL) }
+    if (!is.numeric(obs_vals) || !is.numeric(imp_vals)) { message("Skipping non-numeric variable: ", v); return(NULL) }
     
     rng <- range(c(obs_vals, imp_vals), na.rm = TRUE)
     binwidth <- if (diff(rng) > 0) diff(rng) / bins else 1
@@ -287,7 +254,10 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
     
     df_obs <- data.frame(x = obs_vals, grp = "Observed")
     df_imp <- data.frame(x = imp_vals, grp = rep("Imputed", length(imp_vals)))
-    title_text <- if (is.null(main)) paste("Observed vs Imputed Data:", v) else main
+    
+    title_text <- if (is.null(main))
+      paste0("Observed vs. Imputed Scores Over ", n_imps, " Imputed Data Sets: ", v)
+    else main
     
     ggplot2::ggplot() +
       ggplot2::geom_histogram(
@@ -318,80 +288,88 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
   invisible(plots)
 }
 
-# RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS ----
-# Rubin-pooled LOESS with robust options, support-aware trimming, consistent theme spacing,
-# PLUS standardized-residual index plots & concise outlier table (per DV).
-
+# RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS (+ INDEX) ----
 plot_residuals <- function(
     model,
+    var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
     # smoother & pooling
-    smoother      = "loess",     # "loess" (default) or "poly"
-    degree        = 4,           # if smoother = "poly"
-    span          = 0.9,         # loess span (slightly larger for stability)
-    robust        = TRUE,        # loess family = "symmetric" if TRUE
-    ci            = TRUE,        # draw Rubin-pooled CI band for loess
-    level         = 0.95,        # CI level
-    
+    smoother      = "loess",
+    degree        = 4,
+    span          = 0.9,
+    robust        = TRUE,
+    ci            = TRUE,
+    level         = 0.95,
     # where to show the curve/ribbon
     support       = c("density", "quantile"),
-    trim_prop     = 0.025,       # used if support = "quantile"
-    window_prop   = 0.10,        # used if support = "density" (window width = this * x-range)
-    min_n_prop    = 0.01,        # used if support = "density" (min fraction of N inside the window)
-    
-    # robustification for FITTING ONLY (points are unchanged)
-    center_by_imp = FALSE,       # keep FALSE for this diagnostic
-    winsor_fit    = TRUE,        # winsorize residuals for fitting only
-    winsor_k      = 3,           # ±k * MAD for winsorization
-    
-    # display options (do not alter data; only the view)
+    trim_prop     = 0.025,
+    window_prop   = 0.10,
+    min_n_prop    = 0.01,
+    # robustification for FITTING ONLY
+    center_by_imp = FALSE,
+    winsor_fit    = TRUE,
+    winsor_k      = 3,
+    # display (view only)
     y_clip        = c("mad", "sd", "quantile", "none"),
-    k             = 5,           # multiplier for MAD/SD display limits
-    q_clip        = 0.005,       # tail prob for quantile clipping (both tails)
-    
+    k             = 5,
+    q_clip        = 0.005,
     # styling
     point_alpha   = 0.15,
     point_size    = 1.2,
-    curve_color   = "violet",    # names in plot_colors
+    curve_color   = "violet",
     band_fill     = "violet",
-    band_alpha    = 0.15,
+    band_alpha    = plot_shading,   # follow global shading
     font_size     = 14,
-    
-    # NEW: standardized residual index options
-    show_index    = TRUE,        # whether to also draw standardized residual index plots
-    signed_index  = TRUE,        # TRUE: mean signed z; FALSE: |z| (mean/max)
+    # index options
+    show_index    = TRUE,
+    signed_index  = TRUE,
     index_cutoff  = if (signed_index) c(-3, -2, 0, 2, 3) else c(2, 3),
-    index_aggregate = c("mean", "max"), # used only when signed_index = FALSE
+    index_aggregate = c("mean", "max"),
     index_order   = c("rank", "row"),
     index_point_color = "teal",
     index_line_color  = "violet",
-    print_threshold   = 3,       # table uses |z| > print_threshold
-    print_head        = 20       # rows to print per DV summary
+    print_threshold   = 3,
+    print_head        = 20
 ) {
-  if (!requireNamespace("ggplot2", quietly = TRUE))
-    stop("Package 'ggplot2' is required.")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
   if (!curve_color %in% names(plot_colors) || !band_fill %in% names(plot_colors))
     stop("curve_color and band_fill must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
   
-  support        <- match.arg(support)
-  y_clip         <- match.arg(y_clip)
-  index_aggregate<- match.arg(index_aggregate)
-  index_order    <- match.arg(index_order)
+  support         <- match.arg(support)
+  y_clip          <- match.arg(y_clip)
+  index_aggregate <- match.arg(index_aggregate)
+  index_order     <- match.arg(index_order)
   
-  # FIND BASES FOR *.RESIDUAL / *.PREDICTED ----
-  cols1  <- names(model@imputations[[1]])
-  bases  <- unique(sub("\\.(residual|predicted)$", "",
-                       grep("\\.(residual|predicted)$", cols1, value = TRUE)))
-  has_pair <- vapply(
-    bases,
-    function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1),
-    logical(1L)
-  )
-  bases <- bases[has_pair]
-  if (!length(bases)) {
-    message("No *.residual / *.predicted pairs found.")
+  # DETECT AVAILABLE BASES (from *.residual / *.predicted) ----
+  cols1 <- names(model@imputations[[1]])
+  
+  bases_from_cols <- unique(sub("\\.(residual|predicted)$", "",
+                                grep("\\.(residual|predicted)$", cols1, value = TRUE)))
+  has_resid_col   <- function(b) paste0(b, ".residual")   %in% cols1
+  has_pair_cols   <- function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1)
+  
+  # requested variables (if any)
+  if (!is.null(var)) {
+    stopifnot(is.character(var), length(var) >= 1)
+    var_req <- unique(var)
+  } else {
+    var_req <- bases_from_cols
+  }
+  
+  # split into: bases with residuals (for most panels), and bases with residual+predicted (for R vs P)
+  bases_resid <- var_req[vapply(var_req, has_resid_col, logical(1L))]
+  bases_pair  <- var_req[vapply(var_req, has_pair_cols, logical(1L))]
+  
+  # helpful messages for requested items that can't be plotted in some panels
+  if (!is.null(var)) {
+    if (length(setdiff(var_req, bases_resid)))
+      message("Requested variable(s) missing '.residual' column; will skip where needed: ",
+              paste(setdiff(var_req, bases_resid), collapse = ", "))
+    if (length(setdiff(var_req, bases_pair)))
+      message("Requested variable(s) missing '.predicted' (or residual) pair; skipping Residuals vs. Predicted: ",
+              paste(setdiff(var_req, bases_pair), collapse = ", "))
   }
   
   # STACK ANY Y/X PAIR ACROSS IMPUTATIONS ----
@@ -519,7 +497,7 @@ plot_residuals <- function(
   plots <- list()
   
   # A) RESIDUALS VS. PREDICTED ----
-  if (length(bases)) {
+  if (length(bases_pair)) {
     build_rvp <- function(base) {
       ycol <- paste0(base, ".residual")
       xcol <- paste0(base, ".predicted")
@@ -586,12 +564,12 @@ plot_residuals <- function(
           axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
         )
     }
-    rvp_plots <- setNames(lapply(bases, build_rvp), paste0(bases, "_vs_pred"))
+    rvp_plots <- setNames(lapply(bases_pair, build_rvp), paste0(bases_pair, "_vs_pred"))
     plots <- c(plots, rvp_plots)
     lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
   }
   
-  # PARSE MODEL: FOR RESIDUALS VS. PREDICTORS ----
+  # B) RESIDUALS VS. PREDICTORS (FROM @MODEL) ----
   get_model_lines <- function(sx) {
     if (inherits(sx, "blimp_syntax")) {
       val <- sx$model
@@ -602,7 +580,7 @@ plot_residuals <- function(
   }
   model_lines <- get_model_lines(model@syntax)
   
-  if (length(model_lines)) {
+  if (length(model_lines) && length(bases_resid)) {
     chunks <- unlist(strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
@@ -621,10 +599,11 @@ plot_residuals <- function(
       dv   <- trimws(parts[1])
       rhs  <- trimws(parts[2])
       preds <- parse_rhs_vars(rhs)
-      if (length(preds)) {
-        dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
-      }
+      if (length(preds)) dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
     }
+    
+    # filter dv_pred_pairs to selected DVs with residuals
+    dv_pred_pairs <- dv_pred_pairs[names(dv_pred_pairs) %in% bases_resid]
     
     if (length(dv_pred_pairs)) {
       build_rvx <- function(dv, xname) {
@@ -707,16 +686,14 @@ plot_residuals <- function(
     }
   }
   
-  # C) STANDARDIZED RESIDUAL INDEX PLOTS + CONCISE TABLE (PER DV) ----
-  if (isTRUE(show_index)) {
-    # uses your external helper; keep it separate
-    sr  <- standardize_residuals(model, vars = bases)
+  # C) STANDARDIZED RESIDUAL INDEX PLOTS + OUTLIER TABLE ----
+  if (isTRUE(show_index) && length(bases_resid)) {
+    sr  <- standardize_residuals(model, vars = bases_resid)  # respects var filter
     dat <- sr$data
     
     if (nrow(dat)) {
       n_sets <- length(model@imputations)
       
-      # build pooled case-level values that drive the plot
       split_idx <- interaction(dat$base, dat$row, drop = TRUE)
       if (signed_index) {
         z_case <- tapply(dat$z, split_idx, mean, na.rm = TRUE)
@@ -726,7 +703,7 @@ plot_residuals <- function(
       } else {
         absz <- abs(dat$z)
         agg  <- if (index_aggregate == "mean") tapply(absz, split_idx, mean, na.rm = TRUE)
-        else                            tapply(absz, split_idx, max,  na.rm = TRUE)
+        else                                  tapply(absz, split_idx, max,  na.rm = TRUE)
         yval <- as.numeric(agg)
         ylab <- "Absolute Value of Standardized Residual"
         keys <- strsplit(names(tapply(dat$row, split_idx, length)), split = ".", fixed = TRUE)
@@ -735,7 +712,6 @@ plot_residuals <- function(
       row_i  <- as.integer(vapply(keys, `[`, character(1L), 2L))
       df_idx <- data.frame(base = base_i, row = row_i, y = yval, stringsAsFactors = FALSE)
       
-      # concise per-row outlier summary per DV (|z| > print_threshold)
       bases_idx <- unique(dat$base)
       summaries <- lapply(bases_idx, function(b) {
         d <- dat[dat$base == b, , drop = FALSE]
@@ -752,9 +728,9 @@ plot_residuals <- function(
           stringsAsFactors = FALSE
         )
         for (i in seq_along(rows)) {
-          rr   <- rows[i]
-          zi   <- d$z[d$row == rr]
-          a    <- abs(zi)
+          rr <- rows[i]
+          zi <- d$z[d$row == rr]
+          a  <- abs(zi)
           tab$num_outlier[i] <- sum(a > print_threshold, na.rm = TRUE)
           tab$num_imps[i]    <- sum(is.finite(a))
           tab$mean_abs_z[i]  <- mean(a, na.rm = TRUE)
@@ -771,7 +747,6 @@ plot_residuals <- function(
       })
       names(summaries) <- bases_idx
       
-      # plot builder
       build_index <- function(b) {
         d <- df_idx[df_idx$base == b, , drop = FALSE]
         if (!nrow(d)) return(NULL)
@@ -831,7 +806,6 @@ plot_residuals <- function(
       plots <- c(plots, idx_plots)
       lapply(idx_plots, function(p) if (!is.null(p)) print(p))
       
-      # return summaries/plots invisibly alongside earlier plots
       return(invisible(list(plots = plots, summaries = summaries)))
     } else {
       message("No standardized residuals available for index plots.")
@@ -841,4 +815,3 @@ plot_residuals <- function(
   
   invisible(plots)
 }
-
