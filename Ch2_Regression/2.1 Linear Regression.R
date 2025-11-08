@@ -40,8 +40,7 @@ model2 <- rblimp(
   model = 'dpdd ~ female els age inflam_sum', 
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  nimps = 100)
+  iter = 10000)
 
 # print output
 output(model2)
@@ -54,14 +53,28 @@ posterior_plot(model2,'dpdd')
 
 # GRAPHICAL DIAGNOSTICS ----
 
+# multiple imputations for graphical diagnostics 
+model3 <- rblimp(
+  data = inflamm,
+  nominal = 'female els',
+  center = 'female els age inflam_sum',
+  model = 'dpdd ~ female els age inflam_sum', 
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# print output
+output(model3)
+
 # plot distributions
-imputation_plot(model2)
+imputation_plot(model3)
 
 # plot observed vs. imputed scores
-imputed_vs_observed_plot(model2)
+imputed_vs_observed_plot(model3)
 
 # plot residuals
-residuals_plot(model2)
+residuals_plot(model3)
 
 
 
