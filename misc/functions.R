@@ -815,3 +815,207 @@ residuals_plot <- function(
   
   invisible(plots)
 }
+
+# BIVARIATE SCATTER WITH LOESS ----
+# Adds proper y-axis labeling, tick marks, and bounds for probabilities
+
+bivariate_plot <- function(
+    model, formula,
+    span = 0.9, degree = 1, robust = TRUE, level = 0.95,
+    support = c("density", "quantile"),
+    trim_prop = 0.025, window_prop = 0.10, min_n_prop = 0.01,
+    point_alpha = 0.15, point_size = 1.2,
+    curve_color = "violet", band_fill = "violet",
+    font_size = 14
+) {
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
+  stopifnot(inherits(formula, "formula"))
+  support <- match.arg(support)
+  
+  # --- parse y ~ x
+  tt <- terms(formula)
+  vars <- all.vars(tt)
+  if (length(vars) != 2L) stop("Formula must be like y ~ x.")
+  y_name <- vars[1]; x_name <- vars[2]
+  
+  # --- checks & stack
+  if (!is.list(model@imputations) || !length(model@imputations))
+    stop("@imputations must be a non-empty list of data frames")
+  cols1 <- names(model@imputations[[1]])
+  if (!all(c(y_name, x_name) %in% cols1))
+    stop("Both '", y_name, "' and '", x_name, "' must exist in @imputations data.")
+  
+  df <- do.call(rbind, lapply(seq_along(model@imputations), function(i) {
+    d <- model@imputations[[i]]
+    data.frame(x = d[[x_name]], y = d[[y_name]], imp = i)
+  }))
+  df <- stats::na.omit(df[, c("x","y","imp")])
+  if (!nrow(df)) stop("No complete cases for the selected variables.")
+  if (!is.numeric(df$x) || !is.numeric(df$y)) stop("Both variables must be numeric.")
+  n_imps <- length(model@imputations)
+  
+  # --- detect probability-like outcome
+  qy <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
+  use_logit <- is.finite(qy[1]) && is.finite(qy[2]) && qy[1] >= 0 && qy[2] <= 1
+  inv_logit <- function(z) 1/(1+exp(-z))
+  clamp01 <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
+  
+  # --- decide discrete vs continuous x
+  ux <- sort(unique(df$x[is.finite(df$x)]))
+  is_discrete <- length(ux) <= 3
+  
+  # --- helpers
+  winsor_mad <- function(x, k = 3) {
+    med <- stats::median(x, na.rm = TRUE)
+    mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
+    if (!is.finite(mad) || mad == 0) return(x)
+    pmin(pmax(x, med - k*mad), med + k*mad)
+  }
+  
+  # --- Rubin pooling of LOESS curve (continuous x)
+  loess_pooled <- function(dat_xy) {
+    fitdat <- dat_xy
+    fam <- if (robust) "symmetric" else "gaussian"
+    if (use_logit) {
+      fitdat$y <- clamp01(fitdat$y)
+      fitdat$y <- qlogis(fitdat$y)
+    } else {
+      fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
+    }
+    rng_x <- range(fitdat$x, na.rm = TRUE)
+    xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
+    imps  <- split(fitdat, fitdat$imp)
+    
+    preds <- lapply(imps, function(d) {
+      d0 <- stats::na.omit(d[, c("y","x")])
+      if (nrow(d0) < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
+      fit <- try(suppressWarnings(stats::loess(y ~ x, data = d0, span = span, degree = degree, family = fam, control = ctl)), silent = TRUE)
+      if (inherits(fit, "try-error")) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      pr <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)), silent = TRUE)
+      if (inherits(pr, "try-error") || is.null(pr$se.fit))
+        return(list(fit = as.numeric(stats::predict(fit, newdata = data.frame(x = xgrid))), se2 = rep(NA_real_, length(xgrid))))
+      list(fit = as.numeric(pr$fit), se2 = as.numeric(pr$se.fit)^2)
+    })
+    
+    Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+    Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
+    keep <- which(colSums(is.finite(Fmat)) > 0)
+    if (!length(keep)) return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
+    Fmat <- Fmat[, keep, drop = FALSE]; Wmat <- Wmat[, keep, drop = FALSE]
+    m <- ncol(Fmat)
+    
+    mean_fit <- rowMeans(Fmat, na.rm = TRUE)
+    W <- rowMeans(Wmat, na.rm = TRUE)
+    B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
+    Tvar <- W + (1 + 1/m) * B
+    tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
+    seTot <- sqrt(pmax(0, Tvar))
+    
+    if (use_logit) {
+      mu  <- inv_logit(mean_fit)
+      lwr <- inv_logit(mean_fit - tcrit * seTot)
+      upr <- inv_logit(mean_fit + tcrit * seTot)
+    } else {
+      mu  <- mean_fit
+      lwr <- mean_fit - tcrit * seTot
+      upr <- mean_fit + tcrit * seTot
+    }
+    data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
+  }
+  
+  # --- Rubin-pooled mean per x-level (discrete x)
+  pooled_mean_by_level <- function(dat_xy) {
+    if (use_logit) {
+      dat_xy$y <- clamp01(dat_xy$y)
+      dat_xy$y <- qlogis(dat_xy$y)
+    }
+    levs <- sort(unique(dat_xy$x))
+    m <- length(unique(dat_xy$imp))
+    out <- lapply(levs, function(L) {
+      by_imp <- split(dat_xy[dat_xy$x == L, , drop = FALSE], dat_xy$imp[dat_xy$x == L])
+      mu_j <- vapply(by_imp, function(d) mean(d$y), numeric(1L))
+      n_j  <- vapply(by_imp, nrow, integer(1L))
+      s2_j <- vapply(by_imp, function(d) stats::var(d$y), numeric(1L))
+      Ubar <- mean(s2_j / pmax(1, n_j))
+      B <- stats::var(mu_j)
+      Tvar <- Ubar + (1 + 1/m) * B
+      se <- sqrt(pmax(0, Tvar))
+      tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
+      if (use_logit) {
+        c(mean = inv_logit(mean(mu_j)), lwr = inv_logit(mean(mu_j) - tcrit * se), upr = inv_logit(mean(mu_j) + tcrit * se))
+      } else {
+        c(mean = mean(mu_j), lwr = mean(mu_j) - tcrit * se, upr = mean(mu_j) + tcrit * se)
+      }
+    })
+    out <- do.call(rbind, out)
+    data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
+  }
+  
+  # --- plotting setup
+  y_limits <- if (use_logit) c(0, 1) else range(df$y, na.rm = TRUE)
+  y_breaks <- scales::pretty_breaks()(y_limits)
+  
+  if (is_discrete) {
+    mean_df <- pooled_mean_by_level(df)
+    ggplot2::ggplot(df, ggplot2::aes(x = factor(x), y = y)) +
+      ggplot2::geom_jitter(width = 0.08, alpha = point_alpha, size = point_size,
+                           color = unname(plot_colors["teal"])) +
+      ggplot2::geom_errorbar(
+        data = mean_df,
+        ggplot2::aes(x = factor(x), ymin = lwr, ymax = upr),
+        inherit.aes = FALSE,
+        width = 0.15,
+        color = unname(plot_colors[curve_color]),
+        linewidth = 0.9
+      ) +
+      ggplot2::geom_point(
+        data = mean_df,
+        ggplot2::aes(x = factor(x), y = mean),
+        inherit.aes = FALSE,
+        size = 2.2,
+        color = unname(plot_colors[curve_color])
+      ) +
+      ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+      ggplot2::labs(
+        title = paste0("Bivariate Plot Over ", n_imps, " Imputed Data Sets: ",
+                       y_name, " vs. ", x_name),
+        x = x_name, y = y_name
+      ) +
+      blimp_theme(font_size) +
+      ggplot2::theme(
+        axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+        axis.ticks.y = ggplot2::element_line(),
+        axis.title.y = ggplot2::element_text(size = font_size),
+        axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
+        axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+      )
+  } else {
+    curve_df <- loess_pooled(df)
+    ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
+      ggplot2::geom_point(alpha = point_alpha, size = point_size,
+                          color = unname(plot_colors["teal"])) +
+      ggplot2::geom_ribbon(
+        data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+        inherit.aes = FALSE, fill = unname(plot_colors[band_fill]), alpha = plot_shading
+      ) +
+      ggplot2::geom_line(
+        data = curve_df, ggplot2::aes(x = x, y = mean),
+        inherit.aes = FALSE, color = unname(plot_colors[curve_color]), linewidth = 1.2
+      ) +
+      ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+      ggplot2::labs(
+        title = paste0("Bivariate Plot with LOESS Over ", n_imps,
+                       " Imputed Data Sets: ", y_name, " vs. ", x_name),
+        x = x_name, y = y_name
+      ) +
+      blimp_theme(font_size) +
+      ggplot2::theme(
+        axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+        axis.ticks.y = ggplot2::element_line(),
+        axis.title.y = ggplot2::element_text(size = font_size),
+        axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
+        axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+      )
+  }
+}

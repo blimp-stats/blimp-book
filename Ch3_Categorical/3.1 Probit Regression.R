@@ -33,6 +33,11 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'turnover')
 
+# plot individual-level predicted probabilities
+bivariate_plot(model1, turnover.1.probability ~ lmx)
+bivariate_plot(model1, turnover.1.probability ~ empower)
+bivariate_plot(model1, turnover.1.probability ~ male)
+
 # GRAPHICAL DIAGNOSTICS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
