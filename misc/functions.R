@@ -158,7 +158,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 
 # IMPUTATION HISTOGRAM(S) ----
 
-plot_imputations <- function(model, var = NULL, bins = 50, main = NULL,
+imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
                              fill_color = "teal", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
@@ -210,7 +210,7 @@ plot_imputations <- function(model, var = NULL, bins = 50, main = NULL,
 
 # OBSERVED VS. IMPUTED ----
 
-plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
+imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
                                      observed_fill = "teal", imputed_line = "violet",
                                      font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
@@ -289,7 +289,7 @@ plot_imputed_vs_observed <- function(model, var = NULL, bins = 50, main = NULL,
 }
 
 # RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS (+ INDEX) ----
-plot_residuals <- function(
+residuals_plot <- function(
     model,
     var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
     # smoother & pooling

@@ -30,8 +30,9 @@ model1 <- rblimp(
   iter = 10000)
 
 output(model1)
+trace_plot(model1, 'dpdd')
 
-# centered predictors
+# mean-centered predictors
 model2 <- rblimp(
   data = inflamm,
   nominal = 'female els',
@@ -42,18 +43,25 @@ model2 <- rblimp(
   iter = 10000,
   nimps = 100)
 
+# print output
 output(model2)
+
+# trace plot of model parameters
+trace_plot(model2, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
+
+# plot parameter distributions
+posterior_plot(model2,'dpdd')
 
 # GRAPHICAL DIAGNOSTICS ----
 
 # plot distributions
-plot_imputations(model2)
+imputation_plot(model2)
 
 # plot observed vs. imputed scores
-plot_imputed_vs_observed(model2)
+imputed_vs_observed_plot(model2)
 
 # plot residuals
-plot_residuals(model2)
+residuals_plot(model2)
 
 
 
