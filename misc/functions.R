@@ -181,12 +181,10 @@ imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
   vars_all <- names(model@imputations[[1]])
   
   if (is.null(var)) {
-    model_vars <- .extract_model_vars(model)
-    var <- vars_all[vapply(
-      vars_all,
-      function(v) any(vapply(model_vars, grepl, logical(1), x = v, fixed = TRUE)),
-      logical(1)
-    )]
+    model_vars <- unique(.extract_model_vars(model))
+    # base name = everything before first dot
+    base_all  <- sub("\\..*$", "", vars_all)
+    var <- vars_all[base_all %in% model_vars]
     if (!length(var)) stop("No matching variables found based on MODEL section.")
     message("Plotting variables based on MODEL section: ", paste(var, collapse = ", "))
   } else if (!all(var %in% vars_all)) {
@@ -234,17 +232,65 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
     stop("observed_fill and imputed_line must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
   
-  vars_all <- intersect(names(model@variance_imp), names(model@imputations[[1]]))
+  ## --- local MODEL parser: only look at MODEL: lines -------------------------
+  get_model_vars <- function(syntax_obj) {
+    sx_chr <- as.character(syntax_obj)
+    lines  <- unlist(strsplit(paste(sx_chr, collapse = "\n"),
+                              "\n", fixed = TRUE))
+    if (!length(lines)) return(character(0))
+    
+    model_lines <- grep("^\\s*MODEL\\s*:", lines,
+                        value = TRUE, ignore.case = TRUE)
+    if (!length(model_lines)) return(character(0))
+    
+    model_text <- gsub("^\\s*MODEL\\s*:\\s*", "",
+                       paste(model_lines, collapse = " "),
+                       ignore.case = TRUE)
+    
+    clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
+    toks  <- unlist(strsplit(clean, "\\s+"))
+    toks  <- toks[nzchar(toks)]
+    toks  <- setdiff(toks, c("~", "|"))
+    unique(toks)
+  }
+  
+  ## --- candidate variables: must be in variance_imp AND imputations ----------
+  vars_all <- intersect(names(model@variance_imp),
+                        names(model@imputations[[1]]))
+  
+  # drop derived variables that have no true observed part
+  derived_pattern <- "\\.(latent|residual|predicted|probability)$"
+  vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
   
   if (is.null(var)) {
-    model_vars <- .extract_model_vars(model)
-    var <- vars_all[vapply(
-      vars_all,
-      function(v) any(vapply(model_vars, grepl, logical(1), x = v, fixed = TRUE)),
-      logical(1)
-    )]
-    if (!length(var)) stop("No matching variables found based on MODEL section.")
-    message("Plotting variables with observed values from MODEL section: ", paste(var, collapse = ", "))
+    model_vars <- get_model_vars(model@syntax)
+    if (!length(model_vars))
+      stop("Could not extract variables from MODEL section of @syntax.")
+    
+    # exact name match only
+    var <- intersect(vars_base, model_vars)
+    
+    if (!length(var))
+      stop("No matching non-derived variables with observed data found based on MODEL section.")
+    
+    message("Plotting variables with observed values from MODEL section: ",
+            paste(var, collapse = ", "))
+  } else {
+    # user-specified: drop derived ones and check existence
+    bad_derived <- var[grepl(derived_pattern, var)]
+    if (length(bad_derived)) {
+      message("Skipping derived variable(s) with no true observed part in observed-vs-imputed plot: ",
+              paste(bad_derived, collapse = ", "))
+    }
+    var <- setdiff(var, bad_derived)
+    if (!length(var))
+      stop("After removing derived variables, no variables remain to plot.")
+    
+    if (!all(var %in% vars_all)) {
+      missing <- setdiff(var, vars_all)
+      stop("Variable(s) not found in variance_imp/imputations: ",
+           paste(missing, collapse = ", "))
+    }
   }
   
   obs_col <- unname(plot_colors[observed_fill])
@@ -252,15 +298,31 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   n_imps  <- length(model@imputations)
   
   build_one <- function(v) {
+    # extra guard
+    if (grepl("\\.probability$", v)) {
+      message("Skipping probability variable (no observed counterpart): ", v)
+      return(NULL)
+    }
+    
     vimp <- model@variance_imp[[v]]
     miss_idx <- is.finite(vimp) & (vimp != 0)
     
     obs_vals <- model@imputations[[1]][[v]][!miss_idx]
-    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]), use.names = FALSE)
+    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]),
+                       use.names = FALSE)
     
-    if (!length(obs_vals) || all(is.na(obs_vals))) { message("Skipping variable with no observed data: ", v); return(NULL) }
-    if (!length(imp_vals) || all(is.na(imp_vals))) { message("Skipping variable with no imputed data: ", v); return(NULL) }
-    if (!is.numeric(obs_vals) || !is.numeric(imp_vals)) { message("Skipping non-numeric variable: ", v); return(NULL) }
+    if (!length(obs_vals) || all(is.na(obs_vals))) {
+      message("Skipping variable with no observed data: ", v)
+      return(NULL)
+    }
+    if (!length(imp_vals) || all(is.na(imp_vals))) {
+      message("Skipping variable with no imputed data: ", v)
+      return(NULL)
+    }
+    if (!is.numeric(obs_vals) || !is.numeric(imp_vals)) {
+      message("Skipping non-numeric variable: ", v)
+      return(NULL)
+    }
     
     rng <- range(c(obs_vals, imp_vals), na.rm = TRUE)
     binwidth <- if (diff(rng) > 0) diff(rng) / bins else 1
@@ -303,6 +365,7 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
 }
 
 # RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS (+ INDEX, DISCRETE X FROM ORDINAL/NOMINAL) ----
+
 residuals_plot <- function(
     model,
     var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
@@ -654,26 +717,51 @@ residuals_plot <- function(
       unique(toks)
     }
     
-    dv_pred_pairs <- list()
+    # first build: DV name -> predictors
+    dv_pred_pairs_raw <- list()
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
       parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
       dv   <- trimws(parts[1])
       rhs  <- trimws(parts[2])
       preds <- parse_rhs_vars(rhs)
-      if (length(preds)) dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
+      if (length(preds)) {
+        dv_pred_pairs_raw[[dv]] <- unique(c(dv_pred_pairs_raw[[dv]], preds))
+      }
     }
     
-    dv_pred_pairs <- dv_pred_pairs[names(dv_pred_pairs) %in% bases_resid]
+    if (length(dv_pred_pairs_raw)) {
+      # map DV names (e.g. "drinker") to residual bases (e.g. "drinker.1")
+      dv_pred_pairs <- list()
+      for (dv in names(dv_pred_pairs_raw)) {
+        preds <- dv_pred_pairs_raw[[dv]]
+        # direct match (continuous outcomes etc.)
+        if (dv %in% bases_resid) {
+          dv_pred_pairs[[dv]] <- preds
+        } else {
+          # look for bases that start with "dv."
+          cand <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
+          if (length(cand)) {
+            for (b in cand) {
+              dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
+            }
+          }
+        }
+      }
+      # keep only those with actual residual columns
+      dv_pred_pairs <- dv_pred_pairs[names(dv_pred_pairs) %in% bases_resid]
+    } else {
+      dv_pred_pairs <- list()
+    }
     
     if (length(dv_pred_pairs)) {
-      build_rvx <- function(dv, xname) {
-        ycol <- paste0(dv, ".residual"); xcol <- xname
+      build_rvx <- function(base, xname) {
+        ycol <- paste0(base, ".residual"); xcol <- xname
         if (!ycol %in% cols1) { message("Skipping (residual missing): ", ycol); return(NULL) }
         if (!xcol %in% cols1) { message("Skipping (predictor missing): ", xcol); return(NULL) }
         df <- stack_cols(ycol, xcol)
-        if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", dv, " ~ ", xname); return(NULL) }
-        if (!is.numeric(df$y)) { message("Skipping non-numeric residuals for: ", dv); return(NULL) }
+        if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base, " ~ ", xname); return(NULL) }
+        if (!is.numeric(df$y)) { message("Skipping non-numeric residuals for: ", base); return(NULL) }
         
         # categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values
         unique_x <- length(unique(df$x[is.finite(df$x)]))
@@ -703,9 +791,9 @@ residuals_plot <- function(
             ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
-                             " Imputed Data Sets: ", dv, " vs. ", xname),
+                             " Imputed Data Sets: ", base, " vs. ", xname),
               x = xname,
-              y = paste0(dv, ".residual")
+              y = paste0(base, ".residual")
             ) +
             blimp_theme(font_size) +
             ggplot2::theme(
@@ -765,9 +853,9 @@ residuals_plot <- function(
             ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
-                             " Imputed Data Sets: ", dv, " vs. ", xname),
+                             " Imputed Data Sets: ", base, " vs. ", xname),
               x = xname,
-              y = paste0(dv, ".residual")
+              y = paste0(base, ".residual")
             ) +
             blimp_theme(font_size) +
             ggplot2::theme(
@@ -780,10 +868,10 @@ residuals_plot <- function(
       }
       
       rvx_list <- list()
-      for (dv in names(dv_pred_pairs)) {
-        for (xname in dv_pred_pairs[[dv]]) {
-          p <- build_rvx(dv, xname)
-          nm <- paste0(dv, "_vs_", xname)
+      for (base in names(dv_pred_pairs)) {
+        for (xname in dv_pred_pairs[[base]]) {
+          p <- build_rvx(base, xname)
+          nm <- paste0(base, "_vs_", xname)
           rvx_list[[nm]] <- p
           if (!is.null(p)) print(p)
         }
