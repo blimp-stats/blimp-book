@@ -15,25 +15,39 @@ plot_colors <- c(
 plot_shading <- 0.25
 
 # SHARED THEME ----
+# SHARED THEME ----
 blimp_theme <- function(font_size = 14) {
-  ggplot2::theme_minimal(base_size = font_size) %+replace%
-    ggplot2::theme(
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      axis.text.y  = ggplot2::element_blank(),
-      axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-      axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12)),
-      plot.title   = ggplot2::element_text(hjust = 0.5, face = "bold", size = font_size + 2),
-      legend.title = ggplot2::element_text(size = font_size),
-      legend.text  = ggplot2::element_text(size = font_size),
-      legend.key.height = ggplot2::unit(1.1, "lines"),
-      legend.key.width  = ggplot2::unit(1.6, "lines"),
-      legend.position = c(0.95, 0.85),
-      legend.justification = c("right", "top"),
-      legend.background = ggplot2::element_blank(),
-      legend.key = ggplot2::element_blank()
-    )
+  base_theme <- ggplot2::theme_minimal(base_size = font_size)
+  replace_theme <- ggplot2::theme(
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    axis.ticks.y     = ggplot2::element_blank(),
+    axis.text.y      = ggplot2::element_blank(),
+    axis.text.x      = ggplot2::element_text(
+      size   = font_size,
+      margin = ggplot2::margin(t = 2)
+    ),
+    axis.title.x     = ggplot2::element_text(
+      size   = font_size,
+      margin = ggplot2::margin(t = 12)
+    ),
+    plot.title       = ggplot2::element_text(
+      hjust = 0.5,
+      face  = "bold",
+      size  = font_size + 2
+    ),
+    legend.title     = ggplot2::element_text(size = font_size),
+    legend.text      = ggplot2::element_text(size = font_size),
+    legend.key.height = ggplot2::unit(1.1, "lines"),
+    legend.key.width  = ggplot2::unit(1.6, "lines"),
+    legend.position   = c(0.95, 0.85),
+    legend.justification = c("right", "top"),
+    legend.background = ggplot2::element_blank(),
+    legend.key        = ggplot2::element_blank()
+  )
+  
+  # call the ggplot2 operator explicitly so we don't need library(ggplot2)
+  ggplot2::`%+replace%`(base_theme, replace_theme)
 }
 
 # EXTRACT VARIABLES FROM MODEL SECTION ----
