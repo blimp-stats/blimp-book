@@ -16,6 +16,7 @@ plot_shading <- 0.25
 
 # SHARED THEME ----
 # SHARED THEME ----
+
 blimp_theme <- function(font_size = 14) {
   base_theme <- ggplot2::theme_minimal(base_size = font_size)
   replace_theme <- ggplot2::theme(
@@ -46,47 +47,137 @@ blimp_theme <- function(font_size = 14) {
     legend.key        = ggplot2::element_blank()
   )
   
-  # call the ggplot2 operator explicitly so we don't need library(ggplot2)
   ggplot2::`%+replace%`(base_theme, replace_theme)
 }
 
 # EXTRACT VARIABLES FROM MODEL SECTION ----
 
+# helper: coerce @syntax to a single text blob
+.syntax_as_text <- function(sx) {
+  if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+    paste(unlist(sx, use.names = FALSE), collapse = "\n")
+  } else if (is.character(sx)) {
+    paste(sx, collapse = "\n")
+  } else {
+    ""
+  }
+}
+
+# helper: pull the MODEL block lines (handles focal:/predictors: etc.)
+.get_model_block <- function(model) {
+  if (is.null(model@syntax)) return(character(0))
+  sx <- model@syntax
+  
+  # Case 1: modern blimp_syntax/list with a $model component
+  if ((inherits(sx, "blimp_syntax") || is.list(sx)) && "model" %in% names(sx)) {
+    mb <- as.character(sx$model)
+    mb <- mb[!is.na(mb)]
+    mb <- trimws(mb)
+    mb <- mb[nzchar(mb)]
+    return(mb)
+  }
+  
+  # Case 2: plain text / legacy syntax with "MODEL:" header
+  txt <- .syntax_as_text(sx)
+  if (!nzchar(txt)) return(character(0))
+  
+  lines <- unlist(strsplit(txt, "\n", fixed = TRUE), use.names = FALSE)
+  if (!length(lines)) return(character(0))
+  
+  idx_model <- grep("^\\s*MODEL\\s*:", lines, ignore.case = TRUE)
+  if (!length(idx_model)) return(character(0))
+  
+  lines2 <- lines[idx_model[1]:length(lines)]
+  # remove the literal "MODEL:" label from the first line
+  lines2[1] <- sub("^\\s*MODEL\\s*:\\s*", "", lines2[1], ignore.case = TRUE)
+  
+  # stop at next ALL-CAPS header (SEED:, OPTIONS:, SAVE:, etc.)
+  if (length(lines2) > 1L) {
+    hdr_idx <- which(grepl("^\\s*[A-Z]+\\s*:", lines2[-1L]))
+    if (length(hdr_idx)) {
+      stop_at <- hdr_idx[1L]
+      lines2  <- lines2[seq_len(stop_at + 1L)]
+    }
+  }
+  
+  lines2
+}
+
 .extract_model_vars <- function(model) {
-  # ensure @syntax exists
   if (is.null(model@syntax))
     stop("@syntax not found on model object")
   
-  sx <- model@syntax
+  mb <- .get_model_block(model)
+  if (!length(mb))
+    stop("Could not locate MODEL section in @syntax.")
   
-  # Case 1: modern objects — list/`blimp_syntax` with a `model` element
-  if ((inherits(sx, "blimp_syntax") || is.list(sx)) && "model" %in% names(sx)) {
-    model_text <- as.character(sx$model)
-    model_text <- paste(model_text, collapse = " ")
-  } else {
-    # Case 2: legacy text — try to find lines beginning with 'MODEL:'
-    sx_chr <- as.character(sx)
-    lines  <- unlist(strsplit(paste(sx_chr, collapse = "\n"), "\n", fixed = TRUE))
-    if (!length(lines))
-      stop("Could not coerce @syntax to character.")
-    model_lines <- grep("^\\s*MODEL\\s*:", lines, value = TRUE, ignore.case = TRUE)
-    if (!length(model_lines))
-      stop("No MODEL section found in @syntax")
-    # strip the leading 'MODEL:' label and join
-    model_text <- gsub("^\\s*MODEL\\s*:\\s*", "", paste(model_lines, collapse = " "), ignore.case = TRUE)
-  }
+  model_text <- paste(mb, collapse = " ")
   
-  # Tokenize variable names appearing anywhere in the MODEL section
-  # We want BOTH DVs (left of ~) and predictors (right of ~), and we’ll ignore operators.
-  # Keep letters, digits, underscore, and dot (so 'dpdd.residual' patterns can be matched later).
+  # allow letters / digits / underscore / dot
   clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
-  toks  <- unlist(strsplit(clean, "\\s+"))
+  toks  <- unlist(strsplit(clean, "\\s+"), use.names = FALSE)
   toks  <- toks[nzchar(toks)]
   
-  # Drop reserved tokens if they slipped through
-  toks  <- setdiff(toks, c("~", "|"))
+  # keep only things that look like variable names
+  toks  <- toks[grepl("[A-Za-z_]", toks)]
+  
+  # drop obvious non-variable keywords
+  reserved <- c(
+    "MODEL", "model",
+    "focal", "Focal",
+    "predictors", "Predictors",
+    "WITHIN", "within",
+    "BETWEEN", "between",
+    "random", "fixed"
+  )
+  toks <- setdiff(toks, reserved)
   
   unique(toks)
+}
+
+# ORDINAL / NOMINAL HELPERS ----
+
+.get_categorical_vars <- function(model) {
+  if (is.null(model@syntax)) return(character(0))
+  sx <- model@syntax
+  
+  # Case 1: blimp_syntax/list with ordinal/nominal components
+  if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+    keys <- intersect(names(sx), c("ORDINAL", "ordinal", "NOMINAL", "nominal"))
+    if (length(keys)) {
+      vals <- unlist(sx[keys], use.names = FALSE)
+      vals <- vals[!is.na(vals)]
+      if (length(vals)) {
+        toks <- unlist(
+          strsplit(paste(vals, collapse = " "), "[ ,;]+", perl = TRUE),
+          use.names = FALSE
+        )
+        toks <- toks[nzchar(toks)]
+        return(unique(toks))
+      }
+    }
+  }
+  
+  # Case 2: plain text – look for ORDINAL: / NOMINAL: blocks
+  txt <- .syntax_as_text(sx)
+  if (!nzchar(txt)) return(character(0))
+  txt1 <- gsub("\\s+", " ", txt)
+  
+  grab <- function(key) {
+    rx <- paste0("(?i)\\b", key, "\\s*:\\s*([^;]+)\\s*;")
+    m  <- gregexpr(rx, txt1, perl = TRUE)
+    segs <- regmatches(txt1, m)[[1]]
+    if (!length(segs)) return(character(0))
+    out <- unlist(lapply(segs, function(seg) {
+      s <- sub(rx, "\\1", seg, perl = TRUE)
+      s <- gsub("[,]", " ", s)
+      toks <- strsplit(s, "\\s+", perl = TRUE)[[1]]
+      toks[nzchar(toks)]
+    }), use.names = FALSE)
+    unique(out)
+  }
+  
+  unique(c(grab("ORDINAL"), grab("NOMINAL")))
 }
 
 # STANDARDIZE RESIDUALS (MI) ----
@@ -173,7 +264,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 # IMPUTATION HISTOGRAM(S) ----
 
 imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
-                             fill_color = "teal", font_size = 14) {
+                            fill_color = "teal", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
@@ -226,70 +317,38 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
                                      observed_fill = "teal", imputed_line = "violet",
                                      font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
-  if (is.null(model@variance_imp)) stop("@variance_imp not found on model object")
+  if (!is.list(model@imputations) || !length(model@imputations))
+    stop("@imputations must be non-empty")
+  if (is.null(model@variance_imp))
+    stop("@variance_imp not found on model object")
   if (!observed_fill %in% names(plot_colors) || !imputed_line %in% names(plot_colors))
     stop("observed_fill and imputed_line must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
   
-  ## --- local MODEL parser: only look at MODEL: lines -------------------------
-  get_model_vars <- function(syntax_obj) {
-    sx_chr <- as.character(syntax_obj)
-    lines  <- unlist(strsplit(paste(sx_chr, collapse = "\n"),
-                              "\n", fixed = TRUE))
-    if (!length(lines)) return(character(0))
-    
-    model_lines <- grep("^\\s*MODEL\\s*:", lines,
-                        value = TRUE, ignore.case = TRUE)
-    if (!length(model_lines)) return(character(0))
-    
-    model_text <- gsub("^\\s*MODEL\\s*:\\s*", "",
-                       paste(model_lines, collapse = " "),
-                       ignore.case = TRUE)
-    
-    clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
-    toks  <- unlist(strsplit(clean, "\\s+"))
-    toks  <- toks[nzchar(toks)]
-    toks  <- setdiff(toks, c("~", "|"))
-    unique(toks)
-  }
+  # ---- figure out which variables are eligible ----
+  vars_imp1   <- names(model@imputations[[1]])
+  vars_varimp <- names(model@variance_imp)
+  vars_all    <- intersect(vars_varimp, vars_imp1)
   
-  ## --- candidate variables: must be in variance_imp AND imputations ----------
-  vars_all <- intersect(names(model@variance_imp),
-                        names(model@imputations[[1]]))
-  
-  # drop derived variables that have no true observed part
+  # drop derived columns; we only want the "base" variables
   derived_pattern <- "\\.(latent|residual|predicted|probability)$"
   vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
   
   if (is.null(var)) {
-    model_vars <- get_model_vars(model@syntax)
-    if (!length(model_vars))
-      stop("Could not extract variables from MODEL section of @syntax.")
-    
-    # exact name match only
+    # use robust MODEL parser
+    model_vars <- .extract_model_vars(model)
+    # exact name matching to avoid age/cigage problems
     var <- intersect(vars_base, model_vars)
-    
     if (!length(var))
-      stop("No matching non-derived variables with observed data found based on MODEL section.")
-    
+      stop("No matching variables found that are both in the MODEL section and in @variance_imp/@imputations.")
     message("Plotting variables with observed values from MODEL section: ",
             paste(var, collapse = ", "))
   } else {
-    # user-specified: drop derived ones and check existence
-    bad_derived <- var[grepl(derived_pattern, var)]
-    if (length(bad_derived)) {
-      message("Skipping derived variable(s) with no true observed part in observed-vs-imputed plot: ",
-              paste(bad_derived, collapse = ", "))
-    }
-    var <- setdiff(var, bad_derived)
-    if (!length(var))
-      stop("After removing derived variables, no variables remain to plot.")
-    
-    if (!all(var %in% vars_all)) {
-      missing <- setdiff(var, vars_all)
-      stop("Variable(s) not found in variance_imp/imputations: ",
-           paste(missing, collapse = ", "))
+    # user-specified vars: check they exist in base set
+    missing_vars <- setdiff(var, vars_base)
+    if (length(missing_vars)) {
+      stop("Variable(s) not found as base variables in @variance_imp/@imputations: ",
+           paste(missing_vars, collapse = ", "))
     }
   }
   
@@ -298,18 +357,17 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   n_imps  <- length(model@imputations)
   
   build_one <- function(v) {
-    # extra guard
-    if (grepl("\\.probability$", v)) {
-      message("Skipping probability variable (no observed counterpart): ", v)
+    vimp <- model@variance_imp[[v]]
+    if (is.null(vimp)) {
+      message("Skipping variable with no variance_imp information: ", v)
       return(NULL)
     }
     
-    vimp <- model@variance_imp[[v]]
+    # BLIMP convention: nonzero finite entries indicate missing/imputed values
     miss_idx <- is.finite(vimp) & (vimp != 0)
     
     obs_vals <- model@imputations[[1]][[v]][!miss_idx]
-    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]),
-                       use.names = FALSE)
+    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]), use.names = FALSE)
     
     if (!length(obs_vals) || all(is.na(obs_vals))) {
       message("Skipping variable with no observed data: ", v)
@@ -349,7 +407,11 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
         fill = NA, linewidth = 1.2
       ) +
       ggplot2::coord_cartesian(xlim = rng) +
-      ggplot2::labs(title = title_text, x = v, y = NULL, fill = NULL, color = NULL) +
+      ggplot2::labs(
+        title = title_text,
+        x = v, y = NULL,
+        fill = NULL, color = NULL
+      ) +
       ggplot2::scale_fill_manual(values = c(Observed = obs_col), drop = TRUE) +
       ggplot2::scale_color_manual(values = c(Imputed = imp_col), drop = TRUE) +
       ggplot2::guides(
@@ -420,42 +482,6 @@ residuals_plot <- function(
   index_order     <- match.arg(index_order)
   
   # ==== helpers ===============================================================
-  
-  # robust ORDINAL/NOMINAL parser from @syntax (works for list or text blob)
-  get_categorical_vars <- function(sx) {
-    # to text
-    as_txt <- function(obj) {
-      if (inherits(obj, "blimp_syntax") || is.list(obj)) {
-        paste(unlist(obj, use.names = FALSE), collapse = "\n")
-      } else if (is.character(obj)) {
-        paste(obj, collapse = "\n")
-      } else {
-        ""
-      }
-    }
-    txt <- as_txt(sx)
-    if (!nzchar(txt)) return(character(0))
-    
-    # normalize whitespace
-    txt1 <- gsub("\\s+", " ", txt)
-    
-    # pull KEY: ... ; segments (case-insensitive, may repeat)
-    grab <- function(key) {
-      rx <- paste0("(?i)\\b", key, "\\s*:\\s*([^;]+)\\s*;")
-      m <- gregexpr(rx, txt1, perl = TRUE)
-      segs <- regmatches(txt1, m)[[1]]
-      if (!length(segs)) return(character(0))
-      out <- unlist(lapply(segs, function(seg) {
-        s <- sub(rx, "\\1", seg, perl = TRUE)   # captured list of names
-        s <- gsub("[,]", " ", s)                # allow commas or spaces
-        toks <- strsplit(s, "\\s+", perl = TRUE)[[1]]
-        toks[nzchar(toks)]
-      }), use.names = FALSE)
-      unique(out)
-    }
-    
-    unique(c(grab("ORDINAL"), grab("NOMINAL")))
-  }
   
   # Rubin-pooled category means + CI (for discrete X)
   pool_means_by_category <- function(df_xy, level = 0.95) {
@@ -611,7 +637,7 @@ residuals_plot <- function(
   }
   
   # ==== categorical predictor set from @syntax (plus <4-unique fallback) =======
-  cat_vars <- tolower(get_categorical_vars(model@syntax))
+  cat_vars <- tolower(.get_categorical_vars(model))
   is_categorical_name <- function(vname) tolower(vname) %in% cat_vars
   
   # ==== colors, counts =========================================================
@@ -695,15 +721,7 @@ residuals_plot <- function(
   }
   
   # B) Residuals vs. Predictors (from @MODEL) ----------------------------------
-  get_model_lines <- function(sx) {
-    if (inherits(sx, "blimp_syntax")) {
-      val <- sx$model
-      if (is.null(val)) character(0) else as.character(val)
-    } else if (is.character(sx)) {
-      sx
-    } else character(0)
-  }
-  model_lines <- get_model_lines(model@syntax)
+  model_lines <- .get_model_block(model)
   
   if (length(model_lines) && length(bases_resid)) {
     chunks <- unlist(strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
@@ -722,8 +740,14 @@ residuals_plot <- function(
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
       parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
-      dv   <- trimws(parts[1])
-      rhs  <- trimws(parts[2])
+      dv_raw <- trimws(parts[1])
+      rhs    <- trimws(parts[2])
+      
+      # handle prefixes like "focal: turnover" -> dv = "turnover"
+      dv_tokens <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
+      dv_token_last <- dv_tokens[length(dv_tokens)]
+      dv <- sub(":$", "", dv_token_last)
+      
       preds <- parse_rhs_vars(rhs)
       if (length(preds)) {
         dv_pred_pairs_raw[[dv]] <- unique(c(dv_pred_pairs_raw[[dv]], preds))
@@ -978,7 +1002,7 @@ residuals_plot <- function(
           cutoff_layer +
           ggplot2::scale_y_continuous(breaks = scales::pretty_breaks()) +
           ggplot2::labs(
-            title = paste0("Standardized Residual Index Plot Over ", n_imps,
+            title = paste0("Standardized Residual Index Plot Over ", n_sets,
                            " Imputed Data Sets: ", b),
             x = xtitle,
             y = "Standardized Residual"

@@ -1,3 +1,7 @@
+# BRIAN NOTES ----
+# We need to discuss the .residual behavior with logistic models
+# Loess lines look odd because residuals on latent metric do not appear to have a zero mean
+
 # NEGATIVE BINOMIAL REGRESSION FOR A COUNT OUTCOME ----
 
 # LOAD R PACKAGES ----
@@ -30,6 +34,9 @@ model1 <- rblimp(
 
 # print output
 output(model1)
+
+# plot parameter distributions
+posterior_plot(model1,'alcdays')
 
 # GRAPHICAL DIAGNOSTICS ----
 

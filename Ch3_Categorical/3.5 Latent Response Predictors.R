@@ -15,18 +15,22 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # create data frame from github data
 employee <- read.csv(data_url)
 
-# FIT PROBIT MODEL WITH A LATENT RESPONSE VARIABLE PREDICTOR ----
+# FIT MODEL ----
 
-# probit regression with a binary outcome
+# logistic regression with a latent response variable predictor
+# thresholds require large number of iterations to achieve adequate N_eff 
 model1 <- rblimp(
     data = employee,
     ordinal = 'jobsat male',
     nominal = 'turnover',
-    model = 'turnover ~ lmx empower jobsat.latent male', 
+    model = '
+    focal:
+    turnover ~ lmx empower jobsat.latent male;
+    predictors:
+    jobsat ~ lmx empower male', 
     seed = 90291,
-    burn = 10000,
-    iter = 10000,
-    nimps = 100)
+    burn = 30000,
+    iter = 30000)
 
 # print output
 output(model1)
@@ -36,7 +40,25 @@ posterior_plot(model1,'turnover')
 
 # GRAPHICAL DIAGNOSTICS ----
 
+# multiple imputations for graphical diagnostics 
+model2 <- rblimp(
+  data = employee,
+  ordinal = 'jobsat male',
+  nominal = 'turnover',
+  model = '
+    focal:
+    turnover ~ lmx empower jobsat.latent male;
+    predictors:
+    jobsat ~ lmx empower male', 
+  seed = 90291,
+  burn = 30000,
+  iter = 30000,
+  nimps = 20)
+
+# print output
+output(model2)
+
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+imputation_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)

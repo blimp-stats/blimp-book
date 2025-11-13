@@ -60,6 +60,7 @@ residuals_plot(model2)
 # FIT PROBIT MODEL WITH AN ORDINAL OUTCOME ----
 
 # probit regression with an ordinal outcome
+# large # of iterations to achieve N_eff values for thresholds (psr ok w fewer)
 model3 <- rblimp(
   data = employee,
   ordinal = 'jobsat male',

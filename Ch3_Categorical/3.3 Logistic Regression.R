@@ -1,6 +1,6 @@
 # BRIAN NOTES ----
 # We need to discuss the .residual behavior with logistic models
-# Loess lines look odd
+# Loess lines look odd because residuals on latent metric do not appear to have a zero mean
 
 # LOGISTIC REGRESSION FOR BINARY AND MULTICATEGORICAL OUTCOMES ----
 
@@ -34,6 +34,9 @@ model1 <- rblimp(
 # print output
 output(model1)
 
+# plot parameter distributions
+posterior_plot(model1,'drinker')
+
 # multinomial logistic regression
 model2 <- rblimp(
   data = alcoholuse,
@@ -46,6 +49,9 @@ model2 <- rblimp(
 
 # print output
 output(model2)
+
+# plot parameter distributions
+posterior_plot(model2,'drinkingfreq')
 
 # GRAPHICAL DIAGNOSTICS ----
 
