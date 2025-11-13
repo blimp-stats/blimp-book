@@ -16,7 +16,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 alcoholuse <- read.csv(data_url)
 
-
 # plotting function
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
