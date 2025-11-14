@@ -103,16 +103,29 @@ blimp_theme <- function(font_size = 14) {
   lines2
 }
 
+# EXTRACT VARIABLES FROM MODEL SECTION ----
+
 .extract_model_vars <- function(model) {
   if (is.null(model@syntax))
     stop("@syntax not found on model object")
   
+  # use the shared helper that finds the MODEL block
   mb <- .get_model_block(model)
   if (!length(mb))
     stop("Could not locate MODEL section in @syntax.")
   
   model_text <- paste(mb, collapse = " ")
   
+  # 1) SPECIAL CASE: yjt(...) variables
+  #    e.g., "yjt(dpdd - 6)" -> "yjt(dpdd-6)" to match column names
+  yjt_pattern <- "yjt\\([^)]*\\)"
+  yjt_raw <- unlist(regmatches(model_text, gregexpr(yjt_pattern, model_text, perl = TRUE)),
+                    use.names = FALSE)
+  yjt_raw <- yjt_raw[nzchar(yjt_raw)]
+  # remove ALL spaces inside, so "yjt(dpdd - 6)" -> "yjt(dpdd-6)"
+  yjt_clean <- if (length(yjt_raw)) unique(gsub("\\s+", "", yjt_raw)) else character(0)
+  
+  # 2) GENERIC TOKENIZATION (as before, but ignoring weird operators)
   # allow letters / digits / underscore / dot
   clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
   toks  <- unlist(strsplit(clean, "\\s+"), use.names = FALSE)
@@ -132,7 +145,8 @@ blimp_theme <- function(font_size = 14) {
   )
   toks <- setdiff(toks, reserved)
   
-  unique(toks)
+  # 3) UNION generic tokens with the yjt(...) names
+  unique(c(toks, yjt_clean))
 }
 
 # ORDINAL / NOMINAL HELPERS ----
@@ -334,11 +348,19 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   derived_pattern <- "\\.(latent|residual|predicted|probability)$"
   vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
   
+  # special rule: do NOT make observed-vs-imputed plots for yjt(...) variables
+  is_yjt <- grepl("^yjt\\(", vars_base)
+  if (any(is_yjt)) {
+    message("Skipping yjt(...) variables for observed vs. imputed plots: ",
+            paste(vars_base[is_yjt], collapse = ", "))
+  }
+  vars_base_noyjt <- vars_base[!is_yjt]
+  
   if (is.null(var)) {
-    # use robust MODEL parser
+    # use your robust MODEL parser
     model_vars <- .extract_model_vars(model)
     # exact name matching to avoid age/cigage problems
-    var <- intersect(vars_base, model_vars)
+    var <- intersect(vars_base_noyjt, model_vars)
     if (!length(var))
       stop("No matching variables found that are both in the MODEL section and in @variance_imp/@imputations.")
     message("Plotting variables with observed values from MODEL section: ",
@@ -357,6 +379,12 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   n_imps  <- length(model@imputations)
   
   build_one <- function(v) {
+    # extra guard: never plot yjt(...) even if explicitly requested
+    if (grepl("^yjt\\(", v)) {
+      message("Skipping yjt-derived variable in observed vs. imputed plot: ", v)
+      return(NULL)
+    }
+    
     vimp <- model@variance_imp[[v]]
     if (is.null(vimp)) {
       message("Skipping variable with no variance_imp information: ", v)
