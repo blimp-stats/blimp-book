@@ -205,6 +205,126 @@ blimp_theme <- function(font_size = 14) {
   out
 }
 
+# MAP MODEL PREDICTOR NAME TO COLUMN NAME ----
+
+map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
+  # 1) direct match
+  if (pred_name %in% cols) {
+    return(pred_name)
+  }
+  
+  # 2) handle ".mean" predictors when there is a cluster_id
+  #    Examples:
+  #      MODEL: frlunch.mean  -> frlunch.1.mean[school]
+  #      MODEL: probsolvpre.mean -> probsolvpre.mean[school]
+  #      MODEL: stanmath.mean -> stanmath.mean[school]
+  if (!is.null(cluster_id) && grepl("\\.mean$", pred_name)) {
+    base <- sub("\\.mean$", "", pred_name)
+    
+    # (a) nominal-style: base.<digit>.mean[cluster_id]
+    #     e.g. frlunch.1.mean[school]
+    pattern1 <- paste0("^", base, "\\.[0-9]+\\.mean\\[", cluster_id, "\\]$")
+    cands1   <- grep(pattern1, cols, value = TRUE)
+    if (length(cands1) == 1L) {
+      return(cands1)
+    } else if (length(cands1) > 1L) {
+      message("Multiple matches for predictor '", pred_name,
+              "' with cluster_id '", cluster_id,
+              "'. Using: ", cands1[1])
+      return(cands1[1])
+    }
+    
+    # (b) continuous-style: base.mean[cluster_id]
+    #     e.g. probsolvpre.mean[school], stanmath.mean[school]
+    pattern2 <- paste0("^", base, "\\.mean\\[", cluster_id, "\\]$")
+    cands2   <- grep(pattern2, cols, value = TRUE)
+    if (length(cands2) == 1L) {
+      return(cands2)
+    } else if (length(cands2) > 1L) {
+      message("Multiple matches for predictor '", pred_name,
+              "' with cluster_id '", cluster_id,
+              "'. Using: ", cands2[1])
+      return(cands2[1])
+    }
+  }
+  
+  # 3) no mapping found; return original name so caller can handle failure
+  pred_name
+}
+
+# CLUSTERID HELPER ----
+.get_cluster_id <- function(model) {
+  sx <- model@syntax
+  
+  ## Case 1: modern blimp_syntax / list: use the $clusterid element directly
+  if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+    nms <- tolower(names(sx))
+    i   <- match("clusterid", nms)
+    if (!is.na(i)) {
+      val <- sx[[i]]
+      val <- trimws(as.character(val)[1L])
+      return(ifelse(nzchar(val), val, NA_character_))
+    }
+  }
+  
+  ## Case 2: fall back to parsing the text blob (legacy syntax)
+  txt <- .syntax_as_text(sx)
+  if (!nzchar(txt)) return(NA_character_)
+  
+  m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^;]+);", txt, perl = TRUE)
+  if (m < 0) return(NA_character_)
+  
+  seg <- regmatches(txt, m)
+  seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
+  seg <- sub(";", "", seg, fixed = TRUE)
+  seg <- trimws(seg)
+  
+  ifelse(nzchar(seg), seg, NA_character_)
+}
+
+# LEVEL-2 PREDICTOR DETECTION ----
+
+.get_level2_predictors <- function(model, dv_pred_pairs, cols, cluster_id) {
+  # If we don't have a cluster id or it isn't in the data, nothing to do
+  if (is.null(cluster_id) || !cluster_id %in% cols) return(character(0))
+  if (!length(dv_pred_pairs)) return(character(0))
+  
+  # Use the first imputation to determine cluster-constant variables
+  d <- model@imputations[[1]]
+  if (!cluster_id %in% names(d)) return(character(0))
+  
+  g <- d[[cluster_id]]
+  if (all(is.na(g))) return(character(0))
+  
+  # All predictors appearing on RHS of any DV in dv_pred_pairs (MODEL-scale names)
+  all_preds <- unique(unlist(dv_pred_pairs, use.names = FALSE))
+  all_preds <- all_preds[nzchar(all_preds)]
+  
+  l2_preds <- character(0)
+  
+  for (pn in all_preds) {
+    # Map MODEL predictor name -> actual column in imputations
+    colname <- map_predictor_to_col(pn, cols, cluster_id)
+    if (!colname %in% names(d)) next
+    
+    x <- d[[colname]]
+    # split by cluster, check if each cluster has <= 1 unique value
+    by_cl <- split(x, g)
+    if (!length(by_cl)) next
+    
+    const_within <- vapply(by_cl, function(z) {
+      z <- z[is.finite(z)]
+      if (!length(z)) TRUE else length(unique(z)) <= 1L
+    }, logical(1L))
+    
+    if (all(const_within)) {
+      l2_preds <- c(l2_preds, pn)
+    }
+  }
+  
+  unique(l2_preds)
+}
+
 # EXTRACT VARIABLES FROM MODEL SECTION ----
 
 .extract_model_vars <- function(model) {
@@ -343,11 +463,44 @@ imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
   
   vars_all <- names(model@imputations[[1]])
   
+  # helper: get DV names from MODEL block (handles focal:, etc.)
+  get_dv_names <- function(model) {
+    mb <- .get_model_block(model)
+    if (!length(mb)) return(character(0))
+    chunks <- unlist(strsplit(paste(mb, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
+    chunks <- gsub("\\s+", " ", trimws(chunks))
+    chunks <- chunks[nzchar(chunks)]
+    dvs <- character(0)
+    for (ch in chunks) {
+      if (!grepl("~", ch, fixed = TRUE)) next
+      parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
+      dv_raw <- trimws(parts[1])
+      dv_tokens <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
+      dv_token_last <- dv_tokens[length(dv_tokens)]
+      dv <- sub(":$", "", dv_token_last)
+      dvs <- c(dvs, dv)
+    }
+    unique(dvs)
+  }
+  
   if (is.null(var)) {
     model_vars <- unique(.extract_model_vars(model))
-    # base name = everything before first dot
+    
+    # base name = everything before first dot, as before
     base_all  <- sub("\\..*$", "", vars_all)
     var <- vars_all[base_all %in% model_vars]
+    
+    # NEW: add cluster-level residuals of the form y[cluster]
+    dv_names <- get_dv_names(model)
+    if (length(dv_names)) {
+      cluster_cols <- unlist(lapply(dv_names, function(y) {
+        vars_all[grepl(paste0("^", y, "\\["), vars_all)]
+      }), use.names = FALSE)
+      if (length(cluster_cols)) {
+        var <- unique(c(var, cluster_cols))
+      }
+    }
+    
     if (!length(var)) stop("No matching variables found based on MODEL section.")
     message("Plotting variables based on MODEL section: ", paste(var, collapse = ", "))
   } else if (!all(var %in% vars_all)) {
@@ -708,6 +861,9 @@ residuals_plot <- function(
   has_resid_col   <- function(b) paste0(b, ".residual")   %in% cols1
   has_pair_cols   <- function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1)
   
+  # NEW: cluster ID (e.g., "school"), used for mapping *.mean predictors
+  cluster_id <- .get_cluster_id(model)
+  
   if (!is.null(var)) {
     stopifnot(is.character(var), length(var) >= 1)
     var_req <- unique(var)
@@ -830,32 +986,27 @@ residuals_plot <- function(
   # B) Residuals vs. Predictors (from @MODEL) ----------------------------------
   model_lines <- .get_model_block(model)
   
-  if (length(model_lines) && length(bases_resid)) {
+  if (length(model_lines)) {
     chunks <- unlist(strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
     parse_rhs_vars <- function(rhs) {
-      # keep content before any "|" (if present)
-      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]
+      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]   # keep before vertical pipe
       
-      # 1) strip @labels  (e.g., depress_sum@b1 -> depress_sum)
+      # strip @labels: x@b1 -> x
       rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs2)
       
-      # 2) break interactions "x*y" into "x y"
+      # break interactions x*y into x y
       rhs2 <- gsub("\\*", " ", rhs2)
       
-      # 3) tokenize on whitespace
       toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
       toks <- toks[nzchar(toks)]
-      
-      # 4) drop obvious non-variables
       toks <- setdiff(toks, c("intercept", "+", "-", "/", "*"))
-      
       unique(toks)
     }
     
-    # first build: DV name -> predictors
+    # first build: DV name -> predictors in syntax space
     dv_pred_pairs_raw <- list()
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
@@ -864,9 +1015,9 @@ residuals_plot <- function(
       rhs    <- trimws(parts[2])
       
       # handle prefixes like "focal: turnover" -> dv = "turnover"
-      dv_tokens <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
+      dv_tokens     <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
       dv_token_last <- dv_tokens[length(dv_tokens)]
-      dv <- sub(":$", "", dv_token_last)
+      dv            <- sub(":$", "", dv_token_last)
       
       preds <- parse_rhs_vars(rhs)
       if (length(preds)) {
@@ -874,46 +1025,117 @@ residuals_plot <- function(
       }
     }
     
+    # build mapping from *base name* (including cluster-level bases) -> predictors
+    dv_pred_pairs <- list()
     if (length(dv_pred_pairs_raw)) {
-      # map DV names (e.g. "drinker") to residual bases (e.g. "drinker.1")
-      dv_pred_pairs <- list()
       for (dv in names(dv_pred_pairs_raw)) {
         preds <- dv_pred_pairs_raw[[dv]]
-        # direct match (continuous outcomes etc.)
-        if (dv %in% bases_resid) {
-          dv_pred_pairs[[dv]] <- preds
-        } else {
-          # look for bases that start with "dv."
-          cand <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
-          if (length(cand)) {
-            for (b in cand) {
-              dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
-            }
+        
+        # (1) continuous / standard DV: base = dv when dv.residual exists
+        if (paste0(dv, ".residual") %in% cols1) {
+          dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
+        }
+        
+        # (2) ordinal / nominal, etc.: bases like dv.1, dv.2, ...
+        cand_unit <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
+        if (length(cand_unit)) {
+          for (b in cand_unit) {
+            dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
+          }
+        }
+        
+        # (3) cluster-level residuals: columns like dv[cluster]
+        cand_cluster <- cols1[grepl(paste0("^", dv, "\\["), cols1)]
+        if (length(cand_cluster)) {
+          for (b in cand_cluster) {
+            dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
           }
         }
       }
-      # keep only those with actual residual columns
-      dv_pred_pairs <- dv_pred_pairs[names(dv_pred_pairs) %in% bases_resid]
-    } else {
-      dv_pred_pairs <- list()
+    }
+    
+    # --- NEW: for cluster-level DVs, keep only level-2 predictors --------------
+    # This uses your existing helper .get_level2_predictors()
+    level2_preds <- .get_level2_predictors(model, dv_pred_pairs, cols1, cluster_id)
+    
+    if (length(level2_preds)) {
+      for (bn in names(dv_pred_pairs)) {
+        # cluster-level DV if its base name contains "["
+        if (grepl("\\[", bn, fixed = TRUE)) {
+          old_preds <- dv_pred_pairs[[bn]]
+          keep      <- intersect(old_preds, level2_preds)
+          dropped   <- setdiff(old_preds, keep)
+          
+          if (length(dropped)) {
+            message(
+              "Cluster-level DV '", bn,
+              "' – dropping level-1 predictors for residual plots: ",
+              paste(dropped, collapse = ", ")
+            )
+          }
+          dv_pred_pairs[[bn]] <- keep
+        }
+      }
     }
     
     if (length(dv_pred_pairs)) {
+      
       build_rvx <- function(base, xname) {
-        ycol <- paste0(base, ".residual"); xcol <- xname
-        if (!ycol %in% cols1) { message("Skipping (residual missing): ", ycol); return(NULL) }
-        if (!xcol %in% cols1) { message("Skipping (predictor missing): ", xcol); return(NULL) }
-        df <- stack_cols(ycol, xcol)
-        if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base, " ~ ", xname); return(NULL) }
-        if (!is.numeric(df$y)) { message("Skipping non-numeric residuals for: ", base); return(NULL) }
+        # Prefer *.residual if it exists; otherwise fall back to the raw column name.
+        # This lets things like probsolvpost[school] (no .residual column) work.
+        resid_col <- paste0(base, ".residual")
+        if (resid_col %in% cols1) {
+          ycol <- resid_col
+        } else if (base %in% cols1) {
+          ycol <- base
+        } else {
+          message("Skipping (residual missing): neither '", resid_col,
+                  "' nor '", base, "' found for DV base ", base)
+          return(NULL)
+        }
         
-        ## replace raw residuals with standardized residuals
-        if (nrow(std_data)) {
-          sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
-          if (nrow(sub_z)) {
-            df <- merge(df, sub_z, by = c("imp", "row"), all.x = TRUE, sort = FALSE)
-            df$y <- df$z
+        # Map MODEL predictor name -> actual column name
+        xcol <- map_predictor_to_col(xname, cols1, cluster_id)
+        
+        if (!xcol %in% cols1) {
+          message("Skipping (predictor missing): ", xname,
+                  " (no column found) for DV base ", base)
+          return(NULL)
+        }
+        
+        ## For cluster-level DVs, only keep predictors that are
+        ## constant within cluster in the first imputation.
+        if (!is.null(cluster_id) &&
+            grepl("\\[", base) &&                       # cluster-level DV (e.g., probsolvpost[school])
+            cluster_id %in% names(model@imputations[[1]])) {
+          
+          d0 <- model@imputations[[1]]
+          g  <- d0[[cluster_id]]
+          x0 <- d0[[xcol]]
+          
+          if (!all(is.na(g)) && !all(is.na(x0))) {
+            by_cl <- split(x0, g)
+            const_within <- vapply(by_cl, function(z) {
+              z <- z[is.finite(z)]
+              if (!length(z)) TRUE else length(unique(z)) <= 1L
+            }, logical(1L))
+            
+            if (!all(const_within)) {
+              message("Skipping (level-1 predictor for cluster-level DV): ",
+                      xname, " for DV base ", base)
+              return(NULL)
+            }
           }
+        }
+        
+        df <- stack_cols(ycol, xcol)
+        if (is.null(df) || !nrow(df)) {
+          message("Skipping (no data across imputations): ", base, " ~ ", xname)
+          return(NULL)
+        }
+        if (!is.numeric(df$y)) {
+          message("Skipping non-numeric residuals for: ", base)
+          return(NULL)
         }
         
         # categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values
@@ -925,22 +1147,37 @@ residuals_plot <- function(
           summ <- pool_means_by_category(
             df_xy = data.frame(y = df$y, x = df$x_f, imp = df$imp), level = level
           )
-          if (!is.null(summ) && nrow(summ)) summ$x_f <- factor(summ$level, levels = levels(df$x_f))
+          if (!is.null(summ) && nrow(summ))
+            summ$x_f <- factor(summ$level, levels = levels(df$x_f))
           
           ggplot2::ggplot(df, ggplot2::aes(x = x_f, y = y)) +
-            ggplot2::geom_jitter(width = 0.15, height = 0, alpha = point_alpha, size = point_size,
-                                 color = unname(plot_colors["teal"])) +
+            ggplot2::geom_jitter(
+              width = 0.15, height = 0,
+              alpha = point_alpha, size = point_size,
+              color = unname(plot_colors["teal"])
+            ) +
             ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
-            { if (!is.null(summ) && nrow(summ))
-              ggplot2::geom_errorbar(
-                data = summ, ggplot2::aes(x = x_f, ymin = lwr, ymax = upr),
-                inherit.aes = FALSE, width = 0.18, color = unname(plot_colors["violet"]), alpha = 1
-              ) else NULL } +
-            { if (!is.null(summ) && nrow(summ))
-              ggplot2::geom_point(
-                data = summ, ggplot2::aes(x = x_f, y = mean),
-                inherit.aes = FALSE, size = 2.6, color = unname(plot_colors["violet"])
-              ) else NULL } +
+            {
+              if (!is.null(summ) && nrow(summ))
+                ggplot2::geom_errorbar(
+                  data = summ,
+                  ggplot2::aes(x = x_f, ymin = lwr, ymax = upr),
+                  inherit.aes = FALSE,
+                  width = 0.18,
+                  color = unname(plot_colors["violet"]),
+                  alpha = 1
+                ) else NULL
+            } +
+            {
+              if (!is.null(summ) && nrow(summ))
+                ggplot2::geom_point(
+                  data = summ,
+                  ggplot2::aes(x = x_f, y = mean),
+                  inherit.aes = FALSE,
+                  size = 2.6,
+                  color = unname(plot_colors["violet"])
+                ) else NULL
+            } +
             ggplot2::coord_cartesian(ylim = c(-4, 4)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
@@ -952,31 +1189,46 @@ residuals_plot <- function(
             ggplot2::theme(
               axis.text.y  = ggplot2::element_text(size = font_size),
               axis.ticks.y = ggplot2::element_line(),
-              axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-              axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+              axis.text.x  = ggplot2::element_text(size = font_size,
+                                                   margin = ggplot2::margin(t = 2)),
+              axis.title.x = ggplot2::element_text(size = font_size,
+                                                   margin = ggplot2::margin(t = 12))
             )
           
         } else {
-          if (!is.numeric(df$x)) { message("Skipping non-numeric predictor: ", xname); return(NULL) }
+          if (!is.numeric(df$x)) {
+            message("Skipping non-numeric predictor: ", xname)
+            return(NULL)
+          }
           
           if (tolower(smoother) == "loess") {
-            curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
+            curve_df <- loess_pooled(df, span, level,
+                                     center_by_imp, winsor_fit, winsor_k, robust)
             if (support == "quantile") {
               pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
               curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
             } else {
-              xr <- range(df$x, na.rm = TRUE); win <- window_prop * diff(xr)
+              xr <- range(df$x, na.rm = TRUE)
+              win <- window_prop * diff(xr)
               min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
-              counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
+              counts <- vapply(
+                curve_df$x,
+                function(x0) sum(abs(df$x - x0) <= win / 2),
+                integer(1)
+              )
               curve_df <- curve_df[counts >= min_n, , drop = FALSE]
             }
           } else {
-            rng_x <- range(df$x, na.rm = TRUE); xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
+            rng_x <- range(df$x, na.rm = TRUE)
+            xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
             imps  <- split(df, df$imp)
             coef_mat <- lapply(imps, function(d) {
-              dd <- stats::na.omit(d[, c("y","x")])
+              dd <- stats::na.omit(d[, c("y", "x")])
               if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
-              fit <- try(stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd), silent = TRUE)
+              fit <- try(
+                stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd),
+                silent = TRUE
+              )
               if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
               stats::coef(fit)
             })
@@ -986,23 +1238,43 @@ residuals_plot <- function(
               curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
             } else {
               beta <- colMeans(coef_mat)
-              yhat <- beta[1] + sapply(xgrid, function(x) sum(beta[-1] * x^(seq_along(beta[-1]))))
-              curve_df <- data.frame(x = xgrid, mean = as.numeric(yhat), lwr = NA, upr = NA)
+              yhat <- beta[1] + sapply(xgrid, function(x)
+                sum(beta[-1] * x^(seq_along(beta[-1]))))
+              curve_df <- data.frame(
+                x = xgrid,
+                mean = as.numeric(yhat),
+                lwr = NA,
+                upr = NA
+              )
             }
           }
           
           ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
-            ggplot2::geom_point(alpha = point_alpha, size = point_size,
-                                color = unname(plot_colors["teal"])) +
+            ggplot2::geom_point(
+              alpha = point_alpha, size = point_size,
+              color = unname(plot_colors["teal"])
+            ) +
             ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
-            { if (ci && exists("curve_df") && "lwr" %in% names(curve_df) && nrow(curve_df))
-              ggplot2::geom_ribbon(
-                data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-                inherit.aes = FALSE, fill = band_col, alpha = band_alpha
-              ) else NULL } +
-            { if (exists("curve_df"))
-              ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
-                                 inherit.aes = FALSE, color = curve_col, linewidth = 1.2) else NULL } +
+            {
+              if (ci && exists("curve_df") && "lwr" %in% names(curve_df) && nrow(curve_df))
+                ggplot2::geom_ribbon(
+                  data = curve_df,
+                  ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+                  inherit.aes = FALSE,
+                  fill = band_col,
+                  alpha = band_alpha
+                ) else NULL
+            } +
+            {
+              if (exists("curve_df"))
+                ggplot2::geom_line(
+                  data = curve_df,
+                  ggplot2::aes(x = x, y = mean),
+                  inherit.aes = FALSE,
+                  color = curve_col,
+                  linewidth = 1.2
+                ) else NULL
+            } +
             ggplot2::coord_cartesian(ylim = c(-4, 4)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
@@ -1014,8 +1286,10 @@ residuals_plot <- function(
             ggplot2::theme(
               axis.text.y  = ggplot2::element_text(size = font_size),
               axis.ticks.y = ggplot2::element_line(),
-              axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-              axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+              axis.text.x  = ggplot2::element_text(size = font_size,
+                                                   margin = ggplot2::margin(t = 2)),
+              axis.title.x = ggplot2::element_text(size = font_size,
+                                                   margin = ggplot2::margin(t = 12))
             )
         }
       }
