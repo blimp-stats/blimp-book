@@ -1,3 +1,6 @@
 Check comment section headings for consistency, e.g., FIT MODEL
 include "intercept" in models?
 thresholds never really achieve N_eff
+centering categorical variables?
+treating binary as nominal or ordinal?
+fixed command?

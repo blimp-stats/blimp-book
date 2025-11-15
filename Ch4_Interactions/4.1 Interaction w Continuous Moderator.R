@@ -33,7 +33,7 @@ model1 <- rblimp(
 # print output
 output(model1)
 
-# GRAPHICAL DIAGNOSTICS ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
 imputation_plot(model1)
@@ -42,7 +42,7 @@ residuals_plot(model1)
 
 # FIT INTERACTIVE MODEL ----
 
-# linear regression with continuous moderator
+# interaction with a continuous moderator
 model2 <- rblimp(
   data = reading, 
   nominal = 'male hispanic',
@@ -51,7 +51,8 @@ model2 <- rblimp(
   simple = 'read1 | lrnprob1',      
   seed = 90291,                                              
   burn = 10000,                                              
-  iter = 10000)                                                
+  iter = 10000,
+  nimps = 20)                                                
 
 # print output
 output(model2)
@@ -62,4 +63,11 @@ posterior_plot(model2,'read9')
 # plot conditional effects and johnson-neyman regions of significance
 simple_plot(read9 ~ read1 | lrnprob1, model2)
 jn_plot(read9 ~ read1 | lrnprob1, model2)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+imputation_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
 

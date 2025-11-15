@@ -3,6 +3,9 @@
 
 # YEO-JOHNSON NORMALIZING TRANSFORMATION FOR NONNORMAL CONTINUOUS VARIABLES
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -16,9 +19,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 
 # create data frame from github data
 inflamm <- read.csv(data_url)
-
-# plotting function
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # FIT MODEL ASSUMING NORMALITY ----
 
@@ -40,7 +40,7 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'dpdd')
 
-# GRAPHICAL DIAGNOSTICS ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
 imputation_plot(model1)
@@ -50,7 +50,6 @@ residuals_plot(model1)
 # FIT MODEL WITH NORMALIZED OUTCOME ----
 
 # normalized outcome with yeo-johnson transformation
-# multiple imputations for graphical diagnostics 
 model2 <- rblimp(
   data = inflamm,
   nominal = 'female els',
@@ -78,7 +77,6 @@ residuals_plot(model2)
 # FIT MODEL WITH NORMALIZED PREDICTOR ----
 
 # predictor is normalized in its missing data model but skewed in the focal model
-# multiple imputations for graphical diagnostics 
 model3 <- rblimp(
   data = inflamm,
   nominal = 'female els',
@@ -100,7 +98,7 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3,'dpdd')
 
-# GRAPHICAL DIAGNOSTICS ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
 imputation_plot(model3)
@@ -110,7 +108,6 @@ residuals_plot(model3)
 # FIT MODEL WITH FULLY NORMALIZED PREDICTOR ----
 
 # predictor is normalized in its missing data model and normalized in the focal model
-# multiple imputations for graphical diagnostics 
 model4 <- rblimp(
   data = inflamm,
   nominal = 'female els',
@@ -118,10 +115,10 @@ model4 <- rblimp(
   # fixed = 'age female',
   model = '
   focal:
-  yjt(dpdd - 6) ~ female els age yjt(inflam_sum, lam_prior);
+  yjt(dpdd - 6) ~ female els age yjt(inflam_sum, shape_prior);
   predictor:
-  yjt(inflam_sum, lam_prior) ~ female els age;', 
-  parameters = 'lam_prior ~ uniform(0, 2);',
+  yjt(inflam_sum, shape_prior) ~ female els age;', 
+  parameters = 'shape_prior ~ uniform(0, 2);',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -133,13 +130,9 @@ output(model4)
 # plot parameter distributions
 posterior_plot(model4,'dpdd')
 
-# GRAPHICAL DIAGNOSTICS ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
 imputation_plot(model4)
 imputed_vs_observed_plot(model4)
 residuals_plot(model4)
-
-# PREDICTED VALUES ARE NA
-names(model4@imputations[[1]])
-head(model4@imputations[[1]])

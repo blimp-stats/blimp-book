@@ -1,5 +1,8 @@
 # PROBIT REGRESSION FOR BINARY AND ORDINAL OUTCOMES ----
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -8,9 +11,6 @@ library(rblimp)
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/employee.csv'
-
-# plotting function
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # create data frame from github data
 employee <- read.csv(data_url)
@@ -24,7 +24,8 @@ model1 <- rblimp(
     model = 'turnover ~ lmx empower male', 
     seed = 90291,
     burn = 10000,
-    iter = 10000)
+    iter = 10000,
+    nimps = 20)
 
 # print output
 output(model1)
@@ -32,53 +33,23 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'turnover')
 
-# GRAPHICAL DIAGNOSTICS ----
-
-# multiple imputations for graphical diagnostics 
-model2 <- rblimp(
-  data = employee,
-  ordinal = 'turnover male',
-  model = 'turnover ~ lmx empower male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# print output
-output(model2)
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot individual-level predicted probabilities
-bivariate_plot(model2, turnover.1.probability ~ lmx)
-bivariate_plot(model2, turnover.1.probability ~ empower)
-bivariate_plot(model2, turnover.1.probability ~ male)
+bivariate_plot(model1, turnover.1.probability ~ lmx)
+bivariate_plot(model1, turnover.1.probability ~ empower)
+bivariate_plot(model1, turnover.1.probability ~ male)
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+imputation_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
 
 # FIT PROBIT MODEL WITH AN ORDINAL OUTCOME ----
 
 # probit regression with an ordinal outcome
 # large # of iterations to achieve N_eff values for thresholds (psr ok w fewer)
-model3 <- rblimp(
-  data = employee,
-  ordinal = 'jobsat male',
-  model = 'jobsat ~ lmx empower male', 
-  seed = 90291,
-  burn = 50000,
-  iter = 50000)
-
-# print output
-output(model3)
-
-# plot parameter distributions
-posterior_plot(model3,'turnover')
-
-# GRAPHICAL DIAGNOSTICS ----
-
-# multiple imputations for graphical diagnostics 
-model4 <- rblimp(
+model2 <- rblimp(
   data = employee,
   ordinal = 'jobsat male',
   model = 'jobsat ~ lmx empower male', 
@@ -88,9 +59,14 @@ model4 <- rblimp(
   nimps = 20)
 
 # print output
-output(model4)
+output(model2)
+
+# plot parameter distributions
+posterior_plot(model2,'turnover')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model4)
-imputed_vs_observed_plot(model4)
-residuals_plot(model4)
+imputation_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
