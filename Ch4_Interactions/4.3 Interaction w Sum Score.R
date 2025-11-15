@@ -38,7 +38,11 @@ model <- rblimp(
   iter = 20000,
   nimps = 20)
 
+# print output
 output(model)
+
+# plot parameter distributions
+posterior_plot(model,'disability')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 

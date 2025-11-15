@@ -82,6 +82,8 @@ model3 <- rblimp(
 
 # print output and parameter distributions
 output(model3)
+
+# plot parameter distributions
 posterior_plot(model3,'read9')
 
 # plot conditional effects
