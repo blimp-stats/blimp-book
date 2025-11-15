@@ -1,3 +1,6 @@
+# BRIAN NOTES ----
+# simple command currently does not work with explicit dummy codes (needed for wald test)
+
 # INTERACTION INVOLVING A CATEGORICAL MODERATOR
 
 # LOAD R PACKAGES ----
@@ -14,66 +17,61 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 reading <- read.csv(data_url)
 
-# FIT MODEL WITH BINARY MODERATOR ----
+# FIT MODEL WITH A BINARY MODERATOR ----
 
 # linear regression with a binary moderator
 model1 <- rblimp(
   data = reading, 
-  ordinal = 'lrnprobatrisk1',
-  nominal = 'male hispanic',
+  nominal = 'male hispanic lrnprob1atrisk',
   center = 'read1',
-  model = 'read9 ~ read1 lrnprobatrisk1 read1*lrnprobatrisk1 male hispanic',  
-  simple = 'read1 | lrnprobatrisk1',      
+  model = 'read9 ~ read1 lrnprob1atrisk read1*lrnprob1atrisk male hispanic',  
+  simple = 'read1 | lrnprob1atrisk',      
   seed = 90291,                                              
   burn = 10000,                                              
   iter = 10000)                                                
 
-# summarize results
+# print output
 output(model1)
 
+# plot parameter distributions
+posterior_plot(model1,'read9')
+
 # plot conditional effects
-simple_plot(read9 ~ read1 | lrnprobatrisk1, model1)
+simple_plot(read9 ~ read1 | lrnprob1atrisk.1, model1)
 
-# FIT MODEL WITH MULTICATEGORICAL MODERATOR ----
+# FIT MODEL WITH A MULTICATEGORICAL MODERATOR ----
 
-# linear regression with multicategorical moderator
+# moderated regression with explicit dummy codes and interaction test
 model2 <- rblimp(
   data = reading, 
-  nominal = 'lrnprobgrp1 male hispanic',
+  nominal = 'lrnprob1risk male hispanic',
   center = 'read1',
-  model = 'read9 ~ read1 lrnprobgrp1 read1*lrnprobgrp1 male hispanic',  
-  waldtest = 'read9 ~ read1 lrnprobgrp1 male hispanic',
-  simple = 'read1 | lrnprobgrp1',      
+  model = 'read9 ~ read1 lrnprob1risk.2 lrnprob1risk.3 read1*lrnprob1risk.2@slpdiff2 read1*lrnprob1risk.3@@slpdiff3 male hispanic',  
+  waldtest = 'slpdiff2:slpdiff3 = 0',
   seed = 90291,                                              
   burn = 10000,                                              
   iter = 10000)                                                
 
-# summarize results
+# print output
 output(model2)
 
-# plot conditional effects
-simple_plot(read9 ~ read1 | lrnprobgrp1.2 + lrnprobgrp1.3, model2)
-
-# NOTE: SIMPLE COMMAND DOES NOT WORK WITH . SUFFIX CONVENTION ----
-
-# linear regression with continuous moderator
+# linear regression with multicategorical moderator
 model3 <- rblimp(
   data = reading, 
-  nominal = 'lrnprobgrp1 male hispanic',
+  nominal = 'lrnprob1risk male hispanic',
   center = 'read1',
-  model = 'read9 ~ intercept@b0 read1@b1 lrnprobgrp1.2@b2 lrnprobgrp1.3@b3 read1*lrnprobgrp1.2@b4 read1*lrnprobgrp1.3@b5 male hispanic',  
-  waldtest = 'b4:b5 = 0',
-  parameters = '
-    icept_g1 = b0;
-    readslp_g1 = b1;
-    icept_g2 = b0 + b2;
-    readslp_g2 = b1 + b4;
-    icept_g3 = b0 + b3;
-    readslp_g3 = b1 + b5',
+  model = 'read9 ~ read1 lrnprob1risk read1*lrnprob1risk male hispanic',  
+  waldtest = 'read9 ~ read1 lrnprob1risk male hispanic',
+  simple = 'read1 | lrnprob1risk',      
   seed = 90291,                                              
   burn = 10000,                                              
   iter = 10000)                                                
 
-# summarize results
+# print output
 output(model3)
+
+# plot conditional effects
+simple_plot(read9 ~ read1 | lrnprob1risk.2 + lrnprob1risk.3, model3)
+
+
 

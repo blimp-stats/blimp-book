@@ -1,4 +1,4 @@
-"id","male","hispanic","behsymp1","lrnprob1","lrnprobgrp1","lrnprobatrisk1","read1","read2","read3","read9","readgrp9","stanread7","math1","math2","math3","math9","mathgrp9","stanmath7"
+id,male,hispanic,behsymp1,lrnprob1,lrnprob1risk,lrnprob1atrisk,read1,read2,read3,read9,readgrp9,stanread7,math1,math2,math3,math9,mathgrp9,stanmath7
 1,0,1,44,57,2,1,105,131,123,123,1,376,105,113,116,91,1,313
 2,0,0,48,59,2,1,153,150,138,123,1,345,149,138,120,127,1,381
 3,0,0,41,49,1,0,123,136,126,119,1,399,125,114,115,111,1,421
