@@ -1,5 +1,8 @@
 # CURVILINEAR REGRESSION
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -25,20 +28,22 @@ model <- rblimp(
     model = 'mathpost ~ anxiety anxiety^2 frlunch mathpre male',
     seed = 12345,
     burn = 10000,
-    iter = 10000)
+    iter = 10000,
+    nimps = 20)
 
+# print output
 output(model)
 
-# ADD SOME DISPLAY TO PLOT CURVILINEAR EFFECT ----
+# plot parameter distributions
+posterior_plot(model,'mathpost')
 
-library(ggplot2)
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-ggplot(model@average_imp, aes(x = anxiety, y = mathpost.predicted)) +
-  geom_point(color = "grey60", size = 2) +
-  geom_smooth(method = "lm", formula = y ~ poly(x, 2, raw = TRUE),
-              color = "blue", linewidth = 1.3, se = FALSE) +
-  labs(x = "Anxiety",
-       y = "Predicted Math Score",
-       title = "Quadratic Fit: Predicted Math Achievement by Anxiety") +
-  theme_minimal()
+# plot distributions, observed vs. imputed scores, and residuals
+imputation_plot(model)
+imputed_vs_observed_plot(model)
+residuals_plot(model)
+
+# plot predicted values against curvilinear predictor
+bivariate_plot(model, mathpost.predicted ~ anxiety)
 
