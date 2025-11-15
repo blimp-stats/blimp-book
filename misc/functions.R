@@ -15,7 +15,6 @@ plot_colors <- c(
 plot_shading <- 0.25
 
 # SHARED THEME ----
-# SHARED THEME ----
 
 blimp_theme <- function(font_size = 14) {
   base_theme <- ggplot2::theme_minimal(base_size = font_size)
@@ -55,11 +54,14 @@ blimp_theme <- function(font_size = 14) {
 # helper: coerce @syntax to a single text blob
 .syntax_as_text <- function(sx) {
   if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+    # modern BLIMP objects
     paste(unlist(sx, use.names = FALSE), collapse = "\n")
   } else if (is.character(sx)) {
+    # plain text syntax
     paste(sx, collapse = "\n")
   } else {
-    ""
+    # S4 or any other object: fall back to as.character()
+    paste(as.character(sx), collapse = "\n")
   }
 }
 
@@ -95,103 +97,159 @@ blimp_theme <- function(font_size = 14) {
   if (length(lines2) > 1L) {
     hdr_idx <- which(grepl("^\\s*[A-Z]+\\s*:", lines2[-1L]))
     if (length(hdr_idx)) {
-      stop_at <- hdr_idx[1L]
-      lines2  <- lines2[seq_len(stop_at + 1L)]
+      stop_at <- hdr_idx[1L] + 1L
+      lines2  <- lines2[seq_len(stop_at)]
     }
   }
   
   lines2
 }
 
-# EXTRACT VARIABLES FROM MODEL SECTION ----
-
-.extract_model_vars <- function(model) {
-  if (is.null(model@syntax))
-    stop("@syntax not found on model object")
-  
-  # use the shared helper that finds the MODEL block
-  mb <- .get_model_block(model)
-  if (!length(mb))
-    stop("Could not locate MODEL section in @syntax.")
-  
-  model_text <- paste(mb, collapse = " ")
-  
-  # 1) SPECIAL CASE: yjt(...) variables
-  #    e.g., "yjt(dpdd - 6)" -> "yjt(dpdd-6)" to match column names
-  yjt_pattern <- "yjt\\([^)]*\\)"
-  yjt_raw <- unlist(regmatches(model_text, gregexpr(yjt_pattern, model_text, perl = TRUE)),
-                    use.names = FALSE)
-  yjt_raw <- yjt_raw[nzchar(yjt_raw)]
-  # remove ALL spaces inside, so "yjt(dpdd - 6)" -> "yjt(dpdd-6)"
-  yjt_clean <- if (length(yjt_raw)) unique(gsub("\\s+", "", yjt_raw)) else character(0)
-  
-  # 2) GENERIC TOKENIZATION (as before, but ignoring weird operators)
-  # allow letters / digits / underscore / dot
-  clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
-  toks  <- unlist(strsplit(clean, "\\s+"), use.names = FALSE)
-  toks  <- toks[nzchar(toks)]
-  
-  # keep only things that look like variable names
-  toks  <- toks[grepl("[A-Za-z_]", toks)]
-  
-  # drop obvious non-variable keywords
-  reserved <- c(
-    "MODEL", "model",
-    "focal", "Focal",
-    "predictors", "Predictors",
-    "WITHIN", "within",
-    "BETWEEN", "between",
-    "random", "fixed"
-  )
-  toks <- setdiff(toks, reserved)
-  
-  # 3) UNION generic tokens with the yjt(...) names
-  unique(c(toks, yjt_clean))
-}
-
-# ORDINAL / NOMINAL HELPERS ----
+# ORDINAL / NOMINAL HELPER ----
 
 .get_categorical_vars <- function(model) {
-  if (is.null(model@syntax)) return(character(0))
-  sx <- model@syntax
+  sx  <- model@syntax
+  out <- character(0)
   
-  # Case 1: blimp_syntax/list with ordinal/nominal components
-  if (inherits(sx, "blimp_syntax") || is.list(sx)) {
-    keys <- intersect(names(sx), c("ORDINAL", "ordinal", "NOMINAL", "nominal"))
-    if (length(keys)) {
-      vals <- unlist(sx[keys], use.names = FALSE)
-      vals <- vals[!is.na(vals)]
-      if (length(vals)) {
-        toks <- unlist(
-          strsplit(paste(vals, collapse = " "), "[ ,;]+", perl = TRUE),
-          use.names = FALSE
-        )
-        toks <- toks[nzchar(toks)]
-        return(unique(toks))
+  # ---- 1) Modern blimp_syntax/list case: use $ordinal / $nominal directly ----
+  if ((inherits(sx, "blimp_syntax") || is.list(sx)) &&
+      any(c("ordinal", "nominal") %in% names(sx))) {
+    
+    pieces <- c(
+      if ("ordinal" %in% names(sx)) sx$ordinal else NULL,
+      if ("nominal" %in% names(sx)) sx$nominal else NULL
+    )
+    pieces <- pieces[!is.na(pieces)]
+    
+    if (length(pieces)) {
+      tokens <- unlist(
+        strsplit(paste(pieces, collapse = " "), "\\s+"),
+        use.names = FALSE
+      )
+      tokens <- tokens[nzchar(tokens)]
+      
+      # expand tokens like dep1:dep7 into dep1, dep2, ..., dep7
+      expand_range <- function(tok) {
+        if (!grepl(":", tok, fixed = TRUE)) return(tok)
+        
+        # match dep1:dep7  (same base on both sides)
+        # group 1 = base ("dep"), group 2 = start index ("1"), group 3 = end index ("7")
+        m <- regexec("^([A-Za-z._]+)([0-9]+):\\1([0-9]+)$", tok, perl = TRUE)
+        res <- regmatches(tok, m)[[1]]
+        if (length(res) != 4L) return(tok)  # didn't match dep1:dep7 form
+        
+        base  <- res[2]
+        start <- as.integer(res[3])
+        end   <- as.integer(res[4])
+        if (!is.finite(start) || !is.finite(end)) return(tok)
+        
+        if (start <= end) {
+          paste0(base, seq.int(start, end))
+        } else {
+          paste0(base, seq.int(start, end))
+        }
       }
+      
+      out <- unique(unlist(lapply(tokens, expand_range), use.names = FALSE))
     }
   }
   
-  # Case 2: plain text – look for ORDINAL: / NOMINAL: blocks
-  txt <- .syntax_as_text(sx)
-  if (!nzchar(txt)) return(character(0))
-  txt1 <- gsub("\\s+", " ", txt)
-  
-  grab <- function(key) {
-    rx <- paste0("(?i)\\b", key, "\\s*:\\s*([^;]+)\\s*;")
-    m  <- gregexpr(rx, txt1, perl = TRUE)
-    segs <- regmatches(txt1, m)[[1]]
-    if (!length(segs)) return(character(0))
-    out <- unlist(lapply(segs, function(seg) {
-      s <- sub(rx, "\\1", seg, perl = TRUE)
-      s <- gsub("[,]", " ", s)
-      toks <- strsplit(s, "\\s+", perl = TRUE)[[1]]
-      toks[nzchar(toks)]
-    }), use.names = FALSE)
-    unique(out)
+  # ---- 2) Fallback: older "flat text" case via ORDINAL:/NOMINAL: labels ----
+  if (!length(out)) {
+    txt <- .syntax_as_text(sx)
+    if (!nzchar(txt)) return(character(0))
+    
+    txt1 <- gsub("\\s+", " ", txt)
+    
+    grab <- function(key) {
+      rx <- paste0("(?i)\\b", key, "\\s*:\\s*([^;]+)\\s*;")
+      m  <- gregexpr(rx, txt1, perl = TRUE)
+      segs <- regmatches(txt1, m)[[1]]
+      if (!length(segs)) return(character(0))
+      
+      toks <- unlist(lapply(segs, function(seg) {
+        s <- sub(rx, "\\1", seg, perl = TRUE)  # captured list of names
+        s <- gsub(",", " ", s)                 # allow commas or spaces
+        tt <- strsplit(s, "\\s+", perl = TRUE)[[1]]
+        tt[nzchar(tt)]
+      }), use.names = FALSE)
+      
+      unique(toks)
+    }
+    
+    tokens <- unique(c(grab("ORDINAL"), grab("NOMINAL")))
+    if (!length(tokens)) return(character(0))
+    
+    expand_range <- function(tok) {
+      if (!grepl(":", tok, fixed = TRUE)) return(tok)
+      
+      m <- regexec("^([A-Za-z._]+)([0-9]+):\\1([0-9]+)$", tok, perl = TRUE)
+      res <- regmatches(tok, m)[[1]]
+      if (length(res) != 4L) return(tok)
+      
+      base  <- res[2]
+      start <- as.integer(res[3])
+      end   <- as.integer(res[4])
+      if (!is.finite(start) || !is.finite(end)) return(tok)
+      
+      if (start <= end) {
+        paste0(base, seq.int(start, end))
+      } else {
+        paste0(base, seq.int(start, end))
+      }
+    }
+    
+    out <- unique(unlist(lapply(tokens, expand_range), use.names = FALSE))
   }
   
-  unique(c(grab("ORDINAL"), grab("NOMINAL")))
+  out
+}
+
+# EXTRACT VARIABLES FROM MODEL SECTION ----
+
+.extract_model_vars <- function(model) {
+  # ensure @syntax exists
+  if (is.null(model@syntax))
+    stop("@syntax not found on model object")
+  
+  sx <- model@syntax
+  
+  # Case 1: modern objects — list/`blimp_syntax` with a `model` element
+  if ((inherits(sx, "blimp_syntax") || is.list(sx)) && "model" %in% names(sx)) {
+    model_text <- as.character(sx$model)
+    model_text <- paste(model_text, collapse = " ")
+  } else {
+    # Case 2: legacy text — try to find lines beginning with 'MODEL:'
+    sx_chr <- as.character(sx)
+    lines  <- unlist(strsplit(paste(sx_chr, collapse = "\n"), "\n", fixed = TRUE))
+    if (!length(lines))
+      stop("Could not coerce @syntax to character.")
+    model_lines <- grep("^\\s*MODEL\\s*:", lines, value = TRUE, ignore.case = TRUE)
+    if (!length(model_lines))
+      stop("No MODEL section found in @syntax")
+    # strip the leading 'MODEL:' label and join
+    model_text <- gsub("^\\s*MODEL\\s*:\\s*", "", paste(model_lines, collapse = " "),
+                       ignore.case = TRUE)
+  }
+  
+  # *** NEW: strip path labels like depress_sum@b1, intercept@b0, male@b2 ***
+  # We delete the "@label" part but keep the variable name before @.
+  model_text <- gsub("@[A-Za-z0-9_.]+", "", model_text)
+  
+  # Tokenize variable names appearing anywhere in the MODEL section
+  clean <- gsub("[^A-Za-z0-9_.]+", " ", model_text)
+  toks  <- unlist(strsplit(clean, "\\s+"))
+  toks  <- toks[nzchar(toks)]
+  
+  # Drop reserved tokens (operators, intercept keyword, etc.)
+  reserved <- c("~", "|", "intercept")
+  toks  <- setdiff(toks, reserved)
+  model_vars <- unique(toks)
+  
+  # Also include categorical vars from ORDINAL/NOMINAL (handles ranges like dep1:dep7)
+  cat_vars <- .get_categorical_vars(model)
+  
+  unique(c(model_vars, cat_vars))
 }
 
 # STANDARDIZE RESIDUALS (MI) ----
@@ -778,9 +836,22 @@ residuals_plot <- function(
     chunks <- chunks[nzchar(chunks)]
     
     parse_rhs_vars <- function(rhs) {
-      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]   # keep before vertical pipe
+      # keep content before any "|" (if present)
+      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]
+      
+      # 1) strip @labels  (e.g., depress_sum@b1 -> depress_sum)
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs2)
+      
+      # 2) break interactions "x*y" into "x y"
+      rhs2 <- gsub("\\*", " ", rhs2)
+      
+      # 3) tokenize on whitespace
       toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
       toks <- toks[nzchar(toks)]
+      
+      # 4) drop obvious non-variables
+      toks <- setdiff(toks, c("intercept", "+", "-", "/", "*"))
+      
       unique(toks)
     }
     
