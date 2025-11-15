@@ -42,7 +42,7 @@ model2 <- rblimp(
     center = 'groupmean = probsolvpre stanmath frlunch',
     # fixed = 'probsolve1 condition',
     model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
-    parameters = 'd = diff / sqrt(probsolvpost.totalvar)',
+    parameters = 'd = diff / sqrt(probsolvpost.totalvar); tvar = probsolvpost.totalvar',
     seed = 90291,
     burn = 10000,
     iter = 10000,
@@ -64,7 +64,7 @@ residuals_plot(model2)
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
 # random intercept as level-2 latent variable
-model2 <- rblimp(
+model3 <- rblimp(
   data = probsolve,
   clusterid = 'school',
   nominal = 'condition frlunch',
@@ -72,16 +72,23 @@ model2 <- rblimp(
   # fixed = 'probsolve1 condition',
   center = 'groupmean = probsolvpre stanmath frlunch',
   model = '
-    ranicept ~ probsolvpre.mean stanmath.mean frlunch.mean condition@diff;
+    ranicept ~ intercept probsolvpre.mean stanmath.mean frlunch.mean condition@diff;
     probsolvpost ~ intercept@ranicept probsolvpre stanmath frlunch;',
-  parameters = '
-    d = diff / sqrt(probsolvpost.totalvar + ranicept.totalvar);
-    rsq_total = ranicept.coefvar / (ranicept.totalvar + probsolvpost.totalvar);
-    rsq_between = ranicept.coefvar / ranicept.totalvar;',
+  parameters = 'd = diff / sqrt(probsolvpost.totalvar + ranicept.totalvar);',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
-output(model2)
+# print output
+output(model3)
 
-# NEED TO REVIST TOTAL VARIANCE AND ADD EFFECT SIZES ----
+# plot parameter distributions
+posterior_plot(model3,'probsolvpost')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+imputation_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)
