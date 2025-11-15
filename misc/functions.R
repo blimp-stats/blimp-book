@@ -469,8 +469,8 @@ residuals_plot <- function(
     # where to show the curve/ribbon
     support       = c("density", "quantile"),
     trim_prop     = 0.025,
-    window_prop   = 0.10,
-    min_n_prop    = 0.01,
+    window_prop   = 0.15,
+    min_n_prop    = 0.005,
     # robustification for FITTING ONLY
     center_by_imp = FALSE,
     winsor_fit    = TRUE,
@@ -543,7 +543,7 @@ residuals_plot <- function(
     do.call(rbind, out)
   }
   
-  # view-only y-limits
+  # view-only y-limits (no longer used for A/B, but kept for index section)
   y_limits <- function(y) {
     switch(
       y_clip,
@@ -554,12 +554,17 @@ residuals_plot <- function(
     )
   }
   
-  # stack a y/x pair across imputations
+  # stack a y/x pair across imputations (add row index for joining z-scores)
   stack_cols <- function(ycol, xcol) {
     dfs <- lapply(seq_along(model@imputations), function(i) {
       d <- model@imputations[[i]]
       if (!all(c(ycol, xcol) %in% names(d))) return(NULL)
-      data.frame(x = d[[xcol]], y = d[[ycol]], imp = i)
+      data.frame(
+        x   = d[[xcol]],
+        y   = d[[ycol]],
+        imp = i,
+        row = seq_len(nrow(d))
+      )
     })
     do.call(rbind, dfs)
   }
@@ -664,6 +669,13 @@ residuals_plot <- function(
               paste(setdiff(var_req, bases_pair), collapse = ", "))
   }
   
+  # ==== standardized residuals for plotting (A/B) ==============================
+  std_data <- data.frame()
+  if (length(bases_resid)) {
+    std_obj  <- standardize_residuals(model, vars = bases_resid)
+    std_data <- std_obj$data  # columns: base, imp, row, resid, z
+  }
+  
   # ==== categorical predictor set from @syntax (plus <4-unique fallback) =======
   cat_vars <- tolower(.get_categorical_vars(model))
   is_categorical_name <- function(vname) tolower(vname) %in% cat_vars
@@ -684,6 +696,15 @@ residuals_plot <- function(
       df <- stack_cols(ycol, xcol)
       if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base); return(NULL) }
       if (!is.numeric(df$x) || !is.numeric(df$y)) { message("Skipping non-numeric: ", base); return(NULL) }
+      
+      ## replace raw residuals with standardized residuals
+      if (nrow(std_data)) {
+        sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
+        if (nrow(sub_z)) {
+          df <- merge(df, sub_z, by = c("imp", "row"), all.x = TRUE, sort = FALSE)
+          df$y <- df$z
+        }
+      }
       
       if (tolower(smoother) == "loess") {
         curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
@@ -728,12 +749,12 @@ residuals_plot <- function(
           ) else NULL } +
         ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
                            inherit.aes = FALSE, color = curve_col, linewidth = 1.2) +
-        ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
+        ggplot2::coord_cartesian(ylim = c(-4, 4)) +
         ggplot2::labs(
           title = paste0("Residuals vs. Predicted Values Over ", n_imps,
                          " Imputed Data Sets: ", base),
           x = paste0(base, ".predicted"),
-          y = paste0(base, ".residual")
+          y = "Standardized Residual"
         ) +
         blimp_theme(font_size) +
         ggplot2::theme(
@@ -815,6 +836,15 @@ residuals_plot <- function(
         if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base, " ~ ", xname); return(NULL) }
         if (!is.numeric(df$y)) { message("Skipping non-numeric residuals for: ", base); return(NULL) }
         
+        ## replace raw residuals with standardized residuals
+        if (nrow(std_data)) {
+          sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
+          if (nrow(sub_z)) {
+            df <- merge(df, sub_z, by = c("imp", "row"), all.x = TRUE, sort = FALSE)
+            df$y <- df$z
+          }
+        }
+        
         # categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values
         unique_x <- length(unique(df$x[is.finite(df$x)]))
         is_cat <- is_categorical_name(xname) || (is.numeric(df$x) && unique_x > 0 && unique_x < 4)
@@ -840,12 +870,12 @@ residuals_plot <- function(
                 data = summ, ggplot2::aes(x = x_f, y = mean),
                 inherit.aes = FALSE, size = 2.6, color = unname(plot_colors["violet"])
               ) else NULL } +
-            ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
+            ggplot2::coord_cartesian(ylim = c(-4, 4)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
                              " Imputed Data Sets: ", base, " vs. ", xname),
               x = xname,
-              y = paste0(base, ".residual")
+              y = "Standardized Residual"
             ) +
             blimp_theme(font_size) +
             ggplot2::theme(
@@ -902,12 +932,12 @@ residuals_plot <- function(
             { if (exists("curve_df"))
               ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
                                  inherit.aes = FALSE, color = curve_col, linewidth = 1.2) else NULL } +
-            ggplot2::coord_cartesian(ylim = y_limits(df$y)) +
+            ggplot2::coord_cartesian(ylim = c(-4, 4)) +
             ggplot2::labs(
               title = paste0("Residuals vs. Predictor Over ", n_imps,
                              " Imputed Data Sets: ", base, " vs. ", xname),
               x = xname,
-              y = paste0(base, ".residual")
+              y = "Standardized Residual"
             ) +
             blimp_theme(font_size) +
             ggplot2::theme(

@@ -1,5 +1,8 @@
 # INTERACTION INVOLVING A CONTINUOUS MODERATOR
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -13,9 +16,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 
 # create data frame from github data
 reading <- read.csv(data_url)
-
-# plotting function
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # FIT ADDITIVE MODEL ----
 

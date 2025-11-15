@@ -4,6 +4,9 @@
 
 # INTERACTION INVOLVING A CATEGORICAL MODERATOR
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -17,9 +20,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 
 # create data frame from github data
 reading <- read.csv(data_url)
-
-# plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # FIT MODEL WITH A BINARY MODERATOR ----
 
@@ -37,6 +37,8 @@ model1 <- rblimp(
 
 # print output and parameter distributions
 output(model1)
+
+# plot parameter distributions
 posterior_plot(model1,'read9')
 
 # plot conditional effects
