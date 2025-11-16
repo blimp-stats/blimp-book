@@ -1,10 +1,14 @@
-# MULTILEVEL MODEL WITH DYNAMIC EFFECT
+# MULTILEVEL MODEL WITH LAGGED (DYNAMIC) EFFECTS
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
 library(rblimp)
 library(psych)
 library(summarytools)
+set_blimp('/applications/blimp/blimp-nightly')
 
 # READ DATA ----
 
@@ -15,8 +19,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 diary <- read.csv(data_url)
 
 # FIT MODEL ----
-
-set_blimp('/applications/blimp/blimp-nightly')
 
 # dsem with lagged predictors
 model <- rblimp(

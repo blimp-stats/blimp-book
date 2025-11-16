@@ -42,7 +42,7 @@ model2 <- rblimp(
     center = 'groupmean = probsolvpre stanmath frlunch',
     # fixed = 'probsolve1 condition',
     model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
-    parameters = 'd = diff / sqrt(probsolvpost.totalvar); tvar = probsolvpost.totalvar',
+    parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
     seed = 90291,
     burn = 10000,
     iter = 10000,

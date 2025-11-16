@@ -1,4 +1,11 @@
-# MULTILEVEL MODEL WITH HETEROGENEOUS WITHIN-CLUSTER VARIATION
+# BRIAN NOTES ----
+# options = hev gives VERY different estimates of the condition effect with latent variable specification
+# the two approaches are effectively equivalent without options = hev
+
+# RANDOM INTERCEPT REGRESSION WITH HETEROGENEOUS WITHIN-CLUSTER VARIATION
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
@@ -9,47 +16,37 @@ library(summarytools)
 # READ DATA ----
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/diary.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving2level.csv'
 
 # create data frame from github data
-diary <- read.csv(data_url)
+probsolve <- read.csv(data_url)
 
-# FIT RANDOM SLOPE MODEL WITH HETERGENEOUS VARIATION ----
+# FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
 
-# mixed model specification with heterogeneous variation
-model1 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
-  model = 'posaff ~ pain pain.mean stress female pain*stress | pain',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'hev'
-)
-output(model1)
+# mixed model specification with heterogeneous within-cluster variation
+model <- rblimp(
+    data = probsolve,
+    clusterid = 'school',
+    nominal = 'condition frlunch',
+    center = 'groupmean = probsolvpre stanmath frlunch',
+    # fixed = 'probsolve1 condition',
+    model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
+    parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
+    seed = 90291,
+    burn = 10000,
+    iter = 10000,
+    options = 'hev',
+    nimps = 20)
 
-# FIT LOCATION SCALE MODEL ----
+# print output
+output(model)
 
-# latent variable specificaton
-model2 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  nominal = 'female',
-  latent = 'person = ranicept ranslope logvar;',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
-  model = '
-    level2:
-    ranicept ~ intercept pain.mean stress female;
-    ranslope ~ intercept stress;
-    logvar ~ intercept stress;
-    ranicept ranslope logvar ~~ ranicept ranslope logvar;
-    level1:
-    posaff ~ intercept@ranicept pain@ranslope;
-    scale:
-    var(posaff) ~ intercept@logvar pain;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000
-)
-output(model2)
+# plot parameter distributions
+posterior_plot(model,'probsolvpost')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+imputation_plot(model)
+imputed_vs_observed_plot(model)
+residuals_plot(model)
