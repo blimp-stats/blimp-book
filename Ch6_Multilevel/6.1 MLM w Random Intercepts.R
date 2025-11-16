@@ -27,10 +27,18 @@ model1 <- rblimp(
   model = 'intercept -> probsolvpost probsolvpre stanmath frlunch',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
 # print output
 output(model1)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
 
 # FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
 
@@ -57,7 +65,7 @@ posterior_plot(model2,'probsolvpost')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model2)
+distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 residuals_plot(model2)
 
@@ -89,6 +97,6 @@ posterior_plot(model3,'probsolvpost')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model3)
+distribution_plot(model3)
 imputed_vs_observed_plot(model3)
 residuals_plot(model3)

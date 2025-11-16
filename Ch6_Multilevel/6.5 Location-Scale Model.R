@@ -1,5 +1,8 @@
 # MULTILEVEL MODEL WITH HETEROGENEOUS WITHIN-CLUSTER VARIATION
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -14,25 +17,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 diary <- read.csv(data_url)
 
-# FIT RANDOM SLOPE MODEL WITH HETERGENEOUS VARIATION ----
+# FIT MODEL ----
 
-# mixed model specification with heterogeneous variation
-model1 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
-  model = 'posaff ~ pain pain.mean stress female pain*stress | pain',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'hev'
-)
-output(model1)
-
-# FIT LOCATION SCALE MODEL ----
-
-# latent variable specificaton
-model2 <- rblimp(
+# location-scale model
+model <- rblimp(
   data = diary,
   clusterid = 'person',
   nominal = 'female',
@@ -42,14 +30,27 @@ model2 <- rblimp(
     level2:
     ranicept ~ intercept pain.mean stress female;
     ranslope ~ intercept stress;
-    logvar ~ intercept stress;
-    ranicept ranslope logvar ~~ ranicept ranslope logvar;
+    ranicept ~~ ranslope;
     level1:
     posaff ~ intercept@ranicept pain@ranslope;
     scale:
+    logvar ~ intercept stress;
+    logvar ~~ ranicept ranslope;
     var(posaff) ~ intercept@logvar pain;',
   seed = 90291,
   burn = 10000,
   iter = 10000
 )
-output(model2)
+
+# print output
+output(model)
+
+# plot parameter distributions
+posterior_plot(model,'posaff')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model)
+imputed_vs_observed_plot(model)
+residuals_plot(model)

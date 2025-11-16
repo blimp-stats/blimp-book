@@ -455,7 +455,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 
 # IMPUTATION HISTOGRAM(S) ----
 
-imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
+distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
                             fill_color = "teal", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
@@ -489,6 +489,9 @@ imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
     # base name = everything before first dot, as before
     base_all  <- sub("\\..*$", "", vars_all)
     var <- vars_all[base_all %in% model_vars]
+    
+    # >>> NEW LINE (excludes any *.predicted column)
+    var <- var[!grepl("\\.predicted$", var)]
     
     # NEW: add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
