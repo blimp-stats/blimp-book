@@ -47,6 +47,6 @@ posterior_plot(model,'probsolvpost')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model)
+distribution_plot(model)
 imputed_vs_observed_plot(model)
 residuals_plot(model)

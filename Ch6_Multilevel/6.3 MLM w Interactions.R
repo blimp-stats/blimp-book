@@ -44,7 +44,7 @@ simple_plot(posaff ~ pain.mean[person] | stress, model1)
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model1)
+distribution_plot(model1)
 imputed_vs_observed_plot(model1)
 residuals_plot(model1)
 
@@ -84,6 +84,6 @@ posterior_plot(model2,'posaff')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model2)
+distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 residuals_plot(model2)

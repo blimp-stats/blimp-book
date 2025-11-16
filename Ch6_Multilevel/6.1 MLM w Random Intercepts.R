@@ -27,18 +27,10 @@ model1 <- rblimp(
   model = 'intercept -> probsolvpost probsolvpre stanmath frlunch',
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  iter = 10000)
 
 # print output
 output(model1)
-
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
 
 # FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
 
@@ -47,8 +39,8 @@ model2 <- rblimp(
     data = probsolve,
     clusterid = 'school',
     nominal = 'condition frlunch',
-    center = 'groupmean = probsolvpre stanmath frlunch',
     # fixed = 'probsolve1 condition',
+    center = 'groupmean = probsolvpre stanmath frlunch',
     model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
     parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
     seed = 90291,

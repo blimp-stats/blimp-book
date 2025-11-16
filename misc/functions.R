@@ -40,7 +40,7 @@ blimp_theme <- function(font_size = 14) {
     legend.text      = ggplot2::element_text(size = font_size),
     legend.key.height = ggplot2::unit(1.1, "lines"),
     legend.key.width  = ggplot2::unit(1.6, "lines"),
-    legend.position   = c(0.95, 0.85),
+    legend.position   = c(0.92, 0.85),
     legend.justification = c("right", "top"),
     legend.background = ggplot2::element_blank(),
     legend.key        = ggplot2::element_blank()
@@ -453,7 +453,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   structure(list(data = data_stacked, stats = stats), class = "blimp_stdres")
 }
 
-# IMPUTATION HISTOGRAM(S) ----
+# DISTRIBUTION HISTOGRAM(S) ----
 
 distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
                             fill_color = "teal", font_size = 14) {
@@ -901,6 +901,42 @@ residuals_plot <- function(
     std_obj  <- standardize_residuals(model, vars = bases_resid)
     std_data <- std_obj$data  # columns: base, imp, row, resid, z
   }
+  
+  ## NEW: also standardize any [clusterid] residual columns and append them
+  ##      (random intercepts/slopes like dv[clusterid])
+  cluster_cols <- cols1[grepl("\\[", cols1)]  # NOTE: regex, NOT fixed=TRUE
+  if (length(cluster_cols)) {
+    for (cc in cluster_cols) {
+      # if this base is already in std_data from standardize_residuals(), skip
+      if (nrow(std_data) && cc %in% unique(std_data$base)) next
+      
+      dfs <- lapply(seq_along(model@imputations), function(i) {
+        d <- model@imputations[[i]]
+        if (!cc %in% names(d)) return(NULL)
+        data.frame(
+          base  = cc,
+          imp   = i,
+          row   = seq_len(nrow(d)),
+          resid = d[[cc]],
+          stringsAsFactors = FALSE
+        )
+      })
+      dfc <- do.call(rbind, dfs)
+      if (is.null(dfc) || !nrow(dfc)) next
+      
+      y_all <- dfc$resid
+      y_all <- y_all[is.finite(y_all)]
+      if (length(y_all) < 2L) next
+      
+      mu  <- mean(y_all)
+      sig <- stats::sd(y_all)
+      if (!is.finite(sig) || sig <= 0) next
+      
+      dfc$z <- (dfc$resid - mu) / sig
+      std_data <- rbind(std_data, dfc[, c("base","imp","row","resid","z")])
+    }
+  }
+  ## END NEW
   
   # ==== categorical predictor set from @syntax (plus <4-unique fallback) =======
   cat_vars <- tolower(.get_categorical_vars(model))
@@ -1354,32 +1390,55 @@ residuals_plot <- function(
   }
   
   # C) Standardized residual index plots + table --------------------------------
-  if (isTRUE(show_index) && length(bases_resid)) {
-    sr  <- standardize_residuals(model, vars = bases_resid)
-    dat <- sr$data
+  if (isTRUE(show_index) && nrow(std_data)) {
+    
+    ## Identify random intercepts / slopes from std_data:
+    ##  - any base with "[" in the name
+    ##  - whose underlying DV (before "$" and "[") is in bases_resid
+    re_bases_all <- unique(std_data$base[grepl("\\[", std_data$base)])
+    
+    if (length(re_bases_all)) {
+      # strip [cluster] part
+      dv_part <- sub("\\[.*$", "", re_bases_all)
+      # strip $interaction part, so posaff$pain -> posaff
+      dv_root <- sub("\\$.*$", "", dv_part)
+      # keep only those whose root DV has a .residual column
+      keep <- dv_root %in% bases_resid
+      bases_random <- re_bases_all[keep]
+    } else {
+      bases_random <- character(0L)
+    }
+    
+    ## Allowed bases for the index plot:
+    ##   - ordinary residual bases (bases_resid, e.g., "posaff")
+    ##   - random intercepts/slopes tied to those DVs (bases_random)
+    allowed_bases <- unique(c(bases_resid, bases_random))
+    
+    dat <- std_data[std_data$base %in% allowed_bases, , drop = FALSE]
     
     if (nrow(dat)) {
       n_sets <- length(model@imputations)
       
-      split_idx <- interaction(dat$base, dat$row, drop = TRUE)
+      ## 1. Aggregate per (base, row)
       if (signed_index) {
-        z_case <- tapply(dat$z, split_idx, mean, na.rm = TRUE)
-        yval   <- as.numeric(z_case)
-        ylab   <- "Standardized Residual"
-        keys   <- strsplit(names(z_case), split = ".", fixed = TRUE)
+        agg_df <- stats::aggregate(z ~ base + row, data = dat,
+                                   FUN = mean, na.rm = TRUE)
+        names(agg_df)[names(agg_df) == "z"] <- "y"
+        ylab <- "Standardized Residual"
       } else {
-        absz <- abs(dat$z)
-        agg  <- if (index_aggregate == "mean") tapply(absz, split_idx, mean, na.rm = TRUE)
-        else                                  tapply(absz, split_idx, max,  na.rm = TRUE)
-        yval <- as.numeric(agg)
+        dat$absz <- abs(dat$z)
+        fun <- if (index_aggregate == "mean") mean else max
+        agg_df <- stats::aggregate(absz ~ base + row, data = dat,
+                                   FUN = fun, na.rm = TRUE)
+        names(agg_df)[names(agg_df) == "absz"] <- "y"
         ylab <- "Absolute Value of Standardized Residual"
-        keys <- strsplit(names(tapply(dat$row, split_idx, length)), split = ".", fixed = TRUE)
       }
-      base_i <- vapply(keys, `[`, character(1L), 1L)
-      row_i  <- as.integer(vapply(keys, `[`, character(1L), 2L))
-      df_idx <- data.frame(base = base_i, row = row_i, y = yval, stringsAsFactors = FALSE)
       
-      bases_idx <- unique(dat$base)
+      ## Drop rows with non-finite y
+      df_idx <- agg_df[is.finite(agg_df$y), c("base", "row", "y")]
+      bases_idx <- unique(df_idx$base)
+      
+      ## 2. Outlier summaries (per base)
       summaries <- lapply(bases_idx, function(b) {
         d <- dat[dat$base == b, , drop = FALSE]
         if (!nrow(d)) return(NULL)
@@ -1405,18 +1464,25 @@ residuals_plot <- function(
           tab$max_abs_z[i]   <- suppressWarnings(max(a, na.rm = TRUE))
         }
         tab <- tab[tab$num_outlier > 0, , drop = FALSE]
-        if (!nrow(tab)) { message("No rows with |z| > ", print_threshold, " for ", b, "."); return(NULL) }
-        tab[, c("mean_abs_z","min_abs_z","max_abs_z")] <- round(tab[, c("mean_abs_z","min_abs_z","max_abs_z")], 2)
+        if (!nrow(tab)) {
+          message("No rows with |z| > ", print_threshold, " for ", b, ".")
+          return(NULL)
+        }
+        tab[, c("mean_abs_z", "min_abs_z", "max_abs_z")] <-
+          round(tab[, c("mean_abs_z", "min_abs_z", "max_abs_z")], 2)
         tab <- tab[order(-tab$num_outlier, -tab$mean_abs_z, tab$row), , drop = FALSE]
-        message("Outlier summary for ", b, " (|z| > ", print_threshold, "): n rows = ", nrow(tab))
+        message("Outlier summary for ", b, " (|z| > ", print_threshold,
+                "): n rows = ", nrow(tab))
         print(utils::head(tab, print_head), row.names = FALSE)
         tab
       })
       names(summaries) <- bases_idx
       
+      ## 3. Build index plots
       build_index <- function(b) {
         d <- df_idx[df_idx$base == b, , drop = FALSE]
         if (!nrow(d)) return(NULL)
+        
         if (index_order == "rank") {
           d <- d[order(d$y), ]
           d$index <- seq_len(nrow(d))
@@ -1425,6 +1491,7 @@ residuals_plot <- function(
           d$index <- d$row
           xtitle <- "Case (row order)"
         }
+        
         cutoff_layer <- NULL
         if (length(index_cutoff)) {
           if (signed_index) {
@@ -1446,24 +1513,37 @@ residuals_plot <- function(
             )
           }
         }
+        
         ggplot2::ggplot(d, ggplot2::aes(x = index, y = y)) +
-          ggplot2::geom_point(size = 1.4, alpha = 0.85, color = unname(plot_colors[index_point_color])) +
+          ggplot2::geom_point(
+            size = 1.4, alpha = 0.85,
+            color = unname(plot_colors[index_point_color])
+          ) +
           cutoff_layer +
           ggplot2::scale_y_continuous(breaks = scales::pretty_breaks()) +
           ggplot2::labs(
             title = paste0("Standardized Residual Index Plot Over ", n_sets,
                            " Imputed Data Sets: ", b),
             x = xtitle,
-            y = "Standardized Residual"
+            y = ylab
           ) +
           blimp_theme(font_size) +
           ggplot2::theme(
-            axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+            axis.text.y  = ggplot2::element_text(
+              size = font_size,
+              margin = ggplot2::margin(r = 6)
+            ),
             axis.ticks.y = ggplot2::element_line(),
             axis.title.y = ggplot2::element_text(size = font_size),
-            axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-            axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12)),
-            panel.border = ggplot2::element_blank(),
+            axis.text.x  = ggplot2::element_text(
+              size = font_size,
+              margin = ggplot2::margin(t = 2)
+            ),
+            axis.title.x = ggplot2::element_text(
+              size = font_size,
+              margin = ggplot2::margin(t = 12)
+            ),
+            panel.border     = ggplot2::element_blank(),
             panel.grid.major = ggplot2::element_blank(),
             panel.grid.minor = ggplot2::element_blank()
           )
@@ -1473,9 +1553,44 @@ residuals_plot <- function(
       plots <- c(plots, idx_plots)
       lapply(idx_plots, function(p) if (!is.null(p)) print(p))
       
+      # D) Residual histograms --------------------------------------------------
+      # One histogram per residual variable that appears in the index plots
+      # (i.e., each element of bases_idx). Uses standardized residuals (z),
+      # pooled over imputations.
+      build_hist <- function(b) {
+        z_vals <- dat$z[dat$base == b]
+        z_vals <- z_vals[is.finite(z_vals)]
+        if (!length(z_vals)) return(NULL)
+        
+        ggplot2::ggplot(
+          data.frame(z = z_vals),
+          ggplot2::aes(x = z, y = ggplot2::after_stat(density))
+        ) +
+          ggplot2::geom_histogram(
+            bins  = 100,
+            fill  = unname(plot_colors["teal"]),
+            color = unname(plot_colors["teal"]),
+            alpha = plot_shading
+          ) +
+          ggplot2::labs(
+            title = paste0(
+              "Distribution of Standardized Residuals Over ",
+              n_sets, " Imputed Data Sets: ", b
+            ),
+            x = "Standardized Residual",
+            y = NULL
+          ) +
+          blimp_theme(font_size)
+      }
+      
+      hist_plots <- setNames(lapply(bases_idx, build_hist),
+                             paste0(bases_idx, "_hist"))
+      plots <- c(plots, hist_plots)
+      lapply(hist_plots, function(p) if (!is.null(p)) print(p))
+      
       return(invisible(list(plots = plots, summaries = summaries)))
     } else {
-      message("No standardized residuals available for index plots.")
+      message("No standardized residuals available for index plots (after filtering to .residual and random effects tied to those DVs).")
       return(invisible(plots))
     }
   }
