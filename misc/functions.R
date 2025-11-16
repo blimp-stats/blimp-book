@@ -14,6 +14,16 @@ plot_colors <- c(
 # alpha used for filled layers (bars, ribbons, etc.) across every plot
 plot_shading <- 0.25
 
+# MAD-based winsorization used in multiple plotting functions
+winsor_mad <- function(x, k = 3) {
+  med <- stats::median(x, na.rm = TRUE)
+  mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
+  if (!is.finite(mad) || mad == 0) return(x)
+  lo <- med - k * mad
+  hi <- med + k * mad
+  pmin(pmax(x, lo), hi)
+}
+
 # SHARED THEME ----
 
 blimp_theme <- function(font_size = 14) {
@@ -66,6 +76,8 @@ blimp_theme <- function(font_size = 14) {
 }
 
 # helper: pull the MODEL block lines (handles focal:/predictors: etc.)
+# Returns only the MODEL block, handling both modern list syntax (sx$model)
+# and legacy flat text with "MODEL:" and other section headers.
 .get_model_block <- function(model) {
   if (is.null(model@syntax)) return(character(0))
   sx <- model@syntax
@@ -106,6 +118,9 @@ blimp_theme <- function(font_size = 14) {
 }
 
 # ORDINAL / NOMINAL HELPER ----
+# Returns variable names declared in ORDINAL/NOMINAL sections, expanding ranges
+# like dep1:dep7 -> dep1, ..., dep7. Works for both modern list syntax
+# ($ordinal/$nominal) and legacy flat text with ORDINAL:/NOMINAL: headers.
 
 .get_categorical_vars <- function(model) {
   sx  <- model@syntax
@@ -256,30 +271,37 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
 .get_cluster_id <- function(model) {
   sx <- model@syntax
   
-  ## Case 1: modern blimp_syntax / list: use the $clusterid element directly
+  # helper: strip anything after the first ';' and trim
+  strip_after_semicolon <- function(x) {
+    x <- as.character(x)[1L]
+    if (!nzchar(x)) return(NA_character_)
+    # keep everything before the first ';'
+    x <- sub(";.*$", "", x)
+    x <- trimws(x)
+    ifelse(nzchar(x), x, NA_character_)
+  }
+  
+  ## Case 1: modern blimp_syntax / list: use the $clusterid element
   if (inherits(sx, "blimp_syntax") || is.list(sx)) {
     nms <- tolower(names(sx))
     i   <- match("clusterid", nms)
     if (!is.na(i)) {
-      val <- sx[[i]]
-      val <- trimws(as.character(val)[1L])
-      return(ifelse(nzchar(val), val, NA_character_))
+      val <- strip_after_semicolon(sx[[i]])
+      return(val)
     }
   }
   
-  ## Case 2: fall back to parsing the text blob (legacy syntax)
+  ## Case 2: legacy: parse CLUSTERID from the syntax text
   txt <- .syntax_as_text(sx)
   if (!nzchar(txt)) return(NA_character_)
   
-  m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^;]+);", txt, perl = TRUE)
+  m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
   if (m < 0) return(NA_character_)
   
   seg <- regmatches(txt, m)
   seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
-  seg <- sub(";", "", seg, fixed = TRUE)
-  seg <- trimws(seg)
   
-  ifelse(nzchar(seg), seg, NA_character_)
+  strip_after_semicolon(seg)
 }
 
 # LEVEL-2 PREDICTOR DETECTION ----
@@ -326,6 +348,9 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
 }
 
 # EXTRACT VARIABLES FROM MODEL SECTION ----
+# Extracts all variable names appearing anywhere in the MODEL section,
+# after stripping path labels like x@b1. Also appends categorical vars
+# from ORDINAL/NOMINAL. Used to decide which variables to plot by default.
 
 .extract_model_vars <- function(model) {
   # ensure @syntax exists
@@ -352,8 +377,7 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
                        ignore.case = TRUE)
   }
   
-  # *** NEW: strip path labels like depress_sum@b1, intercept@b0, male@b2 ***
-  # We delete the "@label" part but keep the variable name before @.
+  # strip path labels like depress_sum@b1, intercept@b0, male@b2
   model_text <- gsub("@[A-Za-z0-9_.]+", "", model_text)
   
   # Tokenize variable names appearing anywhere in the MODEL section
@@ -453,10 +477,12 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   structure(list(data = data_stacked, stats = stats), class = "blimp_stdres")
 }
 
-# DISTRIBUTION HISTOGRAM(S) ----
+# IMPUTATION HISTOGRAM(S) ----
+# If 'bins' is NULL, choose bin count adaptively based on unique values.
+# If non-NULL, the user-specified number of bins is used verbatim.
 
-distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
-                            fill_color = "teal", font_size = 14) {
+distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
+                              fill_color = "teal", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
@@ -464,6 +490,7 @@ distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
   vars_all <- names(model@imputations[[1]])
   
   # helper: get DV names from MODEL block (handles focal:, etc.)
+  # Used to find cluster-level and random-slope terms tied to those DVs.
   get_dv_names <- function(model) {
     mb <- .get_model_block(model)
     if (!length(mb)) return(character(0))
@@ -490,10 +517,10 @@ distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
     base_all  <- sub("\\..*$", "", vars_all)
     var <- vars_all[base_all %in% model_vars]
     
-    # >>> NEW LINE (excludes any *.predicted column)
+    # exclude *.predicted columns
     var <- var[!grepl("\\.predicted$", var)]
     
-    # NEW: add cluster-level and random-slope terms tied to the DVs
+    # add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
     if (length(dv_names)) {
       # things like y[cluster]  (random intercepts / cluster-level residuals)
@@ -523,34 +550,83 @@ distribution_plot <- function(model, var = NULL, bins = 30, main = NULL,
   fill_col <- unname(plot_colors[fill_color])
   n_sets   <- length(model@imputations)
   
-  build_one <- function(v) {
+  # inner plot builder (bins_arg comes from outer 'bins')
+  build_one <- function(v, bins_arg) {
     imp_vals <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
-    if (!is.numeric(imp_vals)) { message("Skipping non-numeric variable: ", v); return(NULL) }
+    if (!is.numeric(imp_vals)) {
+      message("Skipping non-numeric variable: ", v)
+      return(NULL)
+    }
+    
+    x <- imp_vals[is.finite(imp_vals)]
+    n <- length(x)
+    if (n == 0L) {
+      message("No finite values for variable: ", v)
+      return(NULL)
+    }
+    
+    n_unique <- length(unique(x))
     
     main_text <- if (is.null(main))
       paste0("Distribution Over ", n_sets, " Imputed Data Sets: ", v)
     else main
     
-    ggplot2::ggplot(data.frame(x = imp_vals),
-                    ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
-      ggplot2::geom_histogram(
-        bins = bins,
-        fill = fill_col,
-        color = fill_col,
-        alpha = plot_shading
-      ) +
-      ggplot2::labs(title = main_text, x = v, y = NULL) +
-      blimp_theme(font_size)
+    ## Case 1: low-support numeric -> treat as discrete (bar chart of counts)
+    if (n_unique <= 10L) {
+      df <- data.frame(x = factor(x, levels = sort(unique(x))))
+      
+      ggplot2::ggplot(df, ggplot2::aes(x = x)) +
+        ggplot2::geom_bar(
+          fill  = fill_col,
+          color = fill_col,
+          alpha = plot_shading
+        ) +
+        ggplot2::labs(
+          title = main_text,
+          x     = v,
+          y     = "Count"
+        ) +
+        blimp_theme(font_size)
+      
+    } else {
+      ## Case 2: more continuous -> choose a conservative bin count
+      
+      if (!is.null(bins_arg)) {
+        # user explicitly supplied bins -> respect it
+        bins_use <- as.integer(bins_arg)
+      } else {
+        # adaptive: grows sub-linearly with unique values, clamped
+        bins_use <- as.integer(round(sqrt(n_unique) * 1.5))
+        bins_use <- max(15L, min(40L, bins_use))
+      }
+      
+      ggplot2::ggplot(data.frame(x = x),
+                      ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
+        ggplot2::geom_histogram(
+          bins  = bins_use,
+          fill  = fill_col,
+          color = fill_col,
+          alpha = plot_shading
+        ) +
+        ggplot2::labs(
+          title = main_text,
+          x     = v,
+          y     = NULL
+        ) +
+        blimp_theme(font_size)
+    }
   }
   
-  plots <- setNames(lapply(var, build_one), var)
+  plots <- setNames(lapply(var, build_one, bins_arg = bins), var)
   for (p in plots) if (!is.null(p)) print(p)
   invisible(plots)
 }
 
 # OBSERVED VS. IMPUTED ----
+# If 'bins' is NULL, choose bin count adaptively based on unique values.
+# If non-NULL, the user-specified number of bins is used verbatim.
 
-imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
+imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL,
                                      observed_fill = "teal", imputed_line = "violet",
                                      font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
@@ -580,7 +656,7 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   vars_base_noyjt <- vars_base[!is_yjt]
   
   if (is.null(var)) {
-    # use your robust MODEL parser
+    # use robust MODEL parser
     model_vars <- .extract_model_vars(model)
     # exact name matching to avoid age/cigage problems
     var <- intersect(vars_base_noyjt, model_vars)
@@ -601,7 +677,8 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
   imp_col <- unname(plot_colors[imputed_line])
   n_imps  <- length(model@imputations)
   
-  build_one <- function(v) {
+  # inner builder: bins_arg is the outer 'bins'
+  build_one <- function(v, bins_arg) {
     # extra guard: never plot yjt(...) even if explicitly requested
     if (grepl("^yjt\\(", v)) {
       message("Skipping yjt-derived variable in observed vs. imputed plot: ", v)
@@ -633,51 +710,119 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = 50, main = NULL,
       return(NULL)
     }
     
-    rng <- range(c(obs_vals, imp_vals), na.rm = TRUE)
-    binwidth <- if (diff(rng) > 0) diff(rng) / bins else 1
-    boundary <- rng[1]
+    obs_vals <- obs_vals[is.finite(obs_vals)]
+    imp_vals <- imp_vals[is.finite(imp_vals)]
+    if (!length(obs_vals) || !length(imp_vals)) {
+      message("Skipping variable with no finite observed/imputed data: ", v)
+      return(NULL)
+    }
     
-    df_obs <- data.frame(x = obs_vals, grp = "Observed")
-    df_imp <- data.frame(x = imp_vals, grp = rep("Imputed", length(imp_vals)))
+    # Decide discrete vs. continuous based on support of the observed data.
+    # We don't want high-resolution bins when the original scale had few values.
+    n_unique_obs <- length(unique(obs_vals))
     
     title_text <- if (is.null(main))
       paste0("Observed vs. Imputed Scores Over ", n_imps, " Imputed Data Sets: ", v)
     else main
     
-    ggplot2::ggplot() +
-      ggplot2::geom_histogram(
-        data = df_obs,
-        ggplot2::aes(x = x, y = ggplot2::after_stat(density), fill = grp),
-        binwidth = binwidth, boundary = boundary,
-        color = obs_col, alpha = plot_shading
-      ) +
-      ggplot2::geom_histogram(
-        data = df_imp,
-        ggplot2::aes(x = x, y = ggplot2::after_stat(density), color = grp),
-        binwidth = binwidth, boundary = boundary,
-        fill = NA, linewidth = 1.2
-      ) +
-      ggplot2::coord_cartesian(xlim = rng) +
-      ggplot2::labs(
-        title = title_text,
-        x = v, y = NULL,
-        fill = NULL, color = NULL
-      ) +
-      ggplot2::scale_fill_manual(values = c(Observed = obs_col), drop = TRUE) +
-      ggplot2::scale_color_manual(values = c(Imputed = imp_col), drop = TRUE) +
-      ggplot2::guides(
-        fill  = ggplot2::guide_legend(order = 1, override.aes = list(color = obs_col, alpha = plot_shading)),
-        color = ggplot2::guide_legend(order = 2, override.aes = list(fill = NA, linewidth = 1.2))
-      ) +
-      blimp_theme(font_size)
+    ## Case 1: low-support numeric -> treat as discrete (bar chart of counts)
+    if (n_unique_obs <= 10L) {
+      levs <- sort(unique(c(obs_vals, imp_vals)))
+      df_disc <- rbind(
+        data.frame(x = factor(obs_vals, levels = levs), grp = "Observed"),
+        data.frame(x = factor(imp_vals, levels = levs), grp = "Imputed")
+      )
+      
+      ggplot2::ggplot(df_disc, ggplot2::aes(x = x, fill = grp)) +
+        ggplot2::geom_bar(position = "dodge", alpha = plot_shading) +
+        ggplot2::scale_fill_manual(
+          values = c(Observed = obs_col, Imputed = imp_col),
+          drop   = TRUE
+        ) +
+        ggplot2::labs(
+          title = title_text,
+          x     = v,
+          y     = "Count",
+          fill  = NULL
+        ) +
+        blimp_theme(font_size)
+      
+    } else {
+      ## Case 2: more continuous -> overlay density histograms with adaptive bins
+      x_all <- c(obs_vals, imp_vals)
+      rng   <- range(x_all, na.rm = TRUE)
+      span  <- diff(rng)
+      if (!is.finite(span) || span <= 0) span <- 1
+      
+      # If user supplied bins, respect that; otherwise adapt based on support
+      if (!is.null(bins_arg)) {
+        bins_use <- as.integer(bins_arg)
+      } else {
+        n_unique_all <- length(unique(x_all))
+        bins_use <- as.integer(round(sqrt(n_unique_all) * 1.5))
+        bins_use <- max(15L, min(40L, bins_use))
+      }
+      
+      binwidth <- span / bins_use
+      boundary <- rng[1]
+      
+      df_obs <- data.frame(x = obs_vals, grp = "Observed")
+      df_imp <- data.frame(x = imp_vals, grp = "Imputed")
+      
+      ggplot2::ggplot() +
+        ggplot2::geom_histogram(
+          data = df_obs,
+          ggplot2::aes(x = x, y = ggplot2::after_stat(density), fill = grp),
+          binwidth = binwidth, boundary = boundary,
+          color    = obs_col, alpha = plot_shading
+        ) +
+        ggplot2::geom_histogram(
+          data = df_imp,
+          ggplot2::aes(x = x, y = ggplot2::after_stat(density), color = grp),
+          binwidth = binwidth, boundary = boundary,
+          fill     = NA, linewidth = 1.2
+        ) +
+        ggplot2::coord_cartesian(xlim = rng) +
+        ggplot2::labs(
+          title = title_text,
+          x     = v, y = NULL,
+          fill  = NULL, color = NULL
+        ) +
+        ggplot2::scale_fill_manual(
+          values = c(Observed = obs_col),
+          drop   = TRUE
+        ) +
+        ggplot2::scale_color_manual(
+          values = c(Imputed = imp_col),
+          drop   = TRUE
+        ) +
+        ggplot2::guides(
+          fill  = ggplot2::guide_legend(
+            order = 1,
+            override.aes = list(color = obs_col, alpha = plot_shading)
+          ),
+          color = ggplot2::guide_legend(
+            order = 2,
+            override.aes = list(fill = NA, linewidth = 1.2)
+          )
+        ) +
+        blimp_theme(font_size)
+    }
   }
   
-  plots <- setNames(lapply(var, build_one), var)
+  plots <- setNames(lapply(var, build_one, bins_arg = bins), var)
   for (p in plots) if (!is.null(p)) print(p)
   invisible(plots)
 }
 
-# RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS (+ INDEX, DISCRETE X FROM ORDINAL/NOMINAL) ----
+
+# RESIDUALS VS. PREDICTED & RESIDUALS VS. PREDICTORS ----
+# Sections:
+#   A) Residuals vs Predicted (continuous, pooled over imputations)
+#   B) Residuals vs Predictors from MODEL (handles ordinal/nominal, level-2, etc.)
+#   C) Standardized residual index plots + outlier table
+#   D) Histograms of standardized residuals for every variable in the index plots
+#   E) Standardized residual spread by cluster (level-1 DVs only)
 
 residuals_plot <- function(
     model,
@@ -766,7 +911,7 @@ residuals_plot <- function(
     do.call(rbind, out)
   }
   
-  # view-only y-limits (no longer used for A/B, but kept for index section)
+  # (Currently unused for A–D; kept for possible future extensions.)
   y_limits <- function(y) {
     switch(
       y_clip,
@@ -777,7 +922,7 @@ residuals_plot <- function(
     )
   }
   
-  # stack a y/x pair across imputations (add row index for joining z-scores)
+  # Stack a y/x pair across imputations (adds row index for joining z-scores).
   stack_cols <- function(ycol, xcol) {
     dfs <- lapply(seq_along(model@imputations), function(i) {
       d <- model@imputations[[i]]
@@ -792,7 +937,7 @@ residuals_plot <- function(
     do.call(rbind, dfs)
   }
   
-  # winsor for fitting only
+  # Winsorization helper (used only for fitting, not for display).
   winsor_mad <- function(x, k = 3) {
     med <- stats::median(x, na.rm = TRUE)
     mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
@@ -801,7 +946,7 @@ residuals_plot <- function(
     pmin(pmax(x, lo), hi)
   }
   
-  # pooled loess
+  # Rubin-pooled LOESS smoother over imputations (for continuous X).
   loess_pooled <- function(df_xy, span, level, center_by_imp, winsor_fit, winsor_k, robust) {
     fitdat <- df_xy
     if (center_by_imp) {
@@ -815,10 +960,15 @@ residuals_plot <- function(
     imps  <- split(fitdat, fitdat$imp)
     fam   <- if (robust) "symmetric" else "gaussian"
     
-    min_span_n <- 50L; min_span <- 0.12; min_unique_x <- 25L; jitter_frac <- 1e-7
+    min_span_n   <- 50L
+    min_span     <- 0.12
+    min_unique_x <- 25L
+    jitter_frac  <- 1e-7
+    
     collapse_dupes <- function(d) {
       d <- stats::na.omit(d[, c("y","x")]); if (!nrow(d)) return(d)
-      agg <- aggregate(y ~ x, data = d, FUN = mean); agg[order(agg$x), , drop = FALSE]
+      agg <- aggregate(y ~ x, data = d, FUN = mean)
+      agg[order(agg$x), , drop = FALSE]
     }
     
     preds <- lapply(imps, function(d) {
@@ -832,12 +982,29 @@ residuals_plot <- function(
         set.seed(1L); d0$x <- d0$x + stats::rnorm(n, 0, j)
       }
       ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
-      fit <- try(suppressWarnings(stats::loess(y ~ x, data = d0, span = min(1, span_eff), degree = 1,
-                                               family = fam, control = ctl)), silent = TRUE)
-      if (inherits(fit, "try-error")) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      pr <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)), silent = TRUE)
+      fit <- try(
+        suppressWarnings(
+          stats::loess(y ~ x, data = d0,
+                       span = min(1, span_eff),
+                       degree = 1,
+                       family = fam, control = ctl)
+        ),
+        silent = TRUE
+      )
+      if (inherits(fit, "try-error"))
+        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      
+      pr <- try(
+        suppressWarnings(
+          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
+        ),
+        silent = TRUE
+      )
       if (inherits(pr, "try-error") || is.null(pr$se.fit)) {
-        yhat <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid))), silent = TRUE)
+        yhat <- try(
+          suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid))),
+          silent = TRUE
+        )
         yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
         list(fit = yhat, se2 = rep(NA_real_, length(xgrid)))
       } else {
@@ -849,7 +1016,8 @@ residuals_plot <- function(
     Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
     keep <- which(colSums(is.finite(Fmat)) > 0)
     if (!length(keep)) return(data.frame(x = xgrid, mean = 0, lwr = 0, upr = 0))
-    Fmat <- Fmat[, keep, drop = FALSE]; Wmat <- Wmat[, keep, drop = FALSE]
+    Fmat <- Fmat[, keep, drop = FALSE]
+    Wmat <- Wmat[, keep, drop = FALSE]
     m <- ncol(Fmat)
     
     mean_fit <- rowMeans(Fmat, na.rm = TRUE)
@@ -857,13 +1025,17 @@ residuals_plot <- function(
     B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
     Tvar <- W + (1 + 1/m) * B
     r <- ifelse(W > 0, ((1 + 1/m) * B) / W, Inf)
-    nu <- (m - 1) * (1 + 1/r)^2; nu[!is.finite(nu) | nu <= 0] <- m - 1
+    nu <- (m - 1) * (1 + 1/r)^2
+    nu[!is.finite(nu) | nu <= 0] <- m - 1
     tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, nu))
     seTot <- sqrt(pmax(0, Tvar))
     
-    data.frame(x = xgrid, mean = mean_fit,
-               lwr = mean_fit - tcrit * seTot,
-               upr = mean_fit + tcrit * seTot)
+    data.frame(
+      x    = xgrid,
+      mean = mean_fit,
+      lwr  = mean_fit - tcrit * seTot,
+      upr  = mean_fit + tcrit * seTot
+    )
   }
   
   # ==== detect available bases =================================================
@@ -873,7 +1045,7 @@ residuals_plot <- function(
   has_resid_col   <- function(b) paste0(b, ".residual")   %in% cols1
   has_pair_cols   <- function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1)
   
-  # NEW: cluster ID (e.g., "school"), used for mapping *.mean predictors
+  # Cluster ID (e.g., "school"), used for mapping *.mean predictors and Section E.
   cluster_id <- .get_cluster_id(model)
   
   if (!is.null(var)) {
@@ -895,15 +1067,15 @@ residuals_plot <- function(
               paste(setdiff(var_req, bases_pair), collapse = ", "))
   }
   
-  # ==== standardized residuals for plotting (A/B) ==============================
+  # ==== standardized residuals for plotting (A/B/C/D/E) =======================
   std_data <- data.frame()
   if (length(bases_resid)) {
     std_obj  <- standardize_residuals(model, vars = bases_resid)
     std_data <- std_obj$data  # columns: base, imp, row, resid, z
   }
   
-  ## NEW: also standardize any [clusterid] residual columns and append them
-  ##      (random intercepts/slopes like dv[clusterid])
+  # Also standardize any [clusterid] residual columns (random intercepts/slopes
+  # such as posaff[person], posaff$pain[person]) and append to std_data.
   cluster_cols <- cols1[grepl("\\[", cols1)]  # NOTE: regex, NOT fixed=TRUE
   if (length(cluster_cols)) {
     for (cc in cluster_cols) {
@@ -936,30 +1108,40 @@ residuals_plot <- function(
       std_data <- rbind(std_data, dfc[, c("base","imp","row","resid","z")])
     }
   }
-  ## END NEW
   
   # ==== categorical predictor set from @syntax (plus <4-unique fallback) =======
   cat_vars <- tolower(.get_categorical_vars(model))
   is_categorical_name <- function(vname) tolower(vname) %in% cat_vars
   
-  # ==== colors, counts =========================================================
+  # ==== colors, counts, collectors ============================================
   curve_col <- unname(plot_colors[curve_color])
   band_col  <- unname(plot_colors[band_fill])
   n_imps    <- length(model@imputations)
   
-  plots <- list()
+  plots     <- list()
+  summaries <- NULL
   
-  # A) Residuals vs. Predicted --------------------------------------------------
+  # A) Residuals vs. Predicted ----
+  
   if (length(bases_pair)) {
     build_rvp <- function(base) {
       ycol <- paste0(base, ".residual")
       xcol <- paste0(base, ".predicted")
-      if (!all(c(ycol, xcol) %in% cols1)) { message("Skipping (columns missing): ", base); return(NULL) }
+      if (!all(c(ycol, xcol) %in% cols1)) {
+        message("Skipping (columns missing): ", base)
+        return(NULL)
+      }
       df <- stack_cols(ycol, xcol)
-      if (is.null(df) || !nrow(df)) { message("Skipping (no data across imputations): ", base); return(NULL) }
-      if (!is.numeric(df$x) || !is.numeric(df$y)) { message("Skipping non-numeric: ", base); return(NULL) }
+      if (is.null(df) || !nrow(df)) {
+        message("Skipping (no data across imputations): ", base)
+        return(NULL)
+      }
+      if (!is.numeric(df$x) || !is.numeric(df$y)) {
+        message("Skipping non-numeric: ", base)
+        return(NULL)
+      }
       
-      ## replace raw residuals with standardized residuals
+      # Replace raw residuals with standardized residuals (z) when available.
       if (nrow(std_data)) {
         sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
         if (nrow(sub_z)) {
@@ -974,18 +1156,23 @@ residuals_plot <- function(
           pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
           curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
         } else {
-          xr <- range(df$x, na.rm = TRUE); win <- window_prop * diff(xr)
+          xr <- range(df$x, na.rm = TRUE)
+          win <- window_prop * diff(xr)
           min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
           counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
           curve_df <- curve_df[counts >= min_n, , drop = FALSE]
         }
       } else {
-        rng_x <- range(df$x, na.rm = TRUE); xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
+        rng_x <- range(df$x, na.rm = TRUE)
+        xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
         imps  <- split(df, df$imp)
         coef_mat <- lapply(imps, function(d) {
           dd <- stats::na.omit(d[, c("y","x")])
           if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
-          fit <- try(stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd), silent = TRUE)
+          fit <- try(
+            stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd),
+            silent = TRUE
+          )
           if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
           stats::coef(fit)
         })
@@ -1001,16 +1188,28 @@ residuals_plot <- function(
       }
       
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
-        ggplot2::geom_point(alpha = point_alpha, size = point_size,
-                            color = unname(plot_colors["teal"])) +
+        ggplot2::geom_point(
+          alpha = point_alpha, size = point_size,
+          color = unname(plot_colors["teal"])
+        ) +
         ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
-        { if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
-          ggplot2::geom_ribbon(
-            data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-            inherit.aes = FALSE, fill = band_col, alpha = band_alpha
-          ) else NULL } +
-        ggplot2::geom_line(data = curve_df, ggplot2::aes(x = x, y = mean),
-                           inherit.aes = FALSE, color = curve_col, linewidth = 1.2) +
+        {
+          if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
+            ggplot2::geom_ribbon(
+              data = curve_df,
+              ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+              inherit.aes = FALSE,
+              fill = band_col,
+              alpha = band_alpha
+            ) else NULL
+        } +
+        ggplot2::geom_line(
+          data = curve_df,
+          ggplot2::aes(x = x, y = mean),
+          inherit.aes = FALSE,
+          color = curve_col,
+          linewidth = 1.2
+        ) +
         ggplot2::coord_cartesian(ylim = c(-4, 4)) +
         ggplot2::labs(
           title = paste0("Residuals vs. Predicted Values Over ", n_imps,
@@ -1026,26 +1225,31 @@ residuals_plot <- function(
           axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
         )
     }
+    
     rvp_plots <- setNames(lapply(bases_pair, build_rvp), paste0(bases_pair, "_vs_pred"))
     plots <- c(plots, rvp_plots)
     lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
   }
   
-  # B) Residuals vs. Predictors (from @MODEL) ----------------------------------
+  
+  # B) Residuals vs. Predictors (from @MODEL) ----
+  
   model_lines <- .get_model_block(model)
   
   if (length(model_lines)) {
-    chunks <- unlist(strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
+    chunks <- unlist(
+      strsplit(paste(model_lines, collapse = " "), ";", fixed = TRUE),
+      use.names = FALSE
+    )
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
     parse_rhs_vars <- function(rhs) {
-      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]   # keep before vertical pipe
-      
-      # strip @labels: x@b1 -> x
+      # Keep only the part before any | (e.g., random-effect syntax).
+      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]
+      # Strip @labels: x@b1 -> x
       rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs2)
-      
-      # break interactions x*y into x y
+      # Break interactions x*y into x y
       rhs2 <- gsub("\\*", " ", rhs2)
       
       toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
@@ -1054,7 +1258,7 @@ residuals_plot <- function(
       unique(toks)
     }
     
-    # first build: DV name -> predictors in syntax space
+    # dv_pred_pairs_raw: MODEL-scale DV name -> MODEL-scale predictor names.
     dv_pred_pairs_raw <- list()
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
@@ -1062,7 +1266,7 @@ residuals_plot <- function(
       dv_raw <- trimws(parts[1])
       rhs    <- trimws(parts[2])
       
-      # handle prefixes like "focal: turnover" -> dv = "turnover"
+      # Handle prefixes like "focal: turnover" -> dv = "turnover".
       dv_tokens     <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
       dv_token_last <- dv_tokens[length(dv_tokens)]
       dv            <- sub(":$", "", dv_token_last)
@@ -1073,18 +1277,18 @@ residuals_plot <- function(
       }
     }
     
-    # build mapping from *base name* (including cluster-level bases) -> predictors
+    # Build mapping from *base name* (including cluster-level bases) -> predictors.
     dv_pred_pairs <- list()
     if (length(dv_pred_pairs_raw)) {
       for (dv in names(dv_pred_pairs_raw)) {
         preds <- dv_pred_pairs_raw[[dv]]
         
-        # (1) continuous / standard DV: base = dv when dv.residual exists
+        # (1) Continuous / standard DV: base = dv when dv.residual exists.
         if (paste0(dv, ".residual") %in% cols1) {
           dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
         }
         
-        # (2) ordinal / nominal, etc.: bases like dv.1, dv.2, ...
+        # (2) Ordinal / nominal, etc.: bases like dv.1, dv.2, ...
         cand_unit <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
         if (length(cand_unit)) {
           for (b in cand_unit) {
@@ -1092,7 +1296,7 @@ residuals_plot <- function(
           }
         }
         
-        # (3) cluster-level residuals: columns like dv[cluster]
+        # (3) Cluster-level residuals: columns like dv[cluster].
         cand_cluster <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
         if (length(cand_cluster)) {
           for (b in cand_cluster) {
@@ -1102,13 +1306,12 @@ residuals_plot <- function(
       }
     }
     
-    # --- NEW: for cluster-level DVs, keep only level-2 predictors --------------
-    # This uses your existing helper .get_level2_predictors()
+    # For cluster-level DVs, keep only level-2 predictors.
     level2_preds <- .get_level2_predictors(model, dv_pred_pairs, cols1, cluster_id)
     
     if (length(level2_preds)) {
       for (bn in names(dv_pred_pairs)) {
-        # cluster-level DV if its base name contains "["
+        # Cluster-level DV if its base name contains "[".
         if (grepl("\\[", bn, fixed = TRUE)) {
           old_preds <- dv_pred_pairs[[bn]]
           keep      <- intersect(old_preds, level2_preds)
@@ -1129,7 +1332,7 @@ residuals_plot <- function(
     if (length(dv_pred_pairs)) {
       
       build_rvx <- function(base, xname) {
-        # Prefer *.residual if it exists; otherwise fall back to the raw column name.
+        # Prefer *.residual if it exists; otherwise fall back to the raw column.
         # This lets things like probsolvpost[school] (no .residual column) work.
         resid_col <- paste0(base, ".residual")
         if (resid_col %in% cols1) {
@@ -1142,7 +1345,7 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        # Map MODEL predictor name -> actual column name
+        # Map MODEL predictor name -> actual column name.
         xcol <- map_predictor_to_col(xname, cols1, cluster_id)
         
         if (!xcol %in% cols1) {
@@ -1151,10 +1354,10 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        ## For cluster-level DVs, only keep predictors that are
-        ## constant within cluster in the first imputation.
+        # For cluster-level DVs, only keep predictors that are constant within
+        # cluster in the first imputation.
         if (!is.null(cluster_id) &&
-            grepl("\\[", base) &&                       # cluster-level DV (e.g., probsolvpost[school])
+            grepl("\\[", base) &&                       # cluster-level DV
             cluster_id %in% names(model@imputations[[1]])) {
           
           d0 <- model@imputations[[1]]
@@ -1186,10 +1389,10 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        ## STANDARDIZE RESIDUALS FOR PLOTTING
-        ## 1) If standardize_residuals() produced z-scores for this base, use them.
-        ## 2) Otherwise (e.g., random slopes like posaff$pain[person] with no .residual),
-        ##    z-score df$y directly across all rows & imputations.
+        # STANDARDIZE RESIDUALS FOR PLOTTING
+        # 1) If standardize_residuals() produced z-scores for this base, use them.
+        # 2) Otherwise (e.g., random slopes like posaff$pain[person] with no
+        #    .residual column), z-score df$y directly across all rows.
         if (nrow(std_data)) {
           sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
           if (nrow(sub_z)) {
@@ -1198,7 +1401,6 @@ residuals_plot <- function(
               df$y <- df$z
             }
           } else {
-            # no precomputed z for this base -> simple mean/sd standardization
             all_y <- df$y[is.finite(df$y)]
             if (length(all_y) > 1L) {
               m_y <- mean(all_y)
@@ -1209,7 +1411,6 @@ residuals_plot <- function(
             }
           }
         } else {
-          # std_data empty for some reason -> simple mean/sd standardization
           all_y <- df$y[is.finite(df$y)]
           if (length(all_y) > 1L) {
             m_y <- mean(all_y)
@@ -1220,7 +1421,7 @@ residuals_plot <- function(
           }
         }
         
-        # categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values
+        # Categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique vals.
         unique_x <- length(unique(df$x[is.finite(df$x)]))
         is_cat <- is_categorical_name(xname) || (is.numeric(df$x) && unique_x > 0 && unique_x < 4)
         
@@ -1320,8 +1521,10 @@ residuals_plot <- function(
               curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
             } else {
               beta <- colMeans(coef_mat)
-              yhat <- beta[1] + sapply(xgrid, function(x)
-                sum(beta[-1] * x^(seq_along(beta[-1]))))
+              yhat <- beta[1] + sapply(
+                xgrid,
+                function(x) sum(beta[-1] * x^(seq_along(beta[-1])))
+              )
               curve_df <- data.frame(
                 x = xgrid,
                 mean = as.numeric(yhat),
@@ -1389,29 +1592,29 @@ residuals_plot <- function(
     }
   }
   
-  # C) Standardized residual index plots + table --------------------------------
+  
+  # C) Standardized residual index plots + outlier tables ----
+  # D) Histograms of standardized residuals ----
+  
   if (isTRUE(show_index) && nrow(std_data)) {
     
-    ## Identify random intercepts / slopes from std_data:
-    ##  - any base with "[" in the name
-    ##  - whose underlying DV (before "$" and "[") is in bases_resid
+    # Identify random intercepts / slopes from std_data:
+    #  - any base with "[" in the name
+    #  - whose underlying DV (before "$" and "[") is in bases_resid
     re_bases_all <- unique(std_data$base[grepl("\\[", std_data$base)])
     
     if (length(re_bases_all)) {
-      # strip [cluster] part
       dv_part <- sub("\\[.*$", "", re_bases_all)
-      # strip $interaction part, so posaff$pain -> posaff
       dv_root <- sub("\\$.*$", "", dv_part)
-      # keep only those whose root DV has a .residual column
-      keep <- dv_root %in% bases_resid
+      keep    <- dv_root %in% bases_resid
       bases_random <- re_bases_all[keep]
     } else {
       bases_random <- character(0L)
     }
     
-    ## Allowed bases for the index plot:
-    ##   - ordinary residual bases (bases_resid, e.g., "posaff")
-    ##   - random intercepts/slopes tied to those DVs (bases_random)
+    # Allowed bases for index/hist plots:
+    #   - ordinary residual bases (bases_resid, e.g., "posaff")
+    #   - random intercepts/slopes tied to those DVs (bases_random)
     allowed_bases <- unique(c(bases_resid, bases_random))
     
     dat <- std_data[std_data$base %in% allowed_bases, , drop = FALSE]
@@ -1419,26 +1622,32 @@ residuals_plot <- function(
     if (nrow(dat)) {
       n_sets <- length(model@imputations)
       
-      ## 1. Aggregate per (base, row)
+      # 1. Aggregate per (base, row).
       if (signed_index) {
-        agg_df <- stats::aggregate(z ~ base + row, data = dat,
-                                   FUN = mean, na.rm = TRUE)
+        agg_df <- stats::aggregate(
+          z ~ base + row,
+          data = dat,
+          FUN = mean, na.rm = TRUE
+        )
         names(agg_df)[names(agg_df) == "z"] <- "y"
         ylab <- "Standardized Residual"
       } else {
         dat$absz <- abs(dat$z)
         fun <- if (index_aggregate == "mean") mean else max
-        agg_df <- stats::aggregate(absz ~ base + row, data = dat,
-                                   FUN = fun, na.rm = TRUE)
+        agg_df <- stats::aggregate(
+          absz ~ base + row,
+          data = dat,
+          FUN = fun, na.rm = TRUE
+        )
         names(agg_df)[names(agg_df) == "absz"] <- "y"
         ylab <- "Absolute Value of Standardized Residual"
       }
       
-      ## Drop rows with non-finite y
-      df_idx <- agg_df[is.finite(agg_df$y), c("base", "row", "y")]
+      # Drop rows with non-finite y.
+      df_idx    <- agg_df[is.finite(agg_df$y), c("base", "row", "y")]
       bases_idx <- unique(df_idx$base)
       
-      ## 2. Outlier summaries (per base)
+      # 2. Outlier summaries (per base).
       summaries <- lapply(bases_idx, function(b) {
         d <- dat[dat$base == b, , drop = FALSE]
         if (!nrow(d)) return(NULL)
@@ -1478,7 +1687,7 @@ residuals_plot <- function(
       })
       names(summaries) <- bases_idx
       
-      ## 3. Build index plots
+      # 3. Build index plots.
       build_index <- function(b) {
         d <- df_idx[df_idx$base == b, , drop = FALSE]
         if (!nrow(d)) return(NULL)
@@ -1499,16 +1708,18 @@ residuals_plot <- function(
               ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 0.8),
               ggplot2::geom_hline(
                 yintercept = index_cutoff[index_cutoff != 0],
-                color = unname(plot_colors[index_line_color]),
-                linewidth = 0.7, linetype = "dashed"
+                color      = unname(plot_colors[index_line_color]),
+                linewidth  = 0.7,
+                linetype   = "dashed"
               )
             )
           } else {
             cutoff_layer <- list(
               ggplot2::geom_hline(
                 yintercept = index_cutoff,
-                color = unname(plot_colors[index_line_color]),
-                linewidth = 0.7, linetype = "dashed"
+                color      = unname(plot_colors[index_line_color]),
+                linewidth  = 0.7,
+                linetype   = "dashed"
               )
             )
           }
@@ -1516,7 +1727,8 @@ residuals_plot <- function(
         
         ggplot2::ggplot(d, ggplot2::aes(x = index, y = y)) +
           ggplot2::geom_point(
-            size = 1.4, alpha = 0.85,
+            size  = 1.4,
+            alpha = 0.85,
             color = unname(plot_colors[index_point_color])
           ) +
           cutoff_layer +
@@ -1530,17 +1742,17 @@ residuals_plot <- function(
           blimp_theme(font_size) +
           ggplot2::theme(
             axis.text.y  = ggplot2::element_text(
-              size = font_size,
+              size   = font_size,
               margin = ggplot2::margin(r = 6)
             ),
             axis.ticks.y = ggplot2::element_line(),
             axis.title.y = ggplot2::element_text(size = font_size),
             axis.text.x  = ggplot2::element_text(
-              size = font_size,
+              size   = font_size,
               margin = ggplot2::margin(t = 2)
             ),
             axis.title.x = ggplot2::element_text(
-              size = font_size,
+              size   = font_size,
               margin = ggplot2::margin(t = 12)
             ),
             panel.border     = ggplot2::element_blank(),
@@ -1553,10 +1765,7 @@ residuals_plot <- function(
       plots <- c(plots, idx_plots)
       lapply(idx_plots, function(p) if (!is.null(p)) print(p))
       
-      # D) Residual histograms --------------------------------------------------
-      # One histogram per residual variable that appears in the index plots
-      # (i.e., each element of bases_idx). Uses standardized residuals (z),
-      # pooled over imputations.
+      # 4. D) Residual histograms (standardized residual z, across imputations).
       build_hist <- function(b) {
         z_vals <- dat$z[dat$base == b]
         z_vals <- z_vals[is.finite(z_vals)]
@@ -1567,7 +1776,7 @@ residuals_plot <- function(
           ggplot2::aes(x = z, y = ggplot2::after_stat(density))
         ) +
           ggplot2::geom_histogram(
-            bins  = 100,
+            bins  = 100,  # fixed for residual_plot()
             fill  = unname(plot_colors["teal"]),
             color = unname(plot_colors["teal"]),
             alpha = plot_shading
@@ -1588,18 +1797,192 @@ residuals_plot <- function(
       plots <- c(plots, hist_plots)
       lapply(hist_plots, function(p) if (!is.null(p)) print(p))
       
-      return(invisible(list(plots = plots, summaries = summaries)))
     } else {
       message("No standardized residuals available for index plots (after filtering to .residual and random effects tied to those DVs).")
-      return(invisible(plots))
     }
   }
   
-  invisible(plots)
+  
+  # E) Standardized residual spread by cluster (level-1 DVs only) ----
+  
+  if (nrow(std_data) &&
+      !is.null(cluster_id) && !is.na(cluster_id) && nzchar(cluster_id) &&
+      cluster_id %in% cols1) {
+    
+    # Use first imputation to classify level-1 vs level-2, but only among
+    # bases_resid (and, if var was supplied, only those in var_req).
+    d0 <- model@imputations[[1]]
+    g  <- d0[[cluster_id]]
+    
+    resid_cols <- paste0(bases_resid, ".residual")
+    resid_cols <- resid_cols[resid_cols %in% cols1]
+    
+    if (length(resid_cols)) {
+      is_level1 <- vapply(resid_cols, function(rc) {
+        x <- d0[[rc]]
+        if (!is.numeric(x)) return(FALSE)
+        by_cl <- split(x, g)
+        const_within <- vapply(by_cl, function(z) {
+          z <- z[is.finite(z)]
+          if (!length(z)) TRUE else length(unique(z)) <= 1L
+        }, logical(1L))
+        any(!const_within)
+      }, logical(1L))
+      
+      bases_lvl1 <- unique(sub("\\.residual$", "", resid_cols[is_level1]))
+      
+      if (length(bases_lvl1)) {
+        if (length(bases_lvl1) == 1L) {
+          message("Level-1 DV for residual-by-cluster spread plot: ", bases_lvl1)
+        } else {
+          message(
+            "Multiple level-1 DVs for residual-by-cluster spread plots: ",
+            paste(bases_lvl1, collapse = ", ")
+          )
+        }
+        
+        # Helper: build one cluster-spread plot for a given DV.
+        build_spread <- function(this_dv) {
+          dat_dv <- std_data[std_data$base == this_dv, , drop = FALSE]
+          if (!nrow(dat_dv)) {
+            message("No standardized residuals found for DV '", this_dv, "'.")
+            return(NULL)
+          }
+          
+          # Attach cluster labels from first imputation (row index).
+          row_cluster <- data.frame(
+            row     = seq_len(nrow(d0)),
+            cluster = d0[[cluster_id]],
+            stringsAsFactors = FALSE
+          )
+          
+          dat2 <- merge(dat_dv, row_cluster,
+                        by = "row", all.x = TRUE, sort = FALSE)
+          dat2 <- dat2[is.finite(dat2$z) & !is.na(dat2$cluster), , drop = FALSE]
+          if (!nrow(dat2)) {
+            message("No finite standardized residuals with cluster labels for '", this_dv, "'.")
+            return(NULL)
+          }
+          dat2$cluster <- as.character(dat2$cluster)
+          
+          # Within-cluster SDs (for ordering) and minimum n per cluster.
+          cluster_min_n <- 3
+          
+          stats_cl <- aggregate(
+            z ~ cluster,
+            data = dat2,
+            FUN = function(z) {
+              z <- z[is.finite(z)]
+              if (length(z) < cluster_min_n) NA_real_ else stats::sd(z)
+            }
+          )
+          names(stats_cl)[names(stats_cl) == "z"] <- "sd"
+          
+          n_cl <- aggregate(
+            z ~ cluster,
+            data = dat2,
+            FUN = function(z) sum(is.finite(z))
+          )
+          names(n_cl)[names(n_cl) == "z"] <- "n"
+          
+          stats_cl <- merge(stats_cl, n_cl, by = "cluster", all.x = TRUE)
+          stats_cl <- stats_cl[is.finite(stats_cl$sd) & stats_cl$n >= cluster_min_n,
+                               , drop = FALSE]
+          if (!nrow(stats_cl)) {
+            message("No clusters had at least ", cluster_min_n,
+                    " standardized residuals for DV '", this_dv, "'.")
+            return(NULL)
+          }
+          
+          keep_clusters <- stats_cl$cluster
+          dat2 <- dat2[dat2$cluster %in% keep_clusters, , drop = FALSE]
+          
+          # Order clusters by spread (SD) or by label.
+          if (index_order == "rank") {
+            stats_cl <- stats_cl[order(stats_cl$sd), ]
+            xlab <- "Clusters (Ordered by SD)"
+          } else {
+            stats_cl <- stats_cl[order(stats_cl$cluster), ]
+            xlab <- "Cluster"
+          }
+          cluster_levels <- stats_cl$cluster
+          dat2$cluster_ord <- factor(dat2$cluster, levels = cluster_levels)
+          
+          n_sets <- length(model@imputations)
+          
+          y_limits <- c(-5.5, 5.5)
+          
+          p <- ggplot2::ggplot(
+            dat2,
+            ggplot2::aes(x = cluster_ord, y = z)
+          ) +
+            ggplot2::geom_point(
+              alpha    = 0.20,
+              size     = 1.0,
+              color    = unname(plot_colors["teal"]),
+              position = ggplot2::position_jitter(width = 0.20, height = 0)
+            ) +
+            ggplot2::geom_hline(
+              yintercept = c(-4, -2, 2, 4),
+              color      = unname(plot_colors["violet"]),
+              linewidth  = 0.8,
+              linetype   = "dashed"
+            ) +
+            ggplot2::geom_hline(
+              yintercept = 0,
+              color      = "black",
+              linewidth  = 0.8
+            ) +
+            ggplot2::scale_y_continuous(
+              limits = y_limits,
+              breaks = seq(-5, 5, 1)
+            ) +
+            ggplot2::labs(
+              title = paste0(
+                "Standardized Residuals by Cluster Over ",
+                n_sets, " Imputed Data Sets: ", this_dv
+              ),
+              x = xlab,
+              y = "Standardized Residual"
+            ) +
+            blimp_theme(font_size) +
+            ggplot2::theme(
+              axis.text.y  = ggplot2::element_text(
+                size   = font_size,
+                margin = ggplot2::margin(r = 6)
+              ),
+              axis.ticks.y = ggplot2::element_line(),
+              axis.title.y = ggplot2::element_text(size = font_size),
+              axis.text.x  = ggplot2::element_blank(),  # hashes only
+              axis.ticks.x = ggplot2::element_line()
+            )
+          
+          print(p)
+          p
+        }
+        
+        cluster_plots <- setNames(
+          lapply(bases_lvl1, build_spread),
+          paste0(bases_lvl1, "_cluster_spread")
+        )
+        plots <- c(plots, cluster_plots)
+      }
+    }
+  }
+  
+  # Final return: keep old behavior (return summaries when index plots exist).
+  if (!is.null(summaries)) {
+    invisible(list(plots = plots, summaries = summaries))
+  } else {
+    invisible(plots)
+  }
 }
 
+
+
 # BIVARIATE SCATTER WITH LOESS ----
-# Adds proper y-axis labeling, tick marks, and bounds for probabilities
+# Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
+# Handles MI pooling of LOESS smooths or discrete-level means.
 
 bivariate_plot <- function(
     model, formula,
@@ -1615,7 +1998,7 @@ bivariate_plot <- function(
   support <- match.arg(support)
   
   # --- parse y ~ x
-  tt <- terms(formula)
+  tt   <- terms(formula)
   vars <- all.vars(tt)
   if (length(vars) != 2L) stop("Formula must be like y ~ x.")
   y_name <- vars[1]; x_name <- vars[2]
@@ -1627,10 +2010,13 @@ bivariate_plot <- function(
   if (!all(c(y_name, x_name) %in% cols1))
     stop("Both '", y_name, "' and '", x_name, "' must exist in @imputations data.")
   
-  df <- do.call(rbind, lapply(seq_along(model@imputations), function(i) {
-    d <- model@imputations[[i]]
-    data.frame(x = d[[x_name]], y = d[[y_name]], imp = i)
-  }))
+  df <- do.call(
+    rbind,
+    lapply(seq_along(model@imputations), function(i) {
+      d <- model@imputations[[i]]
+      data.frame(x = d[[x_name]], y = d[[y_name]], imp = i)
+    })
+  )
   df <- stats::na.omit(df[, c("x","y","imp")])
   if (!nrow(df)) stop("No complete cases for the selected variables.")
   if (!is.numeric(df$x) || !is.numeric(df$y)) stop("Both variables must be numeric.")
@@ -1640,10 +2026,10 @@ bivariate_plot <- function(
   qy <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
   use_logit <- is.finite(qy[1]) && is.finite(qy[2]) && qy[1] >= 0 && qy[2] <= 1
   inv_logit <- function(z) 1/(1+exp(-z))
-  clamp01 <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
+  clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
   
   # --- decide discrete vs continuous x
-  ux <- sort(unique(df$x[is.finite(df$x)]))
+  ux          <- sort(unique(df$x[is.finite(df$x)]))
   is_discrete <- length(ux) <= 3
   
   # --- helpers
@@ -1654,10 +2040,10 @@ bivariate_plot <- function(
     pmin(pmax(x, med - k*mad), med + k*mad)
   }
   
-  # --- Rubin pooling of LOESS curve (continuous x)
+  # Rubin pooling of LOESS curve (continuous x)
   loess_pooled <- function(dat_xy) {
     fitdat <- dat_xy
-    fam <- if (robust) "symmetric" else "gaussian"
+    fam    <- if (robust) "symmetric" else "gaussian"
     if (use_logit) {
       fitdat$y <- clamp01(fitdat$y)
       fitdat$y <- qlogis(fitdat$y)
@@ -1670,29 +2056,48 @@ bivariate_plot <- function(
     
     preds <- lapply(imps, function(d) {
       d0 <- stats::na.omit(d[, c("y","x")])
-      if (nrow(d0) < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      if (nrow(d0) < 10)
+        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
       ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
-      fit <- try(suppressWarnings(stats::loess(y ~ x, data = d0, span = span, degree = degree, family = fam, control = ctl)), silent = TRUE)
-      if (inherits(fit, "try-error")) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      pr <- try(suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)), silent = TRUE)
+      fit <- try(
+        suppressWarnings(
+          stats::loess(y ~ x, data = d0,
+                       span = span, degree = degree,
+                       family = fam, control = ctl)
+        ),
+        silent = TRUE
+      )
+      if (inherits(fit, "try-error"))
+        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      pr <- try(
+        suppressWarnings(
+          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
+        ),
+        silent = TRUE
+      )
       if (inherits(pr, "try-error") || is.null(pr$se.fit))
-        return(list(fit = as.numeric(stats::predict(fit, newdata = data.frame(x = xgrid))), se2 = rep(NA_real_, length(xgrid))))
+        return(list(
+          fit = as.numeric(stats::predict(fit, newdata = data.frame(x = xgrid))),
+          se2 = rep(NA_real_, length(xgrid))
+        ))
       list(fit = as.numeric(pr$fit), se2 = as.numeric(pr$se.fit)^2)
     })
     
     Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
     Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
     keep <- which(colSums(is.finite(Fmat)) > 0)
-    if (!length(keep)) return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
-    Fmat <- Fmat[, keep, drop = FALSE]; Wmat <- Wmat[, keep, drop = FALSE]
+    if (!length(keep))
+      return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
+    Fmat <- Fmat[, keep, drop = FALSE]
+    Wmat <- Wmat[, keep, drop = FALSE]
     m <- ncol(Fmat)
     
     mean_fit <- rowMeans(Fmat, na.rm = TRUE)
-    W <- rowMeans(Wmat, na.rm = TRUE)
-    B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
-    Tvar <- W + (1 + 1/m) * B
-    tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
-    seTot <- sqrt(pmax(0, Tvar))
+    W        <- rowMeans(Wmat, na.rm = TRUE)
+    B        <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
+    Tvar     <- W + (1 + 1/m) * B
+    tcrit    <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
+    seTot    <- sqrt(pmax(0, Tvar))
     
     if (use_logit) {
       mu  <- inv_logit(mean_fit)
@@ -1706,28 +2111,37 @@ bivariate_plot <- function(
     data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
   }
   
-  # --- Rubin-pooled mean per x-level (discrete x)
+  # Rubin-pooled mean per x-level (discrete x)
   pooled_mean_by_level <- function(dat_xy) {
     if (use_logit) {
       dat_xy$y <- clamp01(dat_xy$y)
       dat_xy$y <- qlogis(dat_xy$y)
     }
     levs <- sort(unique(dat_xy$x))
-    m <- length(unique(dat_xy$imp))
-    out <- lapply(levs, function(L) {
-      by_imp <- split(dat_xy[dat_xy$x == L, , drop = FALSE], dat_xy$imp[dat_xy$x == L])
+    m    <- length(unique(dat_xy$imp))
+    out  <- lapply(levs, function(L) {
+      by_imp <- split(dat_xy[dat_xy$x == L, , drop = FALSE],
+                      dat_xy$imp[dat_xy$x == L])
       mu_j <- vapply(by_imp, function(d) mean(d$y), numeric(1L))
       n_j  <- vapply(by_imp, nrow, integer(1L))
       s2_j <- vapply(by_imp, function(d) stats::var(d$y), numeric(1L))
       Ubar <- mean(s2_j / pmax(1, n_j))
-      B <- stats::var(mu_j)
+      B    <- stats::var(mu_j)
       Tvar <- Ubar + (1 + 1/m) * B
-      se <- sqrt(pmax(0, Tvar))
+      se   <- sqrt(pmax(0, Tvar))
       tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
       if (use_logit) {
-        c(mean = inv_logit(mean(mu_j)), lwr = inv_logit(mean(mu_j) - tcrit * se), upr = inv_logit(mean(mu_j) + tcrit * se))
+        c(
+          mean = inv_logit(mean(mu_j)),
+          lwr  = inv_logit(mean(mu_j) - tcrit * se),
+          upr  = inv_logit(mean(mu_j) + tcrit * se)
+        )
       } else {
-        c(mean = mean(mu_j), lwr = mean(mu_j) - tcrit * se, upr = mean(mu_j) + tcrit * se)
+        c(
+          mean = mean(mu_j),
+          lwr  = mean(mu_j) - tcrit * se,
+          upr  = mean(mu_j) + tcrit * se
+        )
       }
     })
     out <- do.call(rbind, out)
@@ -1741,22 +2155,26 @@ bivariate_plot <- function(
   if (is_discrete) {
     mean_df <- pooled_mean_by_level(df)
     ggplot2::ggplot(df, ggplot2::aes(x = factor(x), y = y)) +
-      ggplot2::geom_jitter(width = 0.08, alpha = point_alpha, size = point_size,
-                           color = unname(plot_colors["teal"])) +
+      ggplot2::geom_jitter(
+        width = 0.08,
+        alpha = point_alpha,
+        size  = point_size,
+        color = unname(plot_colors["teal"])
+      ) +
       ggplot2::geom_errorbar(
-        data = mean_df,
+        data        = mean_df,
         ggplot2::aes(x = factor(x), ymin = lwr, ymax = upr),
         inherit.aes = FALSE,
-        width = 0.15,
-        color = unname(plot_colors[curve_color]),
-        linewidth = 0.9
+        width       = 0.15,
+        color       = unname(plot_colors[curve_color]),
+        linewidth   = 0.9
       ) +
       ggplot2::geom_point(
-        data = mean_df,
+        data        = mean_df,
         ggplot2::aes(x = factor(x), y = mean),
         inherit.aes = FALSE,
-        size = 2.2,
-        color = unname(plot_colors[curve_color])
+        size        = 2.2,
+        color       = unname(plot_colors[curve_color])
       ) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
@@ -1775,15 +2193,24 @@ bivariate_plot <- function(
   } else {
     curve_df <- loess_pooled(df)
     ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
-      ggplot2::geom_point(alpha = point_alpha, size = point_size,
-                          color = unname(plot_colors["teal"])) +
+      ggplot2::geom_point(
+        alpha = point_alpha,
+        size  = point_size,
+        color = unname(plot_colors["teal"])
+      ) +
       ggplot2::geom_ribbon(
-        data = curve_df, ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-        inherit.aes = FALSE, fill = unname(plot_colors[band_fill]), alpha = plot_shading
+        data        = curve_df,
+        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+        inherit.aes = FALSE,
+        fill        = unname(plot_colors[band_fill]),
+        alpha       = plot_shading
       ) +
       ggplot2::geom_line(
-        data = curve_df, ggplot2::aes(x = x, y = mean),
-        inherit.aes = FALSE, color = unname(plot_colors[curve_color]), linewidth = 1.2
+        data        = curve_df,
+        ggplot2::aes(x = x, y = mean),
+        inherit.aes = FALSE,
+        color       = unname(plot_colors[curve_color]),
+        linewidth   = 1.2
       ) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
@@ -1801,3 +2228,4 @@ bivariate_plot <- function(
       )
   }
 }
+

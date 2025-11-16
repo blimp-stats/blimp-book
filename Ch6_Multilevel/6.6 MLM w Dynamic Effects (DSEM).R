@@ -33,8 +33,8 @@ model <- rblimp(
         pain_ranicept ~~ posaff_ranicept;',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
 # print output
 output(model)
