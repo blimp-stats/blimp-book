@@ -490,19 +490,28 @@ imputation_plot <- function(model, var = NULL, bins = 50, main = NULL,
     base_all  <- sub("\\..*$", "", vars_all)
     var <- vars_all[base_all %in% model_vars]
     
-    # NEW: add cluster-level residuals of the form y[cluster]
+    # NEW: add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
     if (length(dv_names)) {
+      # things like y[cluster]  (random intercepts / cluster-level residuals)
       cluster_cols <- unlist(lapply(dv_names, function(y) {
         vars_all[grepl(paste0("^", y, "\\["), vars_all)]
       }), use.names = FALSE)
-      if (length(cluster_cols)) {
-        var <- unique(c(var, cluster_cols))
+      
+      # things like y$x[cluster] (random slopes: posaff$pain[person])
+      slope_cols <- unlist(lapply(dv_names, function(y) {
+        vars_all[grepl(paste0("^", y, "\\$"), vars_all)]
+      }), use.names = FALSE)
+      
+      extra <- c(cluster_cols, slope_cols)
+      if (length(extra)) {
+        var <- unique(c(var, extra))
       }
     }
     
     if (!length(var)) stop("No matching variables found based on MODEL section.")
     message("Plotting variables based on MODEL section: ", paste(var, collapse = ", "))
+    
   } else if (!all(var %in% vars_all)) {
     bad <- setdiff(var, vars_all)
     stop("Variable(s) not found in imputations: ", paste(bad, collapse = ", "))
@@ -1045,7 +1054,7 @@ residuals_plot <- function(
         }
         
         # (3) cluster-level residuals: columns like dv[cluster]
-        cand_cluster <- cols1[grepl(paste0("^", dv, "\\["), cols1)]
+        cand_cluster <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
         if (length(cand_cluster)) {
           for (b in cand_cluster) {
             dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
@@ -1136,6 +1145,40 @@ residuals_plot <- function(
         if (!is.numeric(df$y)) {
           message("Skipping non-numeric residuals for: ", base)
           return(NULL)
+        }
+        
+        ## STANDARDIZE RESIDUALS FOR PLOTTING
+        ## 1) If standardize_residuals() produced z-scores for this base, use them.
+        ## 2) Otherwise (e.g., random slopes like posaff$pain[person] with no .residual),
+        ##    z-score df$y directly across all rows & imputations.
+        if (nrow(std_data)) {
+          sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
+          if (nrow(sub_z)) {
+            df <- merge(df, sub_z, by = c("imp", "row"), all.x = TRUE, sort = FALSE)
+            if (any(is.finite(df$z))) {
+              df$y <- df$z
+            }
+          } else {
+            # no precomputed z for this base -> simple mean/sd standardization
+            all_y <- df$y[is.finite(df$y)]
+            if (length(all_y) > 1L) {
+              m_y <- mean(all_y)
+              s_y <- stats::sd(all_y)
+              if (is.finite(s_y) && s_y > 0) {
+                df$y <- (df$y - m_y) / s_y
+              }
+            }
+          }
+        } else {
+          # std_data empty for some reason -> simple mean/sd standardization
+          all_y <- df$y[is.finite(df$y)]
+          if (length(all_y) > 1L) {
+            m_y <- mean(all_y)
+            s_y <- stats::sd(all_y)
+            if (is.finite(s_y) && s_y > 0) {
+              df$y <- (df$y - m_y) / s_y
+            }
+          }
         }
         
         # categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values
