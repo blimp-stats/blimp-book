@@ -498,9 +498,8 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
-    message("---- residuals_plot(): MODEL chunks ----")
-    for (ch in chunks) message("  chunk: ", ch)
-    
+    # message("---- residuals_plot(): MODEL chunks ----")
+    # for (ch in chunks) message("  chunk: ", ch)
     
     dvs <- character(0)
     for (ch in chunks) {
