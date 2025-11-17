@@ -1,5 +1,8 @@
 # MEDIATION WITH DISCRETE INDICATORS ----
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -12,10 +15,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 alcoholuse <- read.csv(data_url)
 
-# FIT MEDIATION MODEL WITH DISCRETE MEDIATOR ----
+# FIT MODEL WITH BINARY MEDIATOR ----
 
-# mediation with a binary logistic mediator
-model_lm <- rblimp(
+# conditional indirect effects with a binary logistic mediator
+model1 <- rblimp(
   data = alcoholuse,
   nominal = 'college male alcearly', 
   center  = 'college age',
@@ -33,19 +36,31 @@ model_lm <- rblimp(
     ind_diff   = ind_male - ind_female;',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
-output(model_lm)
+# print output
+output(model1)
+
+# plot parameter distributions
+posterior_plot(model1)
 
 # plot distribution of indirect effects
-posterior_plot(model_lm, 'ind_male')
-posterior_plot(model_lm, 'ind_female')
-posterior_plot(model_lm, 'ind_diff')
+posterior_plot(model1, 'ind_male')
+posterior_plot(model1, 'ind_female')
+posterior_plot(model1, 'ind_diff')
 
-# FIT MEDIATION MODEL WITH DISCRETE OUTCOMES ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# mediation with a binary logistic outcome
-model_lo <- rblimp(
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
+# FIT MODEL WITH A BINARY OUTCOME ----
+
+# conditional indirect effects with a binary logistic outcome
+model2 <- rblimp(
   data = alcoholuse,
   nominal = 'college male drinker', 
   center  = 'college age',
@@ -63,46 +78,22 @@ model_lo <- rblimp(
     ind_diff = ind_male - ind_female;',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
-output(model_lo)
+# print output
+output(model2)
 
-# plot distribution of indirect effects
-posterior_plot(model_lo, 'ind_male')
-posterior_plot(model_lo, 'ind_female')
-posterior_plot(model_lo, 'ind_diff')
-
-# mediation with a count outcome
-model_co <- rblimp(
-    data = alcoholuse,
-    nominal = 'college male',
-    count = 'alcdays',
-    center = 'college age',
-    # fixed = 'male',
-    model = '
-      apath:
-      alcage ~ intercept@m_icept male@a college age;
-      bpath:
-      alcdays ~ intercept@y_icept alcage@b male@tau college age',
-    parameters = '
-      ind_female = a * (b*exp(y_icept + b*m_icept + tau*0)); 
-      ind_male = a * (b*exp(y_icept + b*(m_icept + a*1) + tau*1));
-      ind_diff = ind_female - ind_male;',
-    seed = 90291,
-    burn = 10000,
-    iter = 10000)
-
-output(model_co)
+# plot parameter distributions
+posterior_plot(model2)
 
 # plot distribution of indirect effects
-posterior_plot(model_co, 'ind_male')
-posterior_plot(model_co, 'ind_female')
-posterior_plot(model_co, 'ind_diff')
+posterior_plot(model2, 'ind_male')
+posterior_plot(model2, 'ind_female')
+posterior_plot(model2, 'ind_diff')
 
-# FIT MEDIATION MODEL WITH CAUSAL INDIRECT EFFECT DEFINITIONS ----
-
-# mediation with a binary probit outcome
-model_oo <- rblimp(
+# causally-defined indirect effects with a binary probit outcome
+model3 <- rblimp(
   data = alcoholuse,
   nominal = 'college male', 
   ordinal = 'drinker',
@@ -125,11 +116,70 @@ model_oo <- rblimp(
     te  = p_x1 - p_x0;',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
-output(model_oo)
+# print output
+output(model3)
+
+# plot parameter distributions
+posterior_plot(model3)
 
 # plot distribution of indirect effects
-posterior_plot(model_co, 'nie')
-posterior_plot(model_co, 'nde')
-posterior_plot(model_co, 'te')
+posterior_plot(model3, 'nie')
+posterior_plot(model3, 'nde')
+posterior_plot(model3, 'te')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)
+
+# FIT MODEL WITH A COUNT OUTCOME ----
+
+# conditional indirect effects with a count outcome
+model4 <- rblimp(
+  data = alcoholuse,
+  nominal = 'college male',
+  count = 'alcdays',
+  center = 'college age',
+  # fixed = 'male',
+  model = '
+      apath:
+      alcage ~ intercept@m_icept male@a college age;
+      bpath:
+      alcdays ~ intercept@y_icept alcage@b male@tau college age',
+  parameters = '
+      ind_female = a * (b*exp(y_icept + b*m_icept + tau*0)); 
+      ind_male = a * (b*exp(y_icept + b*(m_icept + a*1) + tau*1));
+      ind_diff = ind_female - ind_male;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# print output
+output(model4)
+
+# plot parameter distributions
+posterior_plot(model4)
+
+# plot distribution of indirect effects
+posterior_plot(model4, 'ind_male')
+posterior_plot(model4, 'ind_female')
+posterior_plot(model4, 'ind_diff')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model4)
+imputed_vs_observed_plot(model4)
+residuals_plot(model4)
+
+
+
+
+
+

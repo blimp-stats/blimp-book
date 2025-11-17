@@ -1,4 +1,7 @@
-# GENERALIZED LINEAR MIXED MODEL WITH DISCRETE OUTCOME
+# MULTILEVEL MEDIATION
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
@@ -14,7 +17,7 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 employee <- read.csv(data_url)
 
-# FIT 1-1-1 RANDOM INTERCEPT MODEL ----
+# FIT 1-1-1 RANDOM INTERCEPT MODEL WITH COMBINED MODEL SPECIFICATION ----
 
 # mixed model specification
 model1 <- rblimp(
@@ -31,16 +34,29 @@ model1 <- rblimp(
     ind_b = a_b*b_b;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
 
+# print output
 output(model1)
+
+# plot parameter distributions
+posterior_plot(model1)
 
 # plot distribution of indirect effects
 posterior_plot(model1, 'ind_w')
 posterior_plot(model1, 'ind_b')
 
-# latent variable specification
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
+# FIT 1-1-1 RANDOM INTERCEPT MODEL WITH A LATENT VARIABLE SPECIFICATION ----
+
+# random interceptS as level-2 latent variableS
 model2 <- rblimp(
   data = employee,
   clusterid = 'team',
@@ -58,14 +74,25 @@ model2 <- rblimp(
     ind_b = a_b*b_b;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
 
+# print output
 output(model2)
+
+# plot parameter distributions
+posterior_plot(model2)
 
 # plot distribution of indirect effects
 posterior_plot(model2, 'ind_w')
 posterior_plot(model2, 'ind_b')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
 
 # FIT 1-1-1 RANDOM SLOPE MODEL ----
 
@@ -94,11 +121,22 @@ model3 <- rblimp(
     ind_b = a_b*b_b;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
 
+# print output
 output(model3)
+
+# plot parameter distributions
+posterior_plot(model3)
 
 # plot distribution of indirect effects
 posterior_plot(model3, 'ind_w')
 posterior_plot(model3, 'ind_b')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)

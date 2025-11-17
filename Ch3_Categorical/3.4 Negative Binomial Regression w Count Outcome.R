@@ -42,6 +42,6 @@ posterior_plot(model1,'alcdays')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model1)
+distribution_plot(model1)
 imputed_vs_observed_plot(model1)
 residuals_plot(model1)

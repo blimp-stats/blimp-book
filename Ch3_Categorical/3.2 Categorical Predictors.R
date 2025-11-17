@@ -57,6 +57,6 @@ output(model2)
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model2)
+distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 residuals_plot(model2)

@@ -43,7 +43,7 @@ posterior_plot(model1,'dpdd')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model1)
+distribution_plot(model1)
 imputed_vs_observed_plot(model1)
 residuals_plot(model1)
 
@@ -70,7 +70,7 @@ posterior_plot(model2,'dpdd')
 # GRAPHICAL DIAGNOSTICS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model2)
+distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 residuals_plot(model2)
 
@@ -101,7 +101,7 @@ posterior_plot(model3,'dpdd')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model3)
+distribution_plot(model3)
 imputed_vs_observed_plot(model3)
 residuals_plot(model3)
 
@@ -133,6 +133,6 @@ posterior_plot(model4,'dpdd')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
-imputation_plot(model4)
+distribution_plot(model4)
 imputed_vs_observed_plot(model4)
 residuals_plot(model4)
