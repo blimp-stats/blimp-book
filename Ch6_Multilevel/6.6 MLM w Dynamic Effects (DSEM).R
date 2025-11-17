@@ -24,7 +24,7 @@ diary <- read.csv(data_url)
 model <- rblimp(
   data = diary,
   clusterid = 'person; timeid: day;',
-  latent = 'person = pain_ranicept posaff_ranicept',
+  latent = 'person = pain_ranicept posaff_ranicept;',
   model = '
         pain ~ intercept@pain_ranicept (pain.lag - pain_ranicept) (posaff.lag - posaff_ranicept);
         posaff ~ intercept@posaff_ranicept (posaff.lag - posaff_ranicept) (pain.lag - pain_ranicept);
@@ -48,22 +48,3 @@ posterior_plot(model,'posaff')
 distribution_plot(model)
 imputed_vs_observed_plot(model)
 residuals_plot(model)
-
-# # dsem with lagged predictors
-# model <- rblimp(
-#   data = diary,
-#   clusterid = 'person; timeid: day;',
-#   latent = 'person = negaff_ranicept posaff_ranicept',
-#   model = '
-#         negaff ~ intercept@pain_ranicept (negaff.lag - negaff_ranicept) (posaff.lag - posaff_ranicept);
-#         posaff ~ intercept@posaff_ranicept (posaff.lag - posaff_ranicept) (negaff.lag - negaff_ranicept);
-#         negaff ~~ posaff;
-#         intercept -> negaff_ranicept posaff_ranicept;
-#         negaff_ranicept ~~ posaff_ranicept;',
-#   seed = 90291,
-#   burn = 10000,
-#   iter = 10000
-# )
-# 
-# # print output
-# output(model)

@@ -497,6 +497,11 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
     chunks <- unlist(strsplit(paste(mb, collapse = " "), ";", fixed = TRUE), use.names = FALSE)
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
+    
+    message("---- residuals_plot(): MODEL chunks ----")
+    for (ch in chunks) message("  chunk: ", ch)
+    
+    
     dvs <- character(0)
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
@@ -1231,7 +1236,6 @@ residuals_plot <- function(
     lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
   }
   
-  
   # B) Residuals vs. Predictors (from @MODEL) ----
   
   model_lines <- .get_model_block(model)
@@ -1244,96 +1248,198 @@ residuals_plot <- function(
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
-    parse_rhs_vars <- function(rhs) {
-      # Keep only the part before any | (e.g., random-effect syntax).
-      rhs2 <- strsplit(rhs, "\\|", perl = TRUE)[[1]][1]
-      # Strip @labels: x@b1 -> x
-      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs2)
-      # Break interactions x*y into x y
-      rhs2 <- gsub("\\*", " ", rhs2)
-      
+    # Helper: parse RHS "main part" (before "|") into tokens, stripping labels and "*"
+    parse_rhs_vars <- function(rhs_main) {
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)   # strip x@b1 labels
+      rhs2 <- gsub("\\*", " ", rhs2)                  # break x*y into x y
       toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
       toks <- toks[nzchar(toks)]
       toks <- setdiff(toks, c("intercept", "+", "-", "/", "*"))
       unique(toks)
     }
     
-    # dv_pred_pairs_raw: MODEL-scale DV name -> MODEL-scale predictor names.
-    dv_pred_pairs_raw <- list()
+    # Helper: extract interaction pairs from the main RHS (before "|")
+    # Returns a list of c(var1, var2) for each "var1*var2" token (spaces allowed).
+    find_interactions <- function(rhs_main) {
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)       # strip labels
+      rhs2 <- gsub("\\s*\\*\\s*", "*", rhs2)              # normalize spaces around "*"
+      toks <- strsplit(rhs2, "\\s+", perl = TRUE)[[1]]
+      toks <- toks[nzchar(toks)]
+      inter_tokens <- toks[grepl("\\*", toks, fixed = TRUE)]
+      pairs <- lapply(inter_tokens, function(tok) {
+        parts <- strsplit(tok, "\\*", fixed = TRUE)[[1]]
+        if (length(parts) != 2L) return(NULL)
+        parts
+      })
+      Filter(Negate(is.null), pairs)
+    }
+    
+    # Helper: parse the random-slope part after "|" into slope variables
+    parse_random_slopes <- function(rhs_rand) {
+      if (!nzchar(rhs_rand)) return(character(0))
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_rand)
+      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
+      toks[nzchar(toks)]
+    }
+    
+    # Helper: is this predictor level-2 (constant within each cluster)?
+    is_level2_predictor <- function(pred_name) {
+      if (is.null(cluster_id) || !cluster_id %in% cols1) return(FALSE)
+      d <- model@imputations[[1]]
+      if (!cluster_id %in% names(d)) return(FALSE)
+      
+      colname <- map_predictor_to_col(pred_name, cols1, cluster_id)
+      if (!colname %in% names(d)) return(FALSE)
+      
+      x <- d[[colname]]
+      if (!is.numeric(x)) return(FALSE)
+      g <- d[[cluster_id]]
+      if (all(is.na(g))) return(FALSE)
+      
+      by_cl <- split(x, g)
+      if (!length(by_cl)) return(FALSE)
+      
+      const_within <- vapply(by_cl, function(z) {
+        z <- z[is.finite(z)]
+        if (!length(z)) TRUE else length(unique(z)) <= 1L
+      }, logical(1L))
+      
+      all(const_within)
+    }
+    
+    # dv_main_preds: MODEL-scale DV -> all RHS main-part predictors
+    dv_main_preds <- list()
+    
+    # slope_to_l2_for_dv: key = "dv::$slopevar" -> level-2 predictors that
+    # appear in an interaction with that slope (e.g., pain*stress).
+    slope_to_l2_for_dv <- list()
+    
+    # ---- Pass 1: parse MODEL syntax into main preds and random-slope interactions ----
+    
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
+      
       parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
       dv_raw <- trimws(parts[1])
       rhs    <- trimws(parts[2])
       
-      # Handle prefixes like "focal: turnover" -> dv = "turnover".
+      # Handle prefixes like "level2: ranicept" or "focal: turnover"
       dv_tokens     <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
       dv_token_last <- dv_tokens[length(dv_tokens)]
       dv            <- sub(":$", "", dv_token_last)
       
-      preds <- parse_rhs_vars(rhs)
-      if (length(preds)) {
-        dv_pred_pairs_raw[[dv]] <- unique(c(dv_pred_pairs_raw[[dv]], preds))
+      # Split RHS into main vs random-slope part (before and after "|")
+      rhs_split <- strsplit(rhs, "\\|", perl = TRUE)[[1]]
+      rhs_main  <- trimws(rhs_split[1])
+      rhs_rand  <- if (length(rhs_split) > 1L) trimws(rhs_split[2]) else ""
+      
+      preds_main   <- parse_rhs_vars(rhs_main)
+      inter_pairs  <- find_interactions(rhs_main)
+      rand_slopes  <- parse_random_slopes(rhs_rand)
+      
+      # Accumulate main-part predictors for this DV (used for level-1 DV
+      # and random-intercept plots).
+      if (length(preds_main)) {
+        dv_main_preds[[dv]] <- unique(c(dv_main_preds[[dv]], preds_main))
       }
-    }
-    
-    # Build mapping from *base name* (including cluster-level bases) -> predictors.
-    dv_pred_pairs <- list()
-    if (length(dv_pred_pairs_raw)) {
-      for (dv in names(dv_pred_pairs_raw)) {
-        preds <- dv_pred_pairs_raw[[dv]]
-        
-        # (1) Continuous / standard DV: base = dv when dv.residual exists.
-        if (paste0(dv, ".residual") %in% cols1) {
-          dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
-        }
-        
-        # (2) Ordinal / nominal, etc.: bases like dv.1, dv.2, ...
-        cand_unit <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
-        if (length(cand_unit)) {
-          for (b in cand_unit) {
-            dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
+      
+      # For each random slope variable, record which level-2 predictors
+      # appear in an interaction with that slope (e.g., pain*stress).
+      if (length(rand_slopes) && length(inter_pairs)) {
+        for (slope_var in rand_slopes) {
+          # candidates: "the other variable" in any pair that includes slope_var
+          cand <- character(0)
+          for (pair in inter_pairs) {
+            a <- pair[1]; b <- pair[2]
+            if (identical(a, slope_var) && !identical(b, slope_var)) {
+              cand <- c(cand, b)
+            } else if (identical(b, slope_var) && !identical(a, slope_var)) {
+              cand <- c(cand, a)
+            }
           }
-        }
-        
-        # (3) Cluster-level residuals: columns like dv[cluster].
-        cand_cluster <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
-        if (length(cand_cluster)) {
-          for (b in cand_cluster) {
-            dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
-          }
-        }
-      }
-    }
-    
-    # For cluster-level DVs, keep only level-2 predictors.
-    level2_preds <- .get_level2_predictors(model, dv_pred_pairs, cols1, cluster_id)
-    
-    if (length(level2_preds)) {
-      for (bn in names(dv_pred_pairs)) {
-        # Cluster-level DV if its base name contains "[".
-        if (grepl("\\[", bn, fixed = TRUE)) {
-          old_preds <- dv_pred_pairs[[bn]]
-          keep      <- intersect(old_preds, level2_preds)
-          dropped   <- setdiff(old_preds, keep)
+          cand <- unique(cand)
+          if (!length(cand)) next
           
-          if (length(dropped)) {
-            message(
-              "Cluster-level DV '", bn,
-              "' – dropping level-1 predictors for residual plots: ",
-              paste(dropped, collapse = ", ")
-            )
-          }
-          dv_pred_pairs[[bn]] <- keep
+          # keep only level-2 predictors
+          cand_l2 <- cand[vapply(cand, is_level2_predictor, logical(1L))]
+          if (!length(cand_l2)) next
+          
+          key <- paste0(dv, "::$", slope_var)
+          slope_to_l2_for_dv[[key]] <- unique(c(slope_to_l2_for_dv[[key]], cand_l2))
         }
       }
     }
+    
+    # ---- Pass 2: build dv_pred_pairs in "base name" space --------------------
+    # base names include:
+    #   - level-1 DV residuals:            "posaff"
+    #   - ordinal/nominal residual pieces: "posaff.1", "posaff.2", ...
+    #   - random intercepts:               "posaff[person]"
+    #   - random slopes:                   "posaff$pain[person]"
+    
+    dv_pred_pairs <- list()
+    
+    for (dv in names(dv_main_preds)) {
+      preds <- dv_main_preds[[dv]]
+      if (!length(preds)) next
+      
+      # 1) Level-1 DV residuals: base = dv (when dv.residual exists).
+      if (paste0(dv, ".residual") %in% cols1) {
+        dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
+      }
+      
+      # 2) Ordinal/nominal: bases like dv.1, dv.2, ... that have .residual.
+      cand_unit <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
+      if (length(cand_unit)) {
+        for (b in cand_unit) {
+          dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
+        }
+      }
+      
+      # 3) Cluster-level DVs for this dv: random intercept + random slopes.
+      #    Columns look like "dv[cluster]" and "dv$slope[cluster]".
+      cluster_cols_for_dv <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
+      if (!length(cluster_cols_for_dv)) next
+      
+      # random intercept: no "$" in the name
+      intercept_cols <- cluster_cols_for_dv[!grepl("\\$", cluster_cols_for_dv, fixed = TRUE)]
+      # random slopes: have "$" in the name
+      slope_cols     <- setdiff(cluster_cols_for_dv, intercept_cols)
+      
+      # 3a) Random intercept columns: regress on *all* level-2 predictors
+      #     among preds (e.g., pain.mean, stress, female).
+      if (length(intercept_cols)) {
+        preds_l2 <- preds[vapply(preds, is_level2_predictor, logical(1L))]
+        if (length(preds_l2)) {
+          for (b in intercept_cols) {
+            dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds_l2))
+          }
+        }
+      }
+      
+      # 3b) Random slope columns: regress on level-2 predictors that appear
+      #     in an interaction with that slope variable (e.g., pain*stress).
+      if (length(slope_cols)) {
+        for (b in slope_cols) {
+          # b looks like "dv$slopevar[cluster]"
+          slope_part <- sub(paste0("^", dv, "\\$"), "", b)
+          slope_var  <- sub("\\[.*$", "", slope_part)
+          key        <- paste0(dv, "::$", slope_var)
+          
+          preds_slope <- slope_to_l2_for_dv[[key]]
+          if (!length(preds_slope)) next    # no qualifying interaction; skip
+          
+          dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds_slope))
+        }
+      }
+    }
+    
+    # ---- Pass 3: actually build the residual-vs-predictor plots -------------
     
     if (length(dv_pred_pairs)) {
       
       build_rvx <- function(base, xname) {
         # Prefer *.residual if it exists; otherwise fall back to the raw column.
-        # This lets things like probsolvpost[school] (no .residual column) work.
         resid_col <- paste0(base, ".residual")
         if (resid_col %in% cols1) {
           ycol <- resid_col
@@ -1347,36 +1453,10 @@ residuals_plot <- function(
         
         # Map MODEL predictor name -> actual column name.
         xcol <- map_predictor_to_col(xname, cols1, cluster_id)
-        
         if (!xcol %in% cols1) {
           message("Skipping (predictor missing): ", xname,
                   " (no column found) for DV base ", base)
           return(NULL)
-        }
-        
-        # For cluster-level DVs, only keep predictors that are constant within
-        # cluster in the first imputation.
-        if (!is.null(cluster_id) &&
-            grepl("\\[", base) &&                       # cluster-level DV
-            cluster_id %in% names(model@imputations[[1]])) {
-          
-          d0 <- model@imputations[[1]]
-          g  <- d0[[cluster_id]]
-          x0 <- d0[[xcol]]
-          
-          if (!all(is.na(g)) && !all(is.na(x0))) {
-            by_cl <- split(x0, g)
-            const_within <- vapply(by_cl, function(z) {
-              z <- z[is.finite(z)]
-              if (!length(z)) TRUE else length(unique(z)) <= 1L
-            }, logical(1L))
-            
-            if (!all(const_within)) {
-              message("Skipping (level-1 predictor for cluster-level DV): ",
-                      xname, " for DV base ", base)
-              return(NULL)
-            }
-          }
         }
         
         df <- stack_cols(ycol, xcol)
@@ -1390,13 +1470,11 @@ residuals_plot <- function(
         }
         
         # STANDARDIZE RESIDUALS FOR PLOTTING
-        # 1) If standardize_residuals() produced z-scores for this base, use them.
-        # 2) Otherwise (e.g., random slopes like posaff$pain[person] with no
-        #    .residual column), z-score df$y directly across all rows.
         if (nrow(std_data)) {
           sub_z <- std_data[std_data$base == base, c("imp", "row", "z")]
           if (nrow(sub_z)) {
-            df <- merge(df, sub_z, by = c("imp", "row"), all.x = TRUE, sort = FALSE)
+            df <- merge(df, sub_z, by = c("imp", "row"),
+                        all.x = TRUE, sort = FALSE)
             if (any(is.finite(df$z))) {
               df$y <- df$z
             }
@@ -1421,14 +1499,16 @@ residuals_plot <- function(
           }
         }
         
-        # Categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique vals.
+        # Categorical if: listed in ORDINAL/NOMINAL OR numeric with < 4 unique values.
         unique_x <- length(unique(df$x[is.finite(df$x)]))
-        is_cat <- is_categorical_name(xname) || (is.numeric(df$x) && unique_x > 0 && unique_x < 4)
+        is_cat <- is_categorical_name(xname) ||
+          (is.numeric(df$x) && unique_x > 0 && unique_x < 4)
         
         if (is_cat) {
           df$x_f <- factor(df$x)  # stable ticks at categories
           summ <- pool_means_by_category(
-            df_xy = data.frame(y = df$y, x = df$x_f, imp = df$imp), level = level
+            df_xy = data.frame(y = df$y, x = df$x_f, imp = df$imp),
+            level = level
           )
           if (!is.null(summ) && nrow(summ))
             summ$x_f <- factor(summ$level, levels = levels(df$x_f))
@@ -1472,10 +1552,14 @@ residuals_plot <- function(
             ggplot2::theme(
               axis.text.y  = ggplot2::element_text(size = font_size),
               axis.ticks.y = ggplot2::element_line(),
-              axis.text.x  = ggplot2::element_text(size = font_size,
-                                                   margin = ggplot2::margin(t = 2)),
-              axis.title.x = ggplot2::element_text(size = font_size,
-                                                   margin = ggplot2::margin(t = 12))
+              axis.text.x  = ggplot2::element_text(
+                size   = font_size,
+                margin = ggplot2::margin(t = 2)
+              ),
+              axis.title.x = ggplot2::element_text(
+                size   = font_size,
+                margin = ggplot2::margin(t = 12)
+              )
             )
           
         } else {
@@ -1526,10 +1610,10 @@ residuals_plot <- function(
                 function(x) sum(beta[-1] * x^(seq_along(beta[-1])))
               )
               curve_df <- data.frame(
-                x = xgrid,
+                x    = xgrid,
                 mean = as.numeric(yhat),
-                lwr = NA,
-                upr = NA
+                lwr  = NA,
+                upr  = NA
               )
             }
           }
@@ -1541,7 +1625,8 @@ residuals_plot <- function(
             ) +
             ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
             {
-              if (ci && exists("curve_df") && "lwr" %in% names(curve_df) && nrow(curve_df))
+              if (ci && exists("curve_df") &&
+                  "lwr" %in% names(curve_df) && nrow(curve_df))
                 ggplot2::geom_ribbon(
                   data = curve_df,
                   ggplot2::aes(x = x, ymin = lwr, ymax = upr),
@@ -1571,10 +1656,14 @@ residuals_plot <- function(
             ggplot2::theme(
               axis.text.y  = ggplot2::element_text(size = font_size),
               axis.ticks.y = ggplot2::element_line(),
-              axis.text.x  = ggplot2::element_text(size = font_size,
-                                                   margin = ggplot2::margin(t = 2)),
-              axis.title.x = ggplot2::element_text(size = font_size,
-                                                   margin = ggplot2::margin(t = 12))
+              axis.text.x  = ggplot2::element_text(
+                size   = font_size,
+                margin = ggplot2::margin(t = 2)
+              ),
+              axis.title.x = ggplot2::element_text(
+                size   = font_size,
+                margin = ggplot2::margin(t = 12)
+              )
             )
         }
       }
@@ -1591,6 +1680,9 @@ residuals_plot <- function(
       plots <- c(plots, rvx_list)
     }
   }
+  
+  
+
   
   
   # C) Standardized residual index plots + outlier tables ----
