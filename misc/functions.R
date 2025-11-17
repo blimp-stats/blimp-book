@@ -1921,7 +1921,7 @@ residuals_plot <- function(
           cutoff_layer +
           ggplot2::scale_y_continuous(breaks = scales::pretty_breaks()) +
           ggplot2::labs(
-            title = paste0("Standardized Residual Index Plot Over ", n_sets,
+            title = paste0("Mean Standardized Residual Index Plot Over ", n_sets,
                            " Imputed Data Sets: ", b),
             x = xtitle,
             y = ylab
