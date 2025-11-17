@@ -1,4 +1,11 @@
+# BRIAN NOTES ----
+# remove odds ratio for intercept@ ?
+# We need to discuss the .residual behavior with logistic models
+
 # GENERALIZED LINEAR MIXED MODEL WITH DISCRETE OUTCOME
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
@@ -14,9 +21,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 employee <- read.csv(data_url)
 
-# FIT LOGISTIC MODEL ----
+# FIT LOGISTIC MODEL WITH COMBINED MODEL SPECIFICATION ----
 
-# mixed model specification
+# logtistic regression with random intercepts
 model1 <- rblimp(
   data = employee,
   clusterid = 'team',
@@ -24,11 +31,32 @@ model1 <- rblimp(
   center = 'groupmean = lmx; grandmean = lmx.mean climate male',
   model = 'turnover ~ lmx male lmx.mean climate',
   seed = 90291,
-  burn = 10000,
-  iter = 10000
-)
+  burn = 20000,
+  iter = 20000,
+  nimps = 20)
+
+# print output
 output(model1)
 
+# plot parameter distributions
+posterior_plot(model1,'turnover')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot individual-level predicted probabilities
+bivariate_plot(model1, turnover.1.probability ~ lmx)
+bivariate_plot(model1, turnover.1.probability ~ male)
+bivariate_plot(model1, turnover.1.probability ~ lmx.mean[team])
+bivariate_plot(model1, turnover.1.probability ~ climate)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
+# FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+
+# logtistic regression with random intercepts
 model2 <- rblimp(
   data = employee,
   clusterid = 'team',
@@ -41,9 +69,25 @@ model2 <- rblimp(
     level1:
     turnover ~ intercept@ranicept lmx male;',
   seed = 90291,
-  burn = 20000,
-  iter = 30000
-)
+  burn = 30000,
+  iter = 30000,
+  nimps = 20)
+
+# print output
 output(model2)
 
-# BRIAN, REMOVE ODDS RATIO FOR INTERCEPT@ ? ----
+# plot parameter distributions
+posterior_plot(model2,'turnover')
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot individual-level predicted probabilities
+bivariate_plot(model2, turnover.1.probability ~ lmx)
+bivariate_plot(model2, turnover.1.probability ~ male)
+bivariate_plot(model2, turnover.1.probability ~ lmx.mean[team])
+bivariate_plot(model2, turnover.1.probability ~ climate)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)

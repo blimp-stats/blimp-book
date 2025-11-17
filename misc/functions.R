@@ -2193,16 +2193,25 @@ bivariate_plot <- function(
   stopifnot(inherits(formula, "formula"))
   support <- match.arg(support)
   
-  # --- parse y ~ x
-  tt   <- terms(formula)
-  vars <- all.vars(tt)
-  if (length(vars) != 2L) stop("Formula must be like y ~ x.")
-  y_name <- vars[1]; x_name <- vars[2]
+  # --- parse y ~ x (preserve bracketed variable names) ------------------------
+  tt <- terms(formula)
+  vars_raw <- attr(tt, "variables")  # language objects: ~, lhs, rhs,...
+  # Expect: 1 (tilde) + 1 lhs + 1 rhs  => length 3
+  if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
   
-  # --- checks & stack
+  lhs <- as.character(vars_raw[[2]])        # y
+  rhs_labels <- attr(tt, "term.labels")     # character representation(s) of RHS
+  if (length(rhs_labels) != 1L)
+    stop("Formula must be like y ~ x.")
+  
+  y_name <- lhs
+  x_name <- rhs_labels[1]
+  
+  # --- checks & stack --------------------------------------------------------
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
   cols1 <- names(model@imputations[[1]])
+  
   if (!all(c(y_name, x_name) %in% cols1))
     stop("Both '", y_name, "' and '", x_name, "' must exist in @imputations data.")
   
@@ -2218,17 +2227,17 @@ bivariate_plot <- function(
   if (!is.numeric(df$x) || !is.numeric(df$y)) stop("Both variables must be numeric.")
   n_imps <- length(model@imputations)
   
-  # --- detect probability-like outcome
+  # --- detect probability-like outcome ---------------------------------------
   qy <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
   use_logit <- is.finite(qy[1]) && is.finite(qy[2]) && qy[1] >= 0 && qy[2] <= 1
   inv_logit <- function(z) 1/(1+exp(-z))
   clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
   
-  # --- decide discrete vs continuous x
+  # --- decide discrete vs continuous x ---------------------------------------
   ux          <- sort(unique(df$x[is.finite(df$x)]))
   is_discrete <- length(ux) <= 3
   
-  # --- helpers
+  # --- helpers ---------------------------------------------------------------
   winsor_mad <- function(x, k = 3) {
     med <- stats::median(x, na.rm = TRUE)
     mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
@@ -2344,7 +2353,7 @@ bivariate_plot <- function(
     data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
   }
   
-  # --- plotting setup
+  # --- plotting setup --------------------------------------------------------
   y_limits <- if (use_logit) c(0, 1) else range(df$y, na.rm = TRUE)
   y_breaks <- scales::pretty_breaks()(y_limits)
   
@@ -2424,4 +2433,3 @@ bivariate_plot <- function(
       )
   }
 }
-
