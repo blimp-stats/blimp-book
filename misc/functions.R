@@ -1236,6 +1236,10 @@ residuals_plot <- function(
     lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
   }
   
+  
+  
+  
+  
   # B) Residuals vs. Predictors (from @MODEL) ----
   
   model_lines <- .get_model_block(model)
@@ -1248,42 +1252,23 @@ residuals_plot <- function(
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
-    # Helper: parse RHS "main part" (before "|") into tokens, stripping labels and "*"
-    parse_rhs_vars <- function(rhs_main) {
-      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)   # strip x@b1 labels
-      rhs2 <- gsub("\\*", " ", rhs2)                  # break x*y into x y
-      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
-      toks <- toks[nzchar(toks)]
-      toks <- setdiff(toks, c("intercept", "+", "-", "/", "*"))
-      unique(toks)
+    # --- level-2 predictor helper --------------------------------------------
+    # Prefer the existing helper; if it does not exist, fall back to
+    # "constant within cluster" based on the first imputation.
+    l2_from_helper <- try(.get_level2_predictors(model), silent = TRUE)
+    if (inherits(l2_from_helper, "try-error") || is.null(l2_from_helper)) {
+      l2_from_helper <- character(0)
+    } else {
+      l2_from_helper <- unique(as.character(l2_from_helper))
     }
     
-    # Helper: extract interaction pairs from the main RHS (before "|")
-    # Returns a list of c(var1, var2) for each "var1*var2" token (spaces allowed).
-    find_interactions <- function(rhs_main) {
-      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)       # strip labels
-      rhs2 <- gsub("\\s*\\*\\s*", "*", rhs2)              # normalize spaces around "*"
-      toks <- strsplit(rhs2, "\\s+", perl = TRUE)[[1]]
-      toks <- toks[nzchar(toks)]
-      inter_tokens <- toks[grepl("\\*", toks, fixed = TRUE)]
-      pairs <- lapply(inter_tokens, function(tok) {
-        parts <- strsplit(tok, "\\*", fixed = TRUE)[[1]]
-        if (length(parts) != 2L) return(NULL)
-        parts
-      })
-      Filter(Negate(is.null), pairs)
-    }
-    
-    # Helper: parse the random-slope part after "|" into slope variables
-    parse_random_slopes <- function(rhs_rand) {
-      if (!nzchar(rhs_rand)) return(character(0))
-      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_rand)
-      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
-      toks[nzchar(toks)]
-    }
-    
-    # Helper: is this predictor level-2 (constant within each cluster)?
     is_level2_predictor <- function(pred_name) {
+      # If helper provided a list, use that.
+      if (length(l2_from_helper)) {
+        return(pred_name %in% l2_from_helper)
+      }
+      
+      # Fallback: constant within cluster in the data.
       if (is.null(cluster_id) || !cluster_id %in% cols1) return(FALSE)
       d <- model@imputations[[1]]
       if (!cluster_id %in% names(d)) return(FALSE)
@@ -1307,11 +1292,92 @@ residuals_plot <- function(
       all(const_within)
     }
     
+    # --- helpers for parsing the MODEL line ----------------------------------
+    
+    # Parse RHS "main part" (before "|") into tokens, stripping labels and "*".
+    parse_rhs_vars <- function(rhs_main) {
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)   # strip x@b1 labels
+      rhs2 <- gsub("\\*", " ", rhs2)                  # break x*y into x y
+      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
+      toks <- toks[nzchar(toks)]
+      toks <- setdiff(toks, c("intercept", "+", "-", "/", "*"))
+      unique(toks)
+    }
+    
+    # Extract interaction pairs from the main RHS (before "|").
+    # Returns list of c(var1, var2) for each "var1*var2" token (spaces allowed).
+    find_interactions <- function(rhs_main) {
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)       # strip labels
+      rhs2 <- gsub("\\s*\\*\\s*", "*", rhs2)              # normalize spaces around "*"
+      toks <- strsplit(rhs2, "\\s+", perl = TRUE)[[1]]
+      toks <- toks[nzchar(toks)]
+      inter_tokens <- toks[grepl("\\*", toks, fixed = TRUE)]
+      pairs <- lapply(inter_tokens, function(tok) {
+        parts <- strsplit(tok, "\\*", fixed = TRUE)[[1]]
+        if (length(parts) != 2L) return(NULL)  # ignore 3-way etc
+        parts
+      })
+      Filter(Negate(is.null), pairs)
+    }
+    
+    # Parse the random-slope part after "|" into slope variables.
+    parse_random_slopes <- function(rhs_rand) {
+      if (!nzchar(rhs_rand)) return(character(0))
+      rhs2 <- gsub("@[A-Za-z0-9_.]+", "", rhs_rand)
+      toks <- strsplit(trimws(rhs2), "\\s+", perl = TRUE)[[1]]
+      toks[nzchar(toks)]
+    }
+    
+    # Given a DV and a slope variable, return the level-2 predictors
+    # that appear in an interaction with that slope on the MODEL line(s).
+    interaction_l2_for <- function(dv, slope_var) {
+      out <- character(0)
+      
+      # Level-2 predictors among the main predictors for this DV
+      preds_dv <- dv_main_preds[[dv]]
+      if (is.null(preds_dv) || !length(preds_dv)) return(out)
+      l2_preds <- preds_dv[vapply(preds_dv, is_level2_predictor, logical(1L))]
+      if (!length(l2_preds)) return(out)
+      
+      for (ch in chunks) {
+        if (!grepl("~", ch, fixed = TRUE)) next
+        
+        parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
+        dv_raw <- trimws(parts[1])
+        rhs    <- trimws(parts[2])
+        
+        # Normalize DV name (strip prefixes like "level2:" etc.)
+        dv_tokens     <- strsplit(dv_raw, "\\s+", perl = TRUE)[[1]]
+        dv_token_last <- dv_tokens[length(dv_tokens)]
+        dv_this       <- sub(":$", "", dv_token_last)
+        if (!identical(dv_this, dv)) next
+        
+        # Main RHS (before "|")
+        rhs_split <- strsplit(rhs, "\\|", perl = TRUE)[[1]]
+        rhs_main  <- trimws(rhs_split[1])
+        
+        # Strip any labels like x@b1
+        rhs_clean <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)
+        
+        # For each L2 predictor, check for "slope*L2" or "L2*slope"
+        for (other in l2_preds) {
+          pat1 <- paste0("\\b", slope_var, "\\s*\\*\\s*", other, "\\b")
+          pat2 <- paste0("\\b", other, "\\s*\\*\\s*", slope_var, "\\b")
+          if (grepl(pat1, rhs_clean) || grepl(pat2, rhs_clean)) {
+            out <- c(out, other)
+          }
+        }
+      }
+      
+      unique(out)
+    }
+    
     # dv_main_preds: MODEL-scale DV -> all RHS main-part predictors
     dv_main_preds <- list()
     
     # slope_to_l2_for_dv: key = "dv::$slopevar" -> level-2 predictors that
-    # appear in an interaction with that slope (e.g., pain*stress).
+    # appear in an interaction with that slope (e.g., pain*stress with
+    # stress being level-2).
     slope_to_l2_for_dv <- list()
     
     # ---- Pass 1: parse MODEL syntax into main preds and random-slope interactions ----
@@ -1343,8 +1409,9 @@ residuals_plot <- function(
         dv_main_preds[[dv]] <- unique(c(dv_main_preds[[dv]], preds_main))
       }
       
-      # For each random slope variable, record which level-2 predictors
-      # appear in an interaction with that slope (e.g., pain*stress).
+      # For each random slope variable, record which level-2 predictors appear
+      # in an interaction with that slope (e.g., pain*stress, where the L2
+      # predictor is stress).
       if (length(rand_slopes) && length(inter_pairs)) {
         for (slope_var in rand_slopes) {
           # candidates: "the other variable" in any pair that includes slope_var
@@ -1360,7 +1427,7 @@ residuals_plot <- function(
           cand <- unique(cand)
           if (!length(cand)) next
           
-          # keep only level-2 predictors
+          # keep only level-2 predictors (per helper/fallback)
           cand_l2 <- cand[vapply(cand, is_level2_predictor, logical(1L))]
           if (!length(cand_l2)) next
           
@@ -1429,7 +1496,31 @@ residuals_plot <- function(
           preds_slope <- slope_to_l2_for_dv[[key]]
           if (!length(preds_slope)) next    # no qualifying interaction; skip
           
-          dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds_slope))
+          ## IMPORTANT CHANGE: overwrite any existing mapping for this base
+          dv_pred_pairs[[b]] <- unique(preds_slope)
+        }
+      }
+    }
+    
+    # ---- Post-processing: enforce interaction-only predictors for random slopes ----
+    # Any base of the form "dv$slopevar[cluster]" gets *only* L2 predictors
+    # that interact with that slopevar in the MODEL syntax.
+    if (length(dv_pred_pairs)) {
+      for (base in names(dv_pred_pairs)) {
+        # Match "dv$slopevar[anything]"
+        m  <- regexec("^([^$]+)\\$([^\\[]+)\\[", base)
+        mm <- regmatches(base, m)[[1]]
+        if (length(mm) == 3L) {
+          dv        <- mm[2]
+          slope_var <- mm[3]
+          allowed   <- interaction_l2_for(dv, slope_var)
+          
+          if (length(allowed)) {
+            dv_pred_pairs[[base]] <- allowed
+          } else {
+            # No L2 interaction partners: no residual-by-predictor plots
+            dv_pred_pairs[[base]] <- character(0)
+          }
         }
       }
     }
@@ -1437,6 +1528,12 @@ residuals_plot <- function(
     # ---- Pass 3: actually build the residual-vs-predictor plots -------------
     
     if (length(dv_pred_pairs)) {
+      
+        # message("---- dv_pred_pairs mapping ----")
+        # for (nm in names(dv_pred_pairs)) {
+        #   message("  ", nm, "  <-  ", paste(dv_pred_pairs[[nm]], collapse = ", "))
+        # }
+        # message("---- end mapping ----")
       
       build_rvx <- function(base, xname) {
         # Prefer *.residual if it exists; otherwise fall back to the raw column.
@@ -1642,7 +1739,7 @@ residuals_plot <- function(
                   ggplot2::aes(x = x, y = mean),
                   inherit.aes = FALSE,
                   color = curve_col,
-                  linewidth = 1.2
+                  linewidth  = 1.2
                 ) else NULL
             } +
             ggplot2::coord_cartesian(ylim = c(-4, 4)) +
@@ -1681,8 +1778,6 @@ residuals_plot <- function(
     }
   }
   
-  
-
   
   
   # C) Standardized residual index plots + outlier tables ----
@@ -1894,6 +1989,9 @@ residuals_plot <- function(
     }
   }
   
+  # print(table(std_data$base))
+  
+  
   
   # E) Standardized residual spread by cluster (level-1 DVs only) ----
   
@@ -1935,7 +2033,14 @@ residuals_plot <- function(
         
         # Helper: build one cluster-spread plot for a given DV.
         build_spread <- function(this_dv) {
-          dat_dv <- std_data[std_data$base == this_dv, , drop = FALSE]
+
+          dat_dv <- std_data[
+            std_data$base %in% bases_resid & 
+              std_data$base == this_dv,
+            ,
+            drop = FALSE
+          ]
+          
           if (!nrow(dat_dv)) {
             message("No standardized residuals found for DV '", this_dv, "'.")
             return(NULL)
@@ -2002,7 +2107,7 @@ residuals_plot <- function(
           
           n_sets <- length(model@imputations)
           
-          y_limits <- c(-5.5, 5.5)
+          y_limits <- c(-6.5, 6.5)
           
           p <- ggplot2::ggplot(
             dat2,
@@ -2027,7 +2132,7 @@ residuals_plot <- function(
             ) +
             ggplot2::scale_y_continuous(
               limits = y_limits,
-              breaks = seq(-5, 5, 1)
+              breaks = seq(-6, 6, 1)
             ) +
             ggplot2::labs(
               title = paste0(
