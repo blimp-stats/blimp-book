@@ -1,4 +1,7 @@
-# REPEATED MEASURES ANALYSIS WITH UNSTRUCTURED CHANGE
+# SEM LINEAR GROWTH MODEL
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
@@ -21,7 +24,7 @@ model1 <- rblimp(
   latent = 'subjects',
   model = '
     subjects ~ intercept@0;
-    { severity0:severity6 } ~ intercept subjects@1;',
+    { severity0:severity3 } ~ intercept subjects@1;',
   seed = 90291, # integer random number seed
   burn = 10000, # warm up iterations
   iter = 10000) # iterations for analysis

@@ -2176,9 +2176,13 @@ residuals_plot <- function(
 
 
 
+
+
 # BIVARIATE SCATTER WITH LOESS ----
 # Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
 # Handles MI pooling of LOESS smooths or discrete-level means.
+# When lines = TRUE, attempts to detect cluster id via .get_cluster_id(model)
+# and draws spaghetti lines using @average_imp (preferred) or first imputation.
 
 bivariate_plot <- function(
     model, formula,
@@ -2187,33 +2191,34 @@ bivariate_plot <- function(
     trim_prop = 0.025, window_prop = 0.10, min_n_prop = 0.01,
     point_alpha = 0.15, point_size = 1.2,
     curve_color = "violet", band_fill = "violet",
-    font_size = 14
+    font_size = 14,
+    lines = FALSE
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   stopifnot(inherits(formula, "formula"))
   support <- match.arg(support)
   
-  # --- parse y ~ x (preserve bracketed variable names) ------------------------
-  tt <- terms(formula)
-  vars_raw <- attr(tt, "variables")  # language objects: ~, lhs, rhs,...
-  # Expect: 1 (tilde) + 1 lhs + 1 rhs  => length 3
+  ## --- parse y ~ x ----------------------------------------------------------
+  tt       <- terms(formula)
+  vars_raw <- attr(tt, "variables")  # ~, lhs, rhs
   if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
   
-  lhs <- as.character(vars_raw[[2]])        # y
-  rhs_labels <- attr(tt, "term.labels")     # character representation(s) of RHS
-  if (length(rhs_labels) != 1L)
-    stop("Formula must be like y ~ x.")
+  lhs        <- as.character(vars_raw[[2]])
+  rhs_labels <- attr(tt, "term.labels")
+  if (length(rhs_labels) != 1L) stop("Formula must be like y ~ x.")
   
   y_name <- lhs
   x_name <- rhs_labels[1]
   
-  # --- checks & stack --------------------------------------------------------
+  ## --- checks & stack main MI data ------------------------------------------
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
   cols1 <- names(model@imputations[[1]])
   
   if (!all(c(y_name, x_name) %in% cols1))
-    stop("Both '", y_name, "' and '", x_name, "' must exist in @imputations data.")
+    stop("Both '", y_name, "' and '", x_name,
+         "' must exist in @imputations data. Available columns are:\n",
+         paste(cols1, collapse = ", "))
   
   df <- do.call(
     rbind,
@@ -2224,20 +2229,66 @@ bivariate_plot <- function(
   )
   df <- stats::na.omit(df[, c("x","y","imp")])
   if (!nrow(df)) stop("No complete cases for the selected variables.")
-  if (!is.numeric(df$x) || !is.numeric(df$y)) stop("Both variables must be numeric.")
+  if (!is.numeric(df$x) || !is.numeric(df$y))
+    stop("Both variables must be numeric.")
   n_imps <- length(model@imputations)
   
-  # --- detect probability-like outcome ---------------------------------------
-  qy <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
+  ## --- spaghetti data from @average_imp (preferred) -------------------------
+  df_lines <- NULL
+  if (lines) {
+    # Try to get the cluster id via the same helper used in residuals_plot
+    cluster_id <- try(.get_cluster_id(model), silent = TRUE)
+    if (inherits(cluster_id, "try-error")) cluster_id <- NULL
+    if (is.null(cluster_id) || !nzchar(cluster_id)) {
+      warning(
+        "lines = TRUE requested, but .get_cluster_id(model) did not return a usable name; ",
+        "no spaghetti lines will be drawn."
+      )
+    } else {
+      # choose source for spaghetti: average_imp if present, else first imputation
+      if (!is.null(model@average_imp)) {
+        base_df <- model@average_imp
+      } else {
+        base_df <- model@imputations[[1]]
+      }
+      
+      cols_base <- names(base_df)
+      needed    <- c(x_name, y_name, cluster_id)
+      if (!all(needed %in% cols_base)) {
+        warning(
+          "lines = TRUE requested, but variables ",
+          paste(needed, collapse = ", "),
+          " were not all found in ",
+          if (!is.null(model@average_imp)) "@average_imp" else "the first imputation",
+          "; no spaghetti lines will be drawn."
+        )
+      } else {
+        df_lines <- data.frame(
+          x       = base_df[[x_name]],
+          y       = base_df[[y_name]],
+          cluster = base_df[[cluster_id]]
+        )
+        df_lines <- stats::na.omit(df_lines)
+        if (nrow(df_lines)) {
+          df_lines <- df_lines[order(df_lines$cluster, df_lines$x), ]
+        } else {
+          df_lines <- NULL
+        }
+      }
+    }
+  }
+  
+  ## --- probability-like outcome? -------------------------------------------
+  qy        <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
   use_logit <- is.finite(qy[1]) && is.finite(qy[2]) && qy[1] >= 0 && qy[2] <= 1
   inv_logit <- function(z) 1/(1+exp(-z))
   clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
   
-  # --- decide discrete vs continuous x ---------------------------------------
+  ## --- discrete vs continuous x --------------------------------------------
   ux          <- sort(unique(df$x[is.finite(df$x)]))
   is_discrete <- length(ux) <= 3
   
-  # --- helpers ---------------------------------------------------------------
+  ## --- helpers --------------------------------------------------------------
   winsor_mad <- function(x, k = 3) {
     med <- stats::median(x, na.rm = TRUE)
     mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
@@ -2245,7 +2296,7 @@ bivariate_plot <- function(
     pmin(pmax(x, med - k*mad), med + k*mad)
   }
   
-  # Rubin pooling of LOESS curve (continuous x)
+  # Rubin-pooling of LOESS curve
   loess_pooled <- function(dat_xy) {
     fitdat <- dat_xy
     fam    <- if (robust) "symmetric" else "gaussian"
@@ -2262,8 +2313,10 @@ bivariate_plot <- function(
     preds <- lapply(imps, function(d) {
       d0 <- stats::na.omit(d[, c("y","x")])
       if (nrow(d0) < 10)
-        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
+        return(list(fit = rep(NA_real_, length(xgrid)),
+                    se2 = rep(NA_real_, length(xgrid))))
+      ctl <- stats::loess.control(surface = "interpolate",
+                                  trace.hat = "approximate")
       fit <- try(
         suppressWarnings(
           stats::loess(y ~ x, data = d0,
@@ -2273,7 +2326,8 @@ bivariate_plot <- function(
         silent = TRUE
       )
       if (inherits(fit, "try-error"))
-        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+        return(list(fit = rep(NA_real_, length(xgrid)),
+                    se2 = rep(NA_real_, length(xgrid))))
       pr <- try(
         suppressWarnings(
           stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
@@ -2282,10 +2336,12 @@ bivariate_plot <- function(
       )
       if (inherits(pr, "try-error") || is.null(pr$se.fit))
         return(list(
-          fit = as.numeric(stats::predict(fit, newdata = data.frame(x = xgrid))),
+          fit = as.numeric(stats::predict(
+            fit, newdata = data.frame(x = xgrid))),
           se2 = rep(NA_real_, length(xgrid))
         ))
-      list(fit = as.numeric(pr$fit), se2 = as.numeric(pr$se.fit)^2)
+      list(fit = as.numeric(pr$fit),
+           se2 = as.numeric(pr$se.fit)^2)
     })
     
     Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
@@ -2295,7 +2351,7 @@ bivariate_plot <- function(
       return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
     Fmat <- Fmat[, keep, drop = FALSE]
     Wmat <- Wmat[, keep, drop = FALSE]
-    m <- ncol(Fmat)
+    m    <- ncol(Fmat)
     
     mean_fit <- rowMeans(Fmat, na.rm = TRUE)
     W        <- rowMeans(Wmat, na.rm = TRUE)
@@ -2316,7 +2372,7 @@ bivariate_plot <- function(
     data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
   }
   
-  # Rubin-pooled mean per x-level (discrete x)
+  # Rubin-pooled mean per discrete x-level
   pooled_mean_by_level <- function(dat_xy) {
     if (use_logit) {
       dat_xy$y <- clamp01(dat_xy$y)
@@ -2350,16 +2406,17 @@ bivariate_plot <- function(
       }
     })
     out <- do.call(rbind, out)
-    data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
+    data.frame(x = levs, mean = out[,"mean"], lwr = out[,"lwr"], upr = out[,"upr"])
   }
   
-  # --- plotting setup --------------------------------------------------------
+  ## --- plotting -------------------------------------------------------------
   y_limits <- if (use_logit) c(0, 1) else range(df$y, na.rm = TRUE)
   y_breaks <- scales::pretty_breaks()(y_limits)
   
   if (is_discrete) {
     mean_df <- pooled_mean_by_level(df)
-    ggplot2::ggplot(df, ggplot2::aes(x = factor(x), y = y)) +
+    
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = factor(x), y = y)) +
       ggplot2::geom_jitter(
         width = 0.08,
         alpha = point_alpha,
@@ -2389,15 +2446,37 @@ bivariate_plot <- function(
       ) +
       blimp_theme(font_size) +
       ggplot2::theme(
-        axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+        axis.text.y  = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(r = 6)),
         axis.ticks.y = ggplot2::element_line(),
         axis.title.y = ggplot2::element_text(size = font_size),
-        axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-        axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+        axis.text.x  = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(t = 2)),
+        axis.title.x = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(t = 12))
       )
+    
   } else {
     curve_df <- loess_pooled(df)
-    ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
+    
+    # start plot
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
+    
+    # spaghetti FIRST (background)
+    if (lines && !is.null(df_lines)) {
+      p <- p +
+        ggplot2::geom_line(
+          data        = df_lines,
+          ggplot2::aes(x = x, y = y, group = cluster),
+          inherit.aes = FALSE,
+          linewidth   = 0.3,
+          alpha       = 0.15,
+          color       = "grey40"
+        )
+    }
+    
+    # then points + ribbon + LOESS on top
+    p <- p +
       ggplot2::geom_point(
         alpha = point_alpha,
         size  = point_size,
@@ -2425,11 +2504,16 @@ bivariate_plot <- function(
       ) +
       blimp_theme(font_size) +
       ggplot2::theme(
-        axis.text.y  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(r = 6)),
+        axis.text.y  = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(r = 6)),
         axis.ticks.y = ggplot2::element_line(),
         axis.title.y = ggplot2::element_text(size = font_size),
-        axis.text.x  = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 2)),
-        axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12))
+        axis.text.x  = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(t = 2)),
+        axis.title.x = ggplot2::element_text(size = font_size,
+                                             margin = ggplot2::margin(t = 12))
       )
   }
+  
+  p
 }

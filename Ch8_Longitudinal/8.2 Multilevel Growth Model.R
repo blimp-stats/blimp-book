@@ -1,4 +1,7 @@
-# MULTILEVEL MODEL WITH RANDOM SLOPES AND INTERACTIONS
+# BRIAN NOTES ----
+# simple command behaves incorrectly with quadratic term
+
+# MULTILEVEL GROWTH MODEL
 
 # LOAD R PACKAGES ----
 
@@ -24,10 +27,17 @@ model1 <- rblimp(
   model = 'severity ~ intercept week',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
+# print output
 output(model1)
+
+# plot parameter distributions
+posterior_plot(model1)
+
+# plot predicted values by time
+bivariate_plot(model1, severity.predicted ~ week)
 
 # FIT LINEAR GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
@@ -38,10 +48,28 @@ model2 <- rblimp(
   model = 'severity ~ intercept week | week;',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
+# print output
 output(model2)
+
+# plot parameter distributions
+posterior_plot(model2)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model2, severity.predicted ~ week)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
+
+model2@syntax
+
+# FIT PREDICTORS OF LINEAR GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
 # linear growth model with predictors
 model3 <- rblimp(
@@ -57,11 +85,26 @@ model3 <- rblimp(
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
+# print output
 output(model3)
+
+# plot parameter distributions
+posterior_plot(model3)
+
+# plot conditional growth curves
 simple_plot(severity ~ week | drug, model3)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)
+
+
 
 # FIT QUADRATIC GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
