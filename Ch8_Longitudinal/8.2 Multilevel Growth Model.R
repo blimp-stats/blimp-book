@@ -3,6 +3,9 @@
 
 # MULTILEVEL GROWTH MODEL
 
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -36,8 +39,10 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
 # plot predicted values by time
-bivariate_plot(model1, severity.predicted ~ week)
+bivariate_plot(model1, severity.predicted ~ week, lines = T)
 
 # FIT LINEAR GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
@@ -56,20 +61,6 @@ output(model2)
 
 # plot parameter distributions
 posterior_plot(model2)
-
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
-# plot predicted values by time
-bivariate_plot(model2, severity.predicted ~ week)
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
-
-model2@syntax
-
-# FIT PREDICTORS OF LINEAR GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
 # linear growth model with predictors
 model3 <- rblimp(
@@ -99,12 +90,13 @@ simple_plot(severity ~ week | drug, model3)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
+# plot predicted values by time
+bivariate_plot(model3, severity.predicted ~ week, lines = T)
+
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model3)
 imputed_vs_observed_plot(model3)
 residuals_plot(model3)
-
-
 
 # FIT QUADRATIC GROWTH MODEL WITH MIXED MODEL SPECIFICATION ----
 
@@ -115,9 +107,10 @@ model4 <- rblimp(
   model = 'severity ~ intercept week week^2 | week;',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
+# print output
 output(model4)
 
 # quadratic fixed effect and quadratic variance
@@ -126,10 +119,11 @@ model5 <- rblimp(
   clusterid = 'person',
   model = 'severity ~ intercept week week^2 | week week^2;',
   seed = 90291,
-  burn = 10000,
-  iter = 10000
-)
+  burn = 30000,
+  iter = 30000,
+  nimps = 20)
 
+# print output
 output(model5)
 
 # quadratic fixed effect with predictor variables
@@ -144,11 +138,22 @@ model6 <- rblimp(
     mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
-  burn = 10000,
-  iter = 10000
+  burn = 20000,
+  iter = 20000
 )
 
+# print output
 output(model6)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model4, severity.predicted ~ week, lines = T)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model4)
+imputed_vs_observed_plot(model4)
+residuals_plot(model4)
 
 # FIT LINEAR GROWTH MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
@@ -165,9 +170,10 @@ model7 <- rblimp(
     severity ~ intercept@icept week@linear;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
 
+# print output
 output(model7)
 
 # linear growth model with predictors
@@ -190,10 +196,21 @@ model8 <- rblimp(
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
-  iter = 10000
-)
+  iter = 10000,
+  nimps = 20)
 
+# print output
 output(model8)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model7, severity.predicted ~ week, lines = T)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model7)
+imputed_vs_observed_plot(model7)
+residuals_plot(model7)
 
 # FIT QUADRATIC GROWTH MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
@@ -210,8 +227,10 @@ model9 <- rblimp(
     severity ~ intercept@icept week@linear week^2;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
+
+# print output
 output(model9)
 
 # quadratic fixed effect and quadratic variance
@@ -227,8 +246,10 @@ model10 <- rblimp(
     severity ~ intercept@icept week@linear week^2@quad;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
+
+# print output
 output(model10)
 
 # quadratic fixed effect with predictors
@@ -251,6 +272,18 @@ model11 <- rblimp(
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 20000,
-  iter = 20000
-)
+  iter = 20000,
+  nimps = 20)
+
+# print output
 output(model11)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model9, severity.predicted ~ week, lines = T)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model9)
+imputed_vs_observed_plot(model9)
+residuals_plot(model9)

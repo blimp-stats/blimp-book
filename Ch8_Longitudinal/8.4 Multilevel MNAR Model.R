@@ -1,4 +1,7 @@
-# MULTILEVEL MODEL WITH RANDOM SLOPES AND INTERACTIONS
+# MULTILEVEL GROWTH MODEL WITH MNAR ASSUMPTION
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
@@ -14,6 +17,32 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 
 # create data frame from github data
 trial <- read.csv(data_url)
+
+# FIT REPEATED MEASURES MODEL ----
+
+# mixed model specification
+model1 <- rblimp(
+  data = trial,
+  nominal = 'week',
+  clusterid = 'person',
+  model = '
+    severity ~ intercept week;
+    dropout ~ intercept week | intercept@0;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# print output
+output(model1)
+
+# plot parameter distributions
+posterior_plot(model1)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model1, severity.predicted ~ week, lines = T)
 
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
