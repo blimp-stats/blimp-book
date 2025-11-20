@@ -2175,28 +2175,49 @@ residuals_plot <- function(
 }
 
 
-
-
-
 # BIVARIATE SCATTER WITH LOESS ----
 # Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
 # Handles MI pooling of LOESS smooths or discrete-level means.
-# When lines = TRUE, attempts to detect cluster id via .get_cluster_id(model)
-# and draws spaghetti lines using @average_imp (preferred) or first imputation.
+# When lines = TRUE, parses CLUSTERID: ...; from model@syntax and draws
+# spaghetti lines using @average_imp (preferred) or first imputation.
+#
+# x_type:
+#   "auto"     = if < 8 unique x -> discrete style, else numeric/LOESS
+#   "discrete" = always use discrete style (means + line, optional error bars)
+#   "numeric"  = always use numeric style (LOESS)
 
 bivariate_plot <- function(
     model, formula,
     span = 0.9, degree = 1, robust = TRUE, level = 0.95,
     support = c("density", "quantile"),
+    x_type  = c("auto", "discrete", "numeric"),
     trim_prop = 0.025, window_prop = 0.10, min_n_prop = 0.01,
     point_alpha = 0.15, point_size = 1.2,
     curve_color = "violet", band_fill = "violet",
     font_size = 14,
-    lines = FALSE
+    lines = FALSE,
+    errorbars = FALSE   # show error bars for discrete plots?
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   stopifnot(inherits(formula, "formula"))
   support <- match.arg(support)
+  x_type  <- match.arg(x_type)
+  
+  ## --- helper: parse CLUSTERID from model@syntax ----------------------------
+  get_cluster_from_syntax <- function(model) {
+    sx <- model@syntax
+    if (is.null(sx)) return(NULL)
+    sx_chr <- as.character(sx)
+    if (!length(sx_chr)) return(NULL)
+    sx_lines <- unlist(strsplit(sx_chr, "\n", fixed = TRUE), use.names = FALSE)
+    cl_line  <- grep("\\bCLUSTERID\\s*:", sx_lines,
+                     value = TRUE, ignore.case = TRUE)
+    if (!length(cl_line)) return(NULL)
+    cl <- sub(".*CLUSTERID\\s*:\\s*([^;]+);.*", "\\1", cl_line[1], perl = TRUE)
+    cl <- trimws(cl)
+    if (!nzchar(cl)) return(NULL)
+    cl
+  }
   
   ## --- parse y ~ x ----------------------------------------------------------
   tt       <- terms(formula)
@@ -2236,16 +2257,13 @@ bivariate_plot <- function(
   ## --- spaghetti data from @average_imp (preferred) -------------------------
   df_lines <- NULL
   if (lines) {
-    # Try to get the cluster id via the same helper used in residuals_plot
-    cluster_id <- try(.get_cluster_id(model), silent = TRUE)
-    if (inherits(cluster_id, "try-error")) cluster_id <- NULL
+    cluster_id <- get_cluster_from_syntax(model)
     if (is.null(cluster_id) || !nzchar(cluster_id)) {
       warning(
-        "lines = TRUE requested, but .get_cluster_id(model) did not return a usable name; ",
+        "lines = TRUE requested, but no CLUSTERID: declaration found in model@syntax; ",
         "no spaghetti lines will be drawn."
       )
     } else {
-      # choose source for spaghetti: average_imp if present, else first imputation
       if (!is.null(model@average_imp)) {
         base_df <- model@average_imp
       } else {
@@ -2284,9 +2302,17 @@ bivariate_plot <- function(
   inv_logit <- function(z) 1/(1+exp(-z))
   clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
   
-  ## --- discrete vs continuous x --------------------------------------------
+  ## --- determine plot type: discrete vs numeric -----------------------------
   ux          <- sort(unique(df$x[is.finite(df$x)]))
-  is_discrete <- length(ux) <= 3
+  n_unique_x  <- length(ux)
+  
+  if (x_type == "discrete") {
+    plot_type <- "discrete"
+  } else if (x_type == "numeric") {
+    plot_type <- "numeric"
+  } else {  # auto
+    plot_type <- if (n_unique_x < 8) "discrete" else "numeric"
+  }
   
   ## --- helpers --------------------------------------------------------------
   winsor_mad <- function(x, k = 3) {
@@ -2296,7 +2322,7 @@ bivariate_plot <- function(
     pmin(pmax(x, med - k*mad), med + k*mad)
   }
   
-  # Rubin-pooling of LOESS curve
+  # Rubin-pooling of LOESS curve (numeric x)
   loess_pooled <- function(dat_xy) {
     fitdat <- dat_xy
     fam    <- if (robust) "symmetric" else "gaussian"
@@ -2372,7 +2398,7 @@ bivariate_plot <- function(
     data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
   }
   
-  # Rubin-pooled mean per discrete x-level
+  # Rubin-pooled mean per x-level (discrete x)
   pooled_mean_by_level <- function(dat_xy) {
     if (use_logit) {
       dat_xy$y <- clamp01(dat_xy$y)
@@ -2380,63 +2406,120 @@ bivariate_plot <- function(
     }
     levs <- sort(unique(dat_xy$x))
     m    <- length(unique(dat_xy$imp))
+    
     out  <- lapply(levs, function(L) {
-      by_imp <- split(dat_xy[dat_xy$x == L, , drop = FALSE],
-                      dat_xy$imp[dat_xy$x == L])
-      mu_j <- vapply(by_imp, function(d) mean(d$y), numeric(1L))
-      n_j  <- vapply(by_imp, nrow, integer(1L))
-      s2_j <- vapply(by_imp, function(d) stats::var(d$y), numeric(1L))
+      dL <- dat_xy[dat_xy$x == L, , drop = FALSE]
+      if (!nrow(dL)) {
+        return(c(mean = NA_real_, lwr = NA_real_, upr = NA_real_))
+      }
+      by_imp <- split(dL$y, dL$imp)
+      mu_j <- vapply(by_imp, function(z) mean(z, na.rm = TRUE), numeric(1L))
+      n_j  <- vapply(by_imp, function(z) sum(is.finite(z)), integer(1L))
+      s2_j <- vapply(by_imp, function(z) stats::var(z, na.rm = TRUE), numeric(1L))
       Ubar <- mean(s2_j / pmax(1, n_j))
       B    <- stats::var(mu_j)
       Tvar <- Ubar + (1 + 1/m) * B
       se   <- sqrt(pmax(0, Tvar))
       tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
+      
+      mu_bar <- mean(mu_j)
+      
       if (use_logit) {
         c(
-          mean = inv_logit(mean(mu_j)),
-          lwr  = inv_logit(mean(mu_j) - tcrit * se),
-          upr  = inv_logit(mean(mu_j) + tcrit * se)
+          mean = inv_logit(mu_bar),
+          lwr  = inv_logit(mu_bar - tcrit * se),
+          upr  = inv_logit(mu_bar + tcrit * se)
         )
       } else {
         c(
-          mean = mean(mu_j),
-          lwr  = mean(mu_j) - tcrit * se,
-          upr  = mean(mu_j) + tcrit * se
+          mean = mu_bar,
+          lwr  = mu_bar - tcrit * se,
+          upr  = mu_bar + tcrit * se
         )
       }
     })
+    
     out <- do.call(rbind, out)
-    data.frame(x = levs, mean = out[,"mean"], lwr = out[,"lwr"], upr = out[,"upr"])
+    data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
   }
   
-  ## --- plotting -------------------------------------------------------------
-  y_limits <- if (use_logit) c(0, 1) else range(df$y, na.rm = TRUE)
+  ## --- y-axis limits --------------------------------------------------------
+  if (use_logit) {
+    ymax <- max(df$y, na.rm = TRUE)
+    if (!is.finite(ymax)) ymax <- 1
+    upper <- min(1, ymax + 0.02)
+    if (upper <= 0) upper <- 1
+    y_limits <- c(0, upper)
+  } else {
+    y_limits <- range(df$y, na.rm = TRUE)
+  }
   y_breaks <- scales::pretty_breaks()(y_limits)
   
-  if (is_discrete) {
+  ## --- plotting -------------------------------------------------------------
+  if (plot_type == "discrete") {
+    # Discrete plot: jittered green points, pooled mean dots (black),
+    # purple line connecting means, and optional error bars.
+    
     mean_df <- pooled_mean_by_level(df)
     
-    p <- ggplot2::ggplot(df, ggplot2::aes(x = factor(x), y = y)) +
+    # slight jitter relative to spacing
+    if (n_unique_x > 1) {
+      min_step     <- min(diff(ux))
+      jitter_width <- 0.01 * min_step
+    } else {
+      jitter_width <- 0.02
+    }
+    
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
+    
+    # spaghetti FIRST (background) even for discrete x
+    if (lines && !is.null(df_lines)) {
+      p <- p +
+        ggplot2::geom_line(
+          data        = df_lines,
+          ggplot2::aes(x = x, y = y, group = cluster),
+          inherit.aes = FALSE,
+          linewidth   = 0.3,
+          alpha       = 0.15,
+          color       = "grey40"
+        )
+    }
+    
+    p <- p +
       ggplot2::geom_jitter(
-        width = 0.08,
-        alpha = point_alpha,
-        size  = point_size,
-        color = unname(plot_colors["teal"])
+        width  = jitter_width,
+        height = 0,
+        alpha  = point_alpha,
+        size   = point_size,
+        color  = unname(plot_colors["teal"])
       ) +
-      ggplot2::geom_errorbar(
+      {
+        if (errorbars) {
+          ggplot2::geom_errorbar(
+            data        = mean_df,
+            ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+            inherit.aes = FALSE,
+            width       = 0.12,
+            color       = unname(plot_colors[curve_color]),
+            linewidth   = 0.9
+          )
+        } else {
+          NULL
+        }
+      } +
+      ggplot2::geom_line(
         data        = mean_df,
-        ggplot2::aes(x = factor(x), ymin = lwr, ymax = upr),
+        ggplot2::aes(x = x, y = mean),
         inherit.aes = FALSE,
-        width       = 0.15,
         color       = unname(plot_colors[curve_color]),
-        linewidth   = 0.9
+        linewidth   = 1.2
       ) +
       ggplot2::geom_point(
         data        = mean_df,
-        ggplot2::aes(x = factor(x), y = mean),
+        ggplot2::aes(x = x, y = mean),
         inherit.aes = FALSE,
-        size        = 2.2,
-        color       = unname(plot_colors[curve_color])
+        size        = 3,
+        color       = "black"
       ) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
@@ -2457,9 +2540,10 @@ bivariate_plot <- function(
       )
     
   } else {
+    # Numeric plot: points (+ optional spaghetti) + LOESS curve + ribbon.
+    
     curve_df <- loess_pooled(df)
     
-    # start plot
     p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
     
     # spaghetti FIRST (background)
@@ -2475,7 +2559,7 @@ bivariate_plot <- function(
         )
     }
     
-    # then points + ribbon + LOESS on top
+    # points + LOESS
     p <- p +
       ggplot2::geom_point(
         alpha = point_alpha,

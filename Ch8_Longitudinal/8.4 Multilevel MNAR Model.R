@@ -23,11 +23,12 @@ trial <- read.csv(data_url)
 # mixed model specification
 model1 <- rblimp(
   data = trial,
+  ordinal = 'dropout',
   nominal = 'week',
   clusterid = 'person',
   model = '
     severity ~ intercept week;
-    dropout ~ intercept week | intercept@0;',
+    dropout ~ intercept@-3 week | intercept@0;',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -40,9 +41,15 @@ output(model1)
 posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
+names(model1@imputations[[1]])
 # plot predicted values by time
 bivariate_plot(model1, severity.predicted ~ week, lines = T)
+bivariate_plot(model1, dropout.1.probability ~ week)
+bivariate_plot(model1, dropout.1.probability ~ week, x_type = 'numeric')
+
+hist(unique(round(df_check$prob, 4)), breaks = 40,
+     main = "Unique dropout.1.probability values across all imps",
+     xlab = "Probability")
 
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
