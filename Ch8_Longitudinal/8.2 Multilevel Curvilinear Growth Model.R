@@ -1,5 +1,5 @@
 # BRIAN NOTES ----
-# simple command behaves incorrectly with quadratic term
+# simple command behaves incorrectly with quadratic term?
 
 # MULTILEVEL CURVILINEAR GROWTH MODEL
 
@@ -115,10 +115,10 @@ model5 <- rblimp(
   ordinal = 'male drug',
   clusterid = 'person',
   center = 'grandmean = male',
-  model = 'severity ~ intercept@icept_d0 week@slp_d0 week^2@b2 drug@icept_diff drug*week@slp_diff drug*week^2@b21 male | week',
+  model = 'severity ~ intercept@icept_d0 week@slp_d0 week^2@quad_d0 drug@icept_diff drug*week@slp_diff drug*week^2@quad_diff male | week',
   parameters = '
-    mu3_drug0 = icept_d0 + slp_d0*3 + b2*9;
-    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (b2 + b21)*9;
+    mu3_drug0 = icept_d0 + slp_d0*3 + quad_d0*9;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (quad_d0 + quad_diff)*9;
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 20000,
@@ -141,10 +141,10 @@ model6 <- rblimp(
     linear ~ intercept@slp_d0 drug@slp_diff;
     icept ~~ linear;
     level1:
-    severity ~ intercept@icept week@linear week^2@b2 week^2*drug@b21;',
+    severity ~ intercept@icept week@linear week^2@quad_d0 week^2*drug@quad_diff;',
   parameters = '
-    mu3_drug0 = icept_d0 + slp_d0*3 + b2*9;
-    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (b2 + b21)*9;
+    mu3_drug0 = icept_d0 + slp_d0*3 + quad_d0*9;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (quad_d0 + quad_diff)*9;
     mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 20000,

@@ -1,10 +1,11 @@
-# THREE-LEVEL GROWTH MODEL
+# THREE-LEVEL MULTILEVEL GROWTH MODEL
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -20,24 +21,33 @@ probsolve <- read.csv(data_url)
 model1 <- rblimp(
     data = probsolve,
     clusterid = 'school student',
-    ordinal = 'frlunch condition',
+    nominal = 'frlunch condition',
     # fixed = 'month7 condition',
     center = 'grandmean = stanmath frlunch',
     model = 'probsolve ~ month7 stanmath frlunch condition month7*condition | month7', 
     simple = ' month7 | condition', 
     seed = 90291,
     burn = 25000,
-    iter = 25000)
+    iter = 25000,
+    nimps = 20)
 
+# print output
 output(model1)
-simple_plot(probsolve ~ month7 | condition, model1)
+
+# plot parameter distributions
+posterior_plot(model1)
+
+# plot conditional growth curves
+simple_plot(probsolve ~ month7 | condition.1, model1)
 
 # latent variable specification
 model2 <- rblimp(
   data = probsolve,
   clusterid = 'school student',
   ordinal = 'frlunch condition',
-  latent = 'student = raniceptl2 ranslopel2; school = raniceptl3 ranslopel3',
+  latent = '
+    student = raniceptl2 ranslopel2; 
+    school = raniceptl3 ranslopel3',
   model = ' 
     level3:
     raniceptl3 ~ intercept condition;
@@ -56,3 +66,14 @@ model2 <- rblimp(
 
 output(model2)
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot predicted values by time
+bivariate_plot(model1, probsolve.predicted ~ month7, lines = T)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
+model1@average_imp

@@ -271,14 +271,53 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
 .get_cluster_id <- function(model) {
   sx <- model@syntax
   
-  # helper: strip anything after the first ';' and trim
+  # strip anything after the first ';' and trim
   strip_after_semicolon <- function(x) {
     x <- as.character(x)[1L]
     if (!nzchar(x)) return(NA_character_)
-    # keep everything before the first ';'
     x <- sub(";.*$", "", x)
     x <- trimws(x)
     ifelse(nzchar(x), x, NA_character_)
+  }
+  
+  # given a raw CLUSTERID value, return a single chosen ID
+  pick_cluster_id <- function(raw_val) {
+    val <- strip_after_semicolon(raw_val)
+    if (is.na(val) || !nzchar(val)) return(NA_character_)
+    
+    # split on whitespace (e.g., "student school")
+    ids <- unlist(strsplit(val, "[[:space:]]+", perl = TRUE), use.names = FALSE)
+    ids <- ids[nzchar(ids)]
+    if (!length(ids)) return(NA_character_)
+    
+    # if only one, just return it
+    if (length(ids) == 1L) return(ids[1L])
+    
+    # if two (or more), choose the one with more unique values in the data
+    # use @average_imp if available, otherwise first imputation
+    df <- NULL
+    if (!is.null(model@average_imp)) {
+      df <- model@average_imp
+    } else if (is.list(model@imputations) && length(model@imputations) > 0L) {
+      df <- model@imputations[[1L]]
+    }
+    
+    # if we can't get data, or none of the IDs are in the data, fall back to first
+    if (is.null(df) || !is.data.frame(df)) return(ids[1L])
+    
+    present <- ids[ids %in% names(df)]
+    if (!length(present)) return(ids[1L])
+    if (length(present) == 1L) return(present[1L])
+    
+    # compute number of unique values for each candidate
+    nuniq <- vapply(present, function(v) {
+      x <- df[[v]]
+      x <- x[!is.na(x)]
+      length(unique(x))
+    }, integer(1L))
+    
+    # choose the ID with the largest number of unique values
+    present[which.max(nuniq)][1L]
   }
   
   ## Case 1: modern blimp_syntax / list: use the $clusterid element
@@ -286,8 +325,7 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
     nms <- tolower(names(sx))
     i   <- match("clusterid", nms)
     if (!is.na(i)) {
-      val <- strip_after_semicolon(sx[[i]])
-      return(val)
+      return(pick_cluster_id(sx[[i]]))
     }
   }
   
@@ -301,8 +339,45 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
   seg <- regmatches(txt, m)
   seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
   
-  strip_after_semicolon(seg)
+  pick_cluster_id(seg)
 }
+
+# # CLUSTERID HELPER ----
+# .get_cluster_id <- function(model) {
+#   sx <- model@syntax
+#   
+#   # helper: strip anything after the first ';' and trim
+#   strip_after_semicolon <- function(x) {
+#     x <- as.character(x)[1L]
+#     if (!nzchar(x)) return(NA_character_)
+#     # keep everything before the first ';'
+#     x <- sub(";.*$", "", x)
+#     x <- trimws(x)
+#     ifelse(nzchar(x), x, NA_character_)
+#   }
+#   
+#   ## Case 1: modern blimp_syntax / list: use the $clusterid element
+#   if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+#     nms <- tolower(names(sx))
+#     i   <- match("clusterid", nms)
+#     if (!is.na(i)) {
+#       val <- strip_after_semicolon(sx[[i]])
+#       return(val)
+#     }
+#   }
+#   
+#   ## Case 2: legacy: parse CLUSTERID from the syntax text
+#   txt <- .syntax_as_text(sx)
+#   if (!nzchar(txt)) return(NA_character_)
+#   
+#   m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
+#   if (m < 0) return(NA_character_)
+#   
+#   seg <- regmatches(txt, m)
+#   seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
+#   
+#   strip_after_semicolon(seg)
+# }
 
 # LEVEL-2 PvioletICTOR DETECTION ----
 
@@ -2294,8 +2369,8 @@ residuals_plot <- function(
 # BIVARIATE SCATTER WITH LOESS ----
 # Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
 # Handles MI pooling of LOESS smooths or discrete-level means.
-# When lines = TRUE, parses CLUSTERID: ...; from model@syntax and draws
-# spaghetti lines using @average_imp (preferviolet) or first imputation.
+# When lines = TRUE, parses CLUSTERID from model@syntax via .get_cluster_id()
+# and draws spaghetti lines using @average_imp (preferred) or first imputation.
 #
 # x_type:
 #   "auto"     = if < 8 unique x -> discrete style, else numeric/LOESS
@@ -2314,26 +2389,10 @@ bivariate_plot <- function(
     lines = FALSE,
     errorbars = FALSE   # show error bars for discrete plots?
 ) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is requiviolet.")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   stopifnot(inherits(formula, "formula"))
   support <- match.arg(support)
   x_type  <- match.arg(x_type)
-  
-  ## --- helper: parse CLUSTERID from model@syntax ----------------------------
-  get_cluster_from_syntax <- function(model) {
-    sx <- model@syntax
-    if (is.null(sx)) return(NULL)
-    sx_chr <- as.character(sx)
-    if (!length(sx_chr)) return(NULL)
-    sx_lines <- unlist(strsplit(sx_chr, "\n", fixed = TRUE), use.names = FALSE)
-    cl_line  <- grep("\\bCLUSTERID\\s*:", sx_lines,
-                     value = TRUE, ignore.case = TRUE)
-    if (!length(cl_line)) return(NULL)
-    cl <- sub(".*CLUSTERID\\s*:\\s*([^;]+);.*", "\\1", cl_line[1], perl = TRUE)
-    cl <- trimws(cl)
-    if (!nzchar(cl)) return(NULL)
-    cl
-  }
   
   ## --- parse y ~ x ----------------------------------------------------------
   tt       <- terms(formula)
@@ -2370,13 +2429,15 @@ bivariate_plot <- function(
     stop("Both variables must be numeric.")
   n_imps <- length(model@imputations)
   
-  ## --- spaghetti data from @average_imp (preferviolet) -------------------------
+  ## --- spaghetti data from @average_imp (preferred) -------------------------
   df_lines <- NULL
   if (lines) {
-    cluster_id <- get_cluster_from_syntax(model)
-    if (is.null(cluster_id) || !nzchar(cluster_id)) {
+    # use canonical cluster-id helper
+    cluster_id <- .get_cluster_id(model)
+    
+    if (is.null(cluster_id) || is.na(cluster_id) || !nzchar(cluster_id)) {
       warning(
-        "lines = TRUE requested, but no CLUSTERID: declaration found in model@syntax; ",
+        "lines = TRUE requested, but no CLUSTERID declaration found in model@syntax; ",
         "no spaghetti lines will be drawn."
       )
     } else {
@@ -2452,7 +2513,7 @@ bivariate_plot <- function(
     xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
     imps  <- split(fitdat, fitdat$imp)
     
-    pviolets <- lapply(imps, function(d) {
+    preds <- lapply(imps, function(d) {
       d0 <- stats::na.omit(d[, c("y","x")])
       if (nrow(d0) < 10)
         return(list(fit = rep(NA_real_, length(xgrid)),
@@ -2472,13 +2533,13 @@ bivariate_plot <- function(
                     se2 = rep(NA_real_, length(xgrid))))
       pr <- try(
         suppressWarnings(
-          stats::pvioletict(fit, newdata = data.frame(x = xgrid), se = TRUE)
+          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
         ),
         silent = TRUE
       )
       if (inherits(pr, "try-error") || is.null(pr$se.fit))
         return(list(
-          fit = as.numeric(stats::pvioletict(
+          fit = as.numeric(stats::predict(
             fit, newdata = data.frame(x = xgrid))),
           se2 = rep(NA_real_, length(xgrid))
         ))
@@ -2486,8 +2547,8 @@ bivariate_plot <- function(
            se2 = as.numeric(pr$se.fit)^2)
     })
     
-    Fmat <- do.call(cbind, lapply(pviolets, `[[`, "fit"))
-    Wmat <- do.call(cbind, lapply(pviolets, `[[`, "se2"))
+    Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+    Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
     keep <- which(colSums(is.finite(Fmat)) > 0)
     if (!length(keep))
       return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
@@ -2573,7 +2634,7 @@ bivariate_plot <- function(
   
   ## --- plotting -------------------------------------------------------------
   if (plot_type == "discrete") {
-    # Discrete plot: jitteviolet teal points, pooled mean dots (black),
+    # Discrete plot: jitter teal points, pooled mean dots (black),
     # purple line connecting means, and optional error bars.
     
     mean_df <- pooled_mean_by_level(df)
