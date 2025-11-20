@@ -4,3 +4,4 @@ thresholds never really achieve N_eff
 centering categorical variables?
 treating binary as nominal or ordinal?
 fixed command?
+discuss default treatment of binary outcome.
