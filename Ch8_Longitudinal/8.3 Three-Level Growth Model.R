@@ -27,8 +27,8 @@ model1 <- rblimp(
     model = 'probsolve ~ month7 stanmath frlunch condition month7*condition | month7', 
     simple = ' month7 | condition', 
     seed = 90291,
-    burn = 25000,
-    iter = 25000,
+    burn = 30000,
+    iter = 30000,
     nimps = 20)
 
 # print output
@@ -60,20 +60,18 @@ model2 <- rblimp(
     level1:
     probsolve ~ intercept@raniceptl2 month7@ranslopel2',
   seed = 90291,
-  burn = 40000,
-  iter = 40000
-)
+  burn = 50000,
+  iter = 50000,
+  nimps = 20)
 
 output(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot predicted values by time
-bivariate_plot(model1, probsolve.predicted ~ month7, lines = T)
+bivariate_plot(model2, probsolve.predicted ~ month7, lines = T)
 
 # plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
-
-model1@average_imp
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)

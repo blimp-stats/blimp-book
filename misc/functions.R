@@ -24,7 +24,7 @@ winsor_mad <- function(x, k = 3) {
   pmin(pmax(x, lo), hi)
 }
 
-# SHAviolet THEME ----
+# SHAred THEME ----
 
 blimp_theme <- function(font_size = 14) {
   base_theme <- ggplot2::theme_minimal(base_size = font_size)
@@ -75,7 +75,7 @@ blimp_theme <- function(font_size = 14) {
   }
 }
 
-# helper: pull the MODEL block lines (handles focal:/pvioletictors: etc.)
+# helper: pull the MODEL block lines (handles focal:/predictors: etc.)
 # Returns only the MODEL block, handling both modern list syntax (sx$model)
 # and legacy flat text with "MODEL:" and other section headers.
 .get_model_block <- function(model) {
@@ -118,7 +118,7 @@ blimp_theme <- function(font_size = 14) {
 }
 
 # ORDINAL / NOMINAL HELPER ----
-# Returns variable names declaviolet in ORDINAL/NOMINAL sections, expanding ranges
+# Returns variable names declared in ORDINAL/NOMINAL sections, expanding ranges
 # like dep1:dep7 -> dep1, ..., dep7. Works for both modern list syntax
 # ($ordinal/$nominal) and legacy flat text with ORDINAL:/NOMINAL: headers.
 
@@ -183,7 +183,7 @@ blimp_theme <- function(font_size = 14) {
       if (!length(segs)) return(character(0))
       
       toks <- unlist(lapply(segs, function(seg) {
-        s <- sub(rx, "\\1", seg, perl = TRUE)  # captuviolet list of names
+        s <- sub(rx, "\\1", seg, perl = TRUE)  # captured list of names
         s <- gsub(",", " ", s)                 # allow commas or spaces
         tt <- strsplit(s, "\\s+", perl = TRUE)[[1]]
         tt[nzchar(tt)]
@@ -220,21 +220,21 @@ blimp_theme <- function(font_size = 14) {
   out
 }
 
-# MAP MODEL PvioletICTOR NAME TO COLUMN NAME ----
+# MAP MODEL PREDICTOR NAME TO COLUMN NAME ----
 
-map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
+map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   # 1) direct match
-  if (pviolet_name %in% cols) {
-    return(pviolet_name)
+  if (pred_name %in% cols) {
+    return(pred_name)
   }
   
-  # 2) handle ".mean" pvioletictors when there is a cluster_id
+  # 2) handle ".mean" predictors when there is a cluster_id
   #    Examples:
   #      MODEL: frlunch.mean  -> frlunch.1.mean[school]
   #      MODEL: probsolvpre.mean -> probsolvpre.mean[school]
   #      MODEL: stanmath.mean -> stanmath.mean[school]
-  if (!is.null(cluster_id) && grepl("\\.mean$", pviolet_name)) {
-    base <- sub("\\.mean$", "", pviolet_name)
+  if (!is.null(cluster_id) && grepl("\\.mean$", pred_name)) {
+    base <- sub("\\.mean$", "", pred_name)
     
     # (a) nominal-style: base.<digit>.mean[cluster_id]
     #     e.g. frlunch.1.mean[school]
@@ -243,7 +243,7 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
     if (length(cands1) == 1L) {
       return(cands1)
     } else if (length(cands1) > 1L) {
-      message("Multiple matches for pvioletictor '", pviolet_name,
+      message("Multiple matches for PREDICTOR '", pred_name,
               "' with cluster_id '", cluster_id,
               "'. Using: ", cands1[1])
       return(cands1[1])
@@ -256,7 +256,7 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
     if (length(cands2) == 1L) {
       return(cands2)
     } else if (length(cands2) > 1L) {
-      message("Multiple matches for pvioletictor '", pviolet_name,
+      message("Multiple matches for PREDICTOR '", pred_name,
               "' with cluster_id '", cluster_id,
               "'. Using: ", cands2[1])
       return(cands2[1])
@@ -264,7 +264,7 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
   }
   
   # 3) no mapping found; return original name so caller can handle failure
-  pviolet_name
+  pred_name
 }
 
 # CLUSTERID HELPER ----
@@ -379,12 +379,12 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
 #   strip_after_semicolon(seg)
 # }
 
-# LEVEL-2 PvioletICTOR DETECTION ----
+# LEVEL-2 PREDICTOR DETECTION ----
 
-.get_level2_pvioletictors <- function(model, dv_pviolet_pairs, cols, cluster_id) {
+.get_level2_predictors <- function(model, dv_pred_pairs, cols, cluster_id) {
   # If we don't have a cluster id or it isn't in the data, nothing to do
   if (is.null(cluster_id) || !cluster_id %in% cols) return(character(0))
-  if (!length(dv_pviolet_pairs)) return(character(0))
+  if (!length(dv_pred_pairs)) return(character(0))
   
   # Use the first imputation to determine cluster-constant variables
   d <- model@imputations[[1]]
@@ -393,15 +393,15 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
   g <- d[[cluster_id]]
   if (all(is.na(g))) return(character(0))
   
-  # All pvioletictors appearing on RHS of any DV in dv_pviolet_pairs (MODEL-scale names)
-  all_pviolets <- unique(unlist(dv_pviolet_pairs, use.names = FALSE))
-  all_pviolets <- all_pviolets[nzchar(all_pviolets)]
+  # All predictors appearing on RHS of any DV in dv_pred_pairs (MODEL-scale names)
+  all_preds <- unique(unlist(dv_pred_pairs, use.names = FALSE))
+  all_preds <- all_preds[nzchar(all_preds)]
   
-  l2_pviolets <- character(0)
+  l2_preds <- character(0)
   
-  for (pn in all_pviolets) {
-    # Map MODEL pvioletictor name -> actual column in imputations
-    colname <- map_pvioletictor_to_col(pn, cols, cluster_id)
+  for (pn in all_preds) {
+    # Map MODEL PREDICTOR name -> actual column in imputations
+    colname <- map_predictor_to_col(pn, cols, cluster_id)
     if (!colname %in% names(d)) next
     
     x <- d[[colname]]
@@ -415,11 +415,11 @@ map_pvioletictor_to_col <- function(pviolet_name, cols, cluster_id = NULL) {
     }, logical(1L))
     
     if (all(const_within)) {
-      l2_pviolets <- c(l2_pviolets, pn)
+      l2_preds <- c(l2_preds, pn)
     }
   }
   
-  unique(l2_pviolets)
+  unique(l2_preds)
 }
 
 # EXTRACT VARIABLES FROM MODEL SECTION ----
@@ -558,7 +558,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 
 distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
                               fill_color = "teal", font_size = 14) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is requiviolet.")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
   
@@ -596,8 +596,8 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
     base_all  <- sub("\\..*$", "", vars_all)
     var <- vars_all[base_all %in% model_vars]
     
-    # exclude *.pvioleticted columns
-    var <- var[!grepl("\\.pvioleticted$", var)]
+    # exclude *.predicted columns
+    var <- var[!grepl("\\.predicted$", var)]
     
     # add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
@@ -706,9 +706,9 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
 # If non-NULL, the user-specified number of bins is used verbatim.
 
 imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL,
-                                     observed_fill = "teal", imputed_line = "violet",
+                                     observed_fill = "teal", imputed_line = "red",
                                      font_size = 14) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is requiviolet.")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be non-empty")
   if (is.null(model@variance_imp))
@@ -723,7 +723,7 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL
   vars_all    <- intersect(vars_varimp, vars_imp1)
   
   # drop derived columns; we only want the "base" variables
-  derived_pattern <- "\\.(latent|residual|pvioleticted|probability)$"
+  derived_pattern <- "\\.(latent|residual|predicted|probability)$"
   vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
   
   # special rule: do NOT make observed-vs-imputed plots for yjt(...) variables
@@ -895,10 +895,10 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL
 }
 
 
-# RESIDUALS VS. PvioletICTED & RESIDUALS VS. PvioletICTORS ----
+# RESIDUALS VS. PredICTED & RESIDUALS VS. predictors ----
 # Sections:
-#   A) Residuals vs Pvioleticted (continuous, pooled over imputations)
-#   B) Residuals vs Pvioletictors from MODEL (handles ordinal/nominal, level-2, etc.)
+#   A) Residuals vs Predicted (continuous, pooled over imputations)
+#   B) Residuals vs predictors from MODEL (handles ordinal/nominal, level-2, etc.)
 #   C) Standardized residual index plots + outlier table
 #   D) Histograms of standardized residuals for every variable in the index plots
 #   E) Standardized residual spread by cluster (level-1 DVs only)
@@ -929,8 +929,8 @@ residuals_plot <- function(
     # styling
     point_alpha   = 0.15,
     point_size    = 1.2,
-    curve_color   = "violet",
-    band_fill     = "violet",
+    curve_color   = "red",
+    band_fill     = "red",
     band_alpha    = plot_shading,   # follow global shading
     font_size     = 14,
     # index options
@@ -940,11 +940,11 @@ residuals_plot <- function(
     index_aggregate = c("mean", "max"),
     index_order   = c("rank", "row"),
     index_point_color = "teal",
-    index_line_color  = "violet",
+    index_line_color  = "red",
     print_threshold   = 3,
     print_head        = 20
 ) {
-  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is requiviolet.")
+  if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
   if (!curve_color %in% names(plot_colors) || !band_fill %in% names(plot_colors))
@@ -1050,7 +1050,7 @@ residuals_plot <- function(
       agg[order(agg$x), , drop = FALSE]
     }
     
-    pviolets <- lapply(imps, function(d) {
+    preds <- lapply(imps, function(d) {
       d0 <- collapse_dupes(d); n <- nrow(d0)
       if (n < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
       u <- length(unique(d0$x))
@@ -1075,13 +1075,13 @@ residuals_plot <- function(
       
       pr <- try(
         suppressWarnings(
-          stats::pvioletict(fit, newdata = data.frame(x = xgrid), se = TRUE)
+          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
         ),
         silent = TRUE
       )
       if (inherits(pr, "try-error") || is.null(pr$se.fit)) {
         yhat <- try(
-          suppressWarnings(stats::pvioletict(fit, newdata = data.frame(x = xgrid))),
+          suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid))),
           silent = TRUE
         )
         yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
@@ -1091,8 +1091,8 @@ residuals_plot <- function(
       }
     })
     
-    Fmat <- do.call(cbind, lapply(pviolets, `[[`, "fit"))
-    Wmat <- do.call(cbind, lapply(pviolets, `[[`, "se2"))
+    Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+    Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
     keep <- which(colSums(is.finite(Fmat)) > 0)
     if (!length(keep)) return(data.frame(x = xgrid, mean = 0, lwr = 0, upr = 0))
     Fmat <- Fmat[, keep, drop = FALSE]
@@ -1119,12 +1119,12 @@ residuals_plot <- function(
   
   # ==== detect available bases =================================================
   cols1 <- names(model@imputations[[1]])
-  bases_from_cols <- unique(sub("\\.(residual|pvioleticted)$", "",
-                                grep("\\.(residual|pvioleticted)$", cols1, value = TRUE)))
+  bases_from_cols <- unique(sub("\\.(residual|predicted)$", "",
+                                grep("\\.(residual|predicted)$", cols1, value = TRUE)))
   has_resid_col   <- function(b) paste0(b, ".residual")   %in% cols1
-  has_pair_cols   <- function(b) all(c(paste0(b, ".residual"), paste0(b, ".pvioleticted")) %in% cols1)
+  has_pair_cols   <- function(b) all(c(paste0(b, ".residual"), paste0(b, ".predicted")) %in% cols1)
   
-  # Cluster ID (e.g., "school"), used for mapping *.mean pvioletictors and Section E.
+  # Cluster ID (e.g., "school"), used for mapping *.mean predictors and Section E.
   cluster_id <- .get_cluster_id(model)
   
   if (!is.null(var)) {
@@ -1142,7 +1142,7 @@ residuals_plot <- function(
       message("Requested variable(s) missing '.residual' column; will skip where needed: ",
               paste(setdiff(var_req, bases_resid), collapse = ", "))
     if (length(setdiff(var_req, bases_pair)))
-      message("Requested variable(s) missing '.pvioleticted' (or residual) pair; skipping Residuals vs. Pvioleticted: ",
+      message("Requested variable(s) missing '.predicted' (or residual) pair; skipping Residuals vs. Predicted: ",
               paste(setdiff(var_req, bases_pair), collapse = ", "))
   }
   
@@ -1188,7 +1188,7 @@ residuals_plot <- function(
     }
   }
   
-  # ==== categorical pvioletictor set from @syntax (plus <4-unique fallback) =======
+  # ==== categorical PREDICTOR set from @syntax (plus <4-unique fallback) =======
   cat_vars <- tolower(.get_categorical_vars(model))
   is_categorical_name <- function(vname) tolower(vname) %in% cat_vars
   
@@ -1200,12 +1200,12 @@ residuals_plot <- function(
   plots     <- list()
   summaries <- NULL
   
-  # A) Residuals vs. Pvioleticted ----
+  # A) Residuals vs. Predicted ----
   
   if (length(bases_pair)) {
     build_rvp <- function(base) {
       ycol <- paste0(base, ".residual")
-      xcol <- paste0(base, ".pvioleticted")
+      xcol <- paste0(base, ".predicted")
       if (!all(c(ycol, xcol) %in% cols1)) {
         message("Skipping (columns missing): ", base)
         return(NULL)
@@ -1291,9 +1291,9 @@ residuals_plot <- function(
         ) +
         ggplot2::coord_cartesian(ylim = c(-4, 4)) +
         ggplot2::labs(
-          title = paste0("Residuals vs. Pvioleticted Values Over ", n_imps,
+          title = paste0("Residuals vs. Predicted Values Over ", n_imps,
                          " Imputed Data Sets: ", base),
-          x = paste0(base, ".pvioleticted"),
+          x = paste0(base, ".predicted"),
           y = "Standardized Residual"
         ) +
         blimp_theme(font_size) +
@@ -1305,7 +1305,7 @@ residuals_plot <- function(
         )
     }
     
-    rvp_plots <- setNames(lapply(bases_pair, build_rvp), paste0(bases_pair, "_vs_pviolet"))
+    rvp_plots <- setNames(lapply(bases_pair, build_rvp), paste0(bases_pair, "_vs_pred"))
     plots <- c(plots, rvp_plots)
     lapply(rvp_plots, function(p) if (!is.null(p)) print(p))
   }
@@ -1314,7 +1314,7 @@ residuals_plot <- function(
   
   
   
-  # B) Residuals vs. Pvioletictors (from @MODEL) ----
+  # B) Residuals vs. Predictors (from @MODEL) ----
   
   model_lines <- .get_model_block(model)
   
@@ -1326,20 +1326,48 @@ residuals_plot <- function(
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
-    # --- level-2 pvioletictor helper --------------------------------------------
-    # Prefer the existing helper; if it does not exist, fall back to
-    # "constant within cluster" based on the first imputation.
-    l2_from_helper <- try(.get_level2_pvioletictors(model), silent = TRUE)
-    if (inherits(l2_from_helper, "try-error") || is.null(l2_from_helper)) {
-      l2_from_helper <- character(0)
-    } else {
-      l2_from_helper <- unique(as.character(l2_from_helper))
+    # --- how many CLUSTERID variables were declared? (1 vs 2) ----------------
+    n_cluster_ids <- {
+      sx      <- model@syntax
+      ids_vec <- character(0)
+      
+      # Case 1: modern syntax list/blimp_syntax with $clusterid element
+      if ((inherits(sx, "blimp_syntax") || is.list(sx)) &&
+          "clusterid" %in% names(sx)) {
+        raw <- as.character(sx$clusterid)[1]
+        if (nzchar(raw)) {
+          # strip trailing stuff after ';' if present
+          raw <- sub(";.*$", "", raw)
+          toks <- strsplit(raw, "[[:space:]]+", perl = TRUE)[[1]]
+          ids_vec <- toks[nzchar(toks)]
+        }
+      } else {
+        # Case 2: legacy flat text with CLUSTERID: header
+        txt <- .syntax_as_text(sx)
+        if (nzchar(txt)) {
+          m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
+          if (m > 0) {
+            seg <- regmatches(txt, m)
+            seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
+            seg <- sub(";.*$", "", seg)
+            toks <- strsplit(seg, "[[:space:]]+", perl = TRUE)[[1]]
+            ids_vec <- toks[nzchar(toks)]
+          }
+        }
+      }
+      length(ids_vec)
     }
     
-    is_level2_pvioletictor <- function(pviolet_name) {
+    # --- level-2 predictor helper --------------------------------------------
+    # For now we rely only on the "constant within cluster" fallback;
+    # l2_from_helper is left empty so is_level2_predictor() uses the data-based
+    # definition.
+    l2_from_helper <- character(0L)
+    
+    is_level2_predictor <- function(pred_name) {
       # If helper provided a list, use that.
       if (length(l2_from_helper)) {
-        return(pviolet_name %in% l2_from_helper)
+        return(pred_name %in% l2_from_helper)
       }
       
       # Fallback: constant within cluster in the data.
@@ -1347,7 +1375,7 @@ residuals_plot <- function(
       d <- model@imputations[[1]]
       if (!cluster_id %in% names(d)) return(FALSE)
       
-      colname <- map_pvioletictor_to_col(pviolet_name, cols1, cluster_id)
+      colname <- map_predictor_to_col(pred_name, cols1, cluster_id)
       if (!colname %in% names(d)) return(FALSE)
       
       x <- d[[colname]]
@@ -1402,16 +1430,16 @@ residuals_plot <- function(
       toks[nzchar(toks)]
     }
     
-    # Given a DV and a slope variable, return the level-2 pvioletictors
+    # Given a DV and a slope variable, return the level-2 predictors
     # that appear in an interaction with that slope on the MODEL line(s).
     interaction_l2_for <- function(dv, slope_var) {
       out <- character(0)
       
-      # Level-2 pvioletictors among the main pvioletictors for this DV
-      pviolets_dv <- dv_main_pviolets[[dv]]
-      if (is.null(pviolets_dv) || !length(pviolets_dv)) return(out)
-      l2_pviolets <- pviolets_dv[vapply(pviolets_dv, is_level2_pvioletictor, logical(1L))]
-      if (!length(l2_pviolets)) return(out)
+      # Level-2 predictors among the main predictors for this DV
+      preds_dv <- dv_main_preds[[dv]]
+      if (is.null(preds_dv) || !length(preds_dv)) return(out)
+      l2_preds <- preds_dv[vapply(preds_dv, is_level2_predictor, logical(1L))]
+      if (!length(l2_preds)) return(out)
       
       for (ch in chunks) {
         if (!grepl("~", ch, fixed = TRUE)) next
@@ -1433,8 +1461,8 @@ residuals_plot <- function(
         # Strip any labels like x@b1
         rhs_clean <- gsub("@[A-Za-z0-9_.]+", "", rhs_main)
         
-        # For each L2 pvioletictor, check for "slope*L2" or "L2*slope"
-        for (other in l2_pviolets) {
+        # For each L2 predictor, check for "slope*L2" or "L2*slope"
+        for (other in l2_preds) {
           pat1 <- paste0("\\b", slope_var, "\\s*\\*\\s*", other, "\\b")
           pat2 <- paste0("\\b", other, "\\s*\\*\\s*", slope_var, "\\b")
           if (grepl(pat1, rhs_clean) || grepl(pat2, rhs_clean)) {
@@ -1446,15 +1474,15 @@ residuals_plot <- function(
       unique(out)
     }
     
-    # dv_main_pviolets: MODEL-scale DV -> all RHS main-part pvioletictors
-    dv_main_pviolets <- list()
+    # dv_main_predictors: MODEL-scale DV -> all RHS main-part predictors
+    dv_main_preds <- list()
     
-    # slope_to_l2_for_dv: key = "dv::$slopevar" -> level-2 pvioletictors that
+    # slope_to_l2_for_dv: key = "dv::$slopevar" -> level-2 predictors that
     # appear in an interaction with that slope (e.g., pain*stress with
     # stress being level-2).
     slope_to_l2_for_dv <- list()
     
-    # ---- Pass 1: parse MODEL syntax into main pviolets and random-slope interactions ----
+    # ---- Pass 1: parse MODEL syntax into main preds and random-slope interactions ----
     
     for (ch in chunks) {
       if (!grepl("~", ch, fixed = TRUE)) next
@@ -1473,17 +1501,17 @@ residuals_plot <- function(
       rhs_main  <- trimws(rhs_split[1])
       rhs_rand  <- if (length(rhs_split) > 1L) trimws(rhs_split[2]) else ""
       
-      pviolets_main   <- parse_rhs_vars(rhs_main)
+      preds_main   <- parse_rhs_vars(rhs_main)
       inter_pairs  <- find_interactions(rhs_main)
       rand_slopes  <- parse_random_slopes(rhs_rand)
       
-      # Accumulate main-part pvioletictors for this DV (used for level-1 DV
+      # Accumulate main-part predictors for this DV (used for level-1 DV
       # and random-intercept plots).
-      if (length(pviolets_main)) {
-        dv_main_pviolets[[dv]] <- unique(c(dv_main_pviolets[[dv]], pviolets_main))
+      if (length(preds_main)) {
+        dv_main_preds[[dv]] <- unique(c(dv_main_preds[[dv]], preds_main))
       }
       
-      # For each random slope variable, record which level-2 pvioletictors appear
+      # For each random slope variable, record which level-2 predictors appear
       # in an interaction with that slope variable (e.g., pain*stress).
       if (length(rand_slopes) && length(inter_pairs)) {
         for (slope_var in rand_slopes) {
@@ -1500,8 +1528,8 @@ residuals_plot <- function(
           cand <- unique(cand)
           if (!length(cand)) next
           
-          # keep only level-2 pvioletictors (per helper/fallback)
-          cand_l2 <- cand[vapply(cand, is_level2_pvioletictor, logical(1L))]
+          # keep only level-2 predictors (per helper/fallback)
+          cand_l2 <- cand[vapply(cand, is_level2_predictor, logical(1L))]
           if (!length(cand_l2)) next
           
           key <- paste0(dv, "::$", slope_var)
@@ -1510,76 +1538,81 @@ residuals_plot <- function(
       }
     }
     
-    # ---- Pass 2: build dv_pviolet_pairs in "base name" space --------------------
+    # ---- Pass 2: build dv_pred_pairs in "base name" space --------------------
     # base names include:
     #   - level-1 DV residuals:            "posaff"
     #   - ordinal/nominal residual pieces: "posaff.1", "posaff.2", ...
     #   - random intercepts:               "posaff[person]"
     #   - random slopes:                   "posaff$pain[person]"
     
-    dv_pviolet_pairs <- list()
+    dv_pred_pairs <- list()
     
-    for (dv in names(dv_main_pviolets)) {
-      pviolets <- dv_main_pviolets[[dv]]
-      if (!length(pviolets)) next
+    for (dv in names(dv_main_preds)) {
+      preds <- dv_main_preds[[dv]]
+      if (!length(preds)) next
       
       # 1) Level-1 DV residuals: base = dv (when dv.residual exists).
       if (paste0(dv, ".residual") %in% cols1) {
-        dv_pviolet_pairs[[dv]] <- unique(c(dv_pviolet_pairs[[dv]], pviolets))
+        dv_pred_pairs[[dv]] <- unique(c(dv_pred_pairs[[dv]], preds))
       }
       
       # 2) Ordinal/nominal: bases like dv.1, dv.2, ... that have .residual.
       cand_unit <- bases_resid[startsWith(bases_resid, paste0(dv, "."))]
       if (length(cand_unit)) {
         for (b in cand_unit) {
-          dv_pviolet_pairs[[b]] <- unique(c(dv_pviolet_pairs[[b]], pviolets))
+          dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds))
         }
       }
       
       # 3) Cluster-level DVs for this dv: random intercept + random slopes.
       #    Columns look like "dv[cluster]" and "dv$slope[cluster]".
-      cluster_cols_for_dv <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
-      if (!length(cluster_cols_for_dv)) next
-      
-      # random intercept: no "$" in the name
-      intercept_cols <- cluster_cols_for_dv[!grepl("\\$", cluster_cols_for_dv, fixed = TRUE)]
-      # random slopes: have "$" in the name
-      slope_cols     <- setdiff(cluster_cols_for_dv, intercept_cols)
-      
-      # 3a) Random intercept columns: regress on *all* level-2 pvioletictors
-      #     among pviolets (e.g., pain.mean, stress, female).
-      if (length(intercept_cols)) {
-        pviolets_l2 <- pviolets[vapply(pviolets, is_level2_pvioletictor, logical(1L))]
-        if (length(pviolets_l2)) {
-          for (b in intercept_cols) {
-            dv_pviolet_pairs[[b]] <- unique(c(dv_pviolet_pairs[[b]], pviolets_l2))
+      #    If there are TWO CLUSTERID variables declared, we skip these entirely
+      #    (this machinery is designed only for a single cluster ID).
+      if (n_cluster_ids <= 1L) {
+        cluster_cols_for_dv <- cols1[grepl(paste0("^", dv, ".*\\["), cols1)]
+        
+        if (length(cluster_cols_for_dv)) {
+          # random intercept: no "$" in the name
+          intercept_cols <- cluster_cols_for_dv[!grepl("\\$", cluster_cols_for_dv, fixed = TRUE)]
+          # random slopes: have "$" in the name
+          slope_cols     <- setdiff(cluster_cols_for_dv, intercept_cols)
+          
+          # 3a) Random intercept columns: regress on *all* level-2 predictors
+          #     among preds (e.g., pain.mean, stress, female).
+          if (length(intercept_cols)) {
+            preds_l2 <- preds[vapply(preds, is_level2_predictor, logical(1L))]
+            if (length(preds_l2)) {
+              for (b in intercept_cols) {
+                dv_pred_pairs[[b]] <- unique(c(dv_pred_pairs[[b]], preds_l2))
+              }
+            }
           }
-        }
-      }
-      
-      # 3b) Random slope columns: regress on level-2 pvioletictors that appear
-      #     in an interaction with that slope variable (e.g., pain*stress).
-      if (length(slope_cols)) {
-        for (b in slope_cols) {
-          # b looks like "dv$slopevar[cluster]"
-          slope_part <- sub(paste0("^", dv, "\\$"), "", b)
-          slope_var  <- sub("\\[.*$", "", slope_part)
-          key        <- paste0(dv, "::$", slope_var)
           
-          pviolets_slope <- slope_to_l2_for_dv[[key]]
-          if (!length(pviolets_slope)) next    # no qualifying interaction; skip
-          
-          ## IMPORTANT CHANGE: overwrite any existing mapping for this base
-          dv_pviolet_pairs[[b]] <- unique(pviolets_slope)
+          # 3b) Random slope columns: regress on level-2 predictors that appear
+          #     in an interaction with that slope variable (e.g., pain*stress).
+          if (length(slope_cols)) {
+            for (b in slope_cols) {
+              # b looks like "dv$slopevar[cluster]"
+              slope_part <- sub(paste0("^", dv, "\\$"), "", b)
+              slope_var  <- sub("\\[.*$", "", slope_part)
+              key        <- paste0(dv, "::$", slope_var)
+              
+              preds_slope <- slope_to_l2_for_dv[[key]]
+              if (!length(preds_slope)) next    # no qualifying interaction; skip
+              
+              ## IMPORTANT CHANGE: overwrite any existing mapping for this base
+              dv_pred_pairs[[b]] <- unique(preds_slope)
+            }
+          }
         }
       }
     }
     
-    # ---- Post-processing: enforce interaction-only pvioletictors for random slopes ----
-    # Any base of the form "dv$slopevar[cluster]" gets *only* L2 pvioletictors
+    # ---- Post-processing: enforce interaction-only predictors for random slopes ----
+    # Any base of the form "dv$slopevar[cluster]" gets *only* L2 predictors
     # that interact with that slopevar in the MODEL syntax.
-    if (length(dv_pviolet_pairs)) {
-      for (base in names(dv_pviolet_pairs)) {
+    if (length(dv_pred_pairs)) {
+      for (base in names(dv_pred_pairs)) {
         # Match "dv$slopevar[anything]"
         m  <- regexec("^([^$]+)\\$([^\\[]+)\\[", base)
         mm <- regmatches(base, m)[[1]]
@@ -1589,18 +1622,18 @@ residuals_plot <- function(
           allowed   <- interaction_l2_for(dv, slope_var)
           
           if (length(allowed)) {
-            dv_pviolet_pairs[[base]] <- allowed
+            dv_pred_pairs[[base]] <- allowed
           } else {
-            # No L2 interaction partners: no residual-by-pvioletictor plots
-            dv_pviolet_pairs[[base]] <- character(0)
+            # No L2 interaction partners: no residual-by-predictor plots
+            dv_pred_pairs[[base]] <- character(0)
           }
         }
       }
     }
     
-    # ---- Pass 3: actually build the residual-vs-pvioletictor plots -------------
+    # ---- Pass 3: actually build the residual-vs-predictor plots -------------
     
-    if (length(dv_pviolet_pairs)) {
+    if (length(dv_pred_pairs)) {
       
       build_rvx <- function(base, xname) {
         # Prefer *.residual if it exists; otherwise fall back to the raw column.
@@ -1615,10 +1648,10 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        # Map MODEL pvioletictor name -> actual column name.
-        xcol <- map_pvioletictor_to_col(xname, cols1, cluster_id)
+        # Map MODEL predictor name -> actual column name.
+        xcol <- map_predictor_to_col(xname, cols1, cluster_id)
         if (!xcol %in% cols1) {
-          message("Skipping (pvioletictor missing): ", xname,
+          message("Skipping (predictor missing): ", xname,
                   " (no column found) for DV base ", base)
           return(NULL)
         }
@@ -1751,7 +1784,7 @@ residuals_plot <- function(
             p +
               ggplot2::coord_cartesian(ylim = c(-4, 4)) +
               ggplot2::labs(
-                title = paste0("Residuals vs. Pvioletictor Over ", n_imps,
+                title = paste0("Residuals vs. Predictor Over ", n_imps,
                                " Imputed Data Sets: ", base, " vs. ", xname),
                 x = xname,
                 y = "Standardized Residual"
@@ -1829,7 +1862,7 @@ residuals_plot <- function(
             p +
               ggplot2::coord_cartesian(ylim = c(-4, 4)) +
               ggplot2::labs(
-                title = paste0("Residuals vs. Pvioletictor Over ", n_imps,
+                title = paste0("Residuals vs. Predictor Over ", n_imps,
                                " Imputed Data Sets: ", base, " vs. ", xname),
                 x = xname,
                 y = "Standardized Residual"
@@ -1852,7 +1885,7 @@ residuals_plot <- function(
         } else {
           # ---- NUMERIC STYLE: LOESS / polynomial + ribbon (same as before) ----
           if (!is.numeric(df$x)) {
-            message("Skipping non-numeric pvioletictor: ", xname)
+            message("Skipping non-numeric predictor: ", xname)
             return(NULL)
           }
           
@@ -1935,7 +1968,7 @@ residuals_plot <- function(
             } +
             ggplot2::coord_cartesian(ylim = c(-4, 4)) +
             ggplot2::labs(
-              title = paste0("Residuals vs. Pvioletictor Over ", n_imps,
+              title = paste0("Residuals vs. Predictor Over ", n_imps,
                              " Imputed Data Sets: ", base, " vs. ", xname),
               x = xname,
               y = "Standardized Residual"
@@ -1957,8 +1990,8 @@ residuals_plot <- function(
       }
       
       rvx_list <- list()
-      for (base in names(dv_pviolet_pairs)) {
-        for (xname in dv_pviolet_pairs[[base]]) {
+      for (base in names(dv_pred_pairs)) {
+        for (xname in dv_pred_pairs[[base]]) {
           p <- build_rvx(base, xname)
           nm <- paste0(base, "_vs_", xname)
           rvx_list[[nm]] <- p
@@ -2287,7 +2320,7 @@ residuals_plot <- function(
           # Order clusters by spread (SD) or by label.
           if (index_order == "rank") {
             stats_cl <- stats_cl[order(stats_cl$sd), ]
-            xlab <- "Clusters (Ordeviolet by SD)"
+            xlab <- "Clusters (Ordered by SD)"
           } else {
             stats_cl <- stats_cl[order(stats_cl$cluster), ]
             xlab <- "Cluster"
@@ -2311,7 +2344,7 @@ residuals_plot <- function(
             ) +
             ggplot2::geom_hline(
               yintercept = c(-4, -2, 2, 4),
-              color      = unname(plot_colors["violet"]),
+              color      = unname(plot_colors["red"]),
               linewidth  = 0.8,
               linetype   = "dashed"
             ) +
@@ -2384,7 +2417,7 @@ bivariate_plot <- function(
     x_type  = c("auto", "discrete", "numeric"),
     trim_prop = 0.025, window_prop = 0.10, min_n_prop = 0.01,
     point_alpha = 0.15, point_size = 1.2,
-    curve_color = "violet", band_fill = "violet",
+    curve_color = "red", band_fill = "red",
     font_size = 14,
     lines = FALSE,
     errorbars = FALSE   # show error bars for discrete plots?
