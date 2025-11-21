@@ -1,10 +1,20 @@
-# REPEATED MEASURES ANALYSIS WITH UNSTRUCTURED CHANGE
+# BRIAN NOTES ----
+# how to handle wide-format dropout indicators in the code?
+# possible to have add a function that stacks imputations?
+
+# SEM GROWTH MODELS WITH MNAR ASSUMPTION
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+
+# stacking function
+stack_imputations <- function(model)
+  do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
 
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
+set_blimp('/applications/blimp/blimp-nightly')
 
 # READ DATA ----
 
@@ -16,153 +26,216 @@ trial <- read.csv(data_url)
 
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
-# linear growth model with predictors
-# equality constraints produce low N_eff
+# random intercepts and slopes predicting dropout
 model1 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout1:dropout3',
+  ordinal = 'dropout1:dropout3',
+  nominal = 'male drug',
   latent = 'icept linear', 
   center = 'male',
   model = '
     structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
+    severity0:severity3@res;
     missingness:
-    dropout1 ~ icept@bi linear@bl drug;
-    dropout2 ~ icept@bi linear@bl drug;
-    dropout3 ~ icept@bi linear@bl drug;',
+    dropout1 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;
+    dropout2 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;
+    dropout3 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;',
   parameters = '
-    mu3_drug0 = b0 + b1*3;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_drug0 = icept_d0 + slp_d0*3;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3;
     mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 100000, # warm up iterations
-  iter = 100000) # iterations for analysis
+  seed = 90291,
+  burn = 200000, 
+  iter = 200000,
+  nimps = 20)
 
+# print output
 output(model1)
 
-# FIT WU-CARROL SHARED PARAMETER QUADRATIC GROWTH MODEL ----
+# plot parameter distributions
+posterior_plot(model1)
 
-# quadratic fixed effect with predictors
-model2 <- rblimp(
-  data = trial,
-  ordinal = 'male drug dropout1:dropout3',
-  latent = 'icept linear quad', 
-  center = 'male',
-  model = '
-    structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.01;
-    icept ~~ linear;
-    measurement:
-    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
-    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
-    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
-    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
-    missingness:
-    dropout1 ~ icept@bi linear@bl drug;
-    dropout2 ~ icept@bi linear@bl drug;
-    dropout3 ~ icept@bi linear@bl drug;',
-  parameters = '
-    mu3_drug0 = b0 + b1*3 + b2*9;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
-    mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 300000, # warm up iterations
-  iter = 300000) # iterations for analysis
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-output(model2)
+# compare marginal predicted probabilities by time and group
+aggregate(
+  cbind(dropout1.1.probability,dropout2.1.probability,dropout3.1.probability) ~ drug,
+  data = stack_imputations(model1),
+  FUN = mean
+)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
 
 # FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
 
-# linear growth model with predictors
-model3 <- rblimp(
+# current (missing) and previous (observed) outcome predicting dropout
+model2 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout1:dropout3',
+  ordinal = 'dropout1:dropout3',
+  nominal = 'male drug',
   latent = 'icept linear', 
   center = 'male',
   model = '
     structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
+    severity0:severity3@res;
     missingness:
-    dropout1 ~ severity0@mar severity1@mnar drug;
-    dropout2 ~ severity1@mar severity2@mnar drug;
-    dropout3 ~ severity2@mar severity3@mnar drug;',
+    dropout1 ~ (severity0 - icept_d0)@slp_mar (severity1 - icept_d0)@slp_mnar drug;
+    dropout2 ~ (severity1 - icept_d0)@slp_mar (severity2 - icept_d0)@slp_mnar drug;
+    dropout3 ~ (severity2 - icept_d0)@slp_mar (severity3 - icept_d0)@slp_mnar drug;',
   parameters = '
-    mu3_drug0 = b0 + b1*3;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
+    mu3_drug0 = icept_d0 + slp_d0*3;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3;
     mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 200000, # warm up iterations
-  iter = 200000) # iterations for analysis
+  seed = 90291,
+  burn = 100000, 
+  iter = 100000,
+  nimps = 20)
 
-output(model3)
+# print output
+output(model2)
 
-# FIT DIGGLE-KENWARD QUADRATIC GROWTH MODEL ----
+# plot parameter distributions
+posterior_plot(model2)
 
-# quadratic fixed effect with predictors
-model4 <- rblimp(
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# compare marginal predicted probabilities by time and group
+aggregate(
+  cbind(dropout1.1.probability,dropout2.1.probability,dropout3.1.probability) ~ drug,
+  data = stack_imputations(model2),
+  FUN = mean
+)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
+
+# FIT WU-CARROL SHARED PARAMETER CURVILINEAR GROWTH MODEL ----
+
+# random intercepts and slopes predicting dropout
+model3 <- rblimp(
   data = trial,
-  ordinal = 'male drug dropout1:dropout3',
+  ordinal = 'dropout1:dropout3',
+  nominal = 'male drug',
   latent = 'icept linear quad', 
   center = 'male',
   model = '
     structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.01;
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
+    quad ~ intercept@quad_d0 drug@quad_diff;
+    quad ~~ quad@.001;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;
+    severity0:severity3@res;
     missingness:
-    dropout1 ~ severity0@mar severity1@mnar drug;
-    dropout2 ~ severity1@mar severity2@mnar drug;
-    dropout3 ~ severity2@mar severity3@mnar drug;',
+    dropout1 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;
+    dropout2 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;
+    dropout3 ~ (icept - icept_d0)@slp_icpt (linear - slp_d0)@slp_lin drug;',
   parameters = '
-    mu3_drug0 = b0 + b1*3 + b2*9;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_drug0 = icept_d0 + slp_d0*3 + quad_d0*9;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (quad_d0 + quad_diff)*9;
     mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 120000, # warm up iterations
-  iter = 120000) # iterations for analysis
+  seed = 90291, 
+  burn = 200000, 
+  iter = 200000,
+  nimps = 20) 
 
+# print output
+output(model3)
+
+# plot parameter distributions
+posterior_plot(model3)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# compare marginal predicted probabilities by time and group
+aggregate(
+  cbind(dropout1.1.probability,dropout2.1.probability,dropout3.1.probability) ~ drug,
+  data = stack_imputations(model3),
+  FUN = mean
+)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)
+
+# FIT DIGGLE-KENWARD CURVILINEAR GROWTH MODEL ----
+
+# current (missing) and previous (observed) outcome predicting dropout
+model4 <- rblimp(
+  data = trial,
+  ordinal = 'dropout1:dropout3',
+  nominal = 'male drug',
+  latent = 'icept linear quad', 
+  center = 'male',
+  model = '
+    structural:
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
+    quad ~ intercept@quad_d0 drug@quad_diff;
+    quad ~~ quad@.001;
+    icept ~~ linear;
+    measurement:
+    icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
+    linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
+    quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
+    intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
+    severity0:severity3@res;
+    missingness:
+    dropout1 ~ (severity0 - icept_d0)@slp_mar (severity1 - icept_d0)@slp_mnar drug;
+    dropout2 ~ (severity1 - icept_d0)@slp_mar (severity2 - icept_d0)@slp_mnar drug;
+    dropout3 ~ (severity2 - icept_d0)@slp_mar (severity3 - icept_d0)@slp_mnar drug;',
+  parameters = '
+    mu3_drug0 = icept_d0 + slp_d0*3 + quad_d0*9;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (quad_d0 + quad_diff)*9;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
+  seed = 90291, 
+  burn = 100000,
+  iter = 100000,
+  nimps = 20)
+
+# print output
 output(model4)
+
+# plot parameter distributions
+posterior_plot(model4)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# compare marginal predicted probabilities by time and group
+aggregate(
+  cbind(dropout1.1.probability,dropout2.1.probability,dropout3.1.probability) ~ drug,
+  data = stack_imputations(model4),
+  FUN = mean
+)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model4)
+imputed_vs_observed_plot(model4)
+residuals_plot(model4)
 
 

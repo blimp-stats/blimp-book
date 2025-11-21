@@ -10,6 +10,9 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+stack_imputations <- function(model)
+  do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
+
 # LOAD R PACKAGES ----
 
 library(rblimp)
@@ -63,10 +66,7 @@ output(model1)
 posterior_plot(model1)
 
 # compare marginal predicted probabilities by time and group
-stack_imputations <- function(model)
-  do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
-imps <- stack_imputations(model1)
-aggregate(dropout.1.probability ~ drug + week, data = imps, mean)
+aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model1), mean)
 
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 
