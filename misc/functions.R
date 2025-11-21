@@ -596,7 +596,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 # If non-NULL, the user-specified number of bins is used verbatim.
 
 distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
-                              fill_color = "teal", font_size = 14) {
+                              fill_color = "blue", font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
@@ -745,7 +745,7 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
 # If non-NULL, the user-specified number of bins is used verbatim.
 
 imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL,
-                                     observed_fill = "teal", imputed_line = "red",
+                                     observed_fill = "blue", imputed_line = "red",
                                      font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
@@ -974,7 +974,7 @@ residuals_plot <- function(
     index_cutoff  = if (signed_index) c(-3, -2, 0, 2, 3) else c(2, 3),
     index_aggregate = c("mean", "max"),
     index_order   = c("rank", "row"),
-    index_point_color = "teal",
+    index_point_color = "blue",
     index_line_color  = "red",
     print_threshold   = 3,
     print_head        = 20
@@ -1268,7 +1268,7 @@ residuals_plot <- function(
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
         ggplot2::geom_point(
           alpha = point_alpha, size = point_size,
-          color = unname(plot_colors["teal"])
+          color = unname(plot_colors["blue"])
         ) +
         ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
         {
@@ -1716,7 +1716,7 @@ residuals_plot <- function(
                 height = 0,
                 alpha  = point_alpha,
                 size   = point_size,
-                color  = unname(plot_colors["teal"])
+                color  = unname(plot_colors["blue"])
               ) +
               ggplot2::geom_hline(
                 yintercept = 0,
@@ -1794,7 +1794,7 @@ residuals_plot <- function(
                 height = 0,
                 alpha  = point_alpha,
                 size   = point_size,
-                color  = unname(plot_colors["teal"])
+                color  = unname(plot_colors["blue"])
               ) +
               ggplot2::geom_hline(
                 yintercept = 0,
@@ -1915,7 +1915,7 @@ residuals_plot <- function(
           ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
             ggplot2::geom_point(
               alpha = point_alpha, size = point_size,
-              color = unname(plot_colors["teal"])
+              color = unname(plot_colors["blue"])
             ) +
             ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
             {
@@ -2160,8 +2160,8 @@ residuals_plot <- function(
         ) +
           ggplot2::geom_histogram(
             bins  = 100,  # fixed for residual_plot()
-            fill  = unname(plot_colors["teal"]),
-            color = unname(plot_colors["teal"]),
+            fill  = unname(plot_colors["blue"]),
+            color = unname(plot_colors["blue"]),
             alpha = plot_shading
           ) +
           ggplot2::labs(
@@ -2312,7 +2312,7 @@ residuals_plot <- function(
             ggplot2::geom_point(
               alpha    = 0.20,
               size     = 1.0,
-              color    = unname(plot_colors["teal"]),
+              color    = unname(plot_colors["blue"]),
               position = ggplot2::position_jitter(width = 0.20, height = 0)
             ) +
             ggplot2::geom_hline(
@@ -2623,7 +2623,7 @@ bivariate_plot <- function(
   
   ## --- plotting -------------------------------------------------------------
   if (plot_type == "discrete") {
-    # Discrete plot: jitter teal points, pooled mean dots (black),
+    # Discrete plot: jitter blue points, pooled mean dots (black),
     # purple line connecting means, and optional error bars.
     
     mean_df <- pooled_mean_by_level(df)
@@ -2659,7 +2659,7 @@ bivariate_plot <- function(
         height = 0,
         alpha  = point_alpha,
         size   = point_size,
-        color  = unname(plot_colors["teal"])
+        color  = unname(plot_colors["blue"])
       ) +
       {
         if (errorbars) {
@@ -2732,7 +2732,7 @@ bivariate_plot <- function(
       ggplot2::geom_point(
         alpha = point_alpha,
         size  = point_size,
-        color = unname(plot_colors["teal"])
+        color = unname(plot_colors["blue"])
       ) +
       ggplot2::geom_ribbon(
         data        = curve_df,
