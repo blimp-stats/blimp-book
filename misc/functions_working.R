@@ -342,42 +342,42 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   pick_cluster_id(seg)
 }
 
-# COUNT CLUSTERID VARIABLES ----
-# Returns:
-#   0 → no CLUSTERID declared (single-level model)
-#   1 → one CLUSTERID (two-level model)
-#   2 → two CLUSTERIDs (three-level model)
-.count_cluster_ids <- function(model) {
-  sx      <- model@syntax
-  ids_vec <- character(0)
-  
-  # Case 1: modern syntax list/blimp_syntax with $clusterid element
-  if ((inherits(sx, "blimp_syntax") || is.list(sx)) &&
-      "clusterid" %in% names(sx)) {
-    raw <- as.character(sx$clusterid)[1]
-    if (nzchar(raw)) {
-      # strip trailing stuff after ';' if present
-      raw  <- sub(";.*$", "", raw)
-      toks <- strsplit(raw, "[[:space:]]+", perl = TRUE)[[1]]
-      ids_vec <- toks[nzchar(toks)]
-    }
-  } else {
-    # Case 2: legacy flat text with CLUSTERID: header
-    txt <- .syntax_as_text(sx)
-    if (nzchar(txt)) {
-      m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
-      if (m > 0) {
-        seg  <- regmatches(txt, m)
-        seg  <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
-        seg  <- sub(";.*$", "", seg)
-        toks <- strsplit(seg, "[[:space:]]+", perl = TRUE)[[1]]
-        ids_vec <- toks[nzchar(toks)]
-      }
-    }
-  }
-  
-  length(ids_vec)
-}
+# # CLUSTERID HELPER ----
+# .get_cluster_id <- function(model) {
+#   sx <- model@syntax
+#   
+#   # helper: strip anything after the first ';' and trim
+#   strip_after_semicolon <- function(x) {
+#     x <- as.character(x)[1L]
+#     if (!nzchar(x)) return(NA_character_)
+#     # keep everything before the first ';'
+#     x <- sub(";.*$", "", x)
+#     x <- trimws(x)
+#     ifelse(nzchar(x), x, NA_character_)
+#   }
+#   
+#   ## Case 1: modern blimp_syntax / list: use the $clusterid element
+#   if (inherits(sx, "blimp_syntax") || is.list(sx)) {
+#     nms <- tolower(names(sx))
+#     i   <- match("clusterid", nms)
+#     if (!is.na(i)) {
+#       val <- strip_after_semicolon(sx[[i]])
+#       return(val)
+#     }
+#   }
+#   
+#   ## Case 2: legacy: parse CLUSTERID from the syntax text
+#   txt <- .syntax_as_text(sx)
+#   if (!nzchar(txt)) return(NA_character_)
+#   
+#   m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
+#   if (m < 0) return(NA_character_)
+#   
+#   seg <- regmatches(txt, m)
+#   seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
+#   
+#   strip_after_semicolon(seg)
+# }
 
 # LEVEL-2 PREDICTOR DETECTION ----
 
@@ -551,45 +551,6 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   
   structure(list(data = data_stacked, stats = stats), class = "blimp_stdres")
 }
-
-# MI STACKING HELPER ----
-# Stack a y/x pair across imputations (adds row index for joining).
-# Used by residuals_plot() and bivariate_plot().
-.stack_cols <- function(model, ycol, xcol) {
-  dfs <- lapply(seq_along(model@imputations), function(i) {
-    d <- model@imputations[[i]]
-    if (!all(c(ycol, xcol) %in% names(d))) return(NULL)
-    data.frame(
-      x   = d[[xcol]],
-      y   = d[[ycol]],
-      imp = i,
-      row = seq_len(nrow(d)),
-      stringsAsFactors = FALSE
-    )
-  })
-  do.call(rbind, dfs)
-}
-
-# DISCRETE / NUMERIC DETECTION ----
-# Unified rule:
-#   - If declared categorical → discrete
-#   - Else if non-numeric → discrete
-#   - Else if <= 8 unique numeric values → discrete
-#   - Otherwise numeric
-.is_discrete <- function(model, xvec, xname) {
-  # 1. declared categorical in MODEL
-  cats <- tolower(.get_categorical_vars(model))
-  if (tolower(xname) %in% cats) return(TRUE)
-  
-  # 2. non-numeric always discrete
-  if (!is.numeric(xvec)) return(TRUE)
-  
-  # 3. numeric with <= 8 unique values
-  ux <- unique(xvec)
-  ux <- ux[!is.na(ux)]
-  length(ux) <= 8
-}
-
 
 # IMPUTATION HISTOGRAM(S) ----
 # If 'bins' is NULL, choose bin count adaptively based on unique values.
@@ -961,6 +922,10 @@ residuals_plot <- function(
     center_by_imp = FALSE,
     winsor_fit    = TRUE,
     winsor_k      = 3,
+    # display (view only)
+    y_clip        = c("mad", "sd", "quantile", "none"),
+    k             = 5,
+    q_clip        = 0.005,
     # styling
     point_alpha   = 0.15,
     point_size    = 1.2,
@@ -987,6 +952,7 @@ residuals_plot <- function(
          paste(names(plot_colors), collapse = ", "))
   
   support         <- match.arg(support)
+  y_clip          <- match.arg(y_clip)
   index_aggregate <- match.arg(index_aggregate)
   index_order     <- match.arg(index_order)
   
@@ -1022,6 +988,41 @@ residuals_plot <- function(
                  stringsAsFactors = FALSE)
     })
     do.call(rbind, out)
+  }
+  
+  # (Currently unused for A–D; kept for possible future extensions.)
+  y_limits <- function(y) {
+    switch(
+      y_clip,
+      "mad" = { m0 <- stats::median(y, na.rm = TRUE); md <- stats::mad(y, constant = 1.4826, na.rm = TRUE); c(m0 - k*md, m0 + k*md) },
+      "sd"  = { mu <- mean(y, na.rm = TRUE); s  <- stats::sd(y,  na.rm = TRUE); c(mu - k*s,    mu + k*s)    },
+      "quantile" = stats::quantile(y, c(q_clip, 1 - q_clip), na.rm = TRUE),
+      "none" = range(y, na.rm = TRUE)
+    )
+  }
+  
+  # Stack a y/x pair across imputations (adds row index for joining z-scores).
+  stack_cols <- function(ycol, xcol) {
+    dfs <- lapply(seq_along(model@imputations), function(i) {
+      d <- model@imputations[[i]]
+      if (!all(c(ycol, xcol) %in% names(d))) return(NULL)
+      data.frame(
+        x   = d[[xcol]],
+        y   = d[[ycol]],
+        imp = i,
+        row = seq_len(nrow(d))
+      )
+    })
+    do.call(rbind, dfs)
+  }
+  
+  # Winsorization helper (used only for fitting, not for display).
+  winsor_mad <- function(x, k = 3) {
+    med <- stats::median(x, na.rm = TRUE)
+    mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
+    if (!is.finite(mad) || mad == 0) return(x)
+    lo <- med - k * mad; hi <- med + k * mad
+    pmin(pmax(x, lo), hi)
   }
   
   # Rubin-pooled LOESS smoother over imputations (for continuous X).
@@ -1209,7 +1210,7 @@ residuals_plot <- function(
         message("Skipping (columns missing): ", base)
         return(NULL)
       }
-      df <- .stack_cols(model, ycol, xcol)
+      df <- stack_cols(ycol, xcol)
       if (is.null(df) || !nrow(df)) {
         message("Skipping (no data across imputations): ", base)
         return(NULL)
@@ -1325,11 +1326,37 @@ residuals_plot <- function(
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
-    # --- how many CLUSTERID variables were declared? -------------------------
-    # 0 → single-level, 1 → two-level, 2 → three-level.
-    # NOTE: For three-level models (2 CLUSTERIDs), random-effect
-    # residual-vs-predictor plots are intentionally disabled below.
-    n_cluster_ids <- .count_cluster_ids(model)
+    # --- how many CLUSTERID variables were declared? (1 vs 2) ----------------
+    n_cluster_ids <- {
+      sx      <- model@syntax
+      ids_vec <- character(0)
+      
+      # Case 1: modern syntax list/blimp_syntax with $clusterid element
+      if ((inherits(sx, "blimp_syntax") || is.list(sx)) &&
+          "clusterid" %in% names(sx)) {
+        raw <- as.character(sx$clusterid)[1]
+        if (nzchar(raw)) {
+          # strip trailing stuff after ';' if present
+          raw <- sub(";.*$", "", raw)
+          toks <- strsplit(raw, "[[:space:]]+", perl = TRUE)[[1]]
+          ids_vec <- toks[nzchar(toks)]
+        }
+      } else {
+        # Case 2: legacy flat text with CLUSTERID: header
+        txt <- .syntax_as_text(sx)
+        if (nzchar(txt)) {
+          m <- regexpr("(?i)CLUSTERID\\s*:\\s*([^\\n]+)", txt, perl = TRUE)
+          if (m > 0) {
+            seg <- regmatches(txt, m)
+            seg <- sub("(?i)CLUSTERID\\s*:\\s*", "", seg, perl = TRUE)
+            seg <- sub(";.*$", "", seg)
+            toks <- strsplit(seg, "[[:space:]]+", perl = TRUE)[[1]]
+            ids_vec <- toks[nzchar(toks)]
+          }
+        }
+      }
+      length(ids_vec)
+    }
     
     # --- level-2 predictor helper --------------------------------------------
     # For now we rely only on the "constant within cluster" fallback;
@@ -1629,7 +1656,7 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        df <- .stack_cols(model, ycol, xcol)
+        df <- stack_cols(ycol, xcol)
         if (is.null(df) || !nrow(df)) {
           message("Skipping (no data across imputations): ", base, " ~ ", xname)
           return(NULL)
@@ -1683,9 +1710,9 @@ residuals_plot <- function(
         #  - listed as categorical in the model OR
         #  - non-numeric OR
         #  - numeric with < 8 unique values (same as bivariate_plot auto rule)
-     
-        # Unified discrete/numeric rule (same as bivariate_plot via .is_discrete)
-        is_discrete <- .is_discrete(model, df$x, xname)
+        is_discrete <- (!x_is_numeric) ||
+          is_categorical_name(xname) ||
+          (x_is_numeric && n_unique_x > 0 && n_unique_x < 8)
         
         if (is_discrete) {
           # ---- DISCRETE STYLE ----
@@ -2386,7 +2413,9 @@ residuals_plot <- function(
 bivariate_plot <- function(
     model, formula,
     span = 0.9, degree = 1, robust = TRUE, level = 0.95,
+    support = c("density", "quantile"),
     x_type  = c("auto", "discrete", "numeric"),
+    trim_prop = 0.025, window_prop = 0.10, min_n_prop = 0.01,
     point_alpha = 0.15, point_size = 1.2,
     curve_color = "red", band_fill = "red",
     font_size = 14,
@@ -2395,6 +2424,7 @@ bivariate_plot <- function(
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   stopifnot(inherits(formula, "formula"))
+  support <- match.arg(support)
   x_type  <- match.arg(x_type)
   
   ## --- parse y ~ x ----------------------------------------------------------
@@ -2419,9 +2449,14 @@ bivariate_plot <- function(
          "' must exist in @imputations data. Available columns are:\n",
          paste(cols1, collapse = ", "))
   
-  df <- .stack_cols(model, y_name, x_name)
+  df <- do.call(
+    rbind,
+    lapply(seq_along(model@imputations), function(i) {
+      d <- model@imputations[[i]]
+      data.frame(x = d[[x_name]], y = d[[y_name]], imp = i)
+    })
+  )
   df <- stats::na.omit(df[, c("x","y","imp")])
-  
   if (!nrow(df)) stop("No complete cases for the selected variables.")
   if (!is.numeric(df$x) || !is.numeric(df$y))
     stop("Both variables must be numeric.")
@@ -2478,15 +2513,24 @@ bivariate_plot <- function(
   clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
   
   ## --- determine plot type: discrete vs numeric -----------------------------
+  ux          <- sort(unique(df$x[is.finite(df$x)]))
+  n_unique_x  <- length(ux)
+  
   if (x_type == "discrete") {
     plot_type <- "discrete"
   } else if (x_type == "numeric") {
     plot_type <- "numeric"
   } else {  # auto
-    plot_type <- if (.is_discrete(model, df$x, x_name)) "discrete" else "numeric"
+    plot_type <- if (n_unique_x < 8) "discrete" else "numeric"
   }
   
   ## --- helpers --------------------------------------------------------------
+  winsor_mad <- function(x, k = 3) {
+    med <- stats::median(x, na.rm = TRUE)
+    mad <- stats::mad(x, constant = 1.4826, na.rm = TRUE)
+    if (!is.finite(mad) || mad == 0) return(x)
+    pmin(pmax(x, med - k*mad), med + k*mad)
+  }
   
   # Rubin-pooling of LOESS curve (numeric x)
   loess_pooled <- function(dat_xy) {
@@ -2629,8 +2673,6 @@ bivariate_plot <- function(
     mean_df <- pooled_mean_by_level(df)
     
     # slight jitter relative to spacing
-    ux <- sort(unique(df$x[is.finite(df$x)]))
-    n_unique_x <- length(ux)
     if (n_unique_x > 1) {
       min_step     <- min(diff(ux))
       jitter_width <- 0.01 * min_step

@@ -10,7 +10,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 
 library(rblimp)
 
-
 # READ DATA ----
 
 # github url for raw data
