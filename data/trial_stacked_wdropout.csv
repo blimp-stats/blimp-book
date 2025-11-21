@@ -1,4 +1,4 @@
-person,male,drug,week,severity,dropout_man
+"person","male","drug","week","severity","dropout"
 1,1,1,0,5.96,0
 1,1,1,1,4.51,0
 1,1,1,2,4.53,0

@@ -76,6 +76,9 @@ model3 <- rblimp(
 # print output
 output(model3)
 
+# plot parameter distributions
+posterior_plot(model3)
+
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot predicted values by time
@@ -139,6 +142,9 @@ model5 <- rblimp(
 
 # print output
 output(model5)
+
+# plot parameter distributions
+posterior_plot(model5)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 

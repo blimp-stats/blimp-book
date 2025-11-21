@@ -1,3 +1,9 @@
+# BRIAN NOTES ----
+# when specifying nonexistent timeid, error says that time is not at lowest level (rather than nonexistent)
+# when omitting timeid, error references time variable (not timeid variable)
+# timeid variable automatically becomes fixed (as it should, but any downstream consequences?)
+# timeid does not appear in missing data rate table
+
 # MULTILEVEL GROWTH MODEL WITH MNAR ASSUMPTION
 
 # plotting functions
@@ -6,8 +12,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 set_blimp('/applications/blimp/blimp-nightly')
 
 # READ DATA ----
@@ -18,17 +22,33 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-# FIT REPEATED MEASURES MODEL ----
+# MAR MISSINGNESS MODEL ----
 
-# mixed model specification
+psych::describeBy(dropout ~ week:drug, data = trial)
+
+# mar missingness model with dropout varying by time and group
 model1 <- rblimp(
   data = trial,
-  ordinal = 'dropout',
-  nominal = 'week',
-  clusterid = 'person',
+  ordinal = 'male drug',
+  clusterid = 'person; timeid: week; dropout: dropout = severity',
+  # timeid = 'week',
+  # dropout = 'dropoutb = severity',
+  center = 'grandmean = male',
+  latent = 'person = icept linear;',
   model = '
-    severity ~ intercept week;
-    dropout ~ intercept@-3 week | intercept@0;',
+    level2:
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
+    icept ~~ linear;
+    level1:
+    severity ~ intercept@icept week@linear;
+    missingness:
+    dropout ~ intercept@-3 (week==1) (week==2) (week==3)
+      (week==1)*drug (week==2)*drug (week==3)*drug | intercept@0;',
+  parameters = '
+    mu3_drug0 = icept_d0 + slp_d0*3;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3;
+    mu3_diff = mu3_drug1 - mu3_drug0;',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -41,15 +61,16 @@ output(model1)
 posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-names(model1@imputations[[1]])
-# plot predicted values by time
-bivariate_plot(model1, severity.predicted ~ week, lines = T)
-bivariate_plot(model1, dropout.1.probability ~ week)
-bivariate_plot(model1, dropout.1.probability ~ week, x_type = 'numeric')
 
-hist(unique(round(df_check$prob, 4)), breaks = 40,
-     main = "Unique dropout.1.probability values across all imps",
-     xlab = "Probability")
+# plot predicted values by time
+bivariate_plot(model5, severity.predicted ~ week, lines = T)
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model5)
+imputed_vs_observed_plot(model5)
+residuals_plot(model5)
+
+
 
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
 

@@ -1,4 +1,4 @@
-# SEM LINEAR GROWTH MODEL
+# SEM GROWTH MODELS
 
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -6,8 +6,7 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
+set_blimp('/applications/blimp/blimp-nightly')
 
 # READ DATA ----
 
@@ -17,24 +16,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-# FIT REPEATED MEASURES MODEL ----
-
-model1 <- rblimp(
-  data = trial,
-  latent = 'subjects',
-  model = '
-    subjects ~ intercept@0;
-    { severity0:severity3 } ~ intercept subjects@1;',
-  seed = 90291, # integer random number seed
-  burn = 10000, # warm up iterations
-  iter = 10000) # iterations for analysis
-
-output(model1)
-
 # FIT LINEAR GROWTH MODEL ----
 
 # linear growth model
-model2 <- rblimp(
+model1 <- rblimp(
   data = trial,
   latent = 'icept linear',
   model = '
@@ -45,77 +30,95 @@ model2 <- rblimp(
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;',
-  seed = 90291, # integer random number seed
-  burn = 30000, # warm up iterations
-  iter = 30000) # iterations for analysis
+    severity0:severity3@res;',
+  seed = 90291,
+  burn = 30000,
+  iter = 30000,
+  nimps = 20) 
 
-output(model2)
+# print output
+output(model1)
+
+# plot parameter distributions
+posterior_plot(model1)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
+# FIT LINEAR GROWTH MODEL WITH PREDICTORS ----
 
 # linear growth model with predictors
-model3 <- rblimp(
+model2 <- rblimp(
   data = trial,
   ordinal = 'male drug',
   latent = 'icept linear', 
   center = 'male',
   model = '
     structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;',
+    severity0:severity3@res;',
   parameters = '
-    mu3_drug0 = b0 + b1*3;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3;
-    mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 20000, # warm up iterations
-  iter = 20000) # iterations for analysis
+  mu3_drug0 = icept_d0 + slp_d0*3;
+  mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3;
+  mu3_diff = mu3_drug1 - mu3_drug0;',
+  seed = 90291,
+  burn = 30000, 
+  iter = 30000,
+  nimps = 20)
 
-output(model3)
+# print output
+output(model2)
 
-# FIT QUADRATIC GROWTH MODEL ----
+# plot parameter distributions
+posterior_plot(model2)
 
-# quadratic fixed effect but no quadratic variance
-model4 <- rblimp(
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
+
+# FIT CURIVLINEAR GROWTH MODEL ----
+
+# quadratic fixed effect
+model3 <- rblimp(
   data = trial,
   latent = 'icept linear quad',
   model = '
     structural:
     intercept -> icept linear quad;
-    quad ~~ quad@.01;
+    quad ~~ quad@.001;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;',
-  seed = 90291, # integer random number seed
-  burn = 30000, # warm up iterations
-  iter = 30000) # iterations for analysis
+    severity0:severity3@res;',
+  seed = 90291, 
+  burn = 30000,
+  iter = 30000,
+  nimps = 20) 
 
-output(model4)
+# print output
+output(model3)
 
-# quadratic fixed effect and quadratic variance
-# N_eff values decrease given same iterations as model 4
-model5 <- rblimp(
+# plot parameter distributions
+posterior_plot(model3)
+
+# quadratic fixed effect and variance
+model4 <- rblimp(
   data = trial,
   latent = 'icept linear quad',
   model = '
@@ -127,48 +130,66 @@ model5 <- rblimp(
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;',
-  seed = 90291, # integer random number seed
-  burn = 30000, # warm up iterations
-  iter = 30000) # iterations for analysis
+    severity0:severity3@res;',
+  seed = 90291, 
+  burn = 30000, 
+  iter = 30000,
+  nimps = 20)
 
-output(model5)
+# print output
+output(model4)
+
+# plot parameter distributions
+posterior_plot(model4)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model4)
+imputed_vs_observed_plot(model4)
+residuals_plot(model4)
+
+# FIT CURVILINEAR GROWTH MODEL WITH PREDICTORS ----
 
 # quadratic fixed effect with predictors
-model6 <- rblimp(
+model5 <- rblimp(
   data = trial,
   ordinal = 'male drug',
   latent = 'icept linear quad', 
   center = 'male',
   model = '
     structural:
-    icept ~ intercept@b0 drug@b01 male;
-    linear ~ intercept@b1 drug@b11;
-    quad ~ intercept@b2 drug@b21;
-    quad ~~ quad@.01;
+    icept ~ intercept@icept_d0 drug@icept_diff male;
+    linear ~ intercept@slp_d0 drug@slp_diff;
+    quad ~ intercept@quad_d0 drug@quad_diff;
+    quad ~~ quad@.001;
     icept ~~ linear;
     measurement:
     icept -> severity0@1 severity1@1 severity2@1 severity3@1; 
     linear -> severity0@0 severity1@1 severity2@2 severity3@3; 
     quad -> severity0@0 severity1@1 severity2@4 severity3@9; 
     intercept -> severity0@0 severity1@0 severity2@0 severity3@0;
-    residual:
-    severity0 ~~ severity0@res;
-    severity1 ~~ severity1@res;
-    severity2 ~~ severity2@res;
-    severity3 ~~ severity3@res;',
+    severity0:severity3@res;',
   parameters = '
-    mu3_drug0 = b0 + b1*3 + b2*9;
-    mu3_drug1 = (b0 + b01) + (b1 + b11)*3 + (b2 + b21)*9;
+    mu3_drug0 = icept_d0 + slp_d0*3 + quad_d0*9;
+    mu3_drug1 = (icept_d0 + icept_diff) + (slp_d0 + slp_diff)*3 + (quad_d0 + quad_diff)*9;
     mu3_diff = mu3_drug1 - mu3_drug0;',
-  seed = 90291, # integer random number seed
-  burn = 40000, # warm up iterations
-  iter = 40000) # iterations for analysis
+  seed = 90291,
+  burn = 50000, 
+  iter = 50000,
+  nimps = 20)
 
-output(model6)
+# print output
+output(model5)
+
+# plot parameter distributions
+posterior_plot(model5)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model5)
+imputed_vs_observed_plot(model5)
+residuals_plot(model5)
 
 
