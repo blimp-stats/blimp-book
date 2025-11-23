@@ -15,14 +15,13 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-# FIT REPEATED MEASURES MODEL ----
+# FIT LINEAR GROWTH MODEL ----
 
-# mixed model specification
+# combined-model specification
 model1 <- rblimp(
   data = trial,
-  nominal = 'week',
   clusterid = 'person',
-  model = 'severity ~ intercept week',
+  model = 'severity ~ intercept week | week;',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -34,31 +33,8 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
-# plot predicted values by time
-bivariate_plot(model1, severity.predicted ~ week)
-
-# FIT LINEAR GROWTH MODEL ----
-
-# combined-model specification
-model2 <- rblimp(
-  data = trial,
-  clusterid = 'person',
-  model = 'severity ~ intercept week | week;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# print output
-output(model2)
-
-# plot parameter distributions
-posterior_plot(model2)
-
 # latent variable specification
-model3 <- rblimp(
+model2 <- rblimp(
   data = trial,
   clusterid = 'person',
   latent = 'person = icept linear',
@@ -74,25 +50,25 @@ model3 <- rblimp(
   nimps = 20)
 
 # print output
-output(model3)
+output(model2)
 
 # plot parameter distributions
-posterior_plot(model3)
+posterior_plot(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot predicted values by time
-bivariate_plot(model3, severity.predicted ~ week, lines = T)
+bivariate_plot(model2, severity.predicted ~ week, lines = T)
 
 # plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
 
 # FIT LINEAR GROWTH MODEL WITH PREDICTORS ----
 
 # combined-model specification
-model4 <- rblimp(
+model3 <- rblimp(
   data = trial,
   ordinal = 'male drug',
   clusterid = 'person',
@@ -109,16 +85,16 @@ model4 <- rblimp(
   nimps = 20)
 
 # print output
-output(model4)
+output(model3)
 
 # plot parameter distributions
-posterior_plot(model4)
+posterior_plot(model3)
 
 # plot conditional growth curves
-simple_plot(severity ~ week | drug, model4)
+simple_plot(severity ~ week | drug, model3)
 
 # latent variable specification
-model5 <- rblimp(
+model4 <- rblimp(
   data = trial,
   ordinal = 'male drug',
   clusterid = 'person',
@@ -141,17 +117,14 @@ model5 <- rblimp(
   nimps = 20)
 
 # print output
-output(model5)
+output(model4)
 
 # plot parameter distributions
-posterior_plot(model5)
+posterior_plot(model4)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot predicted values by time
-bivariate_plot(model5, severity.predicted ~ week, lines = T)
-
 # plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model5)
-imputed_vs_observed_plot(model5)
-residuals_plot(model5)
+distribution_plot(model4)
+imputed_vs_observed_plot(model4)
+residuals_plot(model4)

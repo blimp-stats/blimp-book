@@ -1,10 +1,14 @@
-# RANDOM INTERCEPT CROSS-LAGGED PANEL MODEL
+# BRIAN NOTES ----
+# you described a limited-scope function for .predicted in lieu of definition equations as possible
+
+# RANDOM-INTERCEPT CROSS-LAGGED PANEL MODEL
+
+# plotting functions
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -49,6 +53,13 @@ model1 <- rblimp(
 
 output(model1)
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model1)
+imputed_vs_observed_plot(model1)
+residuals_plot(model1)
+
 # FIT RICLPM MODEL WITH BETWEEN-PERSON PREDICTOR ----
 
 model2 <- rblimp(
@@ -85,6 +96,13 @@ model2 <- rblimp(
 
 output(model2)
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model2)
+imputed_vs_observed_plot(model2)
+residuals_plot(model2)
+
 # FIT RICLPM MODEL WITH GROUP-SPECIFIC EFFECTS ----
 
 model3 <- rblimp(
@@ -120,3 +138,10 @@ model3 <- rblimp(
   iter = 10000)
 
 output(model3)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot distributions, observed vs. imputed scores, and residuals
+distribution_plot(model3)
+imputed_vs_observed_plot(model3)
+residuals_plot(model3)

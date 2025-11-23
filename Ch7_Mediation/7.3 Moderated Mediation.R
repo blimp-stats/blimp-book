@@ -28,6 +28,7 @@ model1 <- rblimp(
     familism ~ discrim@a_male female age discrim*female@a_dif;
     bpath:
     internalize ~ discrim familism@b female age;',
+  simple = 'discrim | female',
   parameters = '
     ind_male = a_male*b;
     ind_female = (a_male + a_dif)*b;
@@ -42,6 +43,9 @@ output(model1)
 
 # plot parameter distributions
 posterior_plot(model1)
+
+# plot conditional effects
+simple_plot(familism ~ discrim | female.1, model1)
 
 # plot distribution of indirect effects
 posterior_plot(model1, 'ind_male')
@@ -66,6 +70,7 @@ model2 <- rblimp(
     familism ~ discrim@a female age;
     bpath:
     internalize ~ discrim familism@b_male female age familism*female@b_dif;',
+  simple = 'familism | female',
   parameters = '
     ind_male = a*b_male;
     ind_female = a*(b_male + b_dif);
@@ -80,6 +85,9 @@ output(model2)
 
 # plot parameter distributions
 posterior_plot(model2)
+
+# plot conditional effects
+simple_plot(internalize ~ familism | female.1, model2)
 
 # plot distribution of indirect effects
 posterior_plot(model2, 'ind_male')
@@ -104,6 +112,7 @@ model3 <- rblimp(
     familism ~ discrim@a_male female age discrim*female@a_dif;
     bpath:
     internalize ~ discrim familism@b_male female age familism*female@b_dif;',
+  simple = 'discrim | female; familism | female',
   parameters = '
     ind_male = a_male*b_male;
     ind_female = (a_male + a_dif)*(b_male + b_dif);
@@ -118,6 +127,10 @@ output(model3)
 
 # plot parameter distributions
 posterior_plot(model3)
+
+# plot conditional effects
+simple_plot(familism ~ discrim | female.1, model3)
+simple_plot(internalize ~ familism | female.1, model3)
 
 # plot distribution of indirect effects
 posterior_plot(model3, 'ind_male')

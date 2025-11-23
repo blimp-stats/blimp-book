@@ -68,9 +68,6 @@ output(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot predicted values by time
-bivariate_plot(model2, probsolve.predicted ~ month7, lines = T)
-
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model2)
 imputed_vs_observed_plot(model2)
