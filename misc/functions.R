@@ -2452,7 +2452,7 @@ residuals_plot <- function(
 #   "numeric"  = always use numeric style (LOESS)
 
 bivariate_plot <- function(
-    model, formula,
+    formula, model,
     span = 0.9, degree = 1, robust = TRUE, level = 0.95,
     x_type  = c("auto", "discrete", "numeric"),
     point_alpha = 0.15, point_size = 1.2,
