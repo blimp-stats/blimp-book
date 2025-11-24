@@ -1325,6 +1325,74 @@ residuals_plot <- function(
     chunks <- gsub("\\s+", " ", trimws(chunks))
     chunks <- chunks[nzchar(chunks)]
     
+    # Expand arrow syntax (predictor -> dv1 dv2 ...) into multiple tilde equations
+    # This must happen BEFORE we start parsing for "~" in the chunks
+    expand_arrow_syntax_fn <- function(chunks) {
+      expanded <- lapply(chunks, function(ch) {
+        if (!grepl("->", ch, fixed = TRUE)) return(ch)
+        
+        parts <- strsplit(ch, "->", fixed = TRUE)[[1]]
+        if (length(parts) != 2L) {
+          warning("Malformed arrow syntax (expected single '->'): ", ch)
+          return(ch)
+        }
+        
+        lhs_arrow <- trimws(parts[1])
+        rhs_arrow <- trimws(parts[2])
+        
+        prefix <- ""
+        rhs_working <- rhs_arrow
+        prefix_match <- regexec("^([A-Za-z0-9_]+):\\s*(.*)$", rhs_arrow, perl = TRUE)
+        prefix_res <- regmatches(rhs_arrow, prefix_match)[[1]]
+        if (length(prefix_res) == 3L) {
+          prefix <- paste0(prefix_res[2], ": ")
+          rhs_working <- prefix_res[3]
+        }
+        
+        temp_rhs <- rhs_working
+        transform_map <- list()
+        transform_counter <- 0L
+        
+        while (grepl("[A-Za-z_][A-Za-z0-9_]*\\([^)]+\\)", temp_rhs)) {
+          match <- regexec("([A-Za-z_][A-Za-z0-9_]*)\\(([^)]+)\\)", temp_rhs)
+          match_res <- regmatches(temp_rhs, match)[[1]]
+          
+          if (length(match_res) == 3L) {
+            full_match <- match_res[1]
+            transform_counter <- transform_counter + 1L
+            placeholder <- paste0("__XFORM", transform_counter, "__")
+            transform_map[[placeholder]] <- full_match
+            temp_rhs <- sub(full_match, placeholder, temp_rhs, fixed = TRUE)
+          } else {
+            break
+          }
+        }
+        
+        tokens <- strsplit(temp_rhs, "\\s+", perl = TRUE)[[1]]
+        tokens <- tokens[nzchar(tokens)]
+        
+        if (!length(tokens)) {
+          warning("No DVs found in arrow syntax RHS: ", ch)
+          return(ch)
+        }
+        
+        tokens <- sapply(tokens, function(tok) {
+          for (ph in names(transform_map)) {
+            tok <- gsub(ph, transform_map[[ph]], tok, fixed = TRUE)
+          }
+          tok
+        }, USE.NAMES = FALSE)
+        
+        sapply(tokens, function(dv_tok) {
+          paste0(prefix, dv_tok, " ~ ", lhs_arrow)
+        }, USE.NAMES = FALSE)
+      })
+      
+      unlist(expanded, use.names = FALSE)
+    }
+    
+    chunks <- expand_arrow_syntax_fn(chunks)
+    
     # --- how many CLUSTERID variables were declared? -------------------------
     # 0 → single-level, 1 → two-level, 2 → three-level.
     # NOTE: For three-level models (2 CLUSTERIDs), random-effect
@@ -1683,7 +1751,7 @@ residuals_plot <- function(
         #  - listed as categorical in the model OR
         #  - non-numeric OR
         #  - numeric with < 8 unique values (same as bivariate_plot auto rule)
-     
+        
         # Unified discrete/numeric rule (same as bivariate_plot via .is_discrete)
         is_discrete <- .is_discrete(model, df$x, xname)
         
@@ -2229,7 +2297,7 @@ residuals_plot <- function(
         
         # Helper: build one cluster-spread plot for a given DV.
         build_spread <- function(this_dv) {
-
+          
           dat_dv <- std_data[
             std_data$base %in% bases_resid & 
               std_data$base == this_dv,
