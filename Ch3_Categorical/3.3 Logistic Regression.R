@@ -46,10 +46,10 @@ imputed_vs_observed_plot(model1)
 residuals_plot(model1)
 
 # plot individual-level predicted probabilities
-bivariate_plot(model1, drinker.1.probability ~ alcage)
-bivariate_plot(model1, drinker.1.probability ~ college)
-bivariate_plot(model1, drinker.1.probability ~ age)
-bivariate_plot(model1, drinker.1.probability ~ male)
+bivariate_plot(drinker.1.probability ~ alcage, model1)
+bivariate_plot(drinker.1.probability ~ college, model1)
+bivariate_plot(drinker.1.probability ~ age, model1)
+bivariate_plot(drinker.1.probability ~ male, model1)
 
 # FIT MULTINOMIAL LOGISTIC MODEL ----
 

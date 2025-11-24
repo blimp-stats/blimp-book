@@ -14,6 +14,11 @@ plot_colors <- c(
 # alpha used for filled layers (bars, ribbons, etc.) across every plot
 plot_shading <- 0.25
 
+# Primary colors for plotting (can be changed here)
+plot_point_color <- "blue"    # color for scatter points
+plot_curve_color <- "red"     # color for fitted curves/lines  
+plot_band_color  <- "red"     # color for confidence bands/ribbons
+
 # MAD-based winsorization used in multiple plotting functions
 winsor_mad <- function(x, k = 3) {
   med <- stats::median(x, na.rm = TRUE)
@@ -945,11 +950,8 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL
 residuals_plot <- function(
     model,
     var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
-    # smoother & pooling
-    smoother      = "loess",
-    degree        = 4,
-    span          = 0.9,
-    robust        = TRUE,
+    # polynomial fitting & pooling
+    poly_degree   = 3,
     ci            = TRUE,
     level         = 0.95,
     # where to show the curve/ribbon
@@ -964,8 +966,8 @@ residuals_plot <- function(
     # styling
     point_alpha   = 0.15,
     point_size    = 1.2,
-    curve_color   = "red",
-    band_fill     = "red",
+    curve_color   = plot_curve_color,
+    band_fill     = plot_band_color,
     band_alpha    = plot_shading,   # follow global shading
     font_size     = 14,
     # index options
@@ -974,8 +976,8 @@ residuals_plot <- function(
     index_cutoff  = if (signed_index) c(-3, -2, 0, 2, 3) else c(2, 3),
     index_aggregate = c("mean", "max"),
     index_order   = c("rank", "row"),
-    index_point_color = "blue",
-    index_line_color  = "red",
+    index_point_color = plot_point_color,
+    index_line_color  = plot_curve_color,
     print_threshold   = 3,
     print_head        = 20
 ) {
@@ -985,6 +987,12 @@ residuals_plot <- function(
   if (!curve_color %in% names(plot_colors) || !band_fill %in% names(plot_colors))
     stop("curve_color and band_fill must be names in plot_colors: ",
          paste(names(plot_colors), collapse = ", "))
+  
+  # Validate poly_degree
+  if (!is.numeric(poly_degree) || poly_degree < 1) {
+    stop("poly_degree must be a positive integer")
+  }
+  poly_degree <- as.integer(poly_degree)
   
   support         <- match.arg(support)
   index_aggregate <- match.arg(index_aggregate)
@@ -1024,8 +1032,8 @@ residuals_plot <- function(
     do.call(rbind, out)
   }
   
-  # Rubin-pooled LOESS smoother over imputations (for continuous X).
-  loess_pooled <- function(df_xy, span, level, center_by_imp, winsor_fit, winsor_k, robust) {
+  # Rubin-pooled polynomial regression over imputations (for continuous X).
+  polynomial_pooled <- function(df_xy, degree, level, center_by_imp, winsor_fit, winsor_k) {
     fitdat <- df_xy
     if (center_by_imp) {
       fitdat$y <- fitdat$y - ave(fitdat$y, fitdat$imp, FUN = function(z) mean(z, na.rm = TRUE))
@@ -1033,86 +1041,128 @@ residuals_plot <- function(
     if (winsor_fit) {
       fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = winsor_k))
     }
+    
+    # Constrain prediction grid to avoid extreme edge explosion
+    # Use 2nd and 98th percentiles with larger buffer
     rng_x <- range(fitdat$x, na.rm = TRUE)
-    xgrid <- if (!is.finite(diff(rng_x)) || diff(rng_x) == 0) rng_x else seq(rng_x[1], rng_x[2], length.out = 200)
-    imps  <- split(fitdat, fitdat$imp)
-    fam   <- if (robust) "symmetric" else "gaussian"
-    
-    min_span_n   <- 50L
-    min_span     <- 0.12
-    min_unique_x <- 25L
-    jitter_frac  <- 1e-7
-    
-    collapse_dupes <- function(d) {
-      d <- stats::na.omit(d[, c("y","x")]); if (!nrow(d)) return(d)
-      agg <- aggregate(y ~ x, data = d, FUN = mean)
-      agg[order(agg$x), , drop = FALSE]
+    if (!is.finite(diff(rng_x)) || diff(rng_x) == 0) {
+      xgrid <- rng_x
+    } else {
+      x_quantiles <- stats::quantile(fitdat$x, c(0.02, 0.98), na.rm = TRUE)
+      x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
+      x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
+      xgrid <- seq(x_min, x_max, length.out = 200)
     }
     
+    imps  <- split(fitdat, fitdat$imp)
+    m     <- length(imps)
+    
+    # Fit polynomial in each imputation and get predictions + SEs
     preds <- lapply(imps, function(d) {
-      d0 <- collapse_dupes(d); n <- nrow(d0)
-      if (n < 10) return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
-      u <- length(unique(d0$x))
-      span_eff <- max(span, min_span, min_span_n / max(10L, n))
-      if (u < min_unique_x) span_eff <- max(span_eff, min(1, min_unique_x / max(5L, u)))
-      if (anyDuplicated(d0$x)) {
-        xr <- diff(range(d0$x)); j <- if (is.finite(xr) && xr > 0) xr * jitter_frac else jitter_frac
-        set.seed(1L); d0$x <- d0$x + stats::rnorm(n, 0, j)
-      }
-      ctl <- stats::loess.control(surface = "interpolate", trace.hat = "approximate")
-      fit <- try(
-        suppressWarnings(
-          stats::loess(y ~ x, data = d0,
-                       span = min(1, span_eff),
-                       degree = 1,
-                       family = fam, control = ctl)
-        ),
-        silent = TRUE
-      )
-      if (inherits(fit, "try-error"))
-        return(list(fit = rep(NA_real_, length(xgrid)), se2 = rep(NA_real_, length(xgrid))))
+      d0 <- stats::na.omit(d[, c("y", "x")])
+      n <- nrow(d0)
       
-      pr <- try(
-        suppressWarnings(
-          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
-        ),
+      # Need at least degree+1 points
+      if (n <= degree) {
+        return(list(
+          fit = rep(NA_real_, length(xgrid)),
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
+        ))
+      }
+      
+      # Fit polynomial (orthogonal for numerical stability)
+      fit <- try(
+        stats::lm(y ~ stats::poly(x, degree = degree, raw = FALSE), data = d0),
         silent = TRUE
       )
-      if (inherits(pr, "try-error") || is.null(pr$se.fit)) {
+      
+      if (inherits(fit, "try-error")) {
+        return(list(
+          fit = rep(NA_real_, length(xgrid)),
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
+        ))
+      }
+      
+      # Get predictions with standard errors
+      pred <- try(
+        stats::predict(fit, newdata = data.frame(x = xgrid), 
+                       se.fit = TRUE, interval = "none"),
+        silent = TRUE
+      )
+      
+      if (inherits(pred, "try-error") || is.null(pred$se.fit)) {
         yhat <- try(
-          suppressWarnings(stats::predict(fit, newdata = data.frame(x = xgrid))),
+          stats::predict(fit, newdata = data.frame(x = xgrid)),
           silent = TRUE
         )
         yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
-        list(fit = yhat, se2 = rep(NA_real_, length(xgrid)))
-      } else {
-        list(fit = as.numeric(pr$fit), se2 = as.numeric(pr$se.fit)^2)
+        return(list(
+          fit = yhat,
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
+        ))
       }
+      
+      list(
+        fit = as.numeric(pred$fit),
+        se = as.numeric(pred$se.fit),
+        df_resid = pred$df
+      )
     })
     
-    Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
-    Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
-    keep <- which(colSums(is.finite(Fmat)) > 0)
+    # Extract predictions and SEs
+    Qmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+    Umat <- do.call(cbind, lapply(preds, `[[`, "se"))^2  # Variance
+    df_resids <- sapply(preds, `[[`, "df_resid")
+    
+    # Remove imputations that failed
+    keep <- which(colSums(is.finite(Qmat)) > 0)
     if (!length(keep)) return(data.frame(x = xgrid, mean = 0, lwr = 0, upr = 0))
-    Fmat <- Fmat[, keep, drop = FALSE]
-    Wmat <- Wmat[, keep, drop = FALSE]
-    m <- ncol(Fmat)
     
-    mean_fit <- rowMeans(Fmat, na.rm = TRUE)
-    W <- rowMeans(Wmat, na.rm = TRUE)
-    B <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
-    Tvar <- W + (1 + 1/m) * B
-    r <- ifelse(W > 0, ((1 + 1/m) * B) / W, Inf)
-    nu <- (m - 1) * (1 + 1/r)^2
-    nu[!is.finite(nu) | nu <= 0] <- m - 1
-    tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, nu))
-    seTot <- sqrt(pmax(0, Tvar))
+    Qmat <- Qmat[, keep, drop = FALSE]
+    Umat <- Umat[, keep, drop = FALSE]
+    df_resids <- df_resids[keep]
+    m <- ncol(Qmat)
     
+    # Rubin's pooling
+    Q_bar <- rowMeans(Qmat, na.rm = TRUE)                    # Pooled estimate
+    U_bar <- rowMeans(Umat, na.rm = TRUE)                    # Within variance
+    B <- apply(Qmat, 1, stats::var, na.rm = TRUE)           # Between variance
+    B[!is.finite(B)] <- 0
+    
+    # Total variance
+    T_total <- U_bar + (1 + 1/m) * B
+    
+    # Degrees of freedom (Barnard-Rubin adjustment)
+    # lambda = fraction of missing information
+    lambda <- (1 + 1/m) * B / pmax(T_total, 1e-10)
+    lambda <- pmin(lambda, 0.99)  # Cap at 0.99 for stability
+    
+    # Observed degrees of freedom (from residual df)
+    df_obs <- mean(df_resids, na.rm = TRUE)
+    if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
+    
+    # Old degrees of freedom
+    df_old <- (m - 1) / pmax(lambda^2, 1e-10)
+    
+    # Adjusted degrees of freedom
+    df_adj <- (df_obs * df_old) / (df_obs + df_old)
+    df_adj <- pmax(df_adj, 1)  # At least 1 df
+    
+    # Critical values (can vary by point if df_adj varies)
+    tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
+    
+    # Standard error
+    se_total <- sqrt(pmax(T_total, 0))
+    
+    # Confidence intervals
     data.frame(
       x    = xgrid,
-      mean = mean_fit,
-      lwr  = mean_fit - tcrit * seTot,
-      upr  = mean_fit + tcrit * seTot
+      mean = Q_bar,
+      lwr  = Q_bar - tcrit * se_total,
+      upr  = Q_bar + tcrit * se_total
     )
   }
   
@@ -1228,47 +1278,25 @@ residuals_plot <- function(
         }
       }
       
-      if (tolower(smoother) == "loess") {
-        curve_df <- loess_pooled(df, span, level, center_by_imp, winsor_fit, winsor_k, robust)
-        if (support == "quantile") {
-          pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
-          curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
-        } else {
-          xr <- range(df$x, na.rm = TRUE)
-          win <- window_prop * diff(xr)
-          min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
-          counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
-          curve_df <- curve_df[counts >= min_n, , drop = FALSE]
-        }
+      # Fit polynomial with proper Rubin's pooling
+      curve_df <- polynomial_pooled(df, poly_degree, level, center_by_imp, winsor_fit, winsor_k)
+      
+      # Apply support trimming
+      if (support == "quantile") {
+        pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
+        curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
       } else {
-        rng_x <- range(df$x, na.rm = TRUE)
-        xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
-        imps  <- split(df, df$imp)
-        coef_mat <- lapply(imps, function(d) {
-          dd <- stats::na.omit(d[, c("y","x")])
-          if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
-          fit <- try(
-            stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd),
-            silent = TRUE
-          )
-          if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
-          stats::coef(fit)
-        })
-        coef_mat <- do.call(rbind, coef_mat)
-        coef_mat <- coef_mat[stats::complete.cases(coef_mat), , drop = FALSE]
-        if (!nrow(coef_mat)) {
-          curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
-        } else {
-          beta <- colMeans(coef_mat)
-          yhat <- beta[1] + sapply(xgrid, function(x) sum(beta[-1] * x^(seq_along(beta[-1]))))
-          curve_df <- data.frame(x = xgrid, mean = as.numeric(yhat), lwr = NA, upr = NA)
-        }
+        xr <- range(df$x, na.rm = TRUE)
+        win <- window_prop * diff(xr)
+        min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
+        counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
+        curve_df <- curve_df[counts >= min_n, , drop = FALSE]
       }
       
       ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
         ggplot2::geom_point(
           alpha = point_alpha, size = point_size,
-          color = unname(plot_colors["blue"])
+          color = unname(plot_colors[plot_point_color])
         ) +
         ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
         {
@@ -1784,7 +1812,7 @@ residuals_plot <- function(
                 height = 0,
                 alpha  = point_alpha,
                 size   = point_size,
-                color  = unname(plot_colors["blue"])
+                color  = unname(plot_colors[plot_point_color])
               ) +
               ggplot2::geom_hline(
                 yintercept = 0,
@@ -1862,7 +1890,7 @@ residuals_plot <- function(
                 height = 0,
                 alpha  = point_alpha,
                 size   = point_size,
-                color  = unname(plot_colors["blue"])
+                color  = unname(plot_colors[plot_point_color])
               ) +
               ggplot2::geom_hline(
                 yintercept = 0,
@@ -1983,7 +2011,7 @@ residuals_plot <- function(
           ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
             ggplot2::geom_point(
               alpha = point_alpha, size = point_size,
-              color = unname(plot_colors["blue"])
+              color = unname(plot_colors[plot_point_color])
             ) +
             ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
             {
@@ -2228,8 +2256,8 @@ residuals_plot <- function(
         ) +
           ggplot2::geom_histogram(
             bins  = 100,  # fixed for residual_plot()
-            fill  = unname(plot_colors["blue"]),
-            color = unname(plot_colors["blue"]),
+            fill  = unname(plot_colors[plot_point_color]),
+            color = unname(plot_colors[plot_point_color]),
             alpha = plot_shading
           ) +
           ggplot2::labs(
@@ -2380,7 +2408,7 @@ residuals_plot <- function(
             ggplot2::geom_point(
               alpha    = 0.20,
               size     = 1.0,
-              color    = unname(plot_colors["blue"]),
+              color    = unname(plot_colors[plot_point_color]),
               position = ggplot2::position_jitter(width = 0.20, height = 0)
             ) +
             ggplot2::geom_hline(
@@ -2440,23 +2468,24 @@ residuals_plot <- function(
 }
 
 
-# BIVARIATE SCATTER WITH LOESS ----
+# BIVARIATE SCATTER WITH POLYNOMIAL REGRESSION ----
 # Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
-# Handles MI pooling of LOESS smooths or discrete-level means.
+# Handles MI pooling of polynomial regression or discrete-level means.
 # When lines = TRUE, parses CLUSTERID from model@syntax via .get_cluster_id()
 # and draws spaghetti lines using @average_imp (preferred) or first imputation.
 #
 # x_type:
-#   "auto"     = if < 8 unique x -> discrete style, else numeric/LOESS
+#   "auto"     = if < 8 unique x -> discrete style, else numeric/polynomial
 #   "discrete" = always use discrete style (means + line, optional error bars)
-#   "numeric"  = always use numeric style (LOESS)
+#   "numeric"  = always use numeric style (polynomial regression)
 
 bivariate_plot <- function(
     formula, model,
-    span = 0.9, degree = 1, robust = TRUE, level = 0.95,
+    poly_degree = 3,
+    level = 0.95,
     x_type  = c("auto", "discrete", "numeric"),
     point_alpha = 0.15, point_size = 1.2,
-    curve_color = "red", band_fill = "red",
+    curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
     errorbars = FALSE   # show error bars for discrete plots?
@@ -2464,6 +2493,12 @@ bivariate_plot <- function(
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   stopifnot(inherits(formula, "formula"))
   x_type  <- match.arg(x_type)
+  
+  # Validate poly_degree
+  if (!is.numeric(poly_degree) || poly_degree < 1) {
+    stop("poly_degree must be a positive integer")
+  }
+  poly_degree <- as.integer(poly_degree)
   
   ## --- parse y ~ x ----------------------------------------------------------
   tt       <- terms(formula)
@@ -2556,78 +2591,131 @@ bivariate_plot <- function(
   
   ## --- helpers --------------------------------------------------------------
   
-  # Rubin-pooling of LOESS curve (numeric x)
-  loess_pooled <- function(dat_xy) {
+  # Rubin-pooling of polynomial regression (numeric x)
+  polynomial_pooled <- function(dat_xy) {
     fitdat <- dat_xy
-    fam    <- if (robust) "symmetric" else "gaussian"
     if (use_logit) {
       fitdat$y <- clamp01(fitdat$y)
       fitdat$y <- qlogis(fitdat$y)
     } else {
       fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
     }
-    rng_x <- range(fitdat$x, na.rm = TRUE)
-    xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
-    imps  <- split(fitdat, fitdat$imp)
     
+    # Constrain prediction grid to avoid extreme edge explosion
+    # Use 2nd and 98th percentiles with larger buffer
+    rng_x <- range(fitdat$x, na.rm = TRUE)
+    x_quantiles <- stats::quantile(fitdat$x, c(0.02, 0.98), na.rm = TRUE)
+    x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
+    x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
+    xgrid <- seq(x_min, x_max, length.out = 200)
+    
+    imps  <- split(fitdat, fitdat$imp)
+    m     <- length(imps)
+    
+    # Fit polynomial in each imputation
     preds <- lapply(imps, function(d) {
-      d0 <- stats::na.omit(d[, c("y","x")])
-      if (nrow(d0) < 10)
-        return(list(fit = rep(NA_real_, length(xgrid)),
-                    se2 = rep(NA_real_, length(xgrid))))
-      ctl <- stats::loess.control(surface = "interpolate",
-                                  trace.hat = "approximate")
-      fit <- try(
-        suppressWarnings(
-          stats::loess(y ~ x, data = d0,
-                       span = span, degree = degree,
-                       family = fam, control = ctl)
-        ),
-        silent = TRUE
-      )
-      if (inherits(fit, "try-error"))
-        return(list(fit = rep(NA_real_, length(xgrid)),
-                    se2 = rep(NA_real_, length(xgrid))))
-      pr <- try(
-        suppressWarnings(
-          stats::predict(fit, newdata = data.frame(x = xgrid), se = TRUE)
-        ),
-        silent = TRUE
-      )
-      if (inherits(pr, "try-error") || is.null(pr$se.fit))
+      d0 <- stats::na.omit(d[, c("y", "x")])
+      n <- nrow(d0)
+      
+      # Need at least poly_degree+1 points
+      if (n <= poly_degree) {
         return(list(
-          fit = as.numeric(stats::predict(
-            fit, newdata = data.frame(x = xgrid))),
-          se2 = rep(NA_real_, length(xgrid))
+          fit = rep(NA_real_, length(xgrid)),
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
         ))
-      list(fit = as.numeric(pr$fit),
-           se2 = as.numeric(pr$se.fit)^2)
+      }
+      
+      # Fit polynomial
+      fit <- try(
+        stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
+        silent = TRUE
+      )
+      
+      if (inherits(fit, "try-error")) {
+        return(list(
+          fit = rep(NA_real_, length(xgrid)),
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
+        ))
+      }
+      
+      # Get predictions with SEs
+      pred <- try(
+        stats::predict(fit, newdata = data.frame(x = xgrid), 
+                       se.fit = TRUE, interval = "none"),
+        silent = TRUE
+      )
+      
+      if (inherits(pred, "try-error") || is.null(pred$se.fit)) {
+        yhat <- try(
+          stats::predict(fit, newdata = data.frame(x = xgrid)),
+          silent = TRUE
+        )
+        yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
+        return(list(
+          fit = yhat,
+          se = rep(NA_real_, length(xgrid)),
+          df_resid = NA_real_
+        ))
+      }
+      
+      list(
+        fit = as.numeric(pred$fit),
+        se = as.numeric(pred$se.fit),
+        df_resid = pred$df
+      )
     })
     
-    Fmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
-    Wmat <- do.call(cbind, lapply(preds, `[[`, "se2"))
-    keep <- which(colSums(is.finite(Fmat)) > 0)
-    if (!length(keep))
-      return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
-    Fmat <- Fmat[, keep, drop = FALSE]
-    Wmat <- Wmat[, keep, drop = FALSE]
-    m    <- ncol(Fmat)
+    # Extract predictions and SEs
+    Qmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+    Umat <- do.call(cbind, lapply(preds, `[[`, "se"))^2  # Variance
+    df_resids <- sapply(preds, `[[`, "df_resid")
     
-    mean_fit <- rowMeans(Fmat, na.rm = TRUE)
-    W        <- rowMeans(Wmat, na.rm = TRUE)
-    B        <- apply(Fmat, 1, stats::var, na.rm = TRUE); B[!is.finite(B)] <- 0
-    Tvar     <- W + (1 + 1/m) * B
-    tcrit    <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
-    seTot    <- sqrt(pmax(0, Tvar))
+    # Remove failed imputations
+    keep <- which(colSums(is.finite(Qmat)) > 0)
+    if (!length(keep)) {
+      return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
+    }
+    
+    Qmat <- Qmat[, keep, drop = FALSE]
+    Umat <- Umat[, keep, drop = FALSE]
+    df_resids <- df_resids[keep]
+    m <- ncol(Qmat)
+    
+    # Rubin's pooling
+    Q_bar <- rowMeans(Qmat, na.rm = TRUE)
+    U_bar <- rowMeans(Umat, na.rm = TRUE)
+    B <- apply(Qmat, 1, stats::var, na.rm = TRUE)
+    B[!is.finite(B)] <- 0
+    
+    # Total variance
+    T_total <- U_bar + (1 + 1/m) * B
+    
+    # Degrees of freedom (Barnard-Rubin)
+    lambda <- (1 + 1/m) * B / pmax(T_total, 1e-10)
+    lambda <- pmin(lambda, 0.99)
+    
+    df_obs <- mean(df_resids, na.rm = TRUE)
+    if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
+    
+    df_old <- (m - 1) / pmax(lambda^2, 1e-10)
+    df_adj <- (df_obs * df_old) / (df_obs + df_old)
+    df_adj <- pmax(df_adj, 1)
+    
+    tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
+    se_total <- sqrt(pmax(T_total, 0))
+    
+    mean_fit <- Q_bar
     
     if (use_logit) {
       mu  <- inv_logit(mean_fit)
-      lwr <- inv_logit(mean_fit - tcrit * seTot)
-      upr <- inv_logit(mean_fit + tcrit * seTot)
+      lwr <- inv_logit(mean_fit - tcrit * se_total)
+      upr <- inv_logit(mean_fit + tcrit * se_total)
     } else {
       mu  <- mean_fit
-      lwr <- mean_fit - tcrit * seTot
-      upr <- mean_fit + tcrit * seTot
+      lwr <- mean_fit - tcrit * se_total
+      upr <- mean_fit + tcrit * se_total
     }
     data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
   }
@@ -2727,7 +2815,7 @@ bivariate_plot <- function(
         height = 0,
         alpha  = point_alpha,
         size   = point_size,
-        color  = unname(plot_colors["blue"])
+        color  = unname(plot_colors[plot_point_color])
       ) +
       {
         if (errorbars) {
@@ -2776,9 +2864,9 @@ bivariate_plot <- function(
       )
     
   } else {
-    # Numeric plot: points (+ optional spaghetti) + LOESS curve + ribbon.
+    # Numeric plot: points (+ optional spaghetti) + polynomial curve + ribbon.
     
-    curve_df <- loess_pooled(df)
+    curve_df <- polynomial_pooled(df)
     
     p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
     
@@ -2795,12 +2883,12 @@ bivariate_plot <- function(
         )
     }
     
-    # points + LOESS
+    # points + polynomial regression
     p <- p +
       ggplot2::geom_point(
         alpha = point_alpha,
         size  = point_size,
-        color = unname(plot_colors["blue"])
+        color = unname(plot_colors[plot_point_color])
       ) +
       ggplot2::geom_ribbon(
         data        = curve_df,
@@ -2818,7 +2906,7 @@ bivariate_plot <- function(
       ) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
-        title = paste0("Bivariate Plot with LOESS Over ", n_imps,
+        title = paste0("Bivariate Plot Over ", n_imps,
                        " Imputed Data Sets: ", y_name, " vs. ", x_name),
         x = x_name, y = y_name
       ) +

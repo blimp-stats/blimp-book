@@ -44,10 +44,10 @@ posterior_plot(model1,'turnover')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot individual-level predicted probabilities
-bivariate_plot(model1, turnover.1.probability ~ lmx)
-bivariate_plot(model1, turnover.1.probability ~ male)
-bivariate_plot(model1, turnover.1.probability ~ lmx.mean[team])
-bivariate_plot(model1, turnover.1.probability ~ climate)
+bivariate_plot(turnover.1.probability ~ lmx, model1)
+bivariate_plot(turnover.1.probability ~ male, model1)
+bivariate_plot(turnover.1.probability ~ lmx.mean[team], model1)
+bivariate_plot(turnover.1.probability ~ climate, model1)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model1)
@@ -82,10 +82,10 @@ posterior_plot(model2,'turnover')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot individual-level predicted probabilities
-bivariate_plot(model2, turnover.1.probability ~ lmx)
-bivariate_plot(model2, turnover.1.probability ~ male)
-bivariate_plot(model2, turnover.1.probability ~ lmx.mean[team])
-bivariate_plot(model2, turnover.1.probability ~ climate)
+bivariate_plot(turnover.1.probability ~ lmx, model2)
+bivariate_plot(turnover.1.probability ~ male, model2)
+bivariate_plot(turnover.1.probability ~ lmx.mean[team], model2)
+bivariate_plot(turnover.1.probability ~ climate, model2)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model2)

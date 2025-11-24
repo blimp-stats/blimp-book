@@ -36,9 +36,9 @@ posterior_plot(model1,'turnover')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot individual-level predicted probabilities
-bivariate_plot(model1, turnover.1.probability ~ lmx)
-bivariate_plot(model1, turnover.1.probability ~ empower)
-bivariate_plot(model1, turnover.1.probability ~ male)
+bivariate_plot(turnover.1.probability ~ lmx, model1)
+bivariate_plot(turnover.1.probability ~ empower, model1)
+bivariate_plot(turnover.1.probability ~ male, model1)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model1)

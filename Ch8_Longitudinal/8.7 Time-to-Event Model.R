@@ -48,7 +48,7 @@ posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(model1, dropout.1.probability ~ week)
+bivariate_plot(dropout.1.probability ~ week, model1)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model1)
@@ -77,7 +77,7 @@ posterior_plot(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(model2, dropout.1.probability ~ week)
+bivariate_plot(dropout.1.probability ~ week, model2)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model2)
@@ -106,7 +106,7 @@ posterior_plot(model3)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(model3, dropout.1.probability ~ week)
+bivariate_plot(dropout.1.probability ~ week, model3)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model3)

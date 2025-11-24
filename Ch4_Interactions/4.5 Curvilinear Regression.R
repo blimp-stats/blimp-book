@@ -45,5 +45,5 @@ imputed_vs_observed_plot(model)
 residuals_plot(model)
 
 # plot predicted values against curvilinear predictor
-bivariate_plot(model, mathpost.predicted ~ anxiety)
+bivariate_plot(mathpost.predicted ~ anxiety, model)
 
