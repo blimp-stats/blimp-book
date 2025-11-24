@@ -1,5 +1,5 @@
 # BRIAN NOTES ----
-# any way to easily identify columns of iterations matrix?
+# any way to easily identify columns of iterations matrix? transpose matrix and give same row names as @estimates?
 # want to construct wald test of residual correlations among indicators, or all residual correlations
 
 # LATENT VARIABLE WITH NORMAL INDICATORS
@@ -20,9 +20,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
-# FIT MODEL ----
+# FIT STRUCTURAL REGRESSION MODEL ----
 
-# normal indicators with first loading fixed to 1
+# first loading fixed to 1
 model1 <- rblimp(
   data = inflamm,
   latent = 'inflam',
@@ -38,13 +38,13 @@ model1 <- rblimp(
 # print output
 output(model1)
 
-# normal indicators with factor variance fixed to 1
+# factor variance fixed to 1
 model2 <- rblimp(
   data = inflamm,
   latent = 'inflam',
   model = '
     structural:
-    yjt(dpdd - 6) ~ inflam;
+    yjt(dpdd - 6) ~ inflam female els age;
     measurement:
     inflam@1;
     inflam -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn;',
@@ -56,26 +56,22 @@ model2 <- rblimp(
 # print output
 output(model2)
 
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+# FIT MODEL WITH COVARIATES ----
 
-bivariate_plot(inflam_crp ~ inflam.latent, model2)
-bivariate_plot(inflam_il6 ~ inflam.latent, model2)
-bivariate_plot(inflam_tnf ~ inflam.latent, model2)
-bivariate_plot(inflam_ifn ~ inflam.latent, model2)
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
-
-# normal indicators with factor variance fixed to 1
+# correlate latent and manifest predictors
 model3 <- rblimp(
   data = inflamm,
-  nominal = 'female els',
+  ordinal = 'female els',
   latent = 'inflam',
+  center = 'age',
   model = '
+    structural:
+    yjt(dpdd - 6) ~ inflam female els age;
+    measurement:
     inflam@1;
-    inflam -> yjt(inflam_crp)@lo1 yjt(inflam_il6) inflam_tnf yjt(inflam_ifn);', 
+    inflam -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn;
+    predictors:
+    inflam female els age ~~ inflam female els age;',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -84,12 +80,37 @@ model3 <- rblimp(
 # print output
 output(model3)
 
+# link latent and manifest predictors with regression
+model4 <- rblimp(
+  data = inflamm,
+  nominal = 'female els',
+  latent = 'inflam',
+  center = 'age',
+  model = '
+    structural:
+    yjt(dpdd - 6) ~ inflam female els age;
+    measurement:
+    inflam@1;
+    inflam -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn;
+    predictors:
+    inflam ~ female els age;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# print output
+output(model4)
+
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
+bivariate_plot(inflam_crp ~ inflam.latent, model3)
 bivariate_plot(inflam_il6 ~ inflam.latent, model3)
+bivariate_plot(inflam_tnf ~ inflam.latent, model3)
+bivariate_plot(inflam_ifn ~ inflam.latent, model3)
+bivariate_plot(yjt(dpdd-6) ~ inflam_crp.residual, model3)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model3)
 imputed_vs_observed_plot(model3)
 residuals_plot(model3)
-

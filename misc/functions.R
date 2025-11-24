@@ -1952,60 +1952,25 @@ residuals_plot <- function(
           }
           
         } else {
-          # ---- NUMERIC STYLE: LOESS / polynomial + ribbon (same as before) ----
+          # ---- NUMERIC STYLE: polynomial + ribbon ----
           if (!is.numeric(df$x)) {
             message("Skipping non-numeric predictor: ", xname)
             return(NULL)
           }
           
-          if (tolower(smoother) == "loess") {
-            curve_df <- loess_pooled(df, span, level,
-                                     center_by_imp, winsor_fit, winsor_k, robust)
-            if (support == "quantile") {
-              pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
-              curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
-            } else {
-              xr <- range(df$x, na.rm = TRUE)
-              win <- window_prop * diff(xr)
-              min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
-              counts <- vapply(
-                curve_df$x,
-                function(x0) sum(abs(df$x - x0) <= win / 2),
-                integer(1)
-              )
-              curve_df <- curve_df[counts >= min_n, , drop = FALSE]
-            }
+          # Fit polynomial with proper Rubin's pooling
+          curve_df <- polynomial_pooled(df, poly_degree, level, center_by_imp, winsor_fit, winsor_k)
+          
+          # Apply support trimming
+          if (support == "quantile") {
+            pr <- stats::quantile(df$x, c(trim_prop, 1 - trim_prop), na.rm = TRUE)
+            curve_df <- subset(curve_df, x >= pr[1] & x <= pr[2])
           } else {
-            rng_x <- range(df$x, na.rm = TRUE)
-            xgrid <- seq(rng_x[1], rng_x[2], length.out = 200)
-            imps  <- split(df, df$imp)
-            coef_mat <- lapply(imps, function(d) {
-              dd <- stats::na.omit(d[, c("y", "x")])
-              if (nrow(dd) < degree + 1) return(rep(NA_real_, degree + 1))
-              fit <- try(
-                stats::lm(y ~ stats::poly(x, degree = degree, raw = TRUE), data = dd),
-                silent = TRUE
-              )
-              if (inherits(fit, "try-error")) return(rep(NA_real_, degree + 1))
-              stats::coef(fit)
-            })
-            coef_mat <- do.call(rbind, coef_mat)
-            coef_mat <- coef_mat[stats::complete.cases(coef_mat), , drop = FALSE]
-            if (!nrow(coef_mat)) {
-              curve_df <- data.frame(x = xgrid, mean = 0, lwr = NA, upr = NA)
-            } else {
-              beta <- colMeans(coef_mat)
-              yhat <- beta[1] + sapply(
-                xgrid,
-                function(x) sum(beta[-1] * x^(seq_along(beta[-1])))
-              )
-              curve_df <- data.frame(
-                x    = xgrid,
-                mean = as.numeric(yhat),
-                lwr  = NA,
-                upr  = NA
-              )
-            }
+            xr <- range(df$x, na.rm = TRUE)
+            win <- window_prop * diff(xr)
+            min_n <- max(10L, ceiling(min_n_prop * nrow(df)))
+            counts <- vapply(curve_df$x, function(x0) sum(abs(df$x - x0) <= win/2), integer(1))
+            curve_df <- curve_df[counts >= min_n, , drop = FALSE]
           }
           
           ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
@@ -2505,7 +2470,8 @@ bivariate_plot <- function(
   vars_raw <- attr(tt, "variables")  # ~, lhs, rhs
   if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
   
-  lhs        <- as.character(vars_raw[[2]])
+  # Use deparse to preserve exact syntax
+  lhs        <- deparse(vars_raw[[2]])
   rhs_labels <- attr(tt, "term.labels")
   if (length(rhs_labels) != 1L) stop("Formula must be like y ~ x.")
   
@@ -2517,10 +2483,36 @@ bivariate_plot <- function(
     stop("@imputations must be a non-empty list of data frames")
   cols1 <- names(model@imputations[[1]])
   
-  if (!all(c(y_name, x_name) %in% cols1))
+  # Try to match variable names, handling spacing differences
+  # deparse() adds spaces around operators, but column names may not have them
+  y_match <- y_name
+  x_match <- x_name
+  
+  if (!y_name %in% cols1) {
+    # Try removing spaces around operators
+    y_no_spaces <- gsub("\\s+", "", y_name)
+    if (y_no_spaces %in% cols1) {
+      y_match <- y_no_spaces
+    }
+  }
+  
+  if (!x_name %in% cols1) {
+    # Try removing spaces around operators
+    x_no_spaces <- gsub("\\s+", "", x_name)
+    if (x_no_spaces %in% cols1) {
+      x_match <- x_no_spaces
+    }
+  }
+  
+  if (!all(c(y_match, x_match) %in% cols1))
     stop("Both '", y_name, "' and '", x_name,
          "' must exist in @imputations data. Available columns are:\n",
          paste(cols1, collapse = ", "))
+  
+  # Use the matched names for data extraction
+  y_name <- y_match
+  x_name <- x_match
+  
   
   df <- .stack_cols(model, y_name, x_name)
   df <- stats::na.omit(df[, c("x","y","imp")])
