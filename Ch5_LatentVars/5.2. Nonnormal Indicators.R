@@ -53,3 +53,27 @@ distribution_plot(model)
 imputed_vs_observed_plot(model)
 residuals_plot(model)
 
+test <- rblimp(
+  data = inflamm,
+  ordinal = 'female els',
+  latent = 'inflam',
+  # fixed = 'female age',
+  center = 'age',
+  model = '
+    structural:
+    yjt(dpdd - 6) ~ inflam female els age inflam*female;
+    # dpdd ~ inflam female els age inflam*female;
+    measurement:
+    inflam@1;
+    inflam -> yjt(inflam_crp)@lo1 yjt(inflam_il6) inflam_tnf yjt(inflam_ifn);;
+    predictors:
+    inflam female els age ~~ inflam female els age;',
+  simple = 'inflam | female',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# print output
+output(test)
+simple_plot(yjt(dpdd-6) ~ inflam | female, test)

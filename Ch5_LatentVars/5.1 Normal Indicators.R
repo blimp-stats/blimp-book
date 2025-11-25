@@ -38,6 +38,9 @@ model1 <- rblimp(
 # print output
 output(model1)
 
+# plot parameter distributions
+posterior_plot(model1)
+
 # factor variance fixed to 1
 model2 <- rblimp(
   data = inflamm,
@@ -55,6 +58,9 @@ model2 <- rblimp(
 
 # print output
 output(model2)
+
+# plot parameter distributions
+posterior_plot(model2)
 
 # FIT MODEL WITH COVARIATES ----
 
@@ -81,6 +87,9 @@ model3 <- rblimp(
 # print output
 output(model3)
 
+# plot parameter distributions
+posterior_plot(model3)
+
 # link latent and manifest predictors with regression
 model4 <- rblimp(
   data = inflamm,
@@ -103,6 +112,9 @@ model4 <- rblimp(
 
 # print output
 output(model4)
+
+# plot parameter distributions
+posterior_plot(model4)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
