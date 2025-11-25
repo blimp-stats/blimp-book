@@ -44,7 +44,7 @@ model2 <- rblimp(
   latent = 'inflam',
   model = '
     structural:
-    yjt(dpdd - 6) ~ inflam female els age;
+    yjt(dpdd - 6) ~ inflam;
     measurement:
     inflam@1;
     inflam -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn;',
@@ -63,6 +63,7 @@ model3 <- rblimp(
   data = inflamm,
   ordinal = 'female els',
   latent = 'inflam',
+  # fixed = 'female age',
   center = 'age',
   model = '
     structural:
@@ -85,6 +86,7 @@ model4 <- rblimp(
   data = inflamm,
   nominal = 'female els',
   latent = 'inflam',
+  # fixed = 'female age',
   center = 'age',
   model = '
     structural:
@@ -108,7 +110,6 @@ bivariate_plot(inflam_crp ~ inflam.latent, model3)
 bivariate_plot(inflam_il6 ~ inflam.latent, model3)
 bivariate_plot(inflam_tnf ~ inflam.latent, model3)
 bivariate_plot(inflam_ifn ~ inflam.latent, model3)
-bivariate_plot(yjt(dpdd-6) ~ inflam_crp.residual, model3)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model3)

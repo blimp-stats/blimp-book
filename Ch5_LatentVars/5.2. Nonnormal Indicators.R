@@ -23,6 +23,7 @@ model <- rblimp(
   data = inflamm,
   ordinal = 'female els',
   latent = 'inflam',
+  # fixed = 'female age',
   center = 'age',
   model = '
     structural:
@@ -42,7 +43,7 @@ output(model)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(inflam_crp ~ inflam.latent, model)
+bivariate_plot(yjt(inflam_crp) ~ inflam.latent, model)
 bivariate_plot(inflam_il6 ~ inflam.latent, model)
 bivariate_plot(inflam_tnf ~ inflam.latent, model)
 bivariate_plot(inflam_ifn ~ inflam.latent, model)

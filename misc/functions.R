@@ -1301,12 +1301,14 @@ residuals_plot <- function(
         ggplot2::geom_hline(yintercept = 0, color = "black", linewidth = 1.2) +
         {
           if (ci && "lwr" %in% names(curve_df) && nrow(curve_df))
-            ggplot2::geom_ribbon(
-              data = curve_df,
-              ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-              inherit.aes = FALSE,
-              fill = band_col,
-              alpha = band_alpha
+            suppressWarnings(
+              ggplot2::geom_ribbon(
+                data = curve_df,
+                ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+                inherit.aes = FALSE,
+                fill = band_col,
+                alpha = band_alpha
+              )
             ) else NULL
         } +
         ggplot2::geom_line(
@@ -1982,12 +1984,14 @@ residuals_plot <- function(
             {
               if (ci && exists("curve_df") &&
                   "lwr" %in% names(curve_df) && nrow(curve_df))
-                ggplot2::geom_ribbon(
-                  data = curve_df,
-                  ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-                  inherit.aes = FALSE,
-                  fill = band_col,
-                  alpha = band_alpha
+                suppressWarnings(
+                  ggplot2::geom_ribbon(
+                    data = curve_df,
+                    ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+                    inherit.aes = FALSE,
+                    fill = band_col,
+                    alpha = band_alpha
+                  )
                 ) else NULL
             } +
             {
@@ -2470,13 +2474,12 @@ bivariate_plot <- function(
   vars_raw <- attr(tt, "variables")  # ~, lhs, rhs
   if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
   
-  # Use deparse to preserve exact syntax
-  lhs        <- deparse(vars_raw[[2]])
-  rhs_labels <- attr(tt, "term.labels")
-  if (length(rhs_labels) != 1L) stop("Formula must be like y ~ x.")
+  # Use deparse to preserve exact syntax for both sides
+  lhs <- deparse(vars_raw[[2]])
+  rhs <- deparse(vars_raw[[3]])
   
   y_name <- lhs
-  x_name <- rhs_labels[1]
+  x_name <- rhs
   
   ## --- checks & stack main MI data ------------------------------------------
   if (!is.list(model@imputations) || !length(model@imputations))
@@ -2882,12 +2885,14 @@ bivariate_plot <- function(
         size  = point_size,
         color = unname(plot_colors[plot_point_color])
       ) +
-      ggplot2::geom_ribbon(
-        data        = curve_df,
-        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-        inherit.aes = FALSE,
-        fill        = unname(plot_colors[band_fill]),
-        alpha       = plot_shading
+      suppressWarnings(
+        ggplot2::geom_ribbon(
+          data        = curve_df,
+          ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+          inherit.aes = FALSE,
+          fill        = unname(plot_colors[band_fill]),
+          alpha       = plot_shading
+        )
       ) +
       ggplot2::geom_line(
         data        = curve_df,
