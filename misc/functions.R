@@ -800,81 +800,86 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
   invisible(plots)
 }
 
-# OBSERVED VS. IMPUTED ----
-# If 'bins' is NULL, choose bin count adaptively based on unique values.
-# If non-NULL, the user-specified number of bins is used verbatim.
+# IMPUTATION QUALITY VISUALIZATION ----
+# Shows distribution of observed vs. imputed values to assess imputation quality.
+# Uses unified visual style: observed (blue filled) vs imputed (red outlined).
+# Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
-imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL,
-                                     observed_fill = "blue", imputed_line = "red",
-                                     font_size = 14) {
+imputation_plot <- function(
+    model,
+    vars = NULL,
+    discrete_vars = NULL,
+    bins = 30,
+    font_size = 14
+) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be non-empty")
   if (is.null(model@variance_imp))
     stop("@variance_imp not found on model object")
-  if (!observed_fill %in% names(plot_colors) || !imputed_line %in% names(plot_colors))
-    stop("observed_fill and imputed_line must be names in plot_colors: ",
-         paste(names(plot_colors), collapse = ", "))
   
-  # ---- figure out which variables are eligible ----
+  # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
+  if (is.null(discrete_vars)) {
+    discrete_vars <- .get_categorical_vars(model)
+  }
+  
+  # ---- Determine which variables to plot ----
   vars_imp1   <- names(model@imputations[[1]])
   vars_varimp <- names(model@variance_imp)
   vars_all    <- intersect(vars_varimp, vars_imp1)
   
-  # drop derived columns; we only want the "base" variables
+  # Exclude derived columns (.latent, .residual, .predicted, .probability)
   derived_pattern <- "\\.(latent|residual|predicted|probability)$"
   vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
   
-  # special rule: do NOT make observed-vs-imputed plots for yjt(...) variables
+  # Exclude yjt(...) transformed variables
   is_yjt <- grepl("^yjt\\(", vars_base)
   if (any(is_yjt)) {
-    message("Skipping yjt(...) variables for observed vs. imputed plots: ",
-            paste(vars_base[is_yjt], collapse = ", "))
+    message("Skipping yjt(...) variables: ", paste(vars_base[is_yjt], collapse = ", "))
   }
-  vars_base_noyjt <- vars_base[!is_yjt]
+  vars_base <- vars_base[!is_yjt]
   
-  if (is.null(var)) {
-    # use robust MODEL parser
+  if (is.null(vars)) {
+    # Auto: use variables from MODEL section
     model_vars <- .extract_model_vars(model)
-    # exact name matching to avoid age/cigage problems
-    var <- intersect(vars_base_noyjt, model_vars)
-    if (!length(var))
-      stop("No matching variables found that are both in the MODEL section and in @variance_imp/@imputations.")
-    message("Plotting variables with observed values from MODEL section: ",
-            paste(var, collapse = ", "))
+    vars <- intersect(vars_base, model_vars)
+    if (!length(vars))
+      stop("No matching variables found in MODEL section with imputation data.")
+    message("Plotting variables: ", paste(vars, collapse = ", "))
   } else {
-    # user-specified vars: check they exist in base set
-    missing_vars <- setdiff(var, vars_base)
+    # User-specified: validate they exist
+    missing_vars <- setdiff(vars, vars_base)
     if (length(missing_vars)) {
-      stop("Variable(s) not found as base variables in @variance_imp/@imputations: ",
-           paste(missing_vars, collapse = ", "))
+      stop("Variable(s) not found: ", paste(missing_vars, collapse = ", "))
     }
   }
   
-  obs_col <- unname(plot_colors[observed_fill])
-  imp_col <- unname(plot_colors[imputed_line])
+  obs_col <- unname(plot_colors["blue"])
+  imp_col <- unname(plot_colors["red"])
   n_imps  <- length(model@imputations)
   
-  # inner builder: bins_arg is the outer 'bins'
-  build_one <- function(v, bins_arg) {
-    # extra guard: never plot yjt(...) even if explicitly requested
+  # Build plot for one variable
+  build_one <- function(v) {
+    # Skip yjt(...) variables
     if (grepl("^yjt\\(", v)) {
-      message("Skipping yjt-derived variable in observed vs. imputed plot: ", v)
+      message("Skipping yjt variable: ", v)
       return(NULL)
     }
     
     vimp <- model@variance_imp[[v]]
     if (is.null(vimp)) {
-      message("Skipping variable with no variance_imp information: ", v)
+      message("Skipping variable with no variance_imp: ", v)
       return(NULL)
     }
     
-    # BLIMP convention: nonzero finite entries indicate missing/imputed values
+    # BLIMP convention: nonzero finite entries indicate missing/imputed
     miss_idx <- is.finite(vimp) & (vimp != 0)
     
     obs_vals <- model@imputations[[1]][[v]][!miss_idx]
-    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]), use.names = FALSE)
+    imp_vals <- unlist(lapply(model@imputations, function(d) d[[v]][miss_idx]), 
+                       use.names = FALSE)
     
+    # Validate data
     if (!length(obs_vals) || all(is.na(obs_vals))) {
       message("Skipping variable with no observed data: ", v)
       return(NULL)
@@ -891,105 +896,160 @@ imputed_vs_observed_plot <- function(model, var = NULL, bins = NULL, main = NULL
     obs_vals <- obs_vals[is.finite(obs_vals)]
     imp_vals <- imp_vals[is.finite(imp_vals)]
     if (!length(obs_vals) || !length(imp_vals)) {
-      message("Skipping variable with no finite observed/imputed data: ", v)
+      message("Skipping variable with no finite data: ", v)
       return(NULL)
     }
     
-    # Decide discrete vs. continuous based on support of the observed data.
-    # We don't want high-resolution bins when the original scale had few values.
-    n_unique_obs <- length(unique(obs_vals))
+    # Determine if discrete
+    is_discrete <- v %in% discrete_vars
     
-    title_text <- if (is.null(main))
-      paste0("Observed vs. Imputed Scores Over ", n_imps, " Imputed Data Sets: ", v)
-    else main
+    # Create unified data frame
+    df <- data.frame(
+      value = c(obs_vals, imp_vals),
+      type = factor(c(rep("Observed", length(obs_vals)),
+                      rep("Imputed", length(imp_vals))),
+                    levels = c("Observed", "Imputed"))
+    )
     
-    ## Case 1: low-support numeric -> treat as discrete (bar chart of counts)
-    if (n_unique_obs <= 10L) {
-      levs <- sort(unique(c(obs_vals, imp_vals)))
-      df_disc <- rbind(
-        data.frame(x = factor(obs_vals, levels = levs), grp = "Observed"),
-        data.frame(x = factor(imp_vals, levels = levs), grp = "Imputed")
-      )
+    title_text <- paste0("Imputation Quality Over ", n_imps, " Imputations: ", v)
+    
+    if (is_discrete) {
+      # Discrete: bar chart with categorical X
+      levs <- sort(unique(df$value))
+      df$value <- factor(df$value, levels = levs)
       
-      ggplot2::ggplot(df_disc, ggplot2::aes(x = x, fill = grp)) +
-        ggplot2::geom_bar(position = "dodge", alpha = plot_shading) +
-        ggplot2::scale_fill_manual(
-          values = c(Observed = obs_col, Imputed = imp_col),
-          drop   = TRUE
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = value)) +
+        # Observed: blue filled bars
+        ggplot2::geom_bar(
+          data = subset(df, type == "Observed"),
+          fill = obs_col,
+          alpha = plot_shading
+        ) +
+        # Imputed: red outlined bars
+        ggplot2::stat_count(
+          data = subset(df, type == "Imputed"),
+          geom = "bar",
+          fill = NA,
+          color = imp_col,
+          linewidth = 1.2
         ) +
         ggplot2::labs(
           title = title_text,
-          x     = v,
-          y     = "Count",
-          fill  = NULL
+          x = v,
+          y = "Count"
         ) +
         blimp_theme(font_size)
       
     } else {
-      ## Case 2: more continuous -> overlay density histograms with adaptive bins
-      x_all <- c(obs_vals, imp_vals)
-      rng   <- range(x_all, na.rm = TRUE)
-      span  <- diff(rng)
-      if (!is.finite(span) || span <= 0) span <- 1
+      # Continuous: histogram with numeric X
+      rng <- range(df$value, na.rm = TRUE)
       
-      # If user supplied bins, respect that; otherwise adapt based on support
-      if (!is.null(bins_arg)) {
-        bins_use <- as.integer(bins_arg)
+      # Check if observed values are integers (using original obs_vals)
+      is_integer <- all(abs(obs_vals - round(obs_vals)) < 1e-6, na.rm = TRUE)
+      
+      if (is_integer) {
+        # Integer data: one bin per integer value
+        binwidth <- 1
+        boundary <- floor(min(obs_vals, na.rm = TRUE)) - 0.5
       } else {
-        n_unique_all <- length(unique(x_all))
-        bins_use <- as.integer(round(sqrt(n_unique_all) * 1.5))
-        bins_use <- max(15L, min(40L, bins_use))
+        # Continuous data: use bins parameter
+        binwidth <- diff(rng) / bins
+        boundary <- rng[1]
       }
       
-      binwidth <- span / bins_use
-      boundary <- rng[1]
+      # Compute max density for proper Y-axis scaling
+      obs_hist <- hist(obs_vals, breaks = seq(boundary, max(c(obs_vals, imp_vals), na.rm = TRUE) + binwidth, by = binwidth), plot = FALSE)
+      imp_hist <- hist(imp_vals, breaks = seq(boundary, max(c(obs_vals, imp_vals), na.rm = TRUE) + binwidth, by = binwidth), plot = FALSE)
       
-      df_obs <- data.frame(x = obs_vals, grp = "Observed")
-      df_imp <- data.frame(x = imp_vals, grp = "Imputed")
+      obs_density <- obs_hist$counts / (length(obs_vals) * binwidth)
+      imp_density <- imp_hist$counts / (length(imp_vals) * binwidth)
       
-      ggplot2::ggplot() +
+      max_density <- max(c(obs_density, imp_density), na.rm = TRUE)
+      y_upper <- max_density * 1.1  # Add 10% padding
+      
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = value)) +
+        # Observed: blue filled histogram (density)
         ggplot2::geom_histogram(
-          data = df_obs,
-          ggplot2::aes(x = x, y = ggplot2::after_stat(density), fill = grp),
-          binwidth = binwidth, boundary = boundary,
-          color    = obs_col, alpha = plot_shading
+          data = subset(df, type == "Observed"),
+          ggplot2::aes(y = ggplot2::after_stat(density)),
+          binwidth = binwidth,
+          boundary = boundary,
+          fill = obs_col,
+          alpha = plot_shading
         ) +
+        # Imputed: red outlined histogram (density)
         ggplot2::geom_histogram(
-          data = df_imp,
-          ggplot2::aes(x = x, y = ggplot2::after_stat(density), color = grp),
-          binwidth = binwidth, boundary = boundary,
-          fill     = NA, linewidth = 1.2
+          data = subset(df, type == "Imputed"),
+          ggplot2::aes(y = ggplot2::after_stat(density)),
+          binwidth = binwidth,
+          boundary = boundary,
+          fill = NA,
+          color = imp_col,
+          linewidth = 1.2
         ) +
-        ggplot2::coord_cartesian(xlim = rng) +
+        ggplot2::coord_cartesian(xlim = rng, ylim = c(0, y_upper)) +
         ggplot2::labs(
           title = title_text,
-          x     = v, y = NULL,
-          fill  = NULL, color = NULL
+          x = v,
+          y = "Density"
         ) +
-        ggplot2::scale_fill_manual(
-          values = c(Observed = obs_col),
-          drop   = TRUE
-        ) +
-        ggplot2::scale_color_manual(
-          values = c(Imputed = imp_col),
-          drop   = TRUE
-        ) +
-        ggplot2::guides(
-          fill  = ggplot2::guide_legend(
-            order = 1,
-            override.aes = list(color = obs_col, alpha = plot_shading)
-          ),
-          color = ggplot2::guide_legend(
-            order = 2,
-            override.aes = list(fill = NA, linewidth = 1.2)
-          )
-        ) +
-        blimp_theme(font_size)
+        ggplot2::theme_minimal(base_size = font_size) +
+        ggplot2::theme(
+          panel.grid.major = ggplot2::element_blank(),
+          panel.grid.minor = ggplot2::element_blank(),
+          axis.text.x = ggplot2::element_text(size = font_size),
+          axis.title.x = ggplot2::element_text(size = font_size, margin = ggplot2::margin(t = 12)),
+          axis.text.y = ggplot2::element_text(size = font_size),
+          axis.title.y = ggplot2::element_text(size = font_size),
+          plot.title = ggplot2::element_text(hjust = 0.5, face = "bold", size = font_size + 2)
+        )
     }
+    
+    # Add simple legend
+    # Manual legend using dummy aesthetics
+    legend_df <- data.frame(
+      type = c("Observed", "Imputed"),
+      x = 1,
+      y = 1
+    )
+    
+    p <- p +
+      ggplot2::geom_point(
+        data = legend_df,
+        ggplot2::aes(x = x, y = y, fill = type, color = type),
+        size = 0,
+        alpha = 0
+      ) +
+      ggplot2::scale_fill_manual(
+        name = NULL,
+        values = c(Observed = obs_col, Imputed = NA),
+        labels = c("Observed", "Imputed"),
+        guide = ggplot2::guide_legend(
+          override.aes = list(
+            fill = c(obs_col, NA),
+            color = c(obs_col, imp_col),
+            alpha = c(plot_shading, 1),
+            linewidth = c(0, 1.2),
+            size = 3,
+            shape = 15
+          )
+        )
+      ) +
+      ggplot2::scale_color_manual(
+        values = c(Observed = obs_col, Imputed = imp_col),
+        guide = "none"
+      ) +
+      ggplot2::theme(
+        legend.position = "top",
+        legend.justification = "left"
+      )
+    
+    p
   }
   
-  plots <- setNames(lapply(var, build_one, bins_arg = bins), var)
-  for (p in plots) if (!is.null(p)) print(p)
+  plots <- setNames(lapply(vars, build_one), vars)
+  plots <- plots[!sapply(plots, is.null)]
+  for (p in plots) print(p)
   invisible(plots)
 }
 
@@ -2506,11 +2566,13 @@ residuals_plot <- function(
 #
 # discrete_x:
 #   Character vector of variable names that should use discrete plot style
-#   (jittered points, means with ribbon, connecting line). If NULL (default),
-#   all variables use numeric/polynomial style. Only affects X variables.
+#   (jittered points, means with error bars, connecting line).
+#   If NULL (default), automatically populated from ORDINAL/NOMINAL declarations
+#   in model@syntax. Set to character(0) to disable auto-detection and force
+#   all variables to use numeric/polynomial style. Only affects X variables.
 #
 # Visual styles:
-#   Discrete: Blue jittered points + red line connecting means + red ribbon
+#   Discrete: Blue jittered points + red line connecting means + red error bars + red dots
 #   Numeric:  Blue scatter points + red polynomial curve + red ribbon
 #   Both use same color scheme for visual consistency.
 
@@ -2532,6 +2594,11 @@ bivariate_plot <- function(
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   standardize <- match.arg(standardize)
+  
+  # Auto-populate discrete_x from ORDINAL/NOMINAL if not provided
+  if (is.null(discrete_x)) {
+    discrete_x <- .get_categorical_vars(model)
+  }
   
   # Validate poly_degree
   if (!is.numeric(poly_degree) || poly_degree < 1) {
@@ -3095,6 +3162,11 @@ bivariate_plot <- function(
     print = TRUE
 ) {
   standardize <- match.arg(standardize)
+  
+  # Auto-populate discrete_x from ORDINAL/NOMINAL if not provided
+  if (is.null(discrete_x)) {
+    discrete_x <- .get_categorical_vars(model)
+  }
   
   # Determine which pairs to create
   if (!is.null(vars)) {
