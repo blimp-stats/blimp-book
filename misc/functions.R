@@ -651,15 +651,19 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 }
 
 
-# IMPUTATION HISTOGRAM(S) ----
-# If 'bins' is NULL, choose bin count adaptively based on unique values.
-# If non-NULL, the user-specified number of bins is used verbatim.
+# UNIVARIATE DISTRIBUTION PLOTS ----
+# Shows distribution of variables across imputed datasets.
+# Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
-distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
-                              fill_color = "blue", font_size = 14) {
+univariate_plot <- function(model, vars = NULL, discrete_vars = NULL, 
+                            bins = 30, font_size = 14) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
-  if (!fill_color %in% names(plot_colors)) stop("fill_color must be one of: ", paste(names(plot_colors), collapse = ", "))
+  
+  # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
+  if (is.null(discrete_vars)) {
+    discrete_vars <- .get_categorical_vars(model)
+  }
   
   vars_all <- names(model@imputations[[1]])
   
@@ -688,17 +692,24 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
     unique(dvs)
   }
   
-  if (is.null(var)) {
+  if (is.null(vars)) {
     model_vars <- unique(.extract_model_vars(model))
     
-    # base name = everything before first dot, as before
+    # Base name = everything before first dot
     base_all  <- sub("\\..*$", "", vars_all)
-    var <- vars_all[base_all %in% model_vars]
+    vars <- vars_all[base_all %in% model_vars]
     
-    # exclude *.predicted columns
-    var <- var[!grepl("\\.predicted$", var)]
+    # Exclude *.predicted columns
+    vars <- vars[!grepl("\\.predicted$", vars)]
     
-    # add cluster-level and random-slope terms tied to the DVs
+    # Exclude yjt(...) transformed variables
+    is_yjt <- grepl("^yjt\\(", vars)
+    if (any(is_yjt)) {
+      message("Skipping yjt(...) variables: ", paste(vars[is_yjt], collapse = ", "))
+      vars <- vars[!is_yjt]
+    }
+    
+    # Add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
     if (length(dv_names)) {
       # things like y[cluster]  (random intercepts / cluster-level residuals)
@@ -713,23 +724,26 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
       
       extra <- c(cluster_cols, slope_cols)
       if (length(extra)) {
-        var <- unique(c(var, extra))
+        vars <- unique(c(vars, extra))
       }
     }
     
-    if (!length(var)) stop("No matching variables found based on MODEL section.")
-    message("Plotting variables based on MODEL section: ", paste(var, collapse = ", "))
+    if (!length(vars)) stop("No matching variables found based on MODEL section.")
+    message("Plotting variables: ", paste(vars, collapse = ", "))
     
-  } else if (!all(var %in% vars_all)) {
-    bad <- setdiff(var, vars_all)
-    stop("Variable(s) not found in imputations: ", paste(bad, collapse = ", "))
+  } else {
+    # User-specified: validate they exist
+    missing_vars <- setdiff(vars, vars_all)
+    if (length(missing_vars)) {
+      stop("Variable(s) not found: ", paste(missing_vars, collapse = ", "))
+    }
   }
   
-  fill_col <- unname(plot_colors[fill_color])
+  fill_col <- unname(plot_colors["blue"])
   n_sets   <- length(model@imputations)
   
-  # inner plot builder (bins_arg comes from outer 'bins')
-  build_one <- function(v, bins_arg) {
+  # Inner plot builder
+  build_one <- function(v) {
     imp_vals <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
     if (!is.numeric(imp_vals)) {
       message("Skipping non-numeric variable: ", v)
@@ -743,15 +757,15 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
       return(NULL)
     }
     
-    n_unique <- length(unique(x))
+    title_text <- paste0("Distribution Over ", n_sets, " Imputed Data Sets: ", v)
     
-    main_text <- if (is.null(main))
-      paste0("Distribution Over ", n_sets, " Imputed Data Sets: ", v)
-    else main
+    # Determine if discrete (from ORDINAL/NOMINAL declarations)
+    is_discrete <- v %in% discrete_vars
     
-    ## Case 1: low-support numeric -> treat as discrete (bar chart of counts)
-    if (n_unique <= 10L) {
-      df <- data.frame(x = factor(x, levels = sort(unique(x))))
+    if (is_discrete) {
+      # Discrete: bar chart with categorical X
+      levs <- sort(unique(x))
+      df <- data.frame(x = factor(x, levels = levs))
       
       ggplot2::ggplot(df, ggplot2::aes(x = x)) +
         ggplot2::geom_bar(
@@ -760,43 +774,34 @@ distribution_plot <- function(model, var = NULL, bins = NULL, main = NULL,
           alpha = plot_shading
         ) +
         ggplot2::labs(
-          title = main_text,
+          title = title_text,
           x     = v,
           y     = "Count"
         ) +
         blimp_theme(font_size)
       
     } else {
-      ## Case 2: more continuous -> choose a conservative bin count
-      
-      if (!is.null(bins_arg)) {
-        # user explicitly supplied bins -> respect it
-        bins_use <- as.integer(bins_arg)
-      } else {
-        # adaptive: grows sub-linearly with unique values, clamped
-        bins_use <- as.integer(round(sqrt(n_unique) * 1.5))
-        bins_use <- max(15L, min(40L, bins_use))
-      }
-      
+      # Continuous: histogram with density
       ggplot2::ggplot(data.frame(x = x),
                       ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
         ggplot2::geom_histogram(
-          bins  = bins_use,
+          bins  = bins,
           fill  = fill_col,
           color = fill_col,
           alpha = plot_shading
         ) +
         ggplot2::labs(
-          title = main_text,
+          title = title_text,
           x     = v,
-          y     = NULL
+          y     = "Density"
         ) +
         blimp_theme(font_size)
     }
   }
   
-  plots <- setNames(lapply(var, build_one, bins_arg = bins), var)
-  for (p in plots) if (!is.null(p)) print(p)
+  plots <- setNames(lapply(vars, build_one), vars)
+  plots <- plots[!sapply(plots, is.null)]
+  for (p in plots) print(p)
   invisible(plots)
 }
 
@@ -950,7 +955,7 @@ imputation_plot <- function(
       if (is_integer) {
         # Integer data: one bin per integer value
         binwidth <- 1
-        boundary <- floor(min(obs_vals, na.rm = TRUE)) - 0.5
+        boundary <- floor(min(c(obs_vals, imp_vals), na.rm = TRUE)) - 0.5
       } else {
         # Continuous data: use bins parameter
         binwidth <- diff(rng) / bins
@@ -958,8 +963,20 @@ imputation_plot <- function(
       }
       
       # Compute max density for proper Y-axis scaling
-      obs_hist <- hist(obs_vals, breaks = seq(boundary, max(c(obs_vals, imp_vals), na.rm = TRUE) + binwidth, by = binwidth), plot = FALSE)
-      imp_hist <- hist(imp_vals, breaks = seq(boundary, max(c(obs_vals, imp_vals), na.rm = TRUE) + binwidth, by = binwidth), plot = FALSE)
+      # Ensure breaks span the full range of both observed and imputed
+      data_min <- min(c(obs_vals, imp_vals), na.rm = TRUE)
+      data_max <- max(c(obs_vals, imp_vals), na.rm = TRUE)
+      
+      # Make sure boundary is at or below data minimum
+      if (boundary > data_min) {
+        boundary <- floor(data_min / binwidth) * binwidth
+      }
+      
+      # Create breaks that definitely span the full range
+      breaks_seq <- seq(boundary, data_max + binwidth, by = binwidth)
+      
+      obs_hist <- hist(obs_vals, breaks = breaks_seq, plot = FALSE)
+      imp_hist <- hist(imp_vals, breaks = breaks_seq, plot = FALSE)
       
       obs_density <- obs_hist$counts / (length(obs_vals) * binwidth)
       imp_density <- imp_hist$counts / (length(imp_vals) * binwidth)

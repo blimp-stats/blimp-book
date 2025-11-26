@@ -34,12 +34,11 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'intensity')
 
-# linear regression with automatic dummy coding
+# linear regression with explicit dummy coding
 model2 <- rblimp(
   data = smoking,
-  ordinal = 'parsmoke',
-  nominal = 'educ',
-  center = 'parsmoke age',
+  nominal = 'parsmoke educ',
+  center = 'age',
   model = 'intensity ~ intercept@b0 parsmoke educ.2@b2 educ.3@b3 age',
   waldtest = 'b2:b3 = 0',
   parameters = '
@@ -56,7 +55,14 @@ output(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(intensity.residual ~ intensity.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'intensity.residual', 
+               x_vars = c('age'),
+               standardize = 'y',
+               model = model2)

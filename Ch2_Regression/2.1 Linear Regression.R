@@ -6,9 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(ggplot2)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -36,7 +33,7 @@ trace_plot(model1, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
 output(model1)
 
 # plot parameter distributions
-posterior_plot(model2,'dpdd')
+posterior_plot(model1,'dpdd')
 
 # FIT MODEL WITH CENTERED PREDICTORS ----
 
@@ -68,7 +65,7 @@ imputation_plot(model2)
 # plot standardized residuals vs. predicted values
 bivariate_plot(dpdd.residual ~ dpdd.predicted, standardize = 'y', model = model2)
 
-# plot standardized residuals vs. predictors
+# plot standardized residuals vs. numeric predictors
 bivariate_plot(y_vars = 'dpdd.residual', 
                x_vars = c('age','inflam_sum'),
                standardize = 'y',
