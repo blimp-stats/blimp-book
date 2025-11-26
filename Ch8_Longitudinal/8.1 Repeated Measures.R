@@ -42,6 +42,8 @@ posterior_plot(model1)
 
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model1)
+bivariate_plot(severity.predicted ~ week, model = model1, discrete_x = 'week')
+
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model1)

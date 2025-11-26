@@ -58,7 +58,10 @@ posterior_plot(model2)
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot predicted values by time
-bivariate_plot(severity.predicted ~ week, model2, lines = T)
+# disallow std + lines
+bivariate_plot(severity.predicted ~ week, model = model2, lines = T, discrete_x = 'week', standardize = 'y')
+bivariate_plot(severity.predicted ~ week, model = model2, lines = T)
+bivariate_plot(severity.predicted ~ week, model = model2)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model2)

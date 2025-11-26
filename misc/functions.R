@@ -25,6 +25,10 @@ plot_band_color  <- "red"     # color for confidence bands/ribbons
 # 0.98 = show bands for inner 98% of X data (1st to 99th percentile)
 plot_band_coverage <- 0.95
 
+# Jitter width for discrete X plots (as fraction of minimum spacing between levels)
+# For discrete plots, points are jittered horizontally to prevent overplotting
+plot_jitter_fraction <- 0.01  # 1% of spacing between X levels
+
 # MAD-based winsorization used in multiple plotting functions
 winsor_mad <- function(x, k = 3) {
   med <- stats::median(x, na.rm = TRUE)
@@ -480,6 +484,51 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   cat_vars <- .get_categorical_vars(model)
   
   unique(c(model_vars, cat_vars))
+}
+
+# STANDARDIZE VARIABLE (MI) ----
+# Pools mean/variance across imputations and returns pooled statistics.
+# Used for standardizing any variable in plotting functions.
+#
+# Returns list with:
+#   pooled_mean - mean pooled across imputations
+#   pooled_sd   - sqrt(pooled variance) across imputations
+#   m           - number of imputations
+
+.standardize_variable_pooled <- function(model, var_name, na.rm = TRUE) {
+  if (!is.list(model@imputations) || length(model@imputations) == 0)
+    stop("@imputations must be a non-empty list of data frames")
+  
+  # Extract variable from each imputation
+  var_list <- lapply(model@imputations, function(imp_df) {
+    if (!var_name %in% names(imp_df)) return(NULL)
+    imp_df[[var_name]]
+  })
+  
+  # Remove NULLs
+  keep <- vapply(var_list, function(x) !is.null(x), logical(1L))
+  var_list <- var_list[keep]
+  m <- length(var_list)
+  
+  if (m == 0L) {
+    stop("Variable '", var_name, "' not found in any imputation")
+  }
+  
+  # Calculate mean and variance in each imputation
+  mu_j <- vapply(var_list, function(x) mean(x, na.rm = na.rm), numeric(1L))
+  v_j  <- vapply(var_list, function(x) stats::var(x, na.rm = na.rm), numeric(1L))
+  
+  # Pool statistics (Rubin's rules: pool parameter estimates)
+  pooled_mean <- mean(mu_j, na.rm = TRUE)
+  pooled_var  <- mean(v_j, na.rm = TRUE)
+  pooled_sd   <- sqrt(pooled_var)
+  
+  if (!is.finite(pooled_sd) || pooled_sd <= 0) {
+    warning("Pooled SD is non-positive for '", var_name, "'. Cannot standardize.")
+    return(list(pooled_mean = pooled_mean, pooled_sd = NA_real_, m = m))
+  }
+  
+  list(pooled_mean = pooled_mean, pooled_sd = pooled_sd, m = m)
 }
 
 # STANDARDIZE RESIDUALS (MI) ----
@@ -2446,7 +2495,6 @@ residuals_plot <- function(
 
 
 # BIVARIATE SCATTER WITH POLYNOMIAL REGRESSION ----
-# Adds proper y-axis labeling, tick marks, and bounds for probability outcomes.
 # Handles MI pooling of polynomial regression or discrete-level means.
 # When lines = TRUE, parses CLUSTERID from model@syntax via .get_cluster_id()
 # and draws spaghetti lines using @average_imp (preferred) or first imputation.
@@ -2456,10 +2504,15 @@ residuals_plot <- function(
 #   2. Multiple plots: bivariate_plot(vars = c("a", "b", "c"), model = model)
 #                      bivariate_plot(y_vars = c(...), x_vars = c(...), model = model)
 #
-# x_type:
-#   "auto"     = if < 8 unique x -> discrete style, else numeric/polynomial
-#   "discrete" = always use discrete style (means + line, optional error bars)
-#   "numeric"  = always use numeric style (polynomial regression)
+# discrete_x:
+#   Character vector of variable names that should use discrete plot style
+#   (jittered points, means with ribbon, connecting line). If NULL (default),
+#   all variables use numeric/polynomial style. Only affects X variables.
+#
+# Visual styles:
+#   Discrete: Blue jittered points + red line connecting means + red ribbon
+#   Numeric:  Blue scatter points + red polynomial curve + red ribbon
+#   Both use same color scheme for visual consistency.
 
 bivariate_plot <- function(
     formula = NULL,
@@ -2467,18 +2520,18 @@ bivariate_plot <- function(
     vars = NULL,
     y_vars = NULL,
     x_vars = NULL,
+    discrete_x = NULL,
+    standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
     level = 0.95,
-    x_type  = c("auto", "discrete", "numeric"),
     point_alpha = 0.15, point_size = 1.2,
     curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
-    errorbars = FALSE,   # show error bars for discrete plots?
     print = TRUE         # for multi-plot mode
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  x_type  <- match.arg(x_type)
+  standardize <- match.arg(standardize)
   
   # Validate poly_degree
   if (!is.numeric(poly_degree) || poly_degree < 1) {
@@ -2522,16 +2575,16 @@ bivariate_plot <- function(
       y_vars = y_vars,
       x_vars = x_vars,
       model = model,
+      discrete_x = discrete_x,
+      standardize = standardize,
       poly_degree = poly_degree,
       level = level,
-      x_type = x_type,
       point_alpha = point_alpha,
       point_size = point_size,
       curve_color = curve_color,
       band_fill = band_fill,
       font_size = font_size,
       lines = lines,
-      errorbars = errorbars,
       print = print
     ))
   }
@@ -2595,6 +2648,34 @@ bivariate_plot <- function(
     stop("Both variables must be numeric.")
   n_imps <- length(model@imputations)
   
+  ## --- Standardization (if requested) ----------------------------------------
+  y_label <- y_name
+  x_label <- x_name
+  
+  if (standardize %in% c("y", "both")) {
+    # Standardize Y variable using pooled statistics
+    y_stats <- .standardize_variable_pooled(model, y_name, na.rm = TRUE)
+    
+    if (is.finite(y_stats$pooled_sd) && y_stats$pooled_sd > 0) {
+      df$y <- (df$y - y_stats$pooled_mean) / y_stats$pooled_sd
+      y_label <- paste0(y_name, " (standardized)")
+    } else {
+      warning("Cannot standardize Y variable '", y_name, "': pooled SD is non-positive")
+    }
+  }
+  
+  if (standardize %in% c("x", "both")) {
+    # Standardize X variable using pooled statistics
+    x_stats <- .standardize_variable_pooled(model, x_name, na.rm = TRUE)
+    
+    if (is.finite(x_stats$pooled_sd) && x_stats$pooled_sd > 0) {
+      df$x <- (df$x - x_stats$pooled_mean) / x_stats$pooled_sd
+      x_label <- paste0(x_name, " (standardized)")
+    } else {
+      warning("Cannot standardize X variable '", x_name, "': pooled SD is non-positive")
+    }
+  }
+  
   ## --- spaghetti data from @average_imp (preferred) -------------------------
   df_lines <- NULL
   if (lines) {
@@ -2639,32 +2720,17 @@ bivariate_plot <- function(
     }
   }
   
-  ## --- probability-like outcome? -------------------------------------------
-  qy        <- stats::quantile(df$y, c(0.01, 0.99), na.rm = TRUE)
-  use_logit <- is.finite(qy[1]) && is.finite(qy[2]) && qy[1] >= 0 && qy[2] <= 1
-  inv_logit <- function(z) 1/(1+exp(-z))
-  clamp01   <- function(v, eps = 1e-6) pmin(pmax(v, eps), 1 - eps)
-  
   ## --- determine plot type: discrete vs numeric -----------------------------
-  if (x_type == "discrete") {
-    plot_type <- "discrete"
-  } else if (x_type == "numeric") {
-    plot_type <- "numeric"
-  } else {  # auto
-    plot_type <- if (.is_discrete(model, df$x, x_name)) "discrete" else "numeric"
-  }
+  # Check if X variable is in the discrete_x list
+  is_discrete_plot <- !is.null(discrete_x) && x_name %in% discrete_x
   
   ## --- helpers --------------------------------------------------------------
   
   # Rubin-pooling of polynomial regression (numeric x)
   polynomial_pooled <- function(dat_xy) {
     fitdat <- dat_xy
-    if (use_logit) {
-      fitdat$y <- clamp01(fitdat$y)
-      fitdat$y <- qlogis(fitdat$y)
-    } else {
-      fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
-    }
+    # Winsorize Y to handle outliers
+    fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
     
     # Constrain prediction grid to avoid extreme edge explosion
     # Use global plot_band_coverage (default 95% = 2.5th to 97.5th percentile)
@@ -2773,25 +2839,15 @@ bivariate_plot <- function(
     se_total <- sqrt(pmax(T_total, 0))
     
     mean_fit <- Q_bar
+    mu  <- mean_fit
+    lwr <- mean_fit - tcrit * se_total
+    upr <- mean_fit + tcrit * se_total
     
-    if (use_logit) {
-      mu  <- inv_logit(mean_fit)
-      lwr <- inv_logit(mean_fit - tcrit * se_total)
-      upr <- inv_logit(mean_fit + tcrit * se_total)
-    } else {
-      mu  <- mean_fit
-      lwr <- mean_fit - tcrit * se_total
-      upr <- mean_fit + tcrit * se_total
-    }
     data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
   }
   
   # Rubin-pooled mean per x-level (discrete x)
   pooled_mean_by_level <- function(dat_xy) {
-    if (use_logit) {
-      dat_xy$y <- clamp01(dat_xy$y)
-      dat_xy$y <- qlogis(dat_xy$y)
-    }
     levs <- sort(unique(dat_xy$x))
     m    <- length(unique(dat_xy$imp))
     
@@ -2804,27 +2860,41 @@ bivariate_plot <- function(
       mu_j <- vapply(by_imp, function(z) mean(z, na.rm = TRUE), numeric(1L))
       n_j  <- vapply(by_imp, function(z) sum(is.finite(z)), integer(1L))
       s2_j <- vapply(by_imp, function(z) stats::var(z, na.rm = TRUE), numeric(1L))
+      
+      # Within-imputation variance
       Ubar <- mean(s2_j / pmax(1, n_j))
-      B    <- stats::var(mu_j)
+      
+      # Between-imputation variance
+      B <- stats::var(mu_j)
+      
+      # Total variance (Rubin's rules)
       Tvar <- Ubar + (1 + 1/m) * B
-      se   <- sqrt(pmax(0, Tvar))
-      tcrit <- stats::qt(1 - (1 - level)/2, df = pmax(1, m - 1))
+      se <- sqrt(pmax(0, Tvar))
+      
+      # Barnard-Rubin degrees of freedom adjustment
+      lambda <- (1 + 1/m) * B / pmax(Tvar, 1e-10)
+      lambda <- pmin(lambda, 0.99)
+      
+      # Observed degrees of freedom (average n - 1 across imputations)
+      df_obs <- mean(pmax(1, n_j - 1))
+      if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
+      
+      # Old degrees of freedom
+      df_old <- (m - 1) / pmax(lambda^2, 1e-10)
+      
+      # Adjusted degrees of freedom
+      df_adj <- (df_obs * df_old) / (df_obs + df_old)
+      df_adj <- pmax(df_adj, 1)
+      
+      tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
       
       mu_bar <- mean(mu_j)
       
-      if (use_logit) {
-        c(
-          mean = inv_logit(mu_bar),
-          lwr  = inv_logit(mu_bar - tcrit * se),
-          upr  = inv_logit(mu_bar + tcrit * se)
-        )
-      } else {
-        c(
-          mean = mu_bar,
-          lwr  = mu_bar - tcrit * se,
-          upr  = mu_bar + tcrit * se
-        )
-      }
+      c(
+        mean = mu_bar,
+        lwr  = mu_bar - tcrit * se,
+        upr  = mu_bar + tcrit * se
+      )
     })
     
     out <- do.call(rbind, out)
@@ -2832,32 +2902,24 @@ bivariate_plot <- function(
   }
   
   ## --- y-axis limits --------------------------------------------------------
-  if (use_logit) {
-    ymax <- max(df$y, na.rm = TRUE)
-    if (!is.finite(ymax)) ymax <- 1
-    upper <- min(1, ymax + 0.02)
-    if (upper <= 0) upper <- 1
-    y_limits <- c(0, upper)
-  } else {
-    y_limits <- range(df$y, na.rm = TRUE)
-  }
+  y_limits <- range(df$y, na.rm = TRUE)
   y_breaks <- scales::pretty_breaks()(y_limits)
   
   ## --- plotting -------------------------------------------------------------
-  if (plot_type == "discrete") {
-    # Discrete plot: jitter blue points, pooled mean dots (black),
-    # purple line connecting means, and optional error bars.
+  if (is_discrete_plot) {
+    # Discrete plot: jittered points, red line connecting means, red ribbon
+    # Discrete plot: jittered points, red line connecting means, red ribbon
     
     mean_df <- pooled_mean_by_level(df)
     
-    # slight jitter relative to spacing
+    # Calculate jitter width using global parameter
     ux <- sort(unique(df$x[is.finite(df$x)]))
     n_unique_x <- length(ux)
     if (n_unique_x > 1) {
-      min_step     <- min(diff(ux))
-      jitter_width <- 0.01 * min_step
+      min_step <- min(diff(ux))
+      jitter_width <- plot_jitter_fraction * min_step
     } else {
-      jitter_width <- 0.02
+      jitter_width <- plot_jitter_fraction * 2
     }
     
     p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
@@ -2883,20 +2945,24 @@ bivariate_plot <- function(
         size   = point_size,
         color  = unname(plot_colors[plot_point_color])
       ) +
+      # Add reference line at y=0 when Y is standardized
       {
-        if (errorbars) {
-          ggplot2::geom_errorbar(
-            data        = mean_df,
-            ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-            inherit.aes = FALSE,
-            width       = 0.12,
-            color       = unname(plot_colors[curve_color]),
-            linewidth   = 0.9
-          )
+        if (standardize %in% c("y", "both")) {
+          ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                              linetype = "dashed", linewidth = 0.5)
         } else {
           NULL
         }
       } +
+      # Confidence ribbon (red, analogous to continuous)
+      ggplot2::geom_ribbon(
+        data        = mean_df,
+        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+        inherit.aes = FALSE,
+        fill        = unname(plot_colors[band_fill]),
+        alpha       = plot_shading
+      ) +
+      # Line connecting means (red, analogous to continuous)
       ggplot2::geom_line(
         data        = mean_df,
         ggplot2::aes(x = x, y = mean),
@@ -2904,18 +2970,11 @@ bivariate_plot <- function(
         color       = unname(plot_colors[curve_color]),
         linewidth   = 1.2
       ) +
-      ggplot2::geom_point(
-        data        = mean_df,
-        ggplot2::aes(x = x, y = mean),
-        inherit.aes = FALSE,
-        size        = 3,
-        color       = "black"
-      ) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
         title = paste0("Bivariate Plot Over ", n_imps, " Imputed Data Sets: ",
-                       y_name, " vs. ", x_name),
-        x = x_name, y = y_name
+                       y_label, " vs. ", x_label),
+        x = x_label, y = y_label
       ) +
       blimp_theme(font_size) +
       ggplot2::theme(
@@ -2956,6 +3015,15 @@ bivariate_plot <- function(
         size  = point_size,
         color = unname(plot_colors[plot_point_color])
       ) +
+      # Add reference line at y=0 when Y is standardized
+      {
+        if (standardize %in% c("y", "both")) {
+          ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                              linetype = "dashed", linewidth = 0.5)
+        } else {
+          NULL
+        }
+      } +
       suppressWarnings(
         ggplot2::geom_ribbon(
           data        = curve_df,
@@ -2975,8 +3043,8 @@ bivariate_plot <- function(
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
         title = paste0("Bivariate Plot Over ", n_imps,
-                       " Imputed Data Sets: ", y_name, " vs. ", x_name),
-        x = x_name, y = y_name
+                       " Imputed Data Sets: ", y_label, " vs. ", x_label),
+        x = x_label, y = y_label
       ) +
       blimp_theme(font_size) +
       ggplot2::theme(
@@ -3004,19 +3072,19 @@ bivariate_plot <- function(
     y_vars = NULL,
     x_vars = NULL,
     model,
+    discrete_x = NULL,
+    standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
     level = 0.95,
-    x_type = c("auto", "discrete", "numeric"),
     point_alpha = 0.15,
     point_size = 1.2,
     curve_color = plot_curve_color,
     band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
-    errorbars = FALSE,
     print = TRUE
 ) {
-  x_type <- match.arg(x_type)
+  standardize <- match.arg(standardize)
   
   # Determine which pairs to create
   if (!is.null(vars)) {
@@ -3068,16 +3136,16 @@ bivariate_plot <- function(
         y_vars = NULL,    # Explicitly NULL
         x_vars = NULL,    # Explicitly NULL
         model = model,
+        discrete_x = discrete_x,
+        standardize = standardize,
         poly_degree = poly_degree,
         level = level,
-        x_type = x_type,
         point_alpha = point_alpha,
         point_size = point_size,
         curve_color = curve_color,
         band_fill = band_fill,
         font_size = font_size,
-        lines = lines,
-        errorbars = errorbars
+        lines = lines
       )
       
       plots[[i]] <- p
