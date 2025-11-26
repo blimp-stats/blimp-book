@@ -19,6 +19,12 @@ plot_point_color <- "blue"    # color for scatter points
 plot_curve_color <- "red"     # color for fitted curves/lines  
 plot_band_color  <- "red"     # color for confidence bands/ribbons
 
+# Confidence band X-axis coverage (inner percentage of data to show)
+# 0.95 = show bands for inner 95% of X data (2.5th to 97.5th percentile)
+# 0.90 = show bands for inner 90% of X data (5th to 95th percentile)
+# 0.98 = show bands for inner 98% of X data (1st to 99th percentile)
+plot_band_coverage <- 0.95
+
 # MAD-based winsorization used in multiple plotting functions
 winsor_mad <- function(x, k = 3) {
   med <- stats::median(x, na.rm = TRUE)
@@ -1048,7 +1054,9 @@ residuals_plot <- function(
     if (!is.finite(diff(rng_x)) || diff(rng_x) == 0) {
       xgrid <- rng_x
     } else {
-      x_quantiles <- stats::quantile(fitdat$x, c(0.02, 0.98), na.rm = TRUE)
+      # Calculate percentiles based on global coverage setting
+      tail_prob <- (1 - plot_band_coverage) / 2
+      x_quantiles <- stats::quantile(fitdat$x, c(tail_prob, 1 - tail_prob), na.rm = TRUE)
       x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
       x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
       xgrid <- seq(x_min, x_max, length.out = 200)
@@ -2443,13 +2451,22 @@ residuals_plot <- function(
 # When lines = TRUE, parses CLUSTERID from model@syntax via .get_cluster_id()
 # and draws spaghetti lines using @average_imp (preferred) or first imputation.
 #
+# TWO MODES:
+#   1. Single plot: bivariate_plot(y ~ x, model)
+#   2. Multiple plots: bivariate_plot(vars = c("a", "b", "c"), model = model)
+#                      bivariate_plot(y_vars = c(...), x_vars = c(...), model = model)
+#
 # x_type:
 #   "auto"     = if < 8 unique x -> discrete style, else numeric/polynomial
 #   "discrete" = always use discrete style (means + line, optional error bars)
 #   "numeric"  = always use numeric style (polynomial regression)
 
 bivariate_plot <- function(
-    formula, model,
+    formula = NULL,
+    model,
+    vars = NULL,
+    y_vars = NULL,
+    x_vars = NULL,
     poly_degree = 3,
     level = 0.95,
     x_type  = c("auto", "discrete", "numeric"),
@@ -2457,10 +2474,10 @@ bivariate_plot <- function(
     curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
-    errorbars = FALSE   # show error bars for discrete plots?
+    errorbars = FALSE,   # show error bars for discrete plots?
+    print = TRUE         # for multi-plot mode
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
-  stopifnot(inherits(formula, "formula"))
   x_type  <- match.arg(x_type)
   
   # Validate poly_degree
@@ -2468,6 +2485,59 @@ bivariate_plot <- function(
     stop("poly_degree must be a positive integer")
   }
   poly_degree <- as.integer(poly_degree)
+  
+  ## --- DISPATCH: Single plot mode vs. multiple plots mode ---
+  
+  # Check for common mistake: passing model as first positional arg when using vars
+  if (!is.null(formula) && !inherits(formula, "formula")) {
+    stop("First argument should be a formula (y ~ x) or NULL.\n",
+         "If using vars/y_vars/x_vars mode, you must use named argument 'model = ':\n",
+         "  bivariate_plot(vars = c(...), model = mymodel)")
+  }
+  
+  # Count how many input modes are specified
+  has_formula <- !is.null(formula)
+  has_vars <- !is.null(vars)
+  has_y_x <- !is.null(y_vars) || !is.null(x_vars)
+  
+  n_modes <- sum(has_formula, has_vars, has_y_x)
+  
+  if (n_modes == 0) {
+    stop("Must specify either:\n",
+         "  - formula (e.g., y ~ x) for single plot, OR\n",
+         "  - vars (e.g., vars = c('a', 'b', 'c')) for multiple plots, OR\n",
+         "  - y_vars and x_vars for multiple plots")
+  }
+  
+  if (n_modes > 1) {
+    stop("Cannot mix formula with vars/y_vars/x_vars. Choose one input mode:\n",
+         "  - formula for single plot, OR\n",
+         "  - vars/y_vars/x_vars for multiple plots")
+  }
+  
+  # MULTIPLE PLOTS MODE: Use bivariate_pairs logic
+  if (has_vars || has_y_x) {
+    return(.bivariate_pairs_internal(
+      vars = vars,
+      y_vars = y_vars,
+      x_vars = x_vars,
+      model = model,
+      poly_degree = poly_degree,
+      level = level,
+      x_type = x_type,
+      point_alpha = point_alpha,
+      point_size = point_size,
+      curve_color = curve_color,
+      band_fill = band_fill,
+      font_size = font_size,
+      lines = lines,
+      errorbars = errorbars,
+      print = print
+    ))
+  }
+  
+  # SINGLE PLOT MODE: Continue with original logic
+  stopifnot(inherits(formula, "formula"))
   
   ## --- parse y ~ x ----------------------------------------------------------
   tt       <- terms(formula)
@@ -2597,9 +2667,10 @@ bivariate_plot <- function(
     }
     
     # Constrain prediction grid to avoid extreme edge explosion
-    # Use 2nd and 98th percentiles with larger buffer
+    # Use global plot_band_coverage (default 95% = 2.5th to 97.5th percentile)
     rng_x <- range(fitdat$x, na.rm = TRUE)
-    x_quantiles <- stats::quantile(fitdat$x, c(0.02, 0.98), na.rm = TRUE)
+    tail_prob <- (1 - plot_band_coverage) / 2
+    x_quantiles <- stats::quantile(fitdat$x, c(tail_prob, 1 - tail_prob), na.rm = TRUE)
     x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
     x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
     xgrid <- seq(x_min, x_max, length.out = 200)
@@ -2921,4 +2992,114 @@ bivariate_plot <- function(
   }
   
   p
+}
+
+
+# INTERNAL: Multiple bivariate plots ----
+# Called by bivariate_plot() when vars/y_vars/x_vars are specified
+# Not exported - users should call bivariate_plot() instead
+
+.bivariate_pairs_internal <- function(
+    vars = NULL,
+    y_vars = NULL,
+    x_vars = NULL,
+    model,
+    poly_degree = 3,
+    level = 0.95,
+    x_type = c("auto", "discrete", "numeric"),
+    point_alpha = 0.15,
+    point_size = 1.2,
+    curve_color = plot_curve_color,
+    band_fill = plot_band_color,
+    font_size = 14,
+    lines = FALSE,
+    errorbars = FALSE,
+    print = TRUE
+) {
+  x_type <- match.arg(x_type)
+  
+  # Determine which pairs to create
+  if (!is.null(vars)) {
+    # All unique pairs from vars
+    if (!is.null(y_vars) || !is.null(x_vars)) {
+      warning("'vars' specified, ignoring 'y_vars' and 'x_vars'")
+    }
+    if (length(vars) < 2) {
+      stop("Need at least 2 variables in 'vars' to create pairs")
+    }
+    
+    # Create all unique pairs (no duplicates, no self-pairs)
+    pairs_list <- combn(vars, 2, simplify = FALSE)
+    pair_names <- sapply(pairs_list, function(p) paste(p[1], "~", p[2]))
+    
+  } else if (!is.null(y_vars) && !is.null(x_vars)) {
+    # Cartesian product: each Y with each X
+    pairs_list <- lapply(y_vars, function(y) {
+      lapply(x_vars, function(x) c(y, x))
+    })
+    pairs_list <- unlist(pairs_list, recursive = FALSE)
+    pair_names <- sapply(pairs_list, function(p) paste(p[1], "~", p[2]))
+    
+  } else {
+    stop("Must specify either 'vars' OR both 'y_vars' and 'x_vars'")
+  }
+  
+  # Create plots for each pair
+  plots <- vector("list", length(pairs_list))
+  names(plots) <- pair_names
+  
+  for (i in seq_along(pairs_list)) {
+    pair <- pairs_list[[i]]
+    y_var <- pair[1]
+    x_var <- pair[2]
+    
+    # Build formula
+    formula_str <- paste0(y_var, " ~ ", x_var)
+    
+    # Try to create the plot
+    tryCatch({
+      # Create formula
+      fmla <- stats::as.formula(formula_str)
+      
+      # Call bivariate_plot in single-plot mode
+      p <- bivariate_plot(
+        formula = fmla,
+        vars = NULL,      # Explicitly NULL to avoid confusion
+        y_vars = NULL,    # Explicitly NULL
+        x_vars = NULL,    # Explicitly NULL
+        model = model,
+        poly_degree = poly_degree,
+        level = level,
+        x_type = x_type,
+        point_alpha = point_alpha,
+        point_size = point_size,
+        curve_color = curve_color,
+        band_fill = band_fill,
+        font_size = font_size,
+        lines = lines,
+        errorbars = errorbars
+      )
+      
+      plots[[i]] <- p
+      
+      if (print) {
+        print(p)
+      }
+      
+    }, error = function(e) {
+      warning("Failed to create plot for ", pair_names[i], ": ", e$message)
+      plots[[i]] <- NULL
+    })
+  }
+  
+  # Remove NULL plots (failed)
+  plots <- plots[!sapply(plots, is.null)]
+  
+  if (length(plots) == 0) {
+    warning("No plots were successfully created")
+    return(invisible(NULL))
+  }
+  
+  message("Created ", length(plots), " bivariate plot(s)")
+  invisible(plots)
 }
