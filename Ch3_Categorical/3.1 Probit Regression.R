@@ -45,7 +45,7 @@ bivariate_plot(y_vars = 'turnover.1.probability',
 distribution_plot(model1)
 imputed_vs_observed_plot(model1)
 
-# standardized residuals vs. predicted
+# standardized residuals vs. predicted values
 bivariate_plot(turnover.residual ~ turnover.predicted, standardize = 'y', model = model1)
 
 # standardized residuals vs. predictors
@@ -79,7 +79,7 @@ posterior_plot(model2,'jobsat')
 distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 
-# standardized residuals vs. predicted
+# standardized residuals vs. predicted values
 bivariate_plot(jobsat.residual ~ jobsat.predicted, standardize = 'y', model = model2)
 
 # standardized residuals vs. predictors

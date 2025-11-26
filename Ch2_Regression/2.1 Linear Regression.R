@@ -66,7 +66,7 @@ posterior_plot(model2,'dpdd')
 distribution_plot(model2)
 imputed_vs_observed_plot(model2)
 
-# standardized residuals vs. predicted
+# standardized residuals vs. predicted values
 bivariate_plot(dpdd.residual ~ dpdd.predicted, standardize = 'y', model = model2)
 
 # standardized residuals vs. predictors

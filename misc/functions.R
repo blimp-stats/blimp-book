@@ -2954,15 +2954,7 @@ bivariate_plot <- function(
           NULL
         }
       } +
-      # Confidence ribbon (red, analogous to continuous)
-      ggplot2::geom_ribbon(
-        data        = mean_df,
-        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-        inherit.aes = FALSE,
-        fill        = unname(plot_colors[band_fill]),
-        alpha       = plot_shading
-      ) +
-      # Line connecting means (red, analogous to continuous)
+      # Line connecting means (shows trend across levels)
       ggplot2::geom_line(
         data        = mean_df,
         ggplot2::aes(x = x, y = mean),
@@ -2970,6 +2962,24 @@ bivariate_plot <- function(
         color       = unname(plot_colors[curve_color]),
         linewidth   = 1.2
       ) +
+      # Error bars showing confidence intervals at each discrete level
+      ggplot2::geom_errorbar(
+        data        = mean_df,
+        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+        inherit.aes = FALSE,
+        width       = 0,  # No caps, just vertical lines
+        color       = unname(plot_colors[curve_color]),
+        linewidth   = 0.9
+      ) +
+      # Points at means
+      ggplot2::geom_point(
+        data        = mean_df,
+        ggplot2::aes(x = x, y = mean),
+        inherit.aes = FALSE,
+        size        = 3,
+        color       = unname(plot_colors[curve_color])
+      ) +
+      ggplot2::scale_x_continuous(breaks = sort(unique(mean_df$x))) +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
         title = paste0("Bivariate Plot Over ", n_imps, " Imputed Data Sets: ",
