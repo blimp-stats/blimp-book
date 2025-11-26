@@ -36,14 +36,23 @@ posterior_plot(model1,'turnover')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot individual-level predicted probabilities
-bivariate_plot(turnover.1.probability ~ lmx, model1)
-bivariate_plot(turnover.1.probability ~ empower, model1)
-bivariate_plot(turnover.1.probability ~ male, model1)
+bivariate_plot(y_vars = 'turnover.1.probability', 
+               x_vars = c('lmx','empower','male'),
+               discrete_x = c('male'),
+               model = model1)
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model1)
 imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+
+# standardized residuals vs. predicted
+bivariate_plot(turnover.residual ~ turnover.predicted, standardize = 'y', model = model1)
+
+# standardized residuals vs. predictors
+bivariate_plot(y_vars = 'turnover.residual', 
+               x_vars = c('lmx','empower'),
+               standardize = 'y',
+               model = model1)
 
 # FIT PROBIT MODEL WITH AN ORDINAL OUTCOME ----
 
@@ -62,11 +71,19 @@ model2 <- rblimp(
 output(model2)
 
 # plot parameter distributions
-posterior_plot(model2,'turnover')
+posterior_plot(model2,'jobsat')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
 # plot distributions, observed vs. imputed scores, and residuals
 distribution_plot(model2)
 imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+
+# standardized residuals vs. predicted
+bivariate_plot(jobsat.residual ~ jobsat.predicted, standardize = 'y', model = model2)
+
+# standardized residuals vs. predictors
+bivariate_plot(y_vars = 'jobsat.residual', 
+               x_vars = c('lmx','empower'),
+               standardize = 'y',
+               model = model2)

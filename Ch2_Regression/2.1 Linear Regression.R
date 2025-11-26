@@ -30,7 +30,7 @@ model1 <- rblimp(
   iter = 10000)
 
 # trace plot of model parameters
-trace_plot(model2, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
+trace_plot(model1, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
 
 # print output
 output(model1)
@@ -62,10 +62,18 @@ posterior_plot(model2,'dpdd')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
+# plot distributions and imputed values
 distribution_plot(model2)
 imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+
+# standardized residuals vs. predicted
+bivariate_plot(dpdd.residual ~ dpdd.predicted, standardize = 'y', model = model2)
+
+# standardized residuals vs. predictors
+bivariate_plot(y_vars = 'dpdd.residual', 
+               x_vars = c('age','inflam_sum'),
+               standardize = 'y',
+               model = model2)
 
 
 
