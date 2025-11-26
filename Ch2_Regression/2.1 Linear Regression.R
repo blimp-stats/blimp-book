@@ -62,14 +62,13 @@ posterior_plot(model2,'dpdd')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions and imputed values
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
 
-# standardized residuals vs. predicted values
+# plot standardized residuals vs. predicted values
 bivariate_plot(dpdd.residual ~ dpdd.predicted, standardize = 'y', model = model2)
 
-# standardized residuals vs. predictors
+# plot standardized residuals vs. predictors
 bivariate_plot(y_vars = 'dpdd.residual', 
                x_vars = c('age','inflam_sum'),
                standardize = 'y',
