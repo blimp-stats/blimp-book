@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -17,33 +15,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 reading <- read.csv(data_url)
 
-# FIT ADDITIVE MODEL ----
-
-# linear regression with additive terms only
-model1 <- rblimp(
-  data = reading, 
-  nominal = 'male hispanic',
-  center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 male hispanic',  
-  seed = 90291,                                              
-  burn = 10000,                                              
-  iter = 10000,
-  nimps = 20)                                                
-
-# print output
-output(model1)
-
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
-
 # FIT INTERACTIVE MODEL ----
 
 # interaction with a continuous moderator
-model2 <- rblimp(
+model <- rblimp(
   data = reading, 
   nominal = 'male hispanic',
   center = 'read1 lrnprob1',
@@ -55,19 +30,26 @@ model2 <- rblimp(
   nimps = 20)                                                
 
 # print output
-output(model2)
+output(model)
 
 # plot parameter distributions
-posterior_plot(model2,'read9')
+posterior_plot(model,'read9')
 
 # plot conditional effects and johnson-neyman regions of significance
-simple_plot(read9 ~ read1 | lrnprob1, model2)
-jn_plot(read9 ~ read1 | lrnprob1, model2)
+simple_plot(read9 ~ read1 | lrnprob1, model)
+jn_plot(read9 ~ read1 | lrnprob1, model)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(read9.residual ~ read9.predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'read9.residual', 
+               x_vars = c('read1','lrnprob1'),
+               standardize = 'y',
+               model = model)
 

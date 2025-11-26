@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -39,11 +37,15 @@ posterior_plot(model,'mathpost')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model)
-imputed_vs_observed_plot(model)
-residuals_plot(model)
+# plot imputed vs. observed values
+imputation_plot(model)
 
-# plot predicted values against curvilinear predictor
-bivariate_plot(mathpost.predicted ~ anxiety, model)
+# plot standardized residuals vs. predicted values
+bivariate_plot(mathpost.residual ~ mathpost.predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'mathpost.residual', 
+               x_vars = c('anxiety','mathpre'),
+               standardize = 'y',
+               model = model)
 

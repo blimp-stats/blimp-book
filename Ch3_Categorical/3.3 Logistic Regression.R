@@ -1,6 +1,6 @@
 # BRIAN NOTES ----
-# We need to discuss the .residual behavior with logistic models
-# Loess lines look odd because residuals on latent metric do not appear to have a zero mean
+# The .residual behavior with logistic models is incorrect
+# No predicted values for logistic outcomes
 
 # LOGISTIC REGRESSION FOR BINARY AND MULTICATEGORICAL OUTCOMES ----
 
@@ -40,16 +40,23 @@ posterior_plot(model1,'drinker')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
 
 # plot individual-level predicted probabilities
-bivariate_plot(drinker.1.probability ~ alcage, model1)
-bivariate_plot(drinker.1.probability ~ college, model1)
-bivariate_plot(drinker.1.probability ~ age, model1)
-bivariate_plot(drinker.1.probability ~ male, model1)
+bivariate_plot(y_vars = 'drinker.1.probability', 
+               x_vars = c('alcage','college','age','male'),
+               model = model1)
+
+# NO PREDICTED VALUES
+# plot standardized residuals vs. predicted values
+bivariate_plot(drinker.1.residual ~ turnover.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'drinker.1.residual', 
+               x_vars = c('alcage','age'),
+               standardize = 'y',
+               model = model1)
 
 # FIT MULTINOMIAL LOGISTIC MODEL ----
 
@@ -72,9 +79,22 @@ posterior_plot(model2,'drinkingfreq')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot individual-level predicted probabilities
+bivariate_plot(y_vars = c('drinkingfreq.1.probability','drinkingfreq.2.probability'), 
+               x_vars = c('alcage','college','age','male'),
+               model = model2)
+
+# NO PREDICTED VALUES
+# plot standardized residuals vs. predicted values
+# bivariate_plot(drinker.1.residual ~ turnover.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = c('drinkingfreq.1.residual','drinkingfreq.2.residual'), 
+               x_vars = c('alcage','age'),
+               standardize = 'y',
+               model = model2)
 
 

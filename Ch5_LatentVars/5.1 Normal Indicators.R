@@ -118,12 +118,18 @@ posterior_plot(model4)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(inflam_crp ~ inflam.latent, model3)
-bivariate_plot(inflam_il6 ~ inflam.latent, model3)
-bivariate_plot(inflam_tnf ~ inflam.latent, model3)
-bivariate_plot(inflam_ifn ~ inflam.latent, model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot standardized residuals vs. predicted values
+bivariate_plot(inflam_crp.residual ~ inflam_crp.predicted, standardize = 'y', model = model3)
+bivariate_plot(inflam_il6.residual ~ inflam_il6.predicted, standardize = 'y', model = model3)
+bivariate_plot(inflam_tnf.residual ~ inflam_tnf.predicted, standardize = 'y', model = model3)
+bivariate_plot(inflam_ifn.residual ~ inflam_ifn.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals vs. numeric predictors (latent variable scores)
+indicator_residuals <- paste0(c('inflam_crp','inflam_il6','inflam_tnf','inflam_ifn'),'.residual')
+bivariate_plot(x_vars = 'inflam.latent', y_vars = indicator_residuals, model = model3, standardize = 'both')
+
+# plot pairs of indicator residuals
+bivariate_plot(vars = indicator_residuals, model = model3, poly_degree = 1, standardize = 'both')

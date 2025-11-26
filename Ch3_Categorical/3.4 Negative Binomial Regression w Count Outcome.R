@@ -1,6 +1,5 @@
 # BRIAN NOTES ----
-# We need to discuss the .residual behavior with logistic models
-# Loess lines look odd because residuals on latent metric do not appear to have a zero mean
+# The .residual behavior with count models is incorrect
 
 # NEGATIVE BINOMIAL REGRESSION FOR A COUNT OUTCOME ----
 
@@ -41,7 +40,19 @@ posterior_plot(model1,'alcdays')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(alcdays.residual ~ alcdays.predicted, standardize = 'y', model = model1)
+# bivariate_plot(alcdays.residual ~ alcdays.predicted, model = model1)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'alcdays.residual', 
+               x_vars = c('alcage','age'),
+               standardize = 'y',
+               model = model1)
+
+bivariate_plot(y_vars = 'alcdays.residual', 
+               x_vars = c('alcage','age'),
+               model = model1)

@@ -660,6 +660,9 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   
+  # Add normalized yjt copies for easier plotting
+  model <- .add_yjt_copies(model)
+  
   # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_vars)) {
     discrete_vars <- .get_categorical_vars(model)
@@ -701,13 +704,6 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
     
     # Exclude *.predicted columns
     vars <- vars[!grepl("\\.predicted$", vars)]
-    
-    # Exclude yjt(...) transformed variables
-    is_yjt <- grepl("^yjt\\(", vars)
-    if (any(is_yjt)) {
-      message("Skipping yjt(...) variables: ", paste(vars[is_yjt], collapse = ", "))
-      vars <- vars[!is_yjt]
-    }
     
     # Add cluster-level and random-slope terms tied to the DVs
     dv_names <- get_dv_names(model)
@@ -805,6 +801,87 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   invisible(plots)
 }
 
+# HELPER: Normalize yjt() variable names ----
+# Converts yjt(var-6) to var.yjt, yjt(var-6).predicted to var.yjt.predicted, etc.
+# Handles variable names with underscores: yjt(inflam_sum) to inflam_sum.yjt
+.normalize_yjt_names <- function(names_vec) {
+  sapply(names_vec, function(nm) {
+    # Check if it starts with yjt(
+    if (grepl("^yjt\\(", nm)) {
+      # Extract everything between yjt( and )
+      # This captures: yjt(dpdd-6) -> dpdd-6, yjt(inflam_sum) -> inflam_sum
+      inner <- sub("^yjt\\(([^)]+)\\).*", "\\1", nm)
+      
+      # Extract just the base variable name
+      # Stop at " - " (with spaces) or " -" followed by a digit
+      # This preserves underscores in variable names like inflam_sum
+      base <- inner
+      if (grepl("\\s*-\\s*\\d", inner)) {
+        # Has a numeric offset like "dpdd - 6" or "dpdd-6"
+        base <- sub("\\s*-\\s*\\d.*", "", inner)
+      }
+      # Trim any trailing spaces
+      base <- trimws(base)
+      
+      # Extract any suffix after the closing paren (.predicted, .residual, etc.)
+      suffix <- ""
+      if (grepl("\\)", nm)) {
+        after_paren <- sub("^[^)]+\\)", "", nm)
+        if (nchar(after_paren) > 0) {
+          suffix <- after_paren
+        }
+      }
+      
+      # Return normalized name
+      paste0(base, ".yjt", suffix)
+    } else {
+      # Not a yjt variable, return as-is
+      nm
+    }
+  }, USE.NAMES = FALSE)
+}
+
+# HELPER: Add normalized yjt copies to model imputations ----
+.add_yjt_copies <- function(model) {
+  # Check if any yjt variables exist
+  var_names <- names(model@imputations[[1]])
+  yjt_vars <- var_names[grepl("^yjt\\(", var_names)]
+  
+  if (length(yjt_vars) == 0) {
+    return(model)  # No yjt variables, return as-is
+  }
+  
+  # Create normalized names
+  normalized_names <- .normalize_yjt_names(yjt_vars)
+  
+  # Add copies with normalized names to each imputation
+  for (i in seq_along(model@imputations)) {
+    for (j in seq_along(yjt_vars)) {
+      original_name <- yjt_vars[j]
+      new_name <- normalized_names[j]
+      
+      # Only add if not already present
+      if (!new_name %in% names(model@imputations[[i]])) {
+        model@imputations[[i]][[new_name]] <- model@imputations[[i]][[original_name]]
+      }
+    }
+  }
+  
+  # Also add to variance_imp if present
+  if (!is.null(model@variance_imp)) {
+    for (j in seq_along(yjt_vars)) {
+      original_name <- yjt_vars[j]
+      new_name <- normalized_names[j]
+      
+      if (original_name %in% names(model@variance_imp) && !new_name %in% names(model@variance_imp)) {
+        model@variance_imp[[new_name]] <- model@variance_imp[[original_name]]
+      }
+    }
+  }
+  
+  return(model)
+}
+
 # IMPUTATION QUALITY VISUALIZATION ----
 # Shows distribution of observed vs. imputed values to assess imputation quality.
 # Uses unified visual style: observed (blue filled) vs imputed (red outlined).
@@ -823,6 +900,9 @@ imputation_plot <- function(
   if (is.null(model@variance_imp))
     stop("@variance_imp not found on model object")
   
+  # Add normalized yjt copies for easier plotting
+  model <- .add_yjt_copies(model)
+  
   # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_vars)) {
     discrete_vars <- .get_categorical_vars(model)
@@ -836,13 +916,6 @@ imputation_plot <- function(
   # Exclude derived columns (.latent, .residual, .predicted, .probability)
   derived_pattern <- "\\.(latent|residual|predicted|probability)$"
   vars_base <- vars_all[!grepl(derived_pattern, vars_all)]
-  
-  # Exclude yjt(...) transformed variables
-  is_yjt <- grepl("^yjt\\(", vars_base)
-  if (any(is_yjt)) {
-    message("Skipping yjt(...) variables: ", paste(vars_base[is_yjt], collapse = ", "))
-  }
-  vars_base <- vars_base[!is_yjt]
   
   if (is.null(vars)) {
     # Auto: use variables from MODEL section
@@ -924,15 +997,17 @@ imputation_plot <- function(
       df$value <- factor(df$value, levels = levs)
       
       p <- ggplot2::ggplot(df, ggplot2::aes(x = value)) +
-        # Observed: blue filled bars
+        # Observed: blue filled bars (proportions)
         ggplot2::geom_bar(
           data = subset(df, type == "Observed"),
+          ggplot2::aes(y = ggplot2::after_stat(count / sum(count))),
           fill = obs_col,
           alpha = plot_shading
         ) +
-        # Imputed: red outlined bars
+        # Imputed: red outlined bars (proportions)
         ggplot2::stat_count(
           data = subset(df, type == "Imputed"),
+          ggplot2::aes(y = ggplot2::after_stat(count / sum(count))),
           geom = "bar",
           fill = NA,
           color = imp_col,
@@ -941,7 +1016,7 @@ imputation_plot <- function(
         ggplot2::labs(
           title = title_text,
           x = v,
-          y = "Count"
+          y = "Proportion"
         ) +
         blimp_theme(font_size)
       
@@ -2611,6 +2686,9 @@ bivariate_plot <- function(
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   standardize <- match.arg(standardize)
+  
+  # Add normalized yjt copies for easier plotting
+  model <- .add_yjt_copies(model)
   
   # Auto-populate discrete_x from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_x)) {

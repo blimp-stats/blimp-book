@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -46,7 +44,14 @@ posterior_plot(model,'disability')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model)
-imputed_vs_observed_plot(model)
-residuals_plot(model)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(disability.residual ~ disability.predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'disability.residual', 
+               x_vars = 'depress_sum',
+               standardize = 'y',
+               model = model)

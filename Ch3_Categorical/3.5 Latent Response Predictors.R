@@ -19,7 +19,7 @@ employee <- read.csv(data_url)
 
 # logistic regression with a latent response variable predictor
 # thresholds require large number of iterations to achieve adequate N_eff 
-model1 <- rblimp(
+model <- rblimp(
     data = employee,
     ordinal = 'jobsat male',
     nominal = 'turnover',
@@ -34,14 +34,26 @@ model1 <- rblimp(
     nimps = 20)
 
 # print output
-output(model1)
+output(model)
 
 # plot parameter distributions
-posterior_plot(model1,'turnover')
+posterior_plot(model,'turnover')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot individual-level predicted probabilities
+bivariate_plot(y_vars = 'turnover.1.probability', 
+               x_vars = c('lmx','empower','jobsat.latent','male'),
+               model = model)
+
+# plot standardized residuals vs. predicted values
+# bivariate_plot(turnover.1.residual ~ turnover.1.predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'turnover.1.residual', 
+               x_vars = c('lmx','empower','jobsat.latent'),
+               standardize = 'y',
+               model = model)

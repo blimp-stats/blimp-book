@@ -52,7 +52,14 @@ simple_plot(yjt(inflam_sum) ~ els | female.1, model)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model)
-imputed_vs_observed_plot(model)
-residuals_plot(model)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(yjt(inflam_sum).residual ~ yjt(inflam_sum).predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'yjt(inflam_sum).residual', 
+               x_vars = 'age',
+               standardize = 'y',
+               model = model)

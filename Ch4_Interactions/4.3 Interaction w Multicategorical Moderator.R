@@ -28,7 +28,7 @@ model1 <- rblimp(
   data = reading, 
   nominal = 'lrnprob1risk male hispanic',
   center = 'read1',
-  model = 'read9 ~ read1 lrnprob1risk.2 lrnprob1risk.3 read1*lrnprob1risk.2@slpdiff2 read1*lrnprob1risk.3@@slpdiff3 male hispanic',  
+  model = 'read9 ~ read1 lrnprob1risk.2 lrnprob1risk.3 read1*lrnprob1risk.2@slpdiff2 read1*lrnprob1risk.3@slpdiff3 male hispanic',  
   waldtest = 'slpdiff2:slpdiff3 = 0',
   seed = 90291,                                              
   burn = 10000,                                              
@@ -61,10 +61,17 @@ simple_plot(read9 ~ read1 | lrnprob1risk.2 + lrnprob1risk.3, model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(read9.residual ~ read9.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'read9.residual', 
+               x_vars = 'read1',
+               standardize = 'y',
+               model = model2)
 
 
 

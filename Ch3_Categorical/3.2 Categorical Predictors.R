@@ -48,7 +48,8 @@ model2 <- rblimp(
     mu2_vs_mu3 = mu_educ.2 - mu_educ.3;',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
 # print output
 output(model2)
