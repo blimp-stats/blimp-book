@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -43,10 +41,18 @@ simple_plot(posaff ~ pain.mean[person] | stress, model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('posaff.person','posaff_on_pain.person','posaff.residual'), model1)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('pain.mean.person','stress','female'), 
+               y_vars = c('posaff.person','posaff_on_pain.person'), standardize = 'y', model = model1)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model1)
 
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
@@ -83,7 +89,15 @@ posterior_plot(model2,'posaff')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('ranicept.latent','ranicept.residual','ranslope.latent','ranslope.residual','posaff.residual'), model2)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('pain.mean.person','stress','female'), 
+               y_vars = c('ranicept.residual','ranslope.residual'), standardize = 'y', model = model2)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model2)

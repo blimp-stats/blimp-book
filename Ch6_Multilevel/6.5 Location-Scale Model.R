@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -50,7 +48,15 @@ posterior_plot(model,'posaff')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model)
-imputed_vs_observed_plot(model)
-residuals_plot(model)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot distributions and residuals
+univariate_plot(vars = c('ranicept.latent','ranicept.residual','ranslope.latent','ranslope.residual','logvar.latent', 'logvar.residual','posaff.residual'), model)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('pain.mean.person','stress','female'), 
+               y_vars = c('ranicept.residual','ranslope.residual','logvar.residual'), standardize = 'y', model = model)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model)

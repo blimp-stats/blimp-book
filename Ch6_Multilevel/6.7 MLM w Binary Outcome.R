@@ -43,16 +43,23 @@ posterior_plot(model1,'turnover')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot individual-level predicted probabilities
-bivariate_plot(turnover.1.probability ~ lmx, model1)
-bivariate_plot(turnover.1.probability ~ male, model1)
-bivariate_plot(turnover.1.probability ~ lmx.mean[team], model1)
-bivariate_plot(turnover.1.probability ~ climate, model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot individual-level predicted probabilities
+bivariate_plot(x_vars = c('lmx','male'), 
+               y_vars = 'turnover.1.probability', standardize = 'y', model = model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('turnover.1.team','turnover.1.residual','turnover.1.probability'), model1)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('lmx.mean.team','climate'), 
+               y_vars = 'turnover.1.team', standardize = 'y', model = model1)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(x_vars = c('lmx','male'), 
+               y_vars = 'turnover.1.residual', standardize = 'y', model = model1)
 
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
@@ -81,13 +88,20 @@ posterior_plot(model2,'turnover')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot individual-level predicted probabilities
-bivariate_plot(turnover.1.probability ~ lmx, model2)
-bivariate_plot(turnover.1.probability ~ male, model2)
-bivariate_plot(turnover.1.probability ~ lmx.mean[team], model2)
-bivariate_plot(turnover.1.probability ~ climate, model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot individual-level predicted probabilities
+bivariate_plot(x_vars = c('lmx','male'), 
+               y_vars = 'turnover.1.probability', standardize = 'y', model = model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('ranicept.latent','ranicept.residual','turnover.1.probability'), model2)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('lmx.mean.team','climate'), 
+               y_vars = 'ranicept.residual', standardize = 'y', model = model2)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(x_vars = c('lmx','male'), 
+               y_vars = 'turnover.1.residual', standardize = 'y', model = model2)
