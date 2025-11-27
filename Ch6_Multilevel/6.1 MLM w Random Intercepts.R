@@ -1,3 +1,6 @@
+# BRIAN NOTES ----
+# any way to get names in imputations more easily without [[]]?
+
 # RANDOM INTERCEPT REGRESSION
 
 # plotting functions
@@ -6,8 +9,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -56,10 +57,19 @@ posterior_plot(model2,'probsolvpost')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('probsolvpost.school','probsolvpost.residual'), model2)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('probsolvpre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
+               y_vars = 'probsolvpost.school', standardize = 'y', model = model2)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'), 
+               y_vars = 'probsolvpost.residual', standardize = 'y', model = model2)
 
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
 
@@ -88,7 +98,16 @@ posterior_plot(model3,'probsolvpost')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
+
+# plot distributions and residuals
+univariate_plot(vars = c('ranicept.residual','probsolvpost.residual'), model3)
+
+# plot standardized level-2 residuals vs. level-2 predictors
+bivariate_plot(x_vars = c('probsolvpre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
+               y_vars = 'ranicept.residual', standardize = 'y', model = model3)
+
+# plot standardized level-1 residuals vs. level-1 predictors
+bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'), 
+               y_vars = 'probsolvpost.residual', standardize = 'y', model = model2)

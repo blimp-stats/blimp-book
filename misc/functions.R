@@ -46,6 +46,7 @@ blimp_theme <- function(font_size = 14) {
   replace_theme <- ggplot2::theme(
     panel.grid.major = ggplot2::element_blank(),
     panel.grid.minor = ggplot2::element_blank(),
+    axis.line = ggplot2::element_line(colour = "grey60", linewidth = 0.4),
     axis.ticks.y     = ggplot2::element_blank(),
     axis.text.y      = ggplot2::element_blank(),
     axis.text.x      = ggplot2::element_text(
@@ -357,6 +358,49 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   pick_cluster_id(seg)
 }
 
+# HELPER: Check if variable is level-2 (constant within clusters) ----
+.is_level2_variable <- function(imp_df, var_name, cluster_id) {
+  # Validate inputs
+  if (!var_name %in% names(imp_df)) return(FALSE)
+  if (!cluster_id %in% names(imp_df)) return(FALSE)
+  
+  x <- imp_df[[var_name]]
+  g <- imp_df[[cluster_id]]
+  
+  # Check if cluster ID is all NA
+  if (all(is.na(g))) return(FALSE)
+  
+  # Split by cluster, check if constant within each cluster
+  by_cl <- split(x, g)
+  if (!length(by_cl)) return(FALSE)
+  
+  const_within <- vapply(by_cl, function(z) {
+    z <- z[is.finite(z)]
+    if (!length(z)) TRUE else length(unique(z)) <= 1L
+  }, logical(1L))
+  
+  # If constant in ALL clusters, it's level-2
+  all(const_within)
+}
+
+# HELPER: Get unique cluster values for level-2 variables ----
+# For level-2 variables (constant within cluster), extract one value per cluster
+.get_cluster_unique_values <- function(imp_df, var_name, cluster_id) {
+  # Validate inputs
+  if (!var_name %in% names(imp_df)) return(numeric(0))
+  if (!cluster_id %in% names(imp_df)) return(numeric(0))
+  
+  # Use aggregate to get one value per cluster
+  # Since level-2 vars are constant within cluster, any value works (take first)
+  unique_vals <- stats::aggregate(
+    imp_df[[var_name]],
+    by = list(cluster = imp_df[[cluster_id]]),
+    FUN = function(v) v[1]  # All same within cluster, take first
+  )$x
+  
+  return(unique_vals)
+}
+
 # COUNT CLUSTERID VARIABLES ----
 # Returns:
 #   0 → no CLUSTERID declared (single-level model)
@@ -499,10 +543,29 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   if (!is.list(model@imputations) || length(model@imputations) == 0)
     stop("@imputations must be a non-empty list of data frames")
   
+  # Get cluster ID (most granular if multiple levels)
+  cluster_id <- .get_cluster_id(model)
+  
+  # Check if this variable is level-2 (constant within clusters)
+  is_level2 <- FALSE
+  if (!is.na(cluster_id)) {
+    d <- model@imputations[[1]]
+    if (cluster_id %in% names(d) && var_name %in% names(d)) {
+      is_level2 <- .is_level2_variable(d, var_name, cluster_id)
+    }
+  }
+  
   # Extract variable from each imputation
   var_list <- lapply(model@imputations, function(imp_df) {
     if (!var_name %in% names(imp_df)) return(NULL)
-    imp_df[[var_name]]
+    
+    if (is_level2) {
+      # Level-2: Get unique value per cluster (correct n!)
+      .get_cluster_unique_values(imp_df, var_name, cluster_id)
+    } else {
+      # Level-1: Use all observations
+      imp_df[[var_name]]
+    }
   })
   
   # Remove NULLs
@@ -515,6 +578,7 @@ map_predictor_to_col <- function(pred_name, cols, cluster_id = NULL) {
   }
   
   # Calculate mean and variance in each imputation
+  # Now using correct n for level-2 variables!
   mu_j <- vapply(var_list, function(x) mean(x, na.rm = na.rm), numeric(1L))
   v_j  <- vapply(var_list, function(x) stats::var(x, na.rm = na.rm), numeric(1L))
   
@@ -552,10 +616,20 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
       stop("None of the requested variables have a corresponding '*.residual' column in imputations.")
   }
   
-  get_resid <- function(imp_df, base) {
+  # Get cluster ID for level-2 detection
+  cluster_id <- .get_cluster_id(model)
+  
+  get_resid <- function(imp_df, base, is_level2) {
     nm <- paste0(base, ".residual")
     if (!nm %in% names(imp_df)) return(NULL)
-    imp_df[[nm]]
+    
+    if (is_level2 && !is.na(cluster_id)) {
+      # Level-2 residuals: Get unique per cluster
+      .get_cluster_unique_values(imp_df, nm, cluster_id)
+    } else {
+      # Level-1 residuals: Use all observations
+      imp_df[[nm]]
+    }
   }
   
   out_rows <- list()
@@ -570,7 +644,16 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   
   row_counter <- 1L
   for (b in bases) {
-    r_list <- lapply(model@imputations, get_resid, base = b)
+    # Check if this base variable is level-2
+    is_level2 <- FALSE
+    if (!is.na(cluster_id)) {
+      d <- model@imputations[[1]]
+      if (b %in% names(d) && cluster_id %in% names(d)) {
+        is_level2 <- .is_level2_variable(d, b, cluster_id)
+      }
+    }
+    
+    r_list <- lapply(model@imputations, get_resid, base = b, is_level2 = is_level2)
     keep   <- vapply(r_list, function(x) !is.null(x), logical(1L))
     r_list <- r_list[keep]
     m      <- length(r_list)
@@ -630,6 +713,75 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
   do.call(rbind, dfs)
 }
 
+# CLUSTER-AWARE STACK COLS ----
+# Handles level-2 variables correctly (extracts unique per cluster)
+# Errors if trying to mix level-1 and level-2 variables
+.stack_cols_cluster_aware <- function(model, ycol, xcol) {
+  # Get cluster ID
+  cluster_id <- .get_cluster_id(model)
+  
+  # If no cluster ID, use standard stacking
+  if (is.na(cluster_id)) {
+    return(.stack_cols(model, ycol, xcol))
+  }
+  
+  # Check variable levels
+  d <- model@imputations[[1]]
+  if (!cluster_id %in% names(d)) {
+    return(.stack_cols(model, ycol, xcol))
+  }
+  
+  y_is_level2 <- FALSE
+  x_is_level2 <- FALSE
+  
+  if (ycol %in% names(d)) {
+    y_is_level2 <- .is_level2_variable(d, ycol, cluster_id)
+  }
+  if (xcol %in% names(d)) {
+    x_is_level2 <- .is_level2_variable(d, xcol, cluster_id)
+  }
+  
+  # Case 1: Both level-1 (use all observations)
+  if (!y_is_level2 && !x_is_level2) {
+    return(.stack_cols(model, ycol, xcol))
+  }
+  
+  # Case 2: Both level-2 (extract unique per cluster)
+  if (y_is_level2 && x_is_level2) {
+    dfs <- lapply(seq_along(model@imputations), function(i) {
+      imp_df <- model@imputations[[i]]
+      if (!all(c(ycol, xcol, cluster_id) %in% names(imp_df))) return(NULL)
+      
+      # Extract unique cluster-level values
+      y_unique <- .get_cluster_unique_values(imp_df, ycol, cluster_id)
+      x_unique <- .get_cluster_unique_values(imp_df, xcol, cluster_id)
+      
+      data.frame(
+        x = x_unique,
+        y = y_unique,
+        imp = i,
+        row = seq_along(x_unique),  # Now row = cluster index
+        stringsAsFactors = FALSE
+      )
+    })
+    return(do.call(rbind, dfs))
+  }
+  
+  # Case 3: Mixed levels (ERROR)
+  level_y <- ifelse(y_is_level2, "level-2 (constant within clusters)", "level-1 (varies within clusters)")
+  level_x <- ifelse(x_is_level2, "level-2 (constant within clusters)", "level-1 (varies within clusters)")
+  
+  stop("Cannot plot variables at different levels.\n",
+       "  Y variable '", ycol, "' is ", level_y, "\n",
+       "  X variable '", xcol, "' is ", level_x, "\n\n",
+       "Both variables must be at the same level.\n",
+       "Suggestions:\n",
+       "  - Plot level-1 variables against other level-1 variables\n",
+       "  - Plot level-2 variables against other level-2 variables\n",
+       "  - Aggregate level-1 variables to cluster level before plotting\n",
+       "  - Use univariate_plot() to examine variables separately")
+}
+
 # DISCRETE / NUMERIC DETECTION ----
 # Unified rule:
 #   - If declared categorical → discrete
@@ -662,6 +814,9 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   
   # Add normalized yjt copies for easier plotting
   model <- .add_yjt_copies(model)
+  
+  # Add normalized bracket copies for easier plotting
+  model <- .add_bracket_copies(model)
   
   # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_vars)) {
@@ -738,9 +893,29 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   fill_col <- unname(plot_colors["blue"])
   n_sets   <- length(model@imputations)
   
+  # Get cluster ID for level-2 detection
+  cluster_id <- .get_cluster_id(model)
+  
   # Inner plot builder
   build_one <- function(v) {
-    imp_vals <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
+    # Check if this variable is level-2 (constant within clusters)
+    is_level2 <- FALSE
+    if (!is.na(cluster_id)) {
+      d <- model@imputations[[1]]
+      if (v %in% names(d) && cluster_id %in% names(d)) {
+        is_level2 <- .is_level2_variable(d, v, cluster_id)
+      }
+    }
+    
+    # Extract values (unique per cluster for level-2)
+    if (is_level2) {
+      imp_vals <- unlist(lapply(model@imputations, function(imp_df) {
+        .get_cluster_unique_values(imp_df, v, cluster_id)
+      }), use.names = FALSE)
+    } else {
+      imp_vals <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
+    }
+    
     if (!is.numeric(imp_vals)) {
       message("Skipping non-numeric variable: ", v)
       return(NULL)
@@ -798,12 +973,159 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   plots <- setNames(lapply(vars, build_one), vars)
   plots <- plots[!sapply(plots, is.null)]
   
+  # Add cluster index plots for level-1 variables
+  if (!is.na(cluster_id) && cluster_id %in% names(model@imputations[[1]])) {
+    d0 <- model@imputations[[1]]
+    
+    for (v in vars) {
+      # Check if this variable is level-1 (varies within clusters)
+      is_level2 <- FALSE
+      if (v %in% names(d0)) {
+        is_level2 <- .is_level2_variable(d0, v, cluster_id)
+      }
+      
+      # Only create cluster plot for level-1 variables
+      if (!is_level2 && v %in% names(d0)) {
+        cluster_plot <- tryCatch({
+          .build_univariate_cluster_plot(model, v, cluster_id, font_size)
+        }, error = function(e) {
+          message("Could not create cluster plot for '", v, "': ", e$message)
+          NULL
+        })
+        
+        if (!is.null(cluster_plot)) {
+          cluster_plot_name <- paste0(v, "_cluster")
+          plots[[cluster_plot_name]] <- cluster_plot
+        }
+      }
+    }
+  }
+  
   if (print) {
     for (p in plots) print(p)
     invisible(plots)
   } else {
     plots
   }
+}
+
+# HELPER: Build cluster index plot for level-1 variables ----
+.build_univariate_cluster_plot <- function(model, var_name, cluster_id, font_size = 14) {
+  # Stack data across imputations
+  data_list <- lapply(seq_along(model@imputations), function(i) {
+    imp_df <- model@imputations[[i]]
+    if (!var_name %in% names(imp_df)) return(NULL)
+    if (!cluster_id %in% names(imp_df)) return(NULL)
+    
+    data.frame(
+      value = imp_df[[var_name]],
+      cluster = as.character(imp_df[[cluster_id]]),
+      imp = i,
+      stringsAsFactors = FALSE
+    )
+  })
+  
+  data_stacked <- do.call(rbind, data_list)
+  data_stacked <- data_stacked[is.finite(data_stacked$value) & !is.na(data_stacked$cluster), ]
+  
+  if (!nrow(data_stacked)) {
+    return(NULL)
+  }
+  
+  # Compute within-cluster statistics (per imputation, then pool)
+  cluster_min_n <- 3
+  
+  # Compute within-cluster statistics (on pooled data, matching residuals_plot)
+  cluster_min_n <- 3
+  
+  stats_cl <- aggregate(
+    value ~ cluster,
+    data = data_stacked,
+    FUN = function(x) {
+      x <- x[is.finite(x)]
+      if (length(x) < cluster_min_n) NA_real_ else stats::sd(x)
+    }
+  )
+  names(stats_cl)[names(stats_cl) == "value"] <- "sd"
+  
+  n_cl <- aggregate(
+    value ~ cluster,
+    data = data_stacked,
+    FUN = function(x) sum(is.finite(x))
+  )
+  names(n_cl)[names(n_cl) == "value"] <- "n"
+  
+  stats_cl <- merge(stats_cl, n_cl, by = "cluster", all.x = TRUE)
+  stats_cl <- stats_cl[is.finite(stats_cl$sd) & stats_cl$n >= cluster_min_n, , drop = FALSE]
+  
+  if (!nrow(stats_cl)) {
+    return(NULL)
+  }
+  
+  # Keep only clusters with sufficient data
+  keep_clusters <- stats_cl$cluster
+  data_stacked <- data_stacked[data_stacked$cluster %in% keep_clusters, , drop = FALSE]
+  
+  # Order clusters by SD
+  stats_cl <- stats_cl[order(stats_cl$sd), ]
+  cluster_levels <- stats_cl$cluster
+  
+  # Convert cluster to character for factor, but preserve the SD-based order
+  # Important: Don't let factor() reorder alphabetically!
+  data_stacked$cluster_ord <- factor(
+    as.character(data_stacked$cluster), 
+    levels = as.character(cluster_levels)  # Explicit order
+  )
+  
+  # DEBUG: Show SD range
+  message("Cluster SD range for '", var_name, "':")
+  message("  Min SD: ", round(min(stats_cl$sd, na.rm = TRUE), 3))
+  message("  Max SD: ", round(max(stats_cl$sd, na.rm = TRUE), 3))
+  message("  Median SD: ", round(median(stats_cl$sd, na.rm = TRUE), 3))
+  message("  Number of clusters: ", nrow(stats_cl))
+  message("  First 5 clusters (by SD): ", paste(head(cluster_levels, 5), collapse = ", "))
+  message("  Last 5 clusters (by SD): ", paste(tail(cluster_levels, 5), collapse = ", "))
+  
+  n_sets <- length(model@imputations)
+  
+  # Create plot
+  p <- ggplot2::ggplot(
+    data_stacked,
+    ggplot2::aes(x = cluster_ord, y = value)
+  ) +
+    ggplot2::geom_point(
+      alpha    = 0.20,
+      size     = 1.0,
+      color    = unname(plot_colors[plot_point_color]),
+      position = ggplot2::position_jitter(width = 0.10, height = 0)  # Further reduced jitter
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      color      = "grey70",
+      linewidth  = 0.5,
+      linetype   = "dashed"
+    ) +
+    ggplot2::labs(
+      title = paste0(
+        "Distribution by Cluster Over ",
+        n_sets, " Imputed Data Sets: ", var_name
+      ),
+      x = "Clusters (Ordered by SD)",
+      y = var_name
+    ) +
+    blimp_theme(font_size) +
+    ggplot2::theme(
+      axis.text.y  = ggplot2::element_text(
+        size   = font_size,
+        margin = ggplot2::margin(r = 6)
+      ),
+      axis.ticks.y = ggplot2::element_line(),
+      axis.title.y = ggplot2::element_text(size = font_size),
+      axis.text.x  = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_line()
+    )
+  
+  p
 }
 
 # HELPER: Normalize yjt() variable names ----
@@ -893,6 +1215,96 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   return(model)
 }
 
+# HELPER: Normalize bracket variable names ----
+# Converts bracket notation to dot notation:
+#   posaff[person] -> posaff.person
+#   posaff$pain[person] -> posaff_on_pain.person
+#   pain.mean[person] -> pain.mean.person (preserve ALL dots!)
+.normalize_bracket_names <- function(names_vec) {
+  sapply(names_vec, function(nm) {
+    # Check if it has brackets
+    if (!grepl("\\[", nm)) {
+      return(nm)  # No brackets, return as-is
+    }
+    
+    # Extract cluster name (inside brackets)
+    cluster <- sub("^.+\\[(.+)\\]$", "\\1", nm)
+    
+    if (grepl("\\$", nm)) {
+      # Pattern: var$slope[cluster]
+      # Example: posaff$pain[person] -> posaff_on_pain.person
+      
+      # Extract parts before $
+      base <- sub("^(.+)\\$.+\\[.+\\]$", "\\1", nm)
+      # Extract part between $ and [
+      slope <- sub("^.+\\$(.+)\\[.+\\]$", "\\1", nm)
+      
+      # Replace $ with _on_ (preserve ALL dots in base and slope!)
+      return(paste0(base, "_on_", slope, ".", cluster))
+      
+    } else {
+      # Pattern: var[cluster]
+      # Examples: posaff[person] -> posaff.person
+      #           pain.mean[person] -> pain.mean.person
+      #           probsolvpost.residual[school] -> probsolvpost.residual.school
+      
+      # Extract base (everything before [)
+      base <- sub("\\[.+\\]$", "", nm)
+      
+      # Simply replace [ with . and remove ]
+      # Preserve ALL dots in the original variable name!
+      return(paste0(base, ".", cluster))
+    }
+  }, USE.NAMES = FALSE)
+}
+
+# HELPER: Add normalized bracket copies to model imputations ----
+.add_bracket_copies <- function(model) {
+  # Check if any bracket variables exist
+  var_names <- names(model@imputations[[1]])
+  bracket_vars <- var_names[grepl("\\[", var_names)]
+  
+  if (length(bracket_vars) == 0) {
+    return(model)  # No bracket variables, return as-is
+  }
+  
+  # Create normalized names
+  normalized_names <- .normalize_bracket_names(bracket_vars)
+  
+  # DEBUG: Show what's being created
+  message("Creating bracket normalized copies:")
+  for (i in seq_along(bracket_vars)) {
+    message("  ", bracket_vars[i], " -> ", normalized_names[i])
+  }
+  
+  # Add copies with normalized names to each imputation
+  for (i in seq_along(model@imputations)) {
+    for (j in seq_along(bracket_vars)) {
+      original_name <- bracket_vars[j]
+      new_name <- normalized_names[j]
+      
+      # Only add if not already present
+      if (!new_name %in% names(model@imputations[[i]])) {
+        model@imputations[[i]][[new_name]] <- model@imputations[[i]][[original_name]]
+      }
+    }
+  }
+  
+  # Also add to variance_imp if present
+  if (!is.null(model@variance_imp)) {
+    for (j in seq_along(bracket_vars)) {
+      original_name <- bracket_vars[j]
+      new_name <- normalized_names[j]
+      
+      if (original_name %in% names(model@variance_imp) && !new_name %in% names(model@variance_imp)) {
+        model@variance_imp[[new_name]] <- model@variance_imp[[original_name]]
+      }
+    }
+  }
+  
+  return(model)
+}
+
 # IMPUTATION QUALITY VISUALIZATION ----
 # Shows distribution of observed vs. imputed values to assess imputation quality.
 # Uses unified visual style: observed (blue filled) vs imputed (red outlined).
@@ -914,6 +1326,9 @@ imputation_plot <- function(
   
   # Add normalized yjt copies for easier plotting
   model <- .add_yjt_copies(model)
+  
+  # Add normalized bracket copies for easier plotting
+  model <- .add_bracket_copies(model)
   
   # Auto-populate discrete_vars from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_vars)) {
@@ -1485,7 +1900,7 @@ residuals_plot <- function(
         message("Skipping (columns missing): ", base)
         return(NULL)
       }
-      df <- .stack_cols(model, ycol, xcol)
+      df <- .stack_cols(model, ycol, xcol)  # Both level-1, keep standard
       if (is.null(df) || !nrow(df)) {
         message("Skipping (no data across imputations): ", base)
         return(NULL)
@@ -1953,7 +2368,7 @@ residuals_plot <- function(
           return(NULL)
         }
         
-        df <- .stack_cols(model, ycol, xcol)
+        df <- .stack_cols_cluster_aware(model, ycol, xcol)
         if (is.null(df) || !nrow(df)) {
           message("Skipping (no data across imputations): ", base, " ~ ", xname)
           return(NULL)
@@ -2709,6 +3124,9 @@ bivariate_plot <- function(
   # Add normalized yjt copies for easier plotting
   model <- .add_yjt_copies(model)
   
+  # Add normalized bracket copies for easier plotting
+  model <- .add_bracket_copies(model)
+  
   # Auto-populate discrete_x from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_x)) {
     discrete_x <- .get_categorical_vars(model)
@@ -2823,7 +3241,7 @@ bivariate_plot <- function(
   x_name <- x_match
   
   
-  df <- .stack_cols(model, y_name, x_name)
+  df <- .stack_cols_cluster_aware(model, y_name, x_name)
   df <- stats::na.omit(df[, c("x","y","imp")])
   
   if (!nrow(df)) stop("No complete cases for the selected variables.")
@@ -3434,5 +3852,11 @@ bivariate_plot <- function(
   }
   
   message("Created ", length(plots), " bivariate plot(s)")
-  invisible(plots)
+  
+  if (print) {
+    for (p in plots) print(p)
+    invisible(plots)
+  } else {
+    plots
+  }
 }
