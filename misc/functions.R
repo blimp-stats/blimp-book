@@ -656,7 +656,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 # Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
 univariate_plot <- function(model, vars = NULL, discrete_vars = NULL, 
-                            bins = 30, font_size = 14) {
+                            bins = 30, font_size = 14, print = FALSE) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   
@@ -797,8 +797,13 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   
   plots <- setNames(lapply(vars, build_one), vars)
   plots <- plots[!sapply(plots, is.null)]
-  for (p in plots) print(p)
-  invisible(plots)
+  
+  if (print) {
+    for (p in plots) print(p)
+    invisible(plots)
+  } else {
+    plots
+  }
 }
 
 # HELPER: Normalize yjt() variable names ----
@@ -854,6 +859,12 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   # Create normalized names
   normalized_names <- .normalize_yjt_names(yjt_vars)
   
+  # DEBUG: Show what's being created
+  message("Creating yjt normalized copies:")
+  for (i in seq_along(yjt_vars)) {
+    message("  ", yjt_vars[i], " -> ", normalized_names[i])
+  }
+  
   # Add copies with normalized names to each imputation
   for (i in seq_along(model@imputations)) {
     for (j in seq_along(yjt_vars)) {
@@ -892,7 +903,8 @@ imputation_plot <- function(
     vars = NULL,
     discrete_vars = NULL,
     bins = 30,
-    font_size = 14
+    font_size = 14,
+    print = FALSE
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
@@ -1141,8 +1153,13 @@ imputation_plot <- function(
   
   plots <- setNames(lapply(vars, build_one), vars)
   plots <- plots[!sapply(plots, is.null)]
-  for (p in plots) print(p)
-  invisible(plots)
+  
+  if (print) {
+    for (p in plots) print(p)
+    invisible(plots)
+  } else {
+    plots
+  }
 }
 
 
@@ -2677,12 +2694,14 @@ bivariate_plot <- function(
     discrete_x = NULL,
     standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
+    polynomial = TRUE,      # NEW: Turn polynomial fitting on/off
+    rsquare = FALSE,        # NEW: Show R² on plot
     level = 0.95,
     point_alpha = 0.15, point_size = 1.2,
     curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
-    print = TRUE         # for multi-plot mode
+    print = FALSE        # Set to TRUE to force printing
 ) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   standardize <- match.arg(standardize)
@@ -2740,6 +2759,8 @@ bivariate_plot <- function(
       discrete_x = discrete_x,
       standardize = standardize,
       poly_degree = poly_degree,
+      polynomial = polynomial,
+      rsquare = rsquare,
       level = level,
       point_alpha = point_alpha,
       point_size = point_size,
@@ -3165,6 +3186,42 @@ bivariate_plot <- function(
     
     curve_df <- polynomial_pooled(df)
     
+    # Calculate pooled R² for the polynomial fits
+    pooled_r2 <- NULL
+    tryCatch({
+      # Fit polynomial in each imputation and get R²
+      imps <- split(df, df$imp)
+      r2_values <- sapply(imps, function(d) {
+        d0 <- stats::na.omit(d[, c("y", "x")])
+        if (nrow(d0) <= poly_degree) return(NA_real_)
+        
+        fit <- try(
+          stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
+          silent = TRUE
+        )
+        
+        if (inherits(fit, "try-error")) return(NA_real_)
+        
+        # Get R²
+        summary(fit)$r.squared
+      })
+      
+      # Pool R² using Fisher's z-transformation
+      r2_finite <- r2_values[is.finite(r2_values)]
+      if (length(r2_finite) > 0) {
+        # Convert R² to R, then to Fisher's z
+        r_values <- sqrt(pmax(0, pmin(1, r2_finite)))
+        z_values <- 0.5 * log((1 + r_values) / (1 - r_values))
+        
+        # Pool z values
+        z_pooled <- mean(z_values, na.rm = TRUE)
+        
+        # Convert back to R, then to R²
+        r_pooled <- tanh(z_pooled)
+        pooled_r2 <- r_pooled^2
+      }
+    }, error = function(e) NULL)
+    
     p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
     
     # spaghetti FIRST (background)
@@ -3195,23 +3252,30 @@ bivariate_plot <- function(
         } else {
           NULL
         }
-      } +
-      suppressWarnings(
-        ggplot2::geom_ribbon(
+      }
+    
+    # Add polynomial curve and ribbon only if polynomial = TRUE
+    if (polynomial) {
+      p <- p +
+        suppressWarnings(
+          ggplot2::geom_ribbon(
+            data        = curve_df,
+            ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+            inherit.aes = FALSE,
+            fill        = unname(plot_colors[band_fill]),
+            alpha       = plot_shading
+          )
+        ) +
+        ggplot2::geom_line(
           data        = curve_df,
-          ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+          ggplot2::aes(x = x, y = mean),
           inherit.aes = FALSE,
-          fill        = unname(plot_colors[band_fill]),
-          alpha       = plot_shading
+          color       = unname(plot_colors[curve_color]),
+          linewidth   = 1.2
         )
-      ) +
-      ggplot2::geom_line(
-        data        = curve_df,
-        ggplot2::aes(x = x, y = mean),
-        inherit.aes = FALSE,
-        color       = unname(plot_colors[curve_color]),
-        linewidth   = 1.2
-      ) +
+    }
+    
+    p <- p +
       ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
       ggplot2::labs(
         title = paste0("Bivariate Plot Over ", n_imps,
@@ -3229,9 +3293,29 @@ bivariate_plot <- function(
         axis.title.x = ggplot2::element_text(size = font_size,
                                              margin = ggplot2::margin(t = 12))
       )
+    
+    # Add R² annotation if requested and available
+    if (rsquare && !is.null(pooled_r2) && is.finite(pooled_r2)) {
+      p <- p + ggplot2::annotate(
+        "text",
+        x = Inf, y = Inf,
+        label = sprintf("Pooled R² = %.3f", pooled_r2),
+        hjust = 1.1, vjust = 1.5,
+        size = font_size / .pt,
+        color = "black"
+      )
+    }
   }
   
-  p
+  # Return behavior:
+  # - If print = TRUE: print now and return invisible
+  # - If print = FALSE: return visible (R will auto-print if not assigned)
+  if (print) {
+    print(p)
+    invisible(p)
+  } else {
+    p
+  }
 }
 
 
@@ -3247,6 +3331,8 @@ bivariate_plot <- function(
     discrete_x = NULL,
     standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
+    polynomial = TRUE,
+    rsquare = FALSE,
     level = 0.95,
     point_alpha = 0.15,
     point_size = 1.2,
@@ -3254,7 +3340,7 @@ bivariate_plot <- function(
     band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
-    print = TRUE
+    print = FALSE
 ) {
   standardize <- match.arg(standardize)
   
@@ -3316,6 +3402,8 @@ bivariate_plot <- function(
         discrete_x = discrete_x,
         standardize = standardize,
         poly_degree = poly_degree,
+        polynomial = polynomial,
+        rsquare = rsquare,
         level = level,
         point_alpha = point_alpha,
         point_size = point_size,

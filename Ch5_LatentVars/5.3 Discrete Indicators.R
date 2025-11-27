@@ -43,6 +43,9 @@ model1@estimates[grep("standardized|Cor", rownames(model1@estimates)), ]
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
+# plot imputed vs. observed values
+imputation_plot(model1)
+
 # plot distributions and residuals
 indicators <- paste0('swan',1:9,'.latent')
 residuals <- paste0('swan',1:9,'.residual')
@@ -65,7 +68,7 @@ bivariate_plot(x_vars = 'attent.latent', y_vars = residuals, model = model1, sta
 # plot pairs of indicator residuals
 bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
 
-# plot large residual correlations
+# plot largest residual correlations
 bivariate_plot(swan2.residual ~ swan7.residual, model = model1, poly_degree = 1, standardize = 'both')
 bivariate_plot(swan2.residual ~ swan8.residual, model = model1, poly_degree = 1, standardize = 'both')
 bivariate_plot(swan7.residual ~ swan9.residual, model = model1, poly_degree = 1, standardize = 'both')
@@ -92,5 +95,19 @@ output(model2)
 
 # print standardized estimates
 model2@estimates[grep("standardized|Cor", rownames(model2@estimates)), ]
+
+# ITEM TRACE CURVES ----
+
+# plot item trace curves
+items <- paste0("swan", 1:9)
+probs <- 1:5
+itc_vars <- paste0(
+  rep(items, each = length(probs)), ".", rep(probs, times = length(items)), ".probability"
+)
+itc_plots <- bivariate_plot(x_vars = 'attent.latent', y_vars = itc_vars, model = model1, standardize = 'y', polynomial = F)
+for (i in 1:9) {
+  print(patchwork::wrap_plots(itc_plots[((i - 1) * 5 + 1):(i * 5)], ncol = 5) &
+          ggplot2::theme(plot.title = ggplot2::element_blank()))
+}
 
 
