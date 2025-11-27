@@ -40,6 +40,9 @@ posterior_plot(model,'mathpost')
 # plot imputed vs. observed values
 imputation_plot(model)
 
+# plot distributions and residuals
+univariate_plot(vars = c('mathpost','mathpost.residual'), model)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(mathpost.residual ~ mathpost.predicted, standardize = 'y', model = model)
 

@@ -9,8 +9,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -55,11 +53,14 @@ simple_plot(yjt(inflam_sum) ~ els | female.1, model)
 # plot imputed vs. observed values
 imputation_plot(model)
 
+# plot distributions and residuals
+univariate_plot(vars = c('inflam_sum','inflam_sum.yjt','inflam_sum.yjt.residual'), model)
+
 # plot standardized residuals vs. predicted values
-bivariate_plot(yjt(inflam_sum).residual ~ yjt(inflam_sum).predicted, standardize = 'y', model = model)
+bivariate_plot(inflam_sum.yjt.residual ~ inflam_sum.yjt.predicted, standardize = 'y', model = model)
 
 # plot standardized residuals vs. numeric predictors
-bivariate_plot(y_vars = 'yjt(inflam_sum).residual', 
+bivariate_plot(y_vars = 'inflam_sum.yjt.residual', 
                x_vars = 'age',
                standardize = 'y',
                model = model)

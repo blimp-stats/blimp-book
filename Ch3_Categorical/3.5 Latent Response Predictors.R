@@ -44,6 +44,9 @@ posterior_plot(model,'turnover')
 # plot imputed vs. observed values
 imputation_plot(model)
 
+# plot distributions and residuals
+# univariate_plot(vars = c('intensity','drinker.1.residual'), model2)
+
 # plot individual-level predicted probabilities
 bivariate_plot(y_vars = 'turnover.1.probability', 
                x_vars = c('lmx','empower','jobsat.latent','male'),

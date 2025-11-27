@@ -62,6 +62,9 @@ posterior_plot(model2,'dpdd')
 # plot imputed vs. observed values
 imputation_plot(model2)
 
+# plot distributions and residuals
+univariate_plot(vars = c('dpdd','dpdd.residual'), model2)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(dpdd.residual ~ dpdd.predicted, standardize = 'y', model = model2)
 

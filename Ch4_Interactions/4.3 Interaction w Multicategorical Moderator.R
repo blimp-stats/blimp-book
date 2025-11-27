@@ -64,6 +64,9 @@ simple_plot(read9 ~ read1 | lrnprob1risk.2 + lrnprob1risk.3, model2)
 # plot imputed vs. observed values
 imputation_plot(model2)
 
+# plot distributions and residuals
+univariate_plot(vars = c('read9','read9.residual'), model2)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(read9.residual ~ read9.predicted, standardize = 'y', model = model2)
 

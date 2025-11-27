@@ -43,6 +43,9 @@ posterior_plot(model1,'drinker')
 # plot imputed vs. observed values
 imputation_plot(model1)
 
+# # plot distributions and residuals
+# univariate_plot(vars = c('intensity','drinker.1.residual'), model2)
+
 # plot individual-level predicted probabilities
 bivariate_plot(y_vars = 'drinker.1.probability', 
                x_vars = c('alcage','college','age','male'),
@@ -81,6 +84,9 @@ posterior_plot(model2,'drinkingfreq')
 
 # plot imputed vs. observed values
 imputation_plot(model2)
+
+# # plot distributions and residuals
+# univariate_plot(vars = c('intensity','drinker.1.residual'), model2)
 
 # plot individual-level predicted probabilities
 bivariate_plot(y_vars = c('drinkingfreq.1.probability','drinkingfreq.2.probability'), 

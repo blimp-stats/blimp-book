@@ -47,6 +47,9 @@ posterior_plot(model,'disability')
 # plot imputed vs. observed values
 imputation_plot(model)
 
+# plot distributions and residuals
+univariate_plot(vars = c('disability','disability.residual'), model)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(disability.residual ~ disability.predicted, standardize = 'y', model = model)
 

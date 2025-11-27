@@ -44,6 +44,9 @@ jn_plot(read9 ~ read1 | lrnprob1, model)
 # plot imputed vs. observed values
 imputation_plot(model)
 
+# plot distributions and residuals
+univariate_plot(vars = c('read9','read9.residual'), model)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(read9.residual ~ read9.predicted, standardize = 'y', model = model)
 

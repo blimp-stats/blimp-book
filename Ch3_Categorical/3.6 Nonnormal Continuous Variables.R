@@ -44,6 +44,9 @@ posterior_plot(model1,'dpdd')
 # plot imputed vs. observed values
 imputation_plot(model1)
 
+# plot distributions and residuals
+univariate_plot(vars = c('dpdd','dpdd.yjt','dpdd.yjt.residual'), model1)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(dpdd.yjt.residual ~ dpdd.yjt.predicted, standardize = 'y', model = model1)
 
@@ -76,11 +79,6 @@ output(model2)
 
 # plot parameter distributions
 posterior_plot(model2,'dpdd')
-
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-
-# plot imputed vs. observed values
-imputation_plot(model2)
 
 # FIT MODEL WITH FULLY NORMALIZED PREDICTOR ----
 

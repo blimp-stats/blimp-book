@@ -59,6 +59,9 @@ output(model2)
 # plot imputed vs. observed values
 imputation_plot(model2)
 
+# plot distributions and residuals
+univariate_plot(vars = c('intensity','intensity.residual'), model2)
+
 # plot standardized residuals vs. predicted values
 bivariate_plot(intensity.residual ~ intensity.predicted, standardize = 'y', model = model2)
 

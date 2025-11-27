@@ -2,7 +2,7 @@
 # how to access residual correlation draws for Wald test
 # function to print standardized estimates? e.g., standarized(model)
 
-# MODERATED NONLINEAR FACTOR ANALYSIS (MNLFA)
+# LATENT VARIABLE WITH DISCRETE INDICATORS
 
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -43,27 +43,36 @@ model1@estimates[grep("standardized|Cor", rownames(model1@estimates)), ]
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# latent variable scores vs. indicator residuals
-bivariate_plot(x_vars = 'attent.latent', y_vars = paste0('swan',1:9,'.residual'), model = model1, standardize = 'both')
+# plot distributions and residuals
+indicators <- paste0('swan',1:9,'.latent')
+residuals <- paste0('swan',1:9,'.residual')
+univariate_plot(vars = c(indicators,residuals), model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(swan1.residual ~ swan1.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan2.residual ~ swan2.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan3.residual ~ swan3.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan4.residual ~ swan4.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan5.residual ~ swan5.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan6.residual ~ swan6.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan7.residual ~ swan7.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan8.residual ~ swan8.predicted, standardize = 'y', model = model1)
+bivariate_plot(swan9.residual ~ swan9.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. latent variable scores
+bivariate_plot(x_vars = 'attent.latent', y_vars = residuals, model = model1, standardize = 'y')
 
 # plot pairs of indicator residuals
-bivariate_plot(vars = paste0('swan',1:9,'.residual'), model = model1)
+bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
 
 # plot large residual correlations
-bivariate_plot(swan2.residual ~ swan7.residual, model1)
-bivariate_plot(swan2.residual ~ swan8.residual, model1)
-bivariate_plot(swan7.residual ~ swan9.residual, model1)
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
-
-row.names(model1@estimates)
+bivariate_plot(swan2.residual ~ swan7.residual, model = model1, poly_degree = 1, standardize = 'both')
+bivariate_plot(swan2.residual ~ swan8.residual, model = model1, poly_degree = 1, standardize = 'both')
+bivariate_plot(swan7.residual ~ swan9.residual, model = model1, poly_degree = 1, standardize = 'both')
 
 # FIT CFA MODEL WITH CORRELATED RESIDUALS ----
 
-# cfa with factor mean and variance fixed at 0 and 1
+# two pairs of correlated residuals
 model2 <- rblimp(
   data = adhd,
   ordinal = 'swan1:swan9',

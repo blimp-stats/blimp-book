@@ -38,6 +38,9 @@ posterior_plot(model1,'turnover')
 # plot imputed vs. observed values
 imputation_plot(model1)
 
+# plot distributions and residuals
+univariate_plot(vars = c('turnover.latent','turnover.residual'), model1)
+
 # plot individual-level predicted probabilities
 bivariate_plot(y_vars = 'turnover.1.probability', 
                x_vars = c('lmx','empower','male'),
@@ -74,6 +77,9 @@ posterior_plot(model2,'jobsat')
 
 # plot imputed vs. observed values
 imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('jobsat.latent','jobsat.residual'), model2)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(jobsat.residual ~ jobsat.predicted, standardize = 'y', model = model2)
