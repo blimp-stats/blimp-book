@@ -23,7 +23,7 @@ inflamm <- read.csv(data_url)
 # multiple imputations for graphical diagnostics 
 model <- rblimp(
   data = inflamm,
-  # ordinal = 'els',
+  ordinal = 'els',
   nominal = 'female',
   center = 'age',
   # fixed = 'age female',

@@ -1,6 +1,3 @@
-# BRIAN NOTES ----
-# simple_plot error
-
 # REPEATED MEASURES ANALYSIS
 
 # plotting functions

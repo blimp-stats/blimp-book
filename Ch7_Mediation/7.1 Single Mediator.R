@@ -6,8 +6,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
 # READ DATA ----
 
@@ -45,7 +43,25 @@ posterior_plot(model, 'indirect')
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model)
-imputed_vs_observed_plot(model)
-residuals_plot(model)
+# plot imputed vs. observed values
+imputation_plot(model)
+
+# plot distributions and residuals
+univariate_plot(vars = c('familism.residual','internalize.residual'), model)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(familism.residual ~ familism.predicted, standardize = 'y', model = model)
+bivariate_plot(internalize.residual ~ internalize.predicted, standardize = 'y', model = model)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'familism.residual', 
+               x_vars = c('discrim','female','age'),
+               discrete_x = c('female','age'),
+               standardize = 'y',
+               model = model)
+
+bivariate_plot(y_vars = 'internalize.residual', 
+               x_vars = c('discrim','familism','female','age'),
+               discrete_x = c('female','age'),
+               standardize = 'y',
+               model = model)
