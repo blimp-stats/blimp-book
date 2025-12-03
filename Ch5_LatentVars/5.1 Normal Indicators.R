@@ -57,7 +57,7 @@ model2@estimates[grep("standardized|Cor", rownames(model2@estimates)), ]
 # plot distributions and residuals
 indicators <- c('inflam_crp','inflam_il6','inflam_tnf','inflam_ifn')
 residuals <- paste0(c('inflam_crp','inflam_il6','inflam_tnf','inflam_ifn'),'.residual')
-univariate_plot(vars = c(indicators,residuals), model2)
+univariate_plot(vars = c(indicators,residuals), model = model2)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(inflam_crp.residual ~ inflam_crp.predicted, standardize = 'y', model = model2)

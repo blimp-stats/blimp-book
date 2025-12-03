@@ -15,7 +15,7 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-# FIT LINEAR GROWTH MODEL ----
+# FIT LINEAR GROWTH MODEL (COMBINED SPECIFICATION) ----
 
 # combined-model specification
 model1 <- rblimp(
@@ -32,6 +32,25 @@ output(model1)
 
 # plot parameter distributions
 posterior_plot(model1)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('severity.person','severity_on_week.person','severity.residual'), model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model1)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model1)
+
+# FIT LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
 
 # latent variable specification
 model2 <- rblimp(
@@ -57,18 +76,22 @@ posterior_plot(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model2)
+
 # plot predicted values by time
-# disallow std + lines
-bivariate_plot(severity.predicted ~ week, model = model2, lines = T, discrete_x = 'week', standardize = 'y')
-bivariate_plot(severity.predicted ~ week, model = model2, lines = T)
-bivariate_plot(severity.predicted ~ week, model = model2)
+bivariate_plot(severity.predicted ~ week, model2)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
-
-# FIT LINEAR GROWTH MODEL WITH PREDICTORS ----
+# FIT LINEAR GROWTH MODEL WITH PREDICTORS (COMBINED SPECIFICATION) ----
 
 # combined-model specification
 model3 <- rblimp(
@@ -95,6 +118,25 @@ posterior_plot(model3)
 
 # plot conditional growth curves
 simple_plot(severity ~ week | drug, model3)
+
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot imputed vs. observed values
+imputation_plot(model3)
+
+# plot distributions and residuals
+univariate_plot(vars = c('severity.person','severity_on_week.person','severity.residual'), model3)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model3)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model3)
+
+# FIT LINEAR GROWTH MODEL WITH PREDICTORS (LATENT SPECIFICATION) ----
 
 # latent variable specification
 model4 <- rblimp(
@@ -127,7 +169,19 @@ posterior_plot(model4)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model4)
-imputed_vs_observed_plot(model4)
-residuals_plot(model4)
+# plot imputed vs. observed values
+imputation_plot(model4)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model4)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model4)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model4)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model4)
+
+

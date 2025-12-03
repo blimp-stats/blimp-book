@@ -44,10 +44,25 @@ posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+indicators <- c('severity0','severity1','severity1','severity2')
+residuals <- paste0(c('severity0','severity1','severity1','severity2'),'.residual')
+univariate_plot(vars = c(indicators,residuals), model = model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. latent variable scores
+bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model1, standardize = 'both')
+
+# plot pairs of indicator residuals
+bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
 
 # FIT LINEAR GROWTH MODEL WITH PREDICTORS ----
 
@@ -84,7 +99,22 @@ posterior_plot(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+indicators <- c('severity0','severity1','severity1','severity2')
+residuals <- paste0(c('severity0','severity1','severity1','severity2'),'.residual')
+univariate_plot(vars = c(indicators,residuals), model = model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. latent variable scores
+bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model2, standardize = 'both')
+
+# plot pairs of indicator residuals
+bivariate_plot(vars = residuals, model = model2, poly_degree = 1, standardize = 'both')

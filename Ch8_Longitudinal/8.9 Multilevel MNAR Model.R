@@ -71,10 +71,20 @@ posterior_plot(model1)
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model1), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model1)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model1)
 
 # FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
 
@@ -120,10 +130,20 @@ posterior_plot(model2)
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model2), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model2)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model2)
 
 # FIT WU-CARROL SHARED PARAMETER CURVILINEAR GROWTH MODEL ----
 
@@ -169,10 +189,20 @@ posterior_plot(model3)
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model3), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model3)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model3)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model3)
 
 # FIT DIGGLE-KENWARD CURVILINEAR GROWTH MODEL ----
 
@@ -218,8 +248,18 @@ posterior_plot(model4)
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model4), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model4)
-imputed_vs_observed_plot(model4)
-residuals_plot(model4)
+# plot imputed vs. observed values
+imputation_plot(model4)
+
+# plot distributions and residuals
+univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), model4)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model4)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model4)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model4)
 

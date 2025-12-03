@@ -15,7 +15,7 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 probsolve <- read.csv(data_url)
 
-# FIT MODEL ----
+# FIT LINEAR GROWTH MODEL (COMBINED SPECIFICATION) ----
 
 # mixed model specification
 model1 <- rblimp(
@@ -40,25 +40,44 @@ posterior_plot(model1)
 # plot conditional growth curves
 simple_plot(probsolve ~ month7 | condition.1, model1)
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('probsolve.student','probsolve_on_month7.student','probsolve.school','probsolve_on_month7.school','probsolve.residual'), model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(probsolve.residual ~ probsolve.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals by time
+bivariate_plot(probsolve.residual ~ month7, model1)
+
+# plot predicted values by time
+bivariate_plot(probsolve.predicted ~ month7, model1)
+
+# FIT LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
+
 # latent variable specification
 model2 <- rblimp(
   data = probsolve,
   clusterid = 'school student',
   ordinal = 'frlunch condition',
   latent = '
-    student = raniceptl2 ranslopel2; 
-    school = raniceptl3 ranslopel3',
+    student = iceptl2 linearl2; 
+    school = iceptl3 linearl3',
   model = ' 
     level3:
-    raniceptl3 ~ intercept condition;
-    ranslopel3 ~ intercept condition;
-    raniceptl3 ~~ ranslopel3;
+    iceptl3 ~ intercept condition;
+    linearl3 ~ intercept condition;
+    iceptl3 ~~ linearl3;
     level2:
-    raniceptl2 ~ intercept@raniceptl3 stanmath frlunch;
-    ranslopel2 ~ intercept@ranslopel3;
-    raniceptl2 ~~ ranslopel2;
+    iceptl2 ~ intercept@iceptl3 stanmath frlunch;
+    linearl2 ~ intercept@linearl3;
+    iceptl2 ~~ linearl2;
     level1:
-    probsolve ~ intercept@raniceptl2 month7@ranslopel2',
+    probsolve ~ intercept@iceptl2 month7@linearl2',
   seed = 90291,
   burn = 50000,
   iter = 50000,
@@ -68,7 +87,17 @@ output(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('iceptl2.latent','linearl2.latent','iceptl3.latent','linearl3.latent','probsolve.residual'), model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(probsolve.residual ~ probsolve.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals by time
+bivariate_plot(probsolve.residual ~ month7, model2)
+
+# plot predicted values by time
+bivariate_plot(probsolve.predicted ~ month7, model2)

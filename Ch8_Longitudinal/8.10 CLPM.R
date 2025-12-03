@@ -40,7 +40,8 @@ model1 <- rblimp(
                'anx_lon1 = anx_lon2; anx_lon2 = anx_lon3; lon_anx1 = lon_anx2; lon_anx2 = lon_anx3'),
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
 output(model2)
 
@@ -65,13 +66,32 @@ model2 <- rblimp(
     anxdep4 ~~ lonely4;',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
 output(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+indicators <- c('anxdep1','anxdep2','anxdep3','anxdep4','lonely1','lonely2','lonely3','lonely4')
+residuals <- paste0(c('anxdep1','anxdep2','anxdep3','anxdep4','lonely1','lonely2','lonely3','lonely4'),'.residual')
+univariate_plot(vars = c(indicators,residuals), model = model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(anxdep1.residual ~ anxdep1.predicted, standardize = 'y', model = model2)
+bivariate_plot(anxdep2.residual ~ anxdep2.predicted, standardize = 'y', model = model2)
+bivariate_plot(anxdep3.residual ~ anxdep3.predicted, standardize = 'y', model = model2)
+bivariate_plot(anxdep4.residual ~ anxdep4.predicted, standardize = 'y', model = model2)
+bivariate_plot(lonely1.residual ~ lonely1.predicted, standardize = 'y', model = model2)
+bivariate_plot(lonely2.residual ~ lonely2.predicted, standardize = 'y', model = model2)
+bivariate_plot(lonely3.residual ~ lonely3.predicted, standardize = 'y', model = model2)
+bivariate_plot(lonely4.residual ~ lonely4.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. predictors
+bivariate_plot(y_vars = c('anxdep2.residual','lonely2.residual'), x_vars = c('anxdep1','lonely1'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = c('anxdep3.residual','lonely3.residual'), x_vars = c('anxdep2','lonely2'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = c('anxdep4.residual','lonely4.residual'), x_vars = c('anxdep3','lonely3'), standardize = 'y', model = model2)

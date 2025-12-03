@@ -1,7 +1,4 @@
-# BRIAN NOTES ----
-# possible to have add a function that stacks imputations?
-
-# MULTILEVEL GROWTH MODEL WITH MNAR ASSUMPTION
+# TIME-TO-EVENT (DISCRETE TIME) SURVIVAL MODEL
 
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -48,12 +45,23 @@ posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(dropout.1.probability ~ week, model1)
+# compare marginal predicted probabilities by time
+aggregate(dropout.1.probability ~ week, data = stack_imputations(model1), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('dropout.latent','dropout.residual'), model1)
+
+# plot dropout probabilities by time
+bivariate_plot(dropout.1.probability ~ week, model1, discrete_x = 'week')
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. time
+bivariate_plot(dropout.residual ~ week, model = model1, discrete_x = 'week')
 
 # FIT LINEAR HAZARD MODEL ----
 
@@ -77,12 +85,23 @@ posterior_plot(model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(dropout.1.probability ~ week, model2)
+# compare marginal predicted probabilities by time
+aggregate(dropout.1.probability ~ week, data = stack_imputations(model2), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('dropout.latent','dropout.residual'), model2)
+
+# plot dropout probabilities by week
+bivariate_plot(dropout.1.probability ~ week, model2, discrete_x = 'week')
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. time
+bivariate_plot(dropout.residual ~ week, model = model2, discrete_x = 'week')
 
 # FIT QUADRATIC HAZARD MODEL ----
 
@@ -106,12 +125,23 @@ posterior_plot(model3)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-bivariate_plot(dropout.1.probability ~ week, model3)
+# compare marginal predicted probabilities by time
+aggregate(dropout.1.probability ~ week, data = stack_imputations(model3), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
+
+# plot distributions and residuals
+univariate_plot(vars = c('dropout.latent','dropout.residual'), model3)
+
+# plot dropout probabilities by week
+bivariate_plot(dropout.1.probability ~ week, model3, discrete_x = 'week')
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals vs. week
+bivariate_plot(dropout.residual ~ week, model = model3, discrete_x = 'week')
 
 # FIT HAZARD MODEL WITH PREDICTOR ----
 
@@ -138,13 +168,20 @@ posterior_plot(model4)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# model-predictoed by time and group
-aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model4), mean)
+# compare marginal predicted probabilities by time and group
+aggregate(dropout.1.probability ~ week + drug, data = stack_imputations(model4), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model5)
-imputed_vs_observed_plot(model5)
-residuals_plot(model5)
+# plot imputed vs. observed values
+imputation_plot(model4)
+
+# plot distributions and residuals
+univariate_plot(vars = c('dropout.latent','dropout.residual'), model4)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = model4)
+
+# plot standardized residuals vs. week
+bivariate_plot(dropout.residual ~ week, model = model4, discrete_x = 'week')
 
 # FIT HAZARD MODEL WITH GROUP-BY-TIME INTERACTION ----
 
@@ -173,10 +210,17 @@ posterior_plot(model5)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# model-predictoed by time and group
-aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model5), mean)
+# compare marginal predicted probabilities by time and group
+aggregate(dropout.1.probability ~ week + drug, data = stack_imputations(model5), mean)
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model5)
-imputed_vs_observed_plot(model5)
-residuals_plot(model5)
+# plot imputed vs. observed values
+imputation_plot(model5)
+
+# plot distributions and residuals
+univariate_plot(vars = c('dropout.latent','dropout.residual'), model5)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = model5)
+
+# plot standardized residuals vs. week
+bivariate_plot(dropout.residual ~ week, model = model5, discrete_x = 'week')

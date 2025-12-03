@@ -37,15 +37,20 @@ posterior_plot(model1)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('severity.person','severity.residual'), model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model1)
+
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model1)
-bivariate_plot(severity.predicted ~ week, model = model1, discrete_x = 'week')
-
-
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
 
 # FIT REPEATED MEASURES MODEL WITH GROUP-BY-TIME INTERACTION ----
 
@@ -75,8 +80,18 @@ simple_plot(severity ~ drug | week.1 + week.2 + week.3, model2)
 
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+univariate_plot(vars = c('severity.person','severity.residual'), model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals by time
+bivariate_plot(severity.residual ~ week, model2)
+
+# plot predicted values by time
+bivariate_plot(severity.predicted ~ week, model2)
 
