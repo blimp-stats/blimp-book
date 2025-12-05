@@ -50,6 +50,27 @@ posterior_plot(model1, 'ind_male')
 posterior_plot(model1, 'ind_female')
 posterior_plot(model1, 'ind_diff')
 
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+univariate_plot(vars = c('drinker.1.probability','drinker.1.residual'), model1)
+
+# plot individual-level predicted probabilities
+bivariate_plot(y_vars = 'drinker.1.probability', 
+               x_vars = c('alcage','college','age','male'),
+               discrete_x = c('college','male'),
+               model = model1)
+
+# plot standardized residuals vs. numeric predictors
+bivariate_plot(y_vars = 'drinker.1.residual', 
+               x_vars = c('alcage','college','age','male'),
+               discrete_x = c('college','male'),
+               standardize = 'y',
+               model = model1)
+
 # FIT MODEL WITH A COUNT OUTCOME AND CONDITIONAL INDIRECT EFFECTS ----
 
 # negative binomial model for outcome

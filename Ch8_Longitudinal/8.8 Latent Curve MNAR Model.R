@@ -72,10 +72,25 @@ aggregate(
   FUN = mean
 )
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1) 
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
+# plot imputed vs. observed values
+imputation_plot(model1)
+
+# plot distributions and residuals
+latents <- c('icept.residual','linear.residual')
+residuals <- paste0(c('dropout1','dropout2','dropout3','severity0','severity1','severity2','severity3'),'.residual')
+univariate_plot(vars = c(latents,residuals), model = model1)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model1)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model1)
+bivariate_plot(dropout1.residual ~ dropout1.predicted, standardize = 'y', model = model1)
+bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model = model1)
+bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model1)
+
+# plot standardized residuals vs. latent variable scores
+bivariate_plot(x_vars = c('icept.latent','linear.latent','drug'), y_vars = residuals, discrete_x = 'drug', model = model1, standardize = 'y')
 
 # FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
 
@@ -125,10 +140,30 @@ aggregate(
   FUN = mean
 )
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+# plot imputed vs. observed values
+imputation_plot(model2)
+
+# plot distributions and residuals
+latents <- c('icept.residual','linear.residual')
+residuals <- paste0(c('dropout1','dropout2','dropout3','severity0','severity1','severity2','severity3'),'.residual')
+univariate_plot(vars = c(latents,residuals), model = model2)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model2)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model2)
+bivariate_plot(dropout1.residual ~ dropout1.predicted, standardize = 'y', model = model2)
+bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model = model2)
+bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model2)
+
+# plot standardized residuals vs. predictor values
+bivariate_plot(y_vars = 'dropout1.residual', x_vars = c('severity0','severity1','drug'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = 'dropout2.residual', x_vars = c('severity1','severity2','drug'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = 'dropout3.residual', x_vars = c('severity2','severity3','drug'), standardize = 'y', model = model2)
+
+# plot standardized residuals vs. latent variable scores
+bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, discrete_x = 'drug', model = model2, standardize = 'y')
 
 # FIT WU-CARROL SHARED PARAMETER CURVILINEAR GROWTH MODEL ----
 

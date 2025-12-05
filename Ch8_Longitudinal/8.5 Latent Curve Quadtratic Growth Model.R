@@ -75,9 +75,10 @@ posterior_plot(model2)
 imputation_plot(model1)
 
 # plot distributions and residuals
-indicators <- c('severity0','severity1','severity1','severity2')
-residuals <- paste0(c('severity0','severity1','severity1','severity2'),'.residual')
-univariate_plot(vars = c(indicators,residuals), model = model1)
+latents <- c('icept.latent','linear.latent','quad.latent')
+residuals <- paste0(c('severity0','severity1','severity2','severity3'),'.residual')
+univariate_plot(vars = c(latents,residuals), model = model1)
+univariate_plot(vars = c(latents,residuals), model = model2)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model1)
@@ -86,7 +87,7 @@ bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', mode
 bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model1)
 
 # plot standardized residuals vs. latent variable scores
-bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model1, standardize = 'both')
+bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model1, standardize = 'y')
 
 # plot pairs of indicator residuals
 bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
@@ -133,9 +134,9 @@ posterior_plot(model3)
 imputation_plot(model3)
 
 # plot distributions and residuals
-indicators <- c('severity0','severity1','severity1','severity2')
-residuals <- paste0(c('severity0','severity1','severity1','severity2'),'.residual')
-univariate_plot(vars = c(indicators,residuals), model = model3)
+latents <- c('icept.latent','linear.latent','quad.latent')
+residuals <- paste0(c('icept','linear','quad','severity0','severity1','severity2','severity3'),'.residual')
+univariate_plot(vars = c(latents,residuals), model = model3)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model3)
@@ -144,7 +145,7 @@ bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', mode
 bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model3)
 
 # plot standardized residuals vs. latent variable scores
-bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model3, standardize = 'both')
+bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, model = model3, standardize = 'y')
 
 # plot pairs of indicator residuals
 bivariate_plot(vars = residuals, model = model3, poly_degree = 1, standardize = 'both')
