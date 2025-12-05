@@ -2,7 +2,9 @@
 # how to handle wide-format dropout indicators in the code?
 # possible to have add a function that stacks imputations?
 
+#-------------------------------------------------------------------#
 # SEM GROWTH MODELS WITH MNAR ASSUMPTION
+#-------------------------------------------------------------------#
 
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -11,7 +13,9 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 stack_imputations <- function(model)
   do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
 
+#-------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#-------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
@@ -24,7 +28,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
+#-------------------------------------------------------------------#
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
+#-------------------------------------------------------------------#
 
 # random intercepts and slopes predicting dropout
 model1 <- rblimp(
@@ -63,7 +69,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(
@@ -76,9 +84,10 @@ aggregate(
 imputation_plot(model1)
 
 # plot distributions and residuals
-latents <- c('icept.residual','linear.residual')
-residuals <- paste0(c('dropout1','dropout2','dropout3','severity0','severity1','severity2','severity3'),'.residual')
-univariate_plot(vars = c(latents,residuals), model = model1)
+latent_res <- c('icept.residual','linear.residual')
+dropout_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+indicator_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+univariate_plot(vars = c(latent_res,dropout_res,indicator_res), model = model1)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model1)
@@ -89,10 +98,14 @@ bivariate_plot(dropout1.residual ~ dropout1.predicted, standardize = 'y', model 
 bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model = model1)
 bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model1)
 
-# plot standardized residuals vs. latent variable scores
-bivariate_plot(x_vars = c('icept.latent','linear.latent','drug'), y_vars = residuals, discrete_x = 'drug', model = model1, standardize = 'y')
+# plot standardized residuals vs. predictor values
+bivariate_plot(y_vars = latent_res, x_vars = c('drug','male'), discrete_x = c('drug','male'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = dropout_res, x_vars = c('icept.latent','linear.latent','drug'), discrete_x = 'drug', standardize = 'y', model = model2)
+bivariate_plot(y_vars = indicator_res, x_vars = c('icept.latent','linear.latent'), standardize = 'y', model = model2)
 
+#-------------------------------------------------------------------#
 # FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
+#-------------------------------------------------------------------#
 
 # current (missing) and previous (observed) outcome predicting dropout
 model2 <- rblimp(
@@ -131,7 +144,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(
@@ -144,9 +159,10 @@ aggregate(
 imputation_plot(model2)
 
 # plot distributions and residuals
-latents <- c('icept.residual','linear.residual')
-residuals <- paste0(c('dropout1','dropout2','dropout3','severity0','severity1','severity2','severity3'),'.residual')
-univariate_plot(vars = c(latents,residuals), model = model2)
+latent_res <- c('icept.residual','linear.residual')
+dropout_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+indicator_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+univariate_plot(vars = c(latent_res,dropout_res,indicator_res), model = model2)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model2)
@@ -158,14 +174,15 @@ bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model 
 bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model2)
 
 # plot standardized residuals vs. predictor values
-bivariate_plot(y_vars = 'dropout1.residual', x_vars = c('severity0','severity1','drug'), standardize = 'y', model = model2)
-bivariate_plot(y_vars = 'dropout2.residual', x_vars = c('severity1','severity2','drug'), standardize = 'y', model = model2)
-bivariate_plot(y_vars = 'dropout3.residual', x_vars = c('severity2','severity3','drug'), standardize = 'y', model = model2)
+bivariate_plot(y_vars = latent_res, x_vars = 'drug', discrete_x = 'drug', standardize = 'y', model = model2)
+bivariate_plot(y_vars = 'dropout1.residual', x_vars = c('severity0','severity1','drug'), discrete_x = 'drug', standardize = 'y', model = model2)
+bivariate_plot(y_vars = 'dropout2.residual', x_vars = c('severity1','severity2','drug'), discrete_x = 'drug', standardize = 'y', model = model2)
+bivariate_plot(y_vars = 'dropout3.residual', x_vars = c('severity2','severity3','drug'), discrete_x = 'drug', standardize = 'y', model = model2)
+bivariate_plot(y_vars = indicator_res, x_vars = c('icept.latent','linear.latent'), standardize = 'y', model = model2)
 
-# plot standardized residuals vs. latent variable scores
-bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, discrete_x = 'drug', model = model2, standardize = 'y')
-
+#-------------------------------------------------------------------#
 # FIT WU-CARROL SHARED PARAMETER CURVILINEAR GROWTH MODEL ----
+#-------------------------------------------------------------------#
 
 # random intercepts and slopes predicting dropout
 model3 <- rblimp(
@@ -207,7 +224,9 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(
@@ -216,12 +235,32 @@ aggregate(
   FUN = mean
 )
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
 
+# plot distributions and residuals
+latent_res <- c('icept.residual','linear.residual')
+dropout_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+indicator_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+univariate_plot(vars = c(latent_res,dropout_res,indicator_res), model = model3)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model3)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model3)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model3)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model3)
+bivariate_plot(dropout1.residual ~ dropout1.predicted, standardize = 'y', model = model3)
+bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model = model3)
+bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals vs. predictor values
+bivariate_plot(y_vars = latent_res, x_vars = c('drug','male'), discrete_x = c('drug','male'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = dropout_res, x_vars = c('icept.latent','linear.latent','drug'), discrete_x = 'drug', standardize = 'y', model = model3)
+bivariate_plot(y_vars = indicator_res, x_vars = c('icept.latent','linear.latent'), standardize = 'y', model = model3)
+
+#-------------------------------------------------------------------#
 # FIT DIGGLE-KENWARD CURVILINEAR GROWTH MODEL ----
+#-------------------------------------------------------------------#
 
 # current (missing) and previous (observed) outcome predicting dropout
 model4 <- rblimp(
@@ -263,7 +302,9 @@ output(model4)
 # plot parameter distributions
 posterior_plot(model4)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(
@@ -272,7 +313,27 @@ aggregate(
   FUN = mean
 )
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model4)
-imputed_vs_observed_plot(model4)
-residuals_plot(model4)
+# plot imputed vs. observed values
+imputation_plot(model4)
+
+# plot distributions and residuals
+latent_res <- c('icept.residual','linear.residual')
+dropout_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+indicator_res <- paste0(c('dropout1','dropout2','dropout3'),'.residual')
+univariate_plot(vars = c(latent_res,dropout_res,indicator_res), model = model4)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(severity0.residual ~ severity0.predicted, standardize = 'y', model = model4)
+bivariate_plot(severity1.residual ~ severity1.predicted, standardize = 'y', model = model4)
+bivariate_plot(severity2.residual ~ severity2.predicted, standardize = 'y', model = model4)
+bivariate_plot(severity3.residual ~ severity3.predicted, standardize = 'y', model = model4)
+bivariate_plot(dropout1.residual ~ dropout1.predicted, standardize = 'y', model = model4)
+bivariate_plot(dropout2.residual ~ dropout2.predicted, standardize = 'y', model = model4)
+bivariate_plot(dropout3.residual ~ dropout3.predicted, standardize = 'y', model = model4)
+
+# plot standardized residuals vs. predictor values
+bivariate_plot(y_vars = latent_res, x_vars = 'drug', discrete_x = 'drug', standardize = 'y', model = model4)
+bivariate_plot(y_vars = 'dropout1.residual', x_vars = c('severity0','severity1','drug'), discrete_x = 'drug', standardize = 'y', model = model4)
+bivariate_plot(y_vars = 'dropout2.residual', x_vars = c('severity1','severity2','drug'), discrete_x = 'drug', standardize = 'y', model = model4)
+bivariate_plot(y_vars = 'dropout3.residual', x_vars = c('severity2','severity3','drug'), discrete_x = 'drug', standardize = 'y', model = model4)
+bivariate_plot(y_vars = indicator_res, x_vars = c('icept.latent','linear.latent'), standardize = 'y', model = model4)

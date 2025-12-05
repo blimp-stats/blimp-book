@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#-------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#-------------------------------------------------------------------#
 
 library(rblimp)
 
+#-------------------------------------------------------------------#
 # READ DATA ----
+#-------------------------------------------------------------------#
 
 # github url fores raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/loneliness.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 lonely <- read.csv(data_url)
 
+#-------------------------------------------------------------------#
 # FIT CROSS-LAGGED PANEL MODEL ----
+#-------------------------------------------------------------------#
 
 # unrestricted model
 model1 <- rblimp(
@@ -71,7 +77,9 @@ model2 <- rblimp(
 
 output(model2)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

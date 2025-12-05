@@ -6,11 +6,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#-------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#-------------------------------------------------------------------#
 
 library(rblimp)
 
+#-------------------------------------------------------------------#
 # READ DATA ----
+#-------------------------------------------------------------------#
 
 # github url fores raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/loneliness.csv'
@@ -18,7 +22,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 lonely <- read.csv(data_url)
 
+#-------------------------------------------------------------------#
 # FIT RICLPM MODEL ----
+#-------------------------------------------------------------------#
 
 model1 <- rblimp(
   data = lonely,
@@ -53,7 +59,9 @@ model1 <- rblimp(
 
 output(model1)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -82,7 +90,9 @@ bivariate_plot(y_vars = c('lonely2.residual'), x_vars = c('anxdep1','lonely1','i
 bivariate_plot(y_vars = c('lonely3.residual'), x_vars = c('anxdep2','lonely2','icept_lo'), standardize = 'y', model = model1)
 bivariate_plot(y_vars = c('lonely4.residual'), x_vars = c('anxdep3','lonely3','icept_lo'), standardize = 'y', model = model1)
 
+#-------------------------------------------------------------------#
 # FIT RICLPM MODEL WITH BETWEEN-PERSON PREDICTOR ----
+#-------------------------------------------------------------------#
 
 model2 <- rblimp(
   data = lonely,
@@ -119,7 +129,9 @@ model2 <- rblimp(
 
 output(model2)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)
@@ -152,8 +164,9 @@ bivariate_plot(y_vars = 'lonely4.residual', x_vars = c('anxdep3','lonely3','icep
 bivariate_plot(icept_ad.residual ~ female, standardize = 'y', model = model2)
 bivariate_plot(icept_lo.residual ~ female, standardize = 'y', model = model2)
 
+#-------------------------------------------------------------------#
 # FIT RICLPM MODEL WITH GROUP-SPECIFIC EFFECTS ----
-# NEED TO CHECK THIS TO SEE IF GROUP EFFECTS PREDICT INDICATORS
+#-------------------------------------------------------------------#
 
 model3 <- rblimp(
   data = lonely,
@@ -189,9 +202,37 @@ model3 <- rblimp(
 
 output(model3)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+# plot imputed vs. observed values
+imputation_plot(model3)
+
+# plot distributions and residuals
+indicators <- c('anxdep1','anxdep2','anxdep3','anxdep4','lonely1','lonely2','lonely3','lonely4')
+residuals <- paste0(c('anxdep1','anxdep2','anxdep3','anxdep4','lonely1','lonely2','lonely3','lonely4'),'.residual')
+latents <- c('icept_ad','icept_lo')
+univariate_plot(vars = c(indicators,residuals,latents), model = model3)
+
+# plot standardized residuals vs. predicted values
+bivariate_plot(anxdep1.residual ~ anxdep1.predicted, standardize = 'y', model = model3)
+bivariate_plot(anxdep2.residual ~ anxdep2.predicted, standardize = 'y', model = model3)
+bivariate_plot(anxdep3.residual ~ anxdep3.predicted, standardize = 'y', model = model3)
+bivariate_plot(anxdep4.residual ~ anxdep4.predicted, standardize = 'y', model = model3)
+bivariate_plot(lonely1.residual ~ lonely1.predicted, standardize = 'y', model = model3)
+bivariate_plot(lonely2.residual ~ lonely2.predicted, standardize = 'y', model = model3)
+bivariate_plot(lonely3.residual ~ lonely3.predicted, standardize = 'y', model = model3)
+bivariate_plot(lonely4.residual ~ lonely4.predicted, standardize = 'y', model = model3)
+bivariate_plot(icept_ad.residual ~ icept_ad.predicted, standardize = 'y', model = model3)
+bivariate_plot(icept_lo.residual ~ icept_lo.predicted, standardize = 'y', model = model3)
+
+# plot standardized residuals vs. predictors
+bivariate_plot(y_vars = 'anxdep2.residual', x_vars = c('anxdep1','lonely1','icept_ad'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = 'anxdep3.residual', x_vars = c('anxdep2','lonely2','icept_ad'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = 'anxdep4.residual', x_vars = c('anxdep3','lonely3','icept_ad'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = 'lonely2.residual', x_vars = c('anxdep1','lonely1','icept_lo'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = 'lonely3.residual', x_vars = c('anxdep2','lonely2','icept_lo'), standardize = 'y', model = model3)
+bivariate_plot(y_vars = 'lonely4.residual', x_vars = c('anxdep3','lonely3','icept_lo'), standardize = 'y', model = model3)
+bivariate_plot(icept_ad.residual ~ female, standardize = 'y', model = model3)
+bivariate_plot(icept_lo.residual ~ female, standardize = 'y', model = model3)

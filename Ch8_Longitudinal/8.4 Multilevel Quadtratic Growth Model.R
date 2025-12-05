@@ -6,11 +6,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#-------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#-------------------------------------------------------------------#
 
 library(rblimp)
 
+#-------------------------------------------------------------------#
 # READ DATA ----
+#-------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_stacked.csv'
@@ -18,7 +22,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
+#-------------------------------------------------------------------#
 # FIT CURIVLINEAR GROWTH MODEL (COMBINED SPECIFICATION) ----
+#-------------------------------------------------------------------#
 
 # combined-model specification: quadratic fixed effect
 model1 <- rblimp(
@@ -52,7 +58,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -69,7 +77,9 @@ bivariate_plot(severity.residual ~ week, model1)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model1)
 
+#-------------------------------------------------------------------#
 # FIT CURIVLINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
+#-------------------------------------------------------------------#
 
 # latent variable specification: quadratic fixed effect
 model3 <- rblimp(
@@ -115,7 +125,9 @@ output(model4)
 # plot parameter distributions
 posterior_plot(model4)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model3)
@@ -132,7 +144,9 @@ bivariate_plot(severity.residual ~ week, model3)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model3)
 
+#-------------------------------------------------------------------#
 # FIT CURIVLINEAR GROWTH MODEL WITH PREDICTORS (COMBINED SPECIFICATION) ----
+#-------------------------------------------------------------------#
 
 # combined-model specification
 model5 <- rblimp(
@@ -153,7 +167,9 @@ model5 <- rblimp(
 # print output
 output(model5)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model5)
@@ -170,7 +186,9 @@ bivariate_plot(severity.residual ~ week, model5)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model5)
 
+#-------------------------------------------------------------------#
 # FIT CURIVLINEAR GROWTH MODEL WITH PREDICTORS (LATENT SPECIFICATION) ----
+#-------------------------------------------------------------------#
 
 # latent variable specification
 model6 <- rblimp(
@@ -198,7 +216,9 @@ model6 <- rblimp(
 # print output
 output(model6)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model6)

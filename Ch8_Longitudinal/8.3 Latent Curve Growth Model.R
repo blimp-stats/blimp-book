@@ -3,12 +3,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#-------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#-------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#-------------------------------------------------------------------#
 # READ DATA ----
+#-------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_wide.csv'
@@ -16,7 +20,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
+#-------------------------------------------------------------------#
 # FIT LINEAR GROWTH MODEL ----
+#-------------------------------------------------------------------#
 
 # linear growth model
 model1 <- rblimp(
@@ -42,7 +48,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -64,7 +72,9 @@ bivariate_plot(x_vars = c('icept.latent','linear.latent'), y_vars = residuals, m
 # plot pairs of indicator residuals
 bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
 
+#-------------------------------------------------------------------#
 # FIT LINEAR GROWTH MODEL WITH PREDICTORS ----
+#-------------------------------------------------------------------#
 
 # linear growth model with predictors
 model2 <- rblimp(
@@ -97,7 +107,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2)
 
+#-------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#-------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)
