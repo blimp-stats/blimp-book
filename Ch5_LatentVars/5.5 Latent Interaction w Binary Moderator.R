@@ -3,12 +3,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/pain.csv'
@@ -16,7 +20,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 pain <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL ----
+#------------------------------------------------------------------------------#
 
 # latent interaction with a binary moderator
 model <- rblimp(
@@ -51,7 +57,9 @@ posterior_plot(model)
 # print conditional effects (simple slopes)
 simple_plot(disab ~ dep | male, model)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model)

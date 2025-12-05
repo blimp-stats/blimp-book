@@ -3,15 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # READ DATA ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving3level.csv'
@@ -19,9 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 probsolve <- read.csv(data_url)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT LINEAR GROWTH MODEL (COMBINED SPECIFICATION) ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # mixed model specification
 model1 <- rblimp(
@@ -46,9 +46,9 @@ posterior_plot(model1)
 # plot conditional growth curves
 simple_plot(probsolve ~ month7 | condition.1, model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -65,9 +65,9 @@ bivariate_plot(probsolve.residual ~ month7, model1)
 # plot predicted values by time
 bivariate_plot(probsolve.predicted ~ month7, model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # latent variable specification
 model2 <- rblimp(
@@ -95,9 +95,9 @@ model2 <- rblimp(
 
 output(model2)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

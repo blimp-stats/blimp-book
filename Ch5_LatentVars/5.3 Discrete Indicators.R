@@ -7,12 +7,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/adhd.csv'
@@ -20,7 +24,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 adhd <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT CFA MODEL ----
+#------------------------------------------------------------------------------#
 
 # cfa with factor mean and variance fixed at 0 and 1
 model1 <- rblimp(
@@ -41,7 +47,9 @@ output(model1)
 # print standardized estimates
 model1@estimates[grep("standardized|Cor", rownames(model1@estimates)), ]
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -73,7 +81,9 @@ bivariate_plot(swan2.residual ~ swan7.residual, model = model1, poly_degree = 1,
 bivariate_plot(swan2.residual ~ swan8.residual, model = model1, poly_degree = 1, standardize = 'both')
 bivariate_plot(swan7.residual ~ swan9.residual, model = model1, poly_degree = 1, standardize = 'both')
 
+#------------------------------------------------------------------------------#
 # FIT CFA MODEL WITH CORRELATED RESIDUALS ----
+#------------------------------------------------------------------------------#
 
 # two pairs of correlated residuals
 model2 <- rblimp(
@@ -96,7 +106,9 @@ output(model2)
 # print standardized estimates
 model2@estimates[grep("standardized|Cor", rownames(model2@estimates)), ]
 
-# ITEM TRACE CURVES ----
+#------------------------------------------------------------------------------#
+# IRT ITEM TRACE CURVES ----
+#------------------------------------------------------------------------------#
 
 # plot item trace curves
 items <- paste0("swan", 1:9)

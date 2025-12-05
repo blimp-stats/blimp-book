@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/math.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 math <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL ----
+#------------------------------------------------------------------------------#
 
 # curvilinear regression
 model <- rblimp(
@@ -35,7 +41,9 @@ output(model)
 # plot parameter distributions
 posterior_plot(model,'mathpost')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model)

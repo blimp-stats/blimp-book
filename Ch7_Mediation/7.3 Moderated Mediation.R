@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/discrimination.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 discrimination <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH BINARY MODERATOR OF A PATH ----
+#------------------------------------------------------------------------------#
 
 # sex as a moderator of the a path
 model1 <- rblimp(
@@ -50,14 +56,14 @@ posterior_plot(model1, 'ind_male')
 posterior_plot(model1, 'ind_female')
 posterior_plot(model1, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH BINARY MODERATOR OF B PATH ----
+#------------------------------------------------------------------------------#
 
 # sex as a moderator of the b path
 model2 <- rblimp(
@@ -92,14 +98,15 @@ posterior_plot(model2, 'ind_male')
 posterior_plot(model2, 'ind_female')
 posterior_plot(model2, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
 
+
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH BINARY MODERATOR OF A AND B PATHS ----
+#------------------------------------------------------------------------------#
 
 # sex as a moderator of the a and b path
 model3 <- rblimp(
@@ -135,10 +142,9 @@ posterior_plot(model3, 'ind_male')
 posterior_plot(model3, 'ind_female')
 posterior_plot(model3, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+
 

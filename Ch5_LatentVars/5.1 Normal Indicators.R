@@ -7,12 +7,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
@@ -20,7 +24,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT FACTOR MODEL ----
+#------------------------------------------------------------------------------#
 
 # factor mean fixed at 0 and first loading fixed to 1
 model1 <- rblimp(
@@ -52,7 +58,9 @@ output(model2)
 # print standardized estimates
 model2@estimates[grep("standardized|Cor", rownames(model2@estimates)), ]
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot distributions and residuals
 indicators <- c('inflam_crp','inflam_il6','inflam_tnf','inflam_ifn')

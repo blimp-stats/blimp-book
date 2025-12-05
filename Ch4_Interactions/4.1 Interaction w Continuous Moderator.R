@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 reading <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT INTERACTIVE MODEL ----
+#------------------------------------------------------------------------------#
 
 # interaction with a continuous moderator
 model <- rblimp(
@@ -39,7 +45,9 @@ posterior_plot(model,'read9')
 simple_plot(read9 ~ read1 | lrnprob1, model)
 jn_plot(read9 ~ read1 | lrnprob1, model)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model)

@@ -7,13 +7,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/employee.csv'
@@ -21,7 +23,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 employee <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT LOGISTIC MODEL WITH COMBINED MODEL SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # logtistic regression with random intercepts
 model1 <- rblimp(
@@ -41,7 +45,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'turnover')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -61,7 +67,9 @@ bivariate_plot(x_vars = c('lmx.mean.team','climate'),
 bivariate_plot(x_vars = c('lmx','male'), 
                y_vars = 'turnover.1.residual', standardize = 'y', model = model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # logtistic regression with random intercepts
 model2 <- rblimp(
@@ -86,7 +94,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'turnover')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

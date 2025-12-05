@@ -3,12 +3,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/adhd.csv'
@@ -16,7 +20,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 adhd <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH MODERATED FACTOR MEAN AND VARIANCE ----
+#------------------------------------------------------------------------------#
 
 # factor mean and conditional variance fixed at 0 and 1
 model1 <- rblimp(
@@ -46,7 +52,9 @@ model1 <- rblimp(
 # print output
 output(model1)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot distributions and residuals
 residuals <- paste0(c('attent','alphaEEG.yjt','age.yjt','male','adhd','study'),'.residual')
@@ -61,7 +69,9 @@ bivariate_plot(attent.residual ~ attent.predicted, standardize = 'y', model = mo
 # plot standardized residuals vs. predictors
 bivariate_plot(x_vars = c('alphaEEG','age','male','adhd','study'), y_vars = 'attent.residual', model = model1, standardize = 'y')
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH MODERATED MEASUREMENT INTERCEPTS AND LOADINGS ----
+#------------------------------------------------------------------------------#
 
 # factor mean and conditional variance fixed at 0 and 1
 model2 <- rblimp(
@@ -95,7 +105,9 @@ model2 <- rblimp(
 # print output
 output(model2)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

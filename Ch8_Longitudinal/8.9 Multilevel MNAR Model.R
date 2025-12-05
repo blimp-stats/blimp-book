@@ -14,16 +14,16 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 stack_imputations <- function(model)
   do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # READ DATA ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_stacked.csv'
@@ -31,9 +31,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT WU-CARROL SHARED PARAMETER LINEAR GROWTH MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # random intercepts and slopes predicting dropout
 model1 <- rblimp(
@@ -75,9 +75,9 @@ posterior_plot(model1)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model = model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model1), mean)
@@ -97,9 +97,9 @@ bivariate_plot(y_vars = c('icept.residual','linear.residual'), x_vars = c('male'
 bivariate_plot(y_vars = 'severity.residual', x_vars = c('week'), discrete_x = c('week'), standardize = 'y', model = model1)
 bivariate_plot(y_vars = 'dropout.residual', x_vars = c('week','drug','icept','linear'), discrete_x = c('week','drug'), standardize = 'y', model = model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT DIGGLE-KENWARD LINEAR GROWTH MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # current (missing) and previous (observed) outcome predicting dropout
 model2 <- rblimp(
@@ -141,9 +141,9 @@ posterior_plot(model2)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model = model2)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model2), mean)
@@ -163,9 +163,9 @@ bivariate_plot(y_vars = c('icept.residual','linear.residual'), x_vars = c('male'
 bivariate_plot(y_vars = 'severity.residual', x_vars = c('week'), discrete_x = c('week'), standardize = 'y', model = model2)
 bivariate_plot(y_vars = 'dropout.residual', x_vars = c('week','severity','severity.lag1'), discrete_x = c('week','drug'), standardize = 'y', model = model2)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT WU-CARROL SHARED PARAMETER CURVILINEAR GROWTH MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # random intercepts and slopes predicting dropout
 model3 <- rblimp(
@@ -204,9 +204,9 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model3), mean)
@@ -226,9 +226,9 @@ bivariate_plot(y_vars = c('icept.residual','linear.residual'), x_vars = c('male'
 bivariate_plot(y_vars = 'severity.residual', x_vars = c('week'), discrete_x = c('week'), standardize = 'y', model = model3)
 bivariate_plot(y_vars = 'dropout.residual', x_vars = c('week','drug','icept','linear'), discrete_x = c('week','drug'), standardize = 'y', model = model3)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT DIGGLE-KENWARD CURVILINEAR GROWTH MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # current (missing) and previous (observed) outcome predicting dropout
 model4 <- rblimp(
@@ -267,9 +267,9 @@ output(model4)
 # plot parameter distributions
 posterior_plot(model4)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ drug + week, data = stack_imputations(model4), mean)

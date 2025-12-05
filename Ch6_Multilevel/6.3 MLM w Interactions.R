@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/diary.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 diary <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # cross-level and between-level interactions
 model1 <- rblimp(
@@ -39,7 +45,9 @@ posterior_plot(model1,'posaff')
 simple_plot(posaff ~ pain | stress, model1)
 simple_plot(posaff ~ pain.mean[person] | stress, model1)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -54,7 +62,9 @@ bivariate_plot(x_vars = c('pain.mean.person','stress','female'),
 # plot standardized level-1 residuals vs. level-1 predictors
 bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # cross-level and between-level interactions
 model2 <- rblimp(
@@ -87,7 +97,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'posaff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

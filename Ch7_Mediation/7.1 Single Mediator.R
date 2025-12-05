@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/discrimination.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 discrimination <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT SINGLE MEDIATOR MODEL ----
+#------------------------------------------------------------------------------#
 
 model <- rblimp(
   data = discrimination,
@@ -41,7 +47,9 @@ posterior_plot(model)
 # plot distribution of indirect effect
 posterior_plot(model, 'indirect')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model)

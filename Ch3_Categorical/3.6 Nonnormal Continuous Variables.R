@@ -7,15 +7,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # READ DATA ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
@@ -23,9 +23,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH NORMALIZED OUTCOME ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # normalized outcome with yeo-johnson transformation
 model1 <- rblimp(
@@ -45,9 +45,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'dpdd')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -64,9 +64,9 @@ bivariate_plot(y_vars = 'dpdd.yjt.residual',
                standardize = 'y',
                model = model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH NORMALIZED PREDICTOR ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # predictor is normalized in its missing data model but skewed in the focal model
 model2 <- rblimp(
@@ -90,9 +90,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'dpdd')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH FULLY NORMALIZED PREDICTOR ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # predictor is normalized in its missing data model and normalized in the focal model
 model3 <- rblimp(

@@ -7,7 +7,9 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/diary.csv'
@@ -15,7 +17,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 diary <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT EMPTY MODEL FOR LEVEL-1 VARIABLES ----
+#------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
 model1 <- rblimp(
@@ -30,7 +34,9 @@ model1 <- rblimp(
 # print output
 output(model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # random slope model
 model2 <- rblimp(
@@ -50,7 +56,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'posaff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)
@@ -65,7 +73,9 @@ bivariate_plot(x_vars = c('pain.mean.person','stress','female'),
 # plot standardized level-1 residuals vs. level-1 predictors
 bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model2)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # random slope model
 model3 <- rblimp(
@@ -92,7 +102,9 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3,'posaff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model3)

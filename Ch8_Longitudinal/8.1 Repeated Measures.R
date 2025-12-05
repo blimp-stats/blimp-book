@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_stacked.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT REPEATED MEASURES MODEL ----
+#------------------------------------------------------------------------------#
 
 # outcome varying by time
 model1 <- rblimp(
@@ -35,7 +41,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -52,7 +60,9 @@ bivariate_plot(severity.residual ~ week, model1)
 # plot predicted values by time
 bivariate_plot(severity.predicted ~ week, model1)
 
+#------------------------------------------------------------------------------#
 # FIT REPEATED MEASURES MODEL WITH GROUP-BY-TIME INTERACTION ----
+#------------------------------------------------------------------------------#
 
 # outcome varying by time and group
 model2 <- rblimp(
@@ -78,7 +88,9 @@ posterior_plot(model2)
 # plot conditional effects
 simple_plot(severity ~ drug | week.1 + week.2 + week.3, model2)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

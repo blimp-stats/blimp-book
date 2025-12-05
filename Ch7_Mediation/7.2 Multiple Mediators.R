@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/discrimination.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 discrimination <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MULTIPLE MEDIATOR MODEL ----
+#------------------------------------------------------------------------------#
 
 # multiple mediators
 model1 <- rblimp(
@@ -44,14 +50,15 @@ posterior_plot(model1)
 posterior_plot(model1, 'ind_via_vic')
 posterior_plot(model1, 'ind_via_fam')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
 
+
+#------------------------------------------------------------------------------#
 # FIT SERIAL MEDIATOR MODEL ----
+#------------------------------------------------------------------------------#
 
 # serial mediators
 model2 <- rblimp(
@@ -81,9 +88,7 @@ posterior_plot(model2, 'ind_via_vic_fam')
 posterior_plot(model2, 'ind_via_vic')
 posterior_plot(model2, 'ind_via_fam')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)

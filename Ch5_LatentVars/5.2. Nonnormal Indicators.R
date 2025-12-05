@@ -6,12 +6,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
@@ -19,7 +23,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH NORMALIZED INDICATORS ----
+#------------------------------------------------------------------------------#
 
 # normalized indicators
 model <- rblimp(
@@ -36,7 +42,9 @@ model <- rblimp(
 # print output
 output(model)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot distributions and residuals
 indicators <- c('inflam_crp','inflam_il6','inflam_tnf','inflam_ifn')

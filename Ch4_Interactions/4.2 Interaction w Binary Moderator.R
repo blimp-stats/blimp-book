@@ -6,11 +6,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
@@ -18,7 +22,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL ASSUMING NORMALITY ----
+#------------------------------------------------------------------------------#
 
 # multiple imputations for graphical diagnostics 
 model <- rblimp(
@@ -48,7 +54,9 @@ posterior_plot(model,'inflam_sum')
 # plot conditional effects
 simple_plot(yjt(inflam_sum) ~ els | female.1, model)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model)

@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/employee.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 employee <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT PROBIT MODEL WITH A BINARY OUTCOME ----
+#------------------------------------------------------------------------------#
 
 # probit regression with a binary outcome
 model1 <- rblimp(
@@ -33,7 +39,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'turnover')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -55,7 +63,9 @@ bivariate_plot(y_vars = 'turnover.residual',
                standardize = 'y',
                model = model1)
 
+#------------------------------------------------------------------------------#
 # FIT PROBIT MODEL WITH AN ORDINAL OUTCOME ----
+#------------------------------------------------------------------------------#
 
 # probit regression with an ordinal outcome
 model2 <- rblimp(
@@ -73,7 +83,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'jobsat')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

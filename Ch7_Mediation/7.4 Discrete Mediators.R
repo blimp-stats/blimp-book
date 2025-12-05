@@ -3,7 +3,9 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
@@ -15,7 +17,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 alcoholuse <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT RESPONSE MEDIATOR ----
+#------------------------------------------------------------------------------#
 
 # binary probit (latent response) model for mediator
 model1 <- rblimp(
@@ -44,14 +48,14 @@ posterior_plot(model1)
 # plot distribution of indirect effect
 posterior_plot(model1, 'indirect')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model1)
-imputed_vs_observed_plot(model1)
-residuals_plot(model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH CONDITIONAL INDIRECT EFFECTS ----
+#------------------------------------------------------------------------------#
 
 # binary logistic model for mediator
 model2 <- rblimp(
@@ -86,10 +90,9 @@ posterior_plot(model2, 'ind_male')
 posterior_plot(model2, 'ind_female')
 posterior_plot(model2, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
+
 

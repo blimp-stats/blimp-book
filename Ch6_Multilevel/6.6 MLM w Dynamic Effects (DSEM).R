@@ -3,14 +3,16 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
-library(psych)
-library(summarytools)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/diary.csv'
@@ -18,7 +20,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 diary <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT DSEM MODEL ----
+#------------------------------------------------------------------------------#
 
 # dsem with lagged predictors
 model1 <- rblimp(
@@ -44,7 +48,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'posaff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -56,7 +62,9 @@ univariate_plot(vars = c('posaff_ranicept.latent','posaff_ranicept.residual','pa
 bivariate_plot(x_vars = c('pain_lag','posaff_lag'), y_vars = 'posaff.residual', standardize = 'y', model = model1)
 bivariate_plot(x_vars = c('pain_lag','posaff_lag'), y_vars = 'pain.residual', standardize = 'y', model = model1)
 
+#------------------------------------------------------------------------------#
 # FIT DSEM MODEL WITH RANDOM WITHIN-CLUSTER VARIATION ----
+#------------------------------------------------------------------------------#
 
 # location-scale model for random variation
 model2 <- rblimp(
@@ -84,7 +92,9 @@ model2 <- rblimp(
 # print output
 output(model2)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)
@@ -98,7 +108,9 @@ univariate_plot(vars = c('posaff_ranicept.latent','posaff_ranicept.residual','pa
 bivariate_plot(x_vars = c('pain_lag','posaff_lag'), y_vars = 'posaff.residual', standardize = 'y', model = model2)
 bivariate_plot(x_vars = c('pain_lag','posaff_lag'), y_vars = 'pain.residual', standardize = 'y', model = model2)
 
+#------------------------------------------------------------------------------#
 # FIT DSEM MODEL WITH RANDOM SLOPES ----
+#------------------------------------------------------------------------------#
 
 # random slopes for autoregressive and cross-lagged effects
 model3 <- rblimp(
@@ -127,7 +139,9 @@ model3 <- rblimp(
 # print output
 output(model3)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model3)

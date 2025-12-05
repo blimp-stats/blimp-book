@@ -3,7 +3,9 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
@@ -15,7 +17,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflamm <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT LINEAR REGRESSION MODEL ----
+#------------------------------------------------------------------------------#
 
 # raw score predictors
 model1 <- rblimp(
@@ -35,7 +39,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1,'dpdd')
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH CENTERED PREDICTORS ----
+#------------------------------------------------------------------------------#
 
 # mean-centered predictors
 model2 <- rblimp(
@@ -57,7 +63,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'dpdd')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

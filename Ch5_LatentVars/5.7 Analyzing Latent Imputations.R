@@ -3,13 +3,17 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+ #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+ #------------------------------------------------------------------------------#
 
 library(mitml)
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/adhd.csv'
@@ -17,7 +21,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 adhd <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH MODERATED MEASUREMENT INTERCEPTS AND LOADINGS ----
+#------------------------------------------------------------------------------#
 
 # factor mean and conditional variance fixed at 0 and 1
 model <- rblimp(
@@ -48,7 +54,9 @@ model <- rblimp(
   iter = 70000,
   nimps = 20)
 
-# FIT FOCAL MODEL TO MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+# FIT MODEL TO MULTIPLY IMPUTED LATENT SCORES ----
+#------------------------------------------------------------------------------#
 
 # mitml list
 implist <- as.mitml(model)
@@ -62,7 +70,9 @@ estimates <- with(implist, lm(attent.latent ~ I(alphaEEG - mean_alphaEEG) + I((a
                             + I(age - mean_age) + I((age - mean_age)^2) + male))
 testEstimates(estimates, extra.pars = T, df.com = 939 - 6)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot latent scores against predictors
 bivariate_plot(x_vars = c('alphaEEG','age','male'), y_vars = 'attent.latent', model = model)

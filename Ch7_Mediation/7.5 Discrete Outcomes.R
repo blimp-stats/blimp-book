@@ -3,11 +3,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv'
@@ -15,7 +19,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 alcoholuse <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH BINARY OUTCOME AND CONDITIONAL INDIRECT EFFECTS ----
+#-----------#------------------------------------------------------------------------------#--------------------------------------------------------#
 
 # binary logistic model for outcome
 model1 <- rblimp(
@@ -50,7 +56,9 @@ posterior_plot(model1, 'ind_male')
 posterior_plot(model1, 'ind_female')
 posterior_plot(model1, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model1)
@@ -71,7 +79,9 @@ bivariate_plot(y_vars = 'drinker.1.residual',
                standardize = 'y',
                model = model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH A COUNT OUTCOME AND CONDITIONAL INDIRECT EFFECTS ----
+#------------------------------------------------------------------------------#
 
 # negative binomial model for outcome
 model2 <- rblimp(
@@ -105,14 +115,15 @@ posterior_plot(model2, 'ind_male')
 posterior_plot(model2, 'ind_female')
 posterior_plot(model2, 'ind_diff')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model2)
-imputed_vs_observed_plot(model2)
-residuals_plot(model2)
 
+
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH BINARY OUTCOME AND CAUSALLY-DEFINED INDIRECT EFFECTS ----
+#------------------------------------------------------------------------------#
 
 # binary probit (latent response) model for outcome
 model3 <- rblimp(
@@ -152,12 +163,11 @@ posterior_plot(model3, 'nie')
 posterior_plot(model3, 'nde')
 posterior_plot(model3, 'te')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
-# plot distributions, observed vs. imputed scores, and residuals
-distribution_plot(model3)
-imputed_vs_observed_plot(model3)
-residuals_plot(model3)
+
 
 
 

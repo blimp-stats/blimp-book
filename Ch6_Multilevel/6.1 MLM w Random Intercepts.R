@@ -6,11 +6,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving2level.csv'
@@ -18,7 +22,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 probsolve <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT EMPTY MODEL FOR LEVEL-1 VARIABLES ----
+#------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
 model1 <- rblimp(
@@ -33,7 +39,9 @@ model1 <- rblimp(
 # print output
 output(model1)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # mixed model specification
 model2 <- rblimp(
@@ -55,7 +63,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2,'probsolvpost')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)
@@ -71,7 +81,9 @@ bivariate_plot(x_vars = c('probsolvpre.mean.school','stanmath.mean.school','frlu
 bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'), 
                y_vars = 'probsolvpost.residual', standardize = 'y', model = model2)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
+#------------------------------------------------------------------------------#
 
 # random intercept as level-2 latent variable
 model3 <- rblimp(
@@ -96,7 +108,9 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3,'probsolvpost')
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model3)

@@ -7,13 +7,15 @@
 # plotting functions
 source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
 library(rblimp)
-library(psych)
-library(summarytools)
 
+#------------------------------------------------------------------------------#
 # READ DATA ----
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
@@ -21,7 +23,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 reading <- read.csv(data_url)
 
+#------------------------------------------------------------------------------#
 # FIT MODEL WITH A MULTICATEGORICAL MODERATOR ----
+#------------------------------------------------------------------------------#
 
 # interaction with explicit dummy codes and interaction test
 model1 <- rblimp(
@@ -59,7 +63,9 @@ posterior_plot(model2,'read9')
 # plot conditional effects
 simple_plot(read9 ~ read1 | lrnprob1risk.2 + lrnprob1risk.3, model2)
 
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
 
 # plot imputed vs. observed values
 imputation_plot(model2)

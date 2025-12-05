@@ -7,16 +7,16 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 stack_imputations <- function(model)
   do.call(rbind, lapply(seq_along(model@imputations), \(i) transform(model@imputations[[i]], .imp = i)))
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # READ DATA ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_stacked.csv'
@@ -24,9 +24,9 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 trial <- read.csv(data_url)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT UNRESTRICTED HAZARD MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # observed missing data rates by time and group
 aggregate(dropout_man ~ week, data = trial, mean)
@@ -49,9 +49,9 @@ output(model1)
 # plot parameter distributions
 posterior_plot(model1)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time
 aggregate(dropout.1.probability ~ week, data = stack_imputations(model1), mean)
@@ -71,9 +71,9 @@ bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = 
 # plot standardized residuals vs. time
 bivariate_plot(dropout.residual ~ week, model = model1, discrete_x = 'week')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT LINEAR HAZARD MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # linear time
 model2 <- rblimp(
@@ -93,9 +93,9 @@ output(model2)
 # plot parameter distributions
 posterior_plot(model2)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time
 aggregate(dropout.1.probability ~ week, data = stack_imputations(model2), mean)
@@ -115,9 +115,9 @@ bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = 
 # plot standardized residuals vs. time
 bivariate_plot(dropout.residual ~ week, model = model2, discrete_x = 'week')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT QUADRATIC HAZARD MODEL ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # linear time
 model3 <- rblimp(
@@ -137,9 +137,9 @@ output(model3)
 # plot parameter distributions
 posterior_plot(model3)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time
 aggregate(dropout.1.probability ~ week, data = stack_imputations(model3), mean)
@@ -159,9 +159,9 @@ bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = 
 # plot standardized residuals vs. week
 bivariate_plot(dropout.residual ~ week, model = model3, discrete_x = 'week')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT HAZARD MODEL WITH PREDICTOR ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # observed missing data rates by time and group
 aggregate(dropout_man ~ drug + week, data = trial, mean)
@@ -184,9 +184,9 @@ output(model4)
 # plot parameter distributions
 posterior_plot(model4)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ week + drug, data = stack_imputations(model4), mean)
@@ -203,9 +203,9 @@ bivariate_plot(dropout.residual ~ dropout.predicted, standardize = 'y', model = 
 # plot standardized residuals vs. week
 bivariate_plot(dropout.residual ~ week, model = model4, discrete_x = 'week')
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # FIT HAZARD MODEL WITH GROUP-BY-TIME INTERACTION ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # observed missing data rates by time and group
 aggregate(dropout_man ~ drug + week, data = trial, mean)
@@ -230,9 +230,9 @@ output(model5)
 # plot parameter distributions
 posterior_plot(model5)
 
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#-------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 # compare marginal predicted probabilities by time and group
 aggregate(dropout.1.probability ~ week + drug, data = stack_imputations(model5), mean)
