@@ -3011,6 +3011,7 @@ bivariate_plot <- function(
     standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
     polynomial = TRUE,      # NEW: Turn polynomial fitting on/off
+    ci = TRUE,              # NEW: Show/hide confidence intervals (error bars/ribbons)
     rsquare = FALSE,        # NEW: Show R² on plot
     level = 0.95,
     points = TRUE,          # NEW: Show/hide points
@@ -3077,6 +3078,7 @@ bivariate_plot <- function(
       standardize = standardize,
       poly_degree = poly_degree,
       polynomial = polynomial,
+      ci = ci,
       rsquare = rsquare,
       level = level,
       points = points,
@@ -3569,14 +3571,20 @@ bivariate_plot <- function(
           inherit.aes = FALSE,
           linewidth   = 1.2
         ) +
-        # Error bars showing confidence intervals at each discrete level
-        ggplot2::geom_errorbar(
-          data        = mean_df,
-          ggplot2::aes(x = x, ymin = lwr, ymax = upr, color = group),
-          inherit.aes = FALSE,
-          width       = 0,
-          linewidth   = 0.9
-        ) +
+        # Error bars showing confidence intervals at each discrete level (if requested)
+        {
+          if (ci) {
+            ggplot2::geom_errorbar(
+              data        = mean_df,
+              ggplot2::aes(x = x, ymin = lwr, ymax = upr, color = group),
+              inherit.aes = FALSE,
+              width       = 0,
+              linewidth   = 0.9
+            )
+          } else {
+            NULL
+          }
+        } +
         # Points at means
         ggplot2::geom_point(
           data        = mean_df,
@@ -3653,15 +3661,21 @@ bivariate_plot <- function(
           color       = unname(plot_colors[curve_color]),
           linewidth   = 1.2
         ) +
-        # Error bars showing confidence intervals at each discrete level
-        ggplot2::geom_errorbar(
-          data        = mean_df,
-          ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-          inherit.aes = FALSE,
-          width       = 0,  # No caps, just vertical lines
-          color       = unname(plot_colors[curve_color]),
-          linewidth   = 0.9
-        ) +
+        # Error bars showing confidence intervals at each discrete level (if requested)
+        {
+          if (ci) {
+            ggplot2::geom_errorbar(
+              data        = mean_df,
+              ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+              inherit.aes = FALSE,
+              width       = 0,  # No caps, just vertical lines
+              color       = unname(plot_colors[curve_color]),
+              linewidth   = 0.9
+            )
+          } else {
+            NULL
+          }
+        } +
         # Points at means
         ggplot2::geom_point(
           data        = mean_df,
@@ -3781,14 +3795,21 @@ bivariate_plot <- function(
         curve_df$group <- factor(curve_df$group, levels = levels(df$group))
         
         p <- p +
-          suppressWarnings(
-            ggplot2::geom_ribbon(
-              data        = curve_df,
-              ggplot2::aes(x = x, ymin = lwr, ymax = upr, fill = group),
-              inherit.aes = FALSE,
-              alpha       = 0.15
-            )
-          ) +
+          # Add confidence ribbon (if requested)
+          {
+            if (ci) {
+              suppressWarnings(
+                ggplot2::geom_ribbon(
+                  data        = curve_df,
+                  ggplot2::aes(x = x, ymin = lwr, ymax = upr, fill = group),
+                  inherit.aes = FALSE,
+                  alpha       = 0.15
+                )
+              )
+            } else {
+              NULL
+            }
+          } +
           ggplot2::geom_line(
             data        = curve_df,
             ggplot2::aes(x = x, y = mean, color = group),
@@ -3862,15 +3883,22 @@ bivariate_plot <- function(
       # Add polynomial curve and ribbon only if polynomial = TRUE
       if (polynomial) {
         p <- p +
-          suppressWarnings(
-            ggplot2::geom_ribbon(
-              data        = curve_df,
-              ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-              inherit.aes = FALSE,
-              fill        = unname(plot_colors[band_fill]),
-              alpha       = plot_shading
-            )
-          ) +
+          # Add confidence ribbon (if requested)
+          {
+            if (ci) {
+              suppressWarnings(
+                ggplot2::geom_ribbon(
+                  data        = curve_df,
+                  ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+                  inherit.aes = FALSE,
+                  fill        = unname(plot_colors[band_fill]),
+                  alpha       = plot_shading
+                )
+              )
+            } else {
+              NULL
+            }
+          } +
           ggplot2::geom_line(
             data        = curve_df,
             ggplot2::aes(x = x, y = mean),
@@ -3938,6 +3966,7 @@ bivariate_plot <- function(
     standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
     polynomial = TRUE,
+    ci = TRUE,
     rsquare = FALSE,
     level = 0.95,
     points = TRUE,
@@ -4010,6 +4039,7 @@ bivariate_plot <- function(
         standardize = standardize,
         poly_degree = poly_degree,
         polynomial = polynomial,
+        ci = ci,
         rsquare = rsquare,
         level = level,
         points = points,
