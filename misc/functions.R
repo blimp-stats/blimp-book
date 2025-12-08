@@ -803,12 +803,97 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 }
 
 
+# Helper: Compute pooled statistics using Rubin's rules ----
+# Returns mean, sd, skewness, and excess kurtosis pooled across imputations
+.compute_pooled_stats <- function(model, var_name) {
+  # Extract variable from each imputation
+  values_by_imp <- lapply(model@imputations, function(imp) {
+    x <- imp[[var_name]]
+    x[is.finite(x)]
+  })
+  
+  m <- length(values_by_imp)  # Number of imputations
+  
+  # Compute statistics for each imputation
+  stats_list <- lapply(values_by_imp, function(x) {
+    if (length(x) < 2) return(NULL)
+    
+    n <- length(x)
+    mean_val <- mean(x)
+    sd_val <- sd(x)
+    
+    # Skewness: E[(X - μ)³] / σ³
+    centered <- x - mean_val
+    skew_val <- mean(centered^3) / (sd_val^3)
+    
+    # Excess kurtosis: E[(X - μ)⁴] / σ⁴ - 3
+    kurt_val <- mean(centered^4) / (sd_val^4) - 3
+    
+    list(
+      n = n,
+      mean = mean_val,
+      sd = sd_val,
+      skew = skew_val,
+      kurt = kurt_val
+    )
+  })
+  
+  # Remove NULL results
+  stats_list <- stats_list[!sapply(stats_list, is.null)]
+  
+  if (length(stats_list) == 0) return(NULL)
+  
+  # Pool each statistic using Rubin's rules
+  pool_stat <- function(stat_name) {
+    qs <- sapply(stats_list, `[[`, stat_name)
+    
+    # Rubin's pooling
+    q_bar <- mean(qs)  # Pooled estimate
+    
+    if (m > 1) {
+      # Within-imputation variance (for mean and sd, we don't have SEs, so skip CI)
+      # For skew/kurt, direct pooling is appropriate
+      b <- var(qs)  # Between-imputation variance
+      
+      # Total variance (simplified - no within-imputation variance)
+      # This is appropriate for descriptive statistics
+      total_var <- b + b/m
+      
+      list(estimate = q_bar, se = sqrt(total_var))
+    } else {
+      list(estimate = q_bar, se = NA)
+    }
+  }
+  
+  list(
+    n = stats_list[[1]]$n,  # Sample size (same across imputations)
+    mean = pool_stat("mean"),
+    sd = pool_stat("sd"),
+    skew = pool_stat("skew"),
+    kurt = pool_stat("kurt")
+  )
+}
+
+
 # UNIVARIATE DISTRIBUTION PLOTS ----
 # Shows distribution of variables across imputed datasets.
 # Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
-univariate_plot <- function(vars = NULL, model, discrete_vars = NULL, 
-                            bins = 30, font_size = 14, print = FALSE) {
+univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL, 
+                            bins = 30, font_size = 14, stats = FALSE, print = FALSE) {
+  # Handle common usage: univariate_plot(model) where model is first positional arg
+  if (is.null(model) && !is.null(vars)) {
+    # Check if 'vars' is actually a model object (S4 with @imputations)
+    if (isS4(vars) && .hasSlot(vars, "imputations")) {
+      model <- vars
+      vars <- NULL
+    }
+  }
+  
+  if (is.null(model)) {
+    stop("'model' argument is required")
+  }
+  
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   
@@ -950,8 +1035,8 @@ univariate_plot <- function(vars = NULL, model, discrete_vars = NULL,
       
     } else {
       # Continuous: histogram with density
-      ggplot2::ggplot(data.frame(x = x),
-                      ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
+      p <- ggplot2::ggplot(data.frame(x = x),
+                           ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
         ggplot2::geom_histogram(
           bins  = bins,
           fill  = fill_col,
@@ -964,6 +1049,38 @@ univariate_plot <- function(vars = NULL, model, discrete_vars = NULL,
           y     = "Density"
         ) +
         blimp_theme(font_size)
+      
+      # Add statistics if requested
+      if (stats) {
+        pooled_stats <- .compute_pooled_stats(model, v)
+        
+        if (!is.null(pooled_stats)) {
+          # Format statistics text with right alignment
+          # Use sprintf with padding to ensure alignment
+          stat_text <- sprintf(
+            "             Mean = %.2f\n               SD = %.2f\n         Skewness = %.2f\nExcess Kurtosis = %.2f",
+            pooled_stats$mean$estimate,
+            pooled_stats$sd$estimate,
+            pooled_stats$skew$estimate,
+            pooled_stats$kurt$estimate
+          )
+          
+          # Add text annotation to plot
+          # Position in top-right corner
+          p <- p + ggplot2::annotate(
+            "text",
+            x = Inf,
+            y = Inf,
+            label = stat_text,
+            hjust = 1.05,
+            vjust = 1.2,
+            size = font_size / 2.8,  # Larger font (was 3.5)
+            lineheight = 0.9
+          )
+        }
+      }
+      
+      p
     }
   }
   
@@ -1222,12 +1339,25 @@ univariate_plot <- function(vars = NULL, model, discrete_vars = NULL,
 
 imputation_plot <- function(
     vars = NULL,
-    model,
+    model = NULL,
     discrete_vars = NULL,
     bins = 30,
     font_size = 14,
     print = FALSE
 ) {
+  # Handle common usage: imputation_plot(model) where model is first positional arg
+  if (is.null(model) && !is.null(vars)) {
+    # Check if 'vars' is actually a model object (S4 with @imputations)
+    if (isS4(vars) && .hasSlot(vars, "imputations")) {
+      model <- vars
+      vars <- NULL
+    }
+  }
+  
+  if (is.null(model)) {
+    stop("'model' argument is required")
+  }
+  
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be non-empty")
@@ -1489,7 +1619,7 @@ imputation_plot <- function(
 
 residuals_plot <- function(
     var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
-    model,
+    model         = NULL,
     # polynomial fitting & pooling
     poly_degree   = 3,
     ci            = TRUE,
@@ -1521,6 +1651,19 @@ residuals_plot <- function(
     print_threshold   = 3,
     print_head        = 20
 ) {
+  # Handle common usage: residuals_plot(model) where model is first positional arg
+  if (is.null(model) && !is.null(var)) {
+    # Check if 'var' is actually a model object (S4 with @imputations)
+    if (isS4(var) && .hasSlot(var, "imputations")) {
+      model <- var
+      var <- NULL
+    }
+  }
+  
+  if (is.null(model)) {
+    stop("'model' argument is required")
+  }
+  
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
