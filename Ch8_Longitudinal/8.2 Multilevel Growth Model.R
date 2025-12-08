@@ -199,9 +199,10 @@ univariate_plot(vars = c('icept.latent','linear.latent','severity.residual'), mo
 bivariate_plot(severity.residual ~ severity.predicted, standardize = 'y', model = model4)
 
 # plot standardized residuals by time
-bivariate_plot(severity.residual ~ week, model4)
+bivariate_plot(severity.residual ~ week, model = model4)
+bivariate_plot(severity.residual ~ week | drug, model = model4)
 
 # plot predicted values by time
-bivariate_plot(severity.predicted ~ week, model4)
+bivariate_plot(severity.predicted ~ week | drug, model = model4, discrete_x = 'week')
 
 

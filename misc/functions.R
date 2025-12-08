@@ -812,9 +812,6 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
   
-  # Add normalized yjt copies for easier plotting
-  model <- .add_yjt_copies(model)
-  
   # Add normalized bracket copies for easier plotting
   model <- .add_bracket_copies(model)
   
@@ -1128,93 +1125,6 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
   p
 }
 
-# HELPER: Normalize yjt() variable names ----
-# Converts yjt(var-6) to var.yjt, yjt(var-6).predicted to var.yjt.predicted, etc.
-# Handles variable names with underscores: yjt(inflam_sum) to inflam_sum.yjt
-.normalize_yjt_names <- function(names_vec) {
-  sapply(names_vec, function(nm) {
-    # Check if it starts with yjt(
-    if (grepl("^yjt\\(", nm)) {
-      # Extract everything between yjt( and )
-      # This captures: yjt(dpdd-6) -> dpdd-6, yjt(inflam_sum) -> inflam_sum
-      inner <- sub("^yjt\\(([^)]+)\\).*", "\\1", nm)
-      
-      # Extract just the base variable name
-      # Stop at " - " (with spaces) or " -" followed by a digit
-      # This preserves underscores in variable names like inflam_sum
-      base <- inner
-      if (grepl("\\s*-\\s*\\d", inner)) {
-        # Has a numeric offset like "dpdd - 6" or "dpdd-6"
-        base <- sub("\\s*-\\s*\\d.*", "", inner)
-      }
-      # Trim any trailing spaces
-      base <- trimws(base)
-      
-      # Extract any suffix after the closing paren (.predicted, .residual, etc.)
-      suffix <- ""
-      if (grepl("\\)", nm)) {
-        after_paren <- sub("^[^)]+\\)", "", nm)
-        if (nchar(after_paren) > 0) {
-          suffix <- after_paren
-        }
-      }
-      
-      # Return normalized name
-      paste0(base, ".yjt", suffix)
-    } else {
-      # Not a yjt variable, return as-is
-      nm
-    }
-  }, USE.NAMES = FALSE)
-}
-
-# HELPER: Add normalized yjt copies to model imputations ----
-.add_yjt_copies <- function(model) {
-  # Check if any yjt variables exist
-  var_names <- names(model@imputations[[1]])
-  yjt_vars <- var_names[grepl("^yjt\\(", var_names)]
-  
-  if (length(yjt_vars) == 0) {
-    return(model)  # No yjt variables, return as-is
-  }
-  
-  # Create normalized names
-  normalized_names <- .normalize_yjt_names(yjt_vars)
-  
-  # DEBUG: Show what's being created
-  message("Creating yjt normalized copies:")
-  for (i in seq_along(yjt_vars)) {
-    message("  ", yjt_vars[i], " -> ", normalized_names[i])
-  }
-  
-  # Add copies with normalized names to each imputation
-  for (i in seq_along(model@imputations)) {
-    for (j in seq_along(yjt_vars)) {
-      original_name <- yjt_vars[j]
-      new_name <- normalized_names[j]
-      
-      # Only add if not already present
-      if (!new_name %in% names(model@imputations[[i]])) {
-        model@imputations[[i]][[new_name]] <- model@imputations[[i]][[original_name]]
-      }
-    }
-  }
-  
-  # Also add to variance_imp if present
-  if (!is.null(model@variance_imp)) {
-    for (j in seq_along(yjt_vars)) {
-      original_name <- yjt_vars[j]
-      new_name <- normalized_names[j]
-      
-      if (original_name %in% names(model@variance_imp) && !new_name %in% names(model@variance_imp)) {
-        model@variance_imp[[new_name]] <- model@variance_imp[[original_name]]
-      }
-    }
-  }
-  
-  return(model)
-}
-
 # HELPER: Normalize bracket variable names ----
 # Converts bracket notation to dot notation:
 #   posaff[person] -> posaff.person
@@ -1324,9 +1234,6 @@ imputation_plot <- function(
   if (is.null(model@variance_imp))
     stop("@variance_imp not found on model object")
   
-  # Add normalized yjt copies for easier plotting
-  model <- .add_yjt_copies(model)
-  
   # Add normalized bracket copies for easier plotting
   model <- .add_bracket_copies(model)
   
@@ -1365,12 +1272,6 @@ imputation_plot <- function(
   
   # Build plot for one variable
   build_one <- function(v) {
-    # Skip yjt(...) variables
-    if (grepl("^yjt\\(", v)) {
-      message("Skipping yjt variable: ", v)
-      return(NULL)
-    }
-    
     vimp <- model@variance_imp[[v]]
     if (is.null(vimp)) {
       message("Skipping variable with no variance_imp: ", v)
@@ -3121,9 +3022,6 @@ bivariate_plot <- function(
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   standardize <- match.arg(standardize)
   
-  # Add normalized yjt copies for easier plotting
-  model <- .add_yjt_copies(model)
-  
   # Add normalized bracket copies for easier plotting
   model <- .add_bracket_copies(model)
   
@@ -3193,22 +3091,66 @@ bivariate_plot <- function(
   # SINGLE PLOT MODE: Continue with original logic
   stopifnot(inherits(formula, "formula"))
   
-  ## --- parse y ~ x ----------------------------------------------------------
-  tt       <- terms(formula)
-  vars_raw <- attr(tt, "variables")  # ~, lhs, rhs
-  if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
+  ## --- parse y ~ x or y ~ x | group -----------------------------------------
   
-  # Use deparse to preserve exact syntax for both sides
-  lhs <- deparse(vars_raw[[2]])
-  rhs <- deparse(vars_raw[[3]])
+  # Check for grouping variable (| operator)
+  formula_str <- deparse(formula, width.cutoff = 500L)
+  has_grouping <- grepl("\\|", formula_str)
   
-  y_name <- lhs
-  x_name <- rhs
+  group_var <- NULL
+  
+  if (has_grouping) {
+    # Parse: y ~ x | group
+    # Split on ~
+    sides <- strsplit(formula_str, "~", fixed = TRUE)[[1]]
+    if (length(sides) != 2) {
+      stop("Formula must be like y ~ x or y ~ x | group")
+    }
+    
+    y_name <- trimws(sides[1])
+    
+    # Split RHS on |
+    rhs_parts <- strsplit(sides[2], "|", fixed = TRUE)[[1]]
+    if (length(rhs_parts) != 2) {
+      stop("Group syntax must be: y ~ x | groupvar")
+    }
+    
+    x_name <- trimws(rhs_parts[1])
+    group_var <- trimws(rhs_parts[2])
+    
+  } else {
+    # No grouping - use standard parsing
+    tt       <- terms(formula)
+    vars_raw <- attr(tt, "variables")  # ~, lhs, rhs
+    if (length(vars_raw) != 3L) stop("Formula must be like y ~ x.")
+    
+    # Use deparse to preserve exact syntax for both sides
+    y_name <- deparse(vars_raw[[2]])
+    x_name <- deparse(vars_raw[[3]])
+  }
   
   ## --- checks & stack main MI data ------------------------------------------
   if (!is.list(model@imputations) || !length(model@imputations))
     stop("@imputations must be a non-empty list of data frames")
   cols1 <- names(model@imputations[[1]])
+  
+  # Validate group variable if present
+  if (!is.null(group_var)) {
+    # Check if group variable is categorical
+    categorical_vars <- tolower(.get_categorical_vars(model))
+    
+    if (!tolower(group_var) %in% categorical_vars) {
+      stop("Group variable '", group_var, "' must be declared as ORDINAL or NOMINAL in model syntax.\n",
+           "Available categorical variables: ", 
+           paste(.get_categorical_vars(model), collapse = ", "))
+    }
+    
+    # Check if group variable exists in data
+    if (!group_var %in% cols1) {
+      stop("Group variable '", group_var, "' not found in data.\n",
+           "Available columns: ", paste(cols1, collapse = ", "))
+    }
+  }
   
   # Try to match variable names, handling spacing differences
   # deparse() adds spaces around operators, but column names may not have them
@@ -3242,7 +3184,26 @@ bivariate_plot <- function(
   
   
   df <- .stack_cols_cluster_aware(model, y_name, x_name)
-  df <- stats::na.omit(df[, c("x","y","imp")])
+  
+  # Add group variable if specified
+  if (!is.null(group_var)) {
+    group_data <- lapply(model@imputations, function(imp_df) {
+      imp_df[[group_var]]
+    })
+    df$group <- unlist(group_data)
+    
+    # Convert to factor
+    df$group <- as.factor(df$group)
+    
+    # Check for too many groups
+    n_groups <- length(levels(df$group))
+    if (n_groups > 8) {
+      warning("Group variable '", group_var, "' has ", n_groups, 
+              " levels. More than 8 groups may be difficult to distinguish visually.")
+    }
+  }
+  
+  df <- stats::na.omit(df[, c("x","y","imp", if(!is.null(group_var)) "group")])
   
   if (!nrow(df)) stop("No complete cases for the selected variables.")
   if (!is.numeric(df$x) || !is.numeric(df$y))
@@ -3328,178 +3289,212 @@ bivariate_plot <- function(
   ## --- helpers --------------------------------------------------------------
   
   # Rubin-pooling of polynomial regression (numeric x)
-  polynomial_pooled <- function(dat_xy) {
-    fitdat <- dat_xy
-    # Winsorize Y to handle outliers
-    fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
-    
-    # Constrain prediction grid to avoid extreme edge explosion
-    # Use global plot_band_coverage (default 95% = 2.5th to 97.5th percentile)
-    rng_x <- range(fitdat$x, na.rm = TRUE)
-    tail_prob <- (1 - plot_band_coverage) / 2
-    x_quantiles <- stats::quantile(fitdat$x, c(tail_prob, 1 - tail_prob), na.rm = TRUE)
-    x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
-    x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
-    xgrid <- seq(x_min, x_max, length.out = 200)
-    
-    imps  <- split(fitdat, fitdat$imp)
-    m     <- length(imps)
-    
-    # Fit polynomial in each imputation
-    preds <- lapply(imps, function(d) {
-      d0 <- stats::na.omit(d[, c("y", "x")])
-      n <- nrow(d0)
+  # If group_var is not NULL, fits separate polynomials for each group
+  polynomial_pooled <- function(dat_xy, by_group = FALSE) {
+    if (!by_group || !"group" %in% names(dat_xy)) {
+      # Single polynomial fit (original behavior)
+      fitdat <- dat_xy
+      # Winsorize Y to handle outliers
+      fitdat$y <- ave(fitdat$y, fitdat$imp, FUN = function(z) winsor_mad(z, k = 3))
       
-      # Need at least poly_degree+1 points
-      if (n <= poly_degree) {
-        return(list(
-          fit = rep(NA_real_, length(xgrid)),
-          se = rep(NA_real_, length(xgrid)),
-          df_resid = NA_real_
-        ))
-      }
+      # Constrain prediction grid to avoid extreme edge explosion
+      # Use global plot_band_coverage (default 95% = 2.5th to 97.5th percentile)
+      rng_x <- range(fitdat$x, na.rm = TRUE)
+      tail_prob <- (1 - plot_band_coverage) / 2
+      x_quantiles <- stats::quantile(fitdat$x, c(tail_prob, 1 - tail_prob), na.rm = TRUE)
+      x_min <- max(rng_x[1], x_quantiles[1] - 0.2 * diff(x_quantiles))
+      x_max <- min(rng_x[2], x_quantiles[2] + 0.2 * diff(x_quantiles))
+      xgrid <- seq(x_min, x_max, length.out = 200)
       
-      # Fit polynomial
-      fit <- try(
-        stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
-        silent = TRUE
-      )
+      imps  <- split(fitdat, fitdat$imp)
+      m     <- length(imps)
       
-      if (inherits(fit, "try-error")) {
-        return(list(
-          fit = rep(NA_real_, length(xgrid)),
-          se = rep(NA_real_, length(xgrid)),
-          df_resid = NA_real_
-        ))
-      }
-      
-      # Get predictions with SEs
-      pred <- try(
-        stats::predict(fit, newdata = data.frame(x = xgrid), 
-                       se.fit = TRUE, interval = "none"),
-        silent = TRUE
-      )
-      
-      if (inherits(pred, "try-error") || is.null(pred$se.fit)) {
-        yhat <- try(
-          stats::predict(fit, newdata = data.frame(x = xgrid)),
+      # Fit polynomial in each imputation
+      preds <- lapply(imps, function(d) {
+        d0 <- stats::na.omit(d[, c("y", "x")])
+        n <- nrow(d0)
+        
+        # Need at least poly_degree+1 points
+        if (n <= poly_degree) {
+          return(list(
+            fit = rep(NA_real_, length(xgrid)),
+            se = rep(NA_real_, length(xgrid)),
+            df_resid = NA_real_
+          ))
+        }
+        
+        # Fit polynomial
+        fit <- try(
+          stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
           silent = TRUE
         )
-        yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
-        return(list(
-          fit = yhat,
-          se = rep(NA_real_, length(xgrid)),
-          df_resid = NA_real_
-        ))
+        
+        if (inherits(fit, "try-error")) {
+          return(list(
+            fit = rep(NA_real_, length(xgrid)),
+            se = rep(NA_real_, length(xgrid)),
+            df_resid = NA_real_
+          ))
+        }
+        
+        # Get predictions with SEs
+        pred <- try(
+          stats::predict(fit, newdata = data.frame(x = xgrid), 
+                         se.fit = TRUE, interval = "none"),
+          silent = TRUE
+        )
+        
+        if (inherits(pred, "try-error") || is.null(pred$se.fit)) {
+          yhat <- try(
+            stats::predict(fit, newdata = data.frame(x = xgrid)),
+            silent = TRUE
+          )
+          yhat <- if (inherits(yhat, "try-error")) rep(NA_real_, length(xgrid)) else as.numeric(yhat)
+          return(list(
+            fit = yhat,
+            se = rep(NA_real_, length(xgrid)),
+            df_resid = NA_real_
+          ))
+        }
+        
+        list(
+          fit = as.numeric(pred$fit),
+          se = as.numeric(pred$se.fit),
+          df_resid = pred$df
+        )
+      })
+      
+      # Extract predictions and SEs
+      Qmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
+      Umat <- do.call(cbind, lapply(preds, `[[`, "se"))^2  # Variance
+      df_resids <- sapply(preds, `[[`, "df_resid")
+      
+      # Remove failed imputations
+      keep <- which(colSums(is.finite(Qmat)) > 0)
+      if (!length(keep)) {
+        return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
       }
       
-      list(
-        fit = as.numeric(pred$fit),
-        se = as.numeric(pred$se.fit),
-        df_resid = pred$df
-      )
-    })
-    
-    # Extract predictions and SEs
-    Qmat <- do.call(cbind, lapply(preds, `[[`, "fit"))
-    Umat <- do.call(cbind, lapply(preds, `[[`, "se"))^2  # Variance
-    df_resids <- sapply(preds, `[[`, "df_resid")
-    
-    # Remove failed imputations
-    keep <- which(colSums(is.finite(Qmat)) > 0)
-    if (!length(keep)) {
-      return(data.frame(x = xgrid, mean = NA, lwr = NA, upr = NA))
-    }
-    
-    Qmat <- Qmat[, keep, drop = FALSE]
-    Umat <- Umat[, keep, drop = FALSE]
-    df_resids <- df_resids[keep]
-    m <- ncol(Qmat)
-    
-    # Rubin's pooling
-    Q_bar <- rowMeans(Qmat, na.rm = TRUE)
-    U_bar <- rowMeans(Umat, na.rm = TRUE)
-    B <- apply(Qmat, 1, stats::var, na.rm = TRUE)
-    B[!is.finite(B)] <- 0
-    
-    # Total variance
-    T_total <- U_bar + (1 + 1/m) * B
-    
-    # Degrees of freedom (Barnard-Rubin)
-    lambda <- (1 + 1/m) * B / pmax(T_total, 1e-10)
-    lambda <- pmin(lambda, 0.99)
-    
-    df_obs <- mean(df_resids, na.rm = TRUE)
-    if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
-    
-    df_old <- (m - 1) / pmax(lambda^2, 1e-10)
-    df_adj <- (df_obs * df_old) / (df_obs + df_old)
-    df_adj <- pmax(df_adj, 1)
-    
-    tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
-    se_total <- sqrt(pmax(T_total, 0))
-    
-    mean_fit <- Q_bar
-    mu  <- mean_fit
-    lwr <- mean_fit - tcrit * se_total
-    upr <- mean_fit + tcrit * se_total
-    
-    data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
-  }
-  
-  # Rubin-pooled mean per x-level (discrete x)
-  pooled_mean_by_level <- function(dat_xy) {
-    levs <- sort(unique(dat_xy$x))
-    m    <- length(unique(dat_xy$imp))
-    
-    out  <- lapply(levs, function(L) {
-      dL <- dat_xy[dat_xy$x == L, , drop = FALSE]
-      if (!nrow(dL)) {
-        return(c(mean = NA_real_, lwr = NA_real_, upr = NA_real_))
-      }
-      by_imp <- split(dL$y, dL$imp)
-      mu_j <- vapply(by_imp, function(z) mean(z, na.rm = TRUE), numeric(1L))
-      n_j  <- vapply(by_imp, function(z) sum(is.finite(z)), integer(1L))
-      s2_j <- vapply(by_imp, function(z) stats::var(z, na.rm = TRUE), numeric(1L))
+      Qmat <- Qmat[, keep, drop = FALSE]
+      Umat <- Umat[, keep, drop = FALSE]
+      df_resids <- df_resids[keep]
+      m <- ncol(Qmat)
       
-      # Within-imputation variance
-      Ubar <- mean(s2_j / pmax(1, n_j))
+      # Rubin's pooling
+      Q_bar <- rowMeans(Qmat, na.rm = TRUE)
+      U_bar <- rowMeans(Umat, na.rm = TRUE)
+      B <- apply(Qmat, 1, stats::var, na.rm = TRUE)
+      B[!is.finite(B)] <- 0
       
-      # Between-imputation variance
-      B <- stats::var(mu_j)
+      # Total variance
+      T_total <- U_bar + (1 + 1/m) * B
       
-      # Total variance (Rubin's rules)
-      Tvar <- Ubar + (1 + 1/m) * B
-      se <- sqrt(pmax(0, Tvar))
-      
-      # Barnard-Rubin degrees of freedom adjustment
-      lambda <- (1 + 1/m) * B / pmax(Tvar, 1e-10)
+      # Degrees of freedom (Barnard-Rubin)
+      lambda <- (1 + 1/m) * B / pmax(T_total, 1e-10)
       lambda <- pmin(lambda, 0.99)
       
-      # Observed degrees of freedom (average n - 1 across imputations)
-      df_obs <- mean(pmax(1, n_j - 1))
+      df_obs <- mean(df_resids, na.rm = TRUE)
       if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
       
-      # Old degrees of freedom
       df_old <- (m - 1) / pmax(lambda^2, 1e-10)
-      
-      # Adjusted degrees of freedom
       df_adj <- (df_obs * df_old) / (df_obs + df_old)
       df_adj <- pmax(df_adj, 1)
       
       tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
+      se_total <- sqrt(pmax(T_total, 0))
       
-      mu_bar <- mean(mu_j)
+      mean_fit <- Q_bar
+      mu  <- mean_fit
+      lwr <- mean_fit - tcrit * se_total
+      upr <- mean_fit + tcrit * se_total
       
-      c(
-        mean = mu_bar,
-        lwr  = mu_bar - tcrit * se,
-        upr  = mu_bar + tcrit * se
-      )
-    })
-    
-    out <- do.call(rbind, out)
-    data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
+      data.frame(x = xgrid, mean = mu, lwr = lwr, upr = upr)
+    } else {
+      # Grouped polynomial fits - fit separately for each group
+      groups <- levels(dat_xy$group)
+      result_list <- lapply(groups, function(grp) {
+        dat_grp <- dat_xy[dat_xy$group == grp, ]
+        
+        # Call polynomial_pooled recursively for this group (without grouping)
+        curve_grp <- polynomial_pooled(dat_grp, by_group = FALSE)
+        curve_grp$group <- grp
+        curve_grp
+      })
+      
+      do.call(rbind, result_list)
+    }
+  }
+  
+  # Rubin-pooled mean per x-level (discrete x)
+  # If group variable present, computes separately for each group
+  pooled_mean_by_level <- function(dat_xy, by_group = FALSE) {
+    if (!by_group || !"group" %in% names(dat_xy)) {
+      # Single group (original behavior)
+      levs <- sort(unique(dat_xy$x))
+      m    <- length(unique(dat_xy$imp))
+      
+      out  <- lapply(levs, function(L) {
+        dL <- dat_xy[dat_xy$x == L, , drop = FALSE]
+        if (!nrow(dL)) {
+          return(c(mean = NA_real_, lwr = NA_real_, upr = NA_real_))
+        }
+        by_imp <- split(dL$y, dL$imp)
+        mu_j <- vapply(by_imp, function(z) mean(z, na.rm = TRUE), numeric(1L))
+        n_j  <- vapply(by_imp, function(z) sum(is.finite(z)), integer(1L))
+        s2_j <- vapply(by_imp, function(z) stats::var(z, na.rm = TRUE), numeric(1L))
+        
+        # Within-imputation variance
+        Ubar <- mean(s2_j / pmax(1, n_j))
+        
+        # Between-imputation variance
+        B <- stats::var(mu_j)
+        
+        # Total variance (Rubin's rules)
+        Tvar <- Ubar + (1 + 1/m) * B
+        se <- sqrt(pmax(0, Tvar))
+        
+        # Barnard-Rubin degrees of freedom adjustment
+        lambda <- (1 + 1/m) * B / pmax(Tvar, 1e-10)
+        lambda <- pmin(lambda, 0.99)
+        
+        # Observed degrees of freedom (average n - 1 across imputations)
+        df_obs <- mean(pmax(1, n_j - 1))
+        if (!is.finite(df_obs) || df_obs <= 0) df_obs <- Inf
+        
+        # Old degrees of freedom
+        df_old <- (m - 1) / pmax(lambda^2, 1e-10)
+        
+        # Adjusted degrees of freedom
+        df_adj <- (df_obs * df_old) / (df_obs + df_old)
+        df_adj <- pmax(df_adj, 1)
+        
+        tcrit <- stats::qt(1 - (1 - level)/2, df = df_adj)
+        
+        mu_bar <- mean(mu_j)
+        
+        c(
+          mean = mu_bar,
+          lwr  = mu_bar - tcrit * se,
+          upr  = mu_bar + tcrit * se
+        )
+      })
+      
+      out <- do.call(rbind, out)
+      data.frame(x = levs, mean = out[, "mean"], lwr = out[, "lwr"], upr = out[, "upr"])
+    } else {
+      # Grouped - compute separately for each group
+      groups <- levels(dat_xy$group)
+      result_list <- lapply(groups, function(grp) {
+        dat_grp <- dat_xy[dat_xy$group == grp, ]
+        
+        # Call recursively without grouping
+        mean_grp <- pooled_mean_by_level(dat_grp, by_group = FALSE)
+        mean_grp$group <- grp
+        mean_grp
+      })
+      
+      do.call(rbind, result_list)
+    }
   }
   
   ## --- y-axis limits --------------------------------------------------------
@@ -3508,10 +3503,10 @@ bivariate_plot <- function(
   
   ## --- plotting -------------------------------------------------------------
   if (is_discrete_plot) {
-    # Discrete plot: jittered points, red line connecting means, red ribbon
-    # Discrete plot: jittered points, red line connecting means, red ribbon
+    # Discrete plot: jittered points, line connecting means, error bars
     
-    mean_df <- pooled_mean_by_level(df)
+    has_groups <- !is.null(group_var) && "group" %in% names(df)
+    mean_df <- pooled_mean_by_level(df, by_group = has_groups)
     
     # Calculate jitter width using global parameter
     ux <- sort(unique(df$x[is.finite(df$x)]))
@@ -3523,207 +3518,370 @@ bivariate_plot <- function(
       jitter_width <- plot_jitter_fraction * 2
     }
     
-    p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
-    
-    # spaghetti FIRST (background) even for discrete x
-    if (lines && !is.null(df_lines)) {
-      p <- p +
-        ggplot2::geom_line(
-          data        = df_lines,
-          ggplot2::aes(x = x, y = y, group = cluster),
-          inherit.aes = FALSE,
-          linewidth   = 0.3,
-          alpha       = 0.15,
-          color       = "grey40"
-        )
-    }
-    
-    p <- p +
-      ggplot2::geom_jitter(
-        width  = jitter_width,
-        height = 0,
-        alpha  = point_alpha,
-        size   = point_size,
-        color  = unname(plot_colors[plot_point_color])
-      ) +
-      # Add reference line at y=0 when Y is standardized
-      {
-        if (standardize %in% c("y", "both")) {
-          ggplot2::geom_hline(yintercept = 0, color = "grey70", 
-                              linetype = "dashed", linewidth = 0.5)
-        } else {
-          NULL
-        }
-      } +
-      # Line connecting means (shows trend across levels)
-      ggplot2::geom_line(
-        data        = mean_df,
-        ggplot2::aes(x = x, y = mean),
-        inherit.aes = FALSE,
-        color       = unname(plot_colors[curve_color]),
-        linewidth   = 1.2
-      ) +
-      # Error bars showing confidence intervals at each discrete level
-      ggplot2::geom_errorbar(
-        data        = mean_df,
-        ggplot2::aes(x = x, ymin = lwr, ymax = upr),
-        inherit.aes = FALSE,
-        width       = 0,  # No caps, just vertical lines
-        color       = unname(plot_colors[curve_color]),
-        linewidth   = 0.9
-      ) +
-      # Points at means
-      ggplot2::geom_point(
-        data        = mean_df,
-        ggplot2::aes(x = x, y = mean),
-        inherit.aes = FALSE,
-        size        = 3,
-        color       = unname(plot_colors[curve_color])
-      ) +
-      ggplot2::scale_x_continuous(breaks = sort(unique(mean_df$x))) +
-      ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
-      ggplot2::labs(
-        title = paste0("Bivariate Plot Over ", n_imps, " Imputed Data Sets: ",
-                       y_label, " vs. ", x_label),
-        x = x_label, y = y_label
-      ) +
-      blimp_theme(font_size) +
-      ggplot2::theme(
-        axis.text.y  = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(r = 6)),
-        axis.ticks.y = ggplot2::element_line(),
-        axis.title.y = ggplot2::element_text(size = font_size),
-        axis.text.x  = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(t = 2)),
-        axis.title.x = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(t = 12))
-      )
-    
-  } else {
-    # Numeric plot: points (+ optional spaghetti) + polynomial curve + ribbon.
-    
-    curve_df <- polynomial_pooled(df)
-    
-    # Calculate pooled R² for the polynomial fits
-    pooled_r2 <- NULL
-    tryCatch({
-      # Fit polynomial in each imputation and get R²
-      imps <- split(df, df$imp)
-      r2_values <- sapply(imps, function(d) {
-        d0 <- stats::na.omit(d[, c("y", "x")])
-        if (nrow(d0) <= poly_degree) return(NA_real_)
-        
-        fit <- try(
-          stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
-          silent = TRUE
-        )
-        
-        if (inherits(fit, "try-error")) return(NA_real_)
-        
-        # Get R²
-        summary(fit)$r.squared
-      })
+    if (has_groups) {
+      # Grouped discrete plot
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = group))
       
-      # Pool R² using Fisher's z-transformation
-      r2_finite <- r2_values[is.finite(r2_values)]
-      if (length(r2_finite) > 0) {
-        # Convert R² to R, then to Fisher's z
-        r_values <- sqrt(pmax(0, pmin(1, r2_finite)))
-        z_values <- 0.5 * log((1 + r_values) / (1 - r_values))
-        
-        # Pool z values
-        z_pooled <- mean(z_values, na.rm = TRUE)
-        
-        # Convert back to R, then to R²
-        r_pooled <- tanh(z_pooled)
-        pooled_r2 <- r_pooled^2
-      }
-    }, error = function(e) NULL)
-    
-    p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
-    
-    # spaghetti FIRST (background)
-    if (lines && !is.null(df_lines)) {
-      p <- p +
-        ggplot2::geom_line(
-          data        = df_lines,
-          ggplot2::aes(x = x, y = y, group = cluster),
-          inherit.aes = FALSE,
-          linewidth   = 0.3,
-          alpha       = 0.15,
-          color       = "grey40"
-        )
-    }
-    
-    # points + polynomial regression
-    p <- p +
-      ggplot2::geom_point(
-        alpha = point_alpha,
-        size  = point_size,
-        color = unname(plot_colors[plot_point_color])
-      ) +
-      # Add reference line at y=0 when Y is standardized
-      {
-        if (standardize %in% c("y", "both")) {
-          ggplot2::geom_hline(yintercept = 0, color = "grey70", 
-                              linetype = "dashed", linewidth = 0.5)
-        } else {
-          NULL
-        }
-      }
-    
-    # Add polynomial curve and ribbon only if polynomial = TRUE
-    if (polynomial) {
-      p <- p +
-        suppressWarnings(
-          ggplot2::geom_ribbon(
-            data        = curve_df,
-            ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+      # spaghetti FIRST (background) even for discrete x
+      if (lines && !is.null(df_lines)) {
+        p <- p +
+          ggplot2::geom_line(
+            data        = df_lines,
+            ggplot2::aes(x = x, y = y, group = cluster),
             inherit.aes = FALSE,
-            fill        = unname(plot_colors[band_fill]),
-            alpha       = plot_shading
+            linewidth   = 0.3,
+            alpha       = 0.15,
+            color       = "grey40"
+          )
+      }
+      
+      p <- p +
+        ggplot2::geom_point(
+          alpha  = point_alpha,
+          size   = point_size,
+          position = ggplot2::position_jitter(
+            width = jitter_width,
+            height = 0
           )
         ) +
+        # Add reference line at y=0 when Y is standardized
+        {
+          if (standardize %in% c("y", "both")) {
+            ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                                linetype = "dashed", linewidth = 0.5)
+          } else {
+            NULL
+          }
+        } +
+        # Line connecting means (shows trend across levels)
         ggplot2::geom_line(
-          data        = curve_df,
+          data        = mean_df,
+          ggplot2::aes(x = x, y = mean, color = group, group = group),
+          inherit.aes = FALSE,
+          linewidth   = 1.2
+        ) +
+        # Error bars showing confidence intervals at each discrete level
+        ggplot2::geom_errorbar(
+          data        = mean_df,
+          ggplot2::aes(x = x, ymin = lwr, ymax = upr, color = group),
+          inherit.aes = FALSE,
+          width       = 0,
+          linewidth   = 0.9
+        ) +
+        # Points at means
+        ggplot2::geom_point(
+          data        = mean_df,
+          ggplot2::aes(x = x, y = mean, color = group),
+          inherit.aes = FALSE,
+          size        = 3
+        ) +
+        ggplot2::scale_x_continuous(breaks = sort(unique(mean_df$x))) +
+        ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+        ggplot2::labs(
+          title = paste0(y_label, " vs. ", x_label, " by ", group_var),
+          x     = x_label,
+          y     = y_label,
+          color = group_var
+        ) +
+        blimp_theme(font_size) +
+        ggplot2::theme(
+          axis.text.y  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(r = 6)),
+          axis.ticks.y = ggplot2::element_line(),
+          axis.title.y = ggplot2::element_text(size = font_size),
+          axis.text.x  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 2)),
+          axis.title.x = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 12))
+        )
+      
+    } else {
+      # Ungrouped discrete plot (original)
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
+      
+      # spaghetti FIRST (background) even for discrete x
+      if (lines && !is.null(df_lines)) {
+        p <- p +
+          ggplot2::geom_line(
+            data        = df_lines,
+            ggplot2::aes(x = x, y = y, group = cluster),
+            inherit.aes = FALSE,
+            linewidth   = 0.3,
+            alpha       = 0.15,
+            color       = "grey40"
+          )
+      }
+      
+      p <- p +
+        ggplot2::geom_jitter(
+          width  = jitter_width,
+          height = 0,
+          alpha  = point_alpha,
+          size   = point_size,
+          color  = unname(plot_colors[plot_point_color])
+        ) +
+        # Add reference line at y=0 when Y is standardized
+        {
+          if (standardize %in% c("y", "both")) {
+            ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                                linetype = "dashed", linewidth = 0.5)
+          } else {
+            NULL
+          }
+        } +
+        # Line connecting means (shows trend across levels)
+        ggplot2::geom_line(
+          data        = mean_df,
           ggplot2::aes(x = x, y = mean),
           inherit.aes = FALSE,
           color       = unname(plot_colors[curve_color]),
           linewidth   = 1.2
+        ) +
+        # Error bars showing confidence intervals at each discrete level
+        ggplot2::geom_errorbar(
+          data        = mean_df,
+          ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+          inherit.aes = FALSE,
+          width       = 0,  # No caps, just vertical lines
+          color       = unname(plot_colors[curve_color]),
+          linewidth   = 0.9
+        ) +
+        # Points at means
+        ggplot2::geom_point(
+          data        = mean_df,
+          ggplot2::aes(x = x, y = mean),
+          inherit.aes = FALSE,
+          size        = 3,
+          color       = unname(plot_colors[curve_color])
+        ) +
+        ggplot2::scale_x_continuous(breaks = sort(unique(mean_df$x))) +
+        ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+        ggplot2::labs(
+          title = paste0("Bivariate Plot Over ", n_imps, " Imputed Data Sets: ",
+                         y_label, " vs. ", x_label),
+          x = x_label, y = y_label
+        ) +
+        blimp_theme(font_size) +
+        ggplot2::theme(
+          axis.text.y  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(r = 6)),
+          axis.ticks.y = ggplot2::element_line(),
+          axis.title.y = ggplot2::element_text(size = font_size),
+          axis.text.x  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 2)),
+          axis.title.x = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 12))
         )
+    }  # End ungrouped discrete plot
+    
+  } else {
+    # Numeric plot: points (+ optional spaghetti) + polynomial curve + ribbon.
+    
+    has_groups <- !is.null(group_var) && "group" %in% names(df)
+    curve_df <- polynomial_pooled(df, by_group = has_groups)
+    
+    # Calculate pooled R² for the polynomial fits
+    pooled_r2 <- NULL
+    if (!has_groups) {
+      # Only calculate overall R² if not grouped
+      tryCatch({
+        # Fit polynomial in each imputation and get R²
+        imps <- split(df, df$imp)
+        r2_values <- sapply(imps, function(d) {
+          d0 <- stats::na.omit(d[, c("y", "x")])
+          if (nrow(d0) <= poly_degree) return(NA_real_)
+          
+          fit <- try(
+            stats::lm(y ~ stats::poly(x, degree = poly_degree, raw = FALSE), data = d0),
+            silent = TRUE
+          )
+          
+          if (inherits(fit, "try-error")) return(NA_real_)
+          
+          # Get R²
+          summary(fit)$r.squared
+        })
+        
+        # Pool R² using Fisher's z-transformation
+        r2_finite <- r2_values[is.finite(r2_values)]
+        if (length(r2_finite) > 0) {
+          # Convert R² to R, then to Fisher's z
+          r_values <- sqrt(pmax(0, pmin(1, r2_finite)))
+          z_values <- 0.5 * log((1 + r_values) / (1 - r_values))
+          
+          # Pool z values
+          z_pooled <- mean(z_values, na.rm = TRUE)
+          
+          # Convert back to R, then to R²
+          r_pooled <- tanh(z_pooled)
+          pooled_r2 <- r_pooled^2
+        }
+      }, error = function(e) NULL)
     }
     
-    p <- p +
-      ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
-      ggplot2::labs(
-        title = paste0("Bivariate Plot Over ", n_imps,
-                       " Imputed Data Sets: ", y_label, " vs. ", x_label),
-        x = x_label, y = y_label
-      ) +
-      blimp_theme(font_size) +
-      ggplot2::theme(
-        axis.text.y  = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(r = 6)),
-        axis.ticks.y = ggplot2::element_line(),
-        axis.title.y = ggplot2::element_text(size = font_size),
-        axis.text.x  = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(t = 2)),
-        axis.title.x = ggplot2::element_text(size = font_size,
-                                             margin = ggplot2::margin(t = 12))
-      )
-    
-    # Add R² annotation if requested and available
-    if (rsquare && !is.null(pooled_r2) && is.finite(pooled_r2)) {
-      p <- p + ggplot2::annotate(
-        "text",
-        x = Inf, y = Inf,
-        label = sprintf("Pooled R² = %.3f", pooled_r2),
-        hjust = 1.1, vjust = 1.5,
-        size = font_size / .pt,
-        color = "black"
-      )
-    }
-  }
+    if (has_groups) {
+      # Grouped continuous plot
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y, color = group))
+      
+      # spaghetti FIRST (background)
+      if (lines && !is.null(df_lines)) {
+        p <- p +
+          ggplot2::geom_line(
+            data        = df_lines,
+            ggplot2::aes(x = x, y = y, group = cluster),
+            inherit.aes = FALSE,
+            linewidth   = 0.3,
+            alpha       = 0.15,
+            color       = "grey40"
+          )
+      }
+      
+      # points + polynomial regression
+      p <- p +
+        ggplot2::geom_point(
+          alpha = point_alpha,
+          size  = point_size
+        ) +
+        # Add reference line at y=0 when Y is standardized
+        {
+          if (standardize %in% c("y", "both")) {
+            ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                                linetype = "dashed", linewidth = 0.5)
+          } else {
+            NULL
+          }
+        }
+      
+      # Add polynomial curve and ribbon only if polynomial = TRUE
+      if (polynomial) {
+        # Ensure curve_df$group is a factor matching df$group
+        curve_df$group <- factor(curve_df$group, levels = levels(df$group))
+        
+        p <- p +
+          suppressWarnings(
+            ggplot2::geom_ribbon(
+              data        = curve_df,
+              ggplot2::aes(x = x, ymin = lwr, ymax = upr, fill = group),
+              inherit.aes = FALSE,
+              alpha       = 0.15
+            )
+          ) +
+          ggplot2::geom_line(
+            data        = curve_df,
+            ggplot2::aes(x = x, y = mean, color = group),
+            inherit.aes = FALSE,
+            linewidth   = 1.2
+          )
+      }
+      
+      p <- p +
+        ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+        ggplot2::labs(
+          title = paste0(y_label, " vs. ", x_label, " by ", group_var),
+          x = x_label, 
+          y = y_label,
+          color = group_var,
+          fill = group_var
+        ) +
+        blimp_theme(font_size) +
+        ggplot2::theme(
+          axis.text.y  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(r = 6)),
+          axis.ticks.y = ggplot2::element_line(),
+          axis.title.y = ggplot2::element_text(size = font_size),
+          axis.text.x  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 2)),
+          axis.title.x = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 12))
+        )
+      
+    } else {
+      # Ungrouped continuous plot (original)
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y))
+      
+      # spaghetti FIRST (background)
+      if (lines && !is.null(df_lines)) {
+        p <- p +
+          ggplot2::geom_line(
+            data        = df_lines,
+            ggplot2::aes(x = x, y = y, group = cluster),
+            inherit.aes = FALSE,
+            linewidth   = 0.3,
+            alpha       = 0.15,
+            color       = "grey40"
+          )
+      }
+      
+      # points + polynomial regression
+      p <- p +
+        ggplot2::geom_point(
+          alpha = point_alpha,
+          size  = point_size,
+          color = unname(plot_colors[plot_point_color])
+        ) +
+        # Add reference line at y=0 when Y is standardized
+        {
+          if (standardize %in% c("y", "both")) {
+            ggplot2::geom_hline(yintercept = 0, color = "grey70", 
+                                linetype = "dashed", linewidth = 0.5)
+          } else {
+            NULL
+          }
+        }
+      
+      # Add polynomial curve and ribbon only if polynomial = TRUE
+      if (polynomial) {
+        p <- p +
+          suppressWarnings(
+            ggplot2::geom_ribbon(
+              data        = curve_df,
+              ggplot2::aes(x = x, ymin = lwr, ymax = upr),
+              inherit.aes = FALSE,
+              fill        = unname(plot_colors[band_fill]),
+              alpha       = plot_shading
+            )
+          ) +
+          ggplot2::geom_line(
+            data        = curve_df,
+            ggplot2::aes(x = x, y = mean),
+            inherit.aes = FALSE,
+            color       = unname(plot_colors[curve_color]),
+            linewidth   = 1.2
+          )
+      }
+      
+      p <- p +
+        ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
+        ggplot2::labs(
+          title = paste0("Bivariate Plot Over ", n_imps,
+                         " Imputed Data Sets: ", y_label, " vs. ", x_label),
+          x = x_label, y = y_label
+        ) +
+        blimp_theme(font_size) +
+        ggplot2::theme(
+          axis.text.y  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(r = 6)),
+          axis.ticks.y = ggplot2::element_line(),
+          axis.title.y = ggplot2::element_text(size = font_size),
+          axis.text.x  = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 2)),
+          axis.title.x = ggplot2::element_text(size = font_size,
+                                               margin = ggplot2::margin(t = 12))
+        )
+      
+      # Add R² annotation if requested and available
+      if (rsquare && !is.null(pooled_r2) && is.finite(pooled_r2)) {
+        p <- p + ggplot2::annotate(
+          "text",
+          x = Inf, y = Inf,
+          label = sprintf("Pooled R² = %.3f", pooled_r2),
+          hjust = 1.1, vjust = 1.5,
+          size = font_size / .pt,
+          color = "black"
+        )
+      }
+    }  # End ungrouped continuous plot
+  }  # End continuous vs discrete branching
   
   # Return behavior:
   # - If print = TRUE: print now and return invisible

@@ -59,11 +59,11 @@ univariate_plot(vars = c('probsolve.student','probsolve_on_month7.student','prob
 # plot standardized residuals vs. predicted values
 bivariate_plot(probsolve.residual ~ probsolve.predicted, standardize = 'y', model = model1)
 
-# plot standardized residuals by time
-bivariate_plot(probsolve.residual ~ month7, model1)
+# plot level-1 standardized residuals by time
+bivariate_plot(probsolve.residual ~ month7, model = model1)
 
 # plot predicted values by time
-bivariate_plot(probsolve.predicted ~ month7, model1)
+bivariate_plot(probsolve.predicted ~ month7, model = model1)
 
 #------------------------------------------------------------------------------#
 # FIT LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
@@ -103,13 +103,15 @@ output(model2)
 imputation_plot(model2)
 
 # plot distributions and residuals
-univariate_plot(vars = c('iceptl2.latent','linearl2.latent','iceptl3.latent','linearl3.latent','probsolve.residual'), model2)
+residuals <- paste0(c('iceptl2','linearl2','iceptl3','linearl3','probsolve'), '.residual')
+univariate_plot(vars = residuals, model2)
 
 # plot standardized residuals vs. predicted values
 bivariate_plot(probsolve.residual ~ probsolve.predicted, standardize = 'y', model = model2)
 
-# plot standardized residuals by time
-bivariate_plot(probsolve.residual ~ month7, model2)
+# plot standardized residuals by predictors
+bivariate_plot(probsolve.residual ~ month7, model = model2)
+bivariate_plot(y_vars = c('iceptl3.residual','linearl3.residual'), x_vars = 'condition', model = model2)
 
 # plot predicted values by time
-bivariate_plot(probsolve.predicted ~ month7, model2)
+bivariate_plot(probsolve.predicted ~ month7, model = model2)
