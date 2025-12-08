@@ -807,7 +807,7 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 # Shows distribution of variables across imputed datasets.
 # Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
-univariate_plot <- function(model, vars = NULL, discrete_vars = NULL, 
+univariate_plot <- function(vars = NULL, model, discrete_vars = NULL, 
                             bins = 30, font_size = 14, print = FALSE) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) stop("Package 'ggplot2' is required.")
   if (!is.list(model@imputations) || !length(model@imputations)) stop("@imputations must be non-empty")
@@ -1221,8 +1221,8 @@ univariate_plot <- function(model, vars = NULL, discrete_vars = NULL,
 # Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
 imputation_plot <- function(
-    model,
     vars = NULL,
+    model,
     discrete_vars = NULL,
     bins = 30,
     font_size = 14,
@@ -1488,8 +1488,8 @@ imputation_plot <- function(
 #   E) Standardized residual spread by cluster (level-1 DVs only)
 
 residuals_plot <- function(
-    model,
     var           = NULL,   # vector of DV bases (e.g., c("dpdd","inflam_sum"))
+    model,
     # polynomial fitting & pooling
     poly_degree   = 3,
     ci            = TRUE,
@@ -3003,16 +3003,17 @@ residuals_plot <- function(
 
 bivariate_plot <- function(
     formula = NULL,
-    model,
     vars = NULL,
     y_vars = NULL,
     x_vars = NULL,
+    model,
     discrete_x = NULL,
     standardize = c("none", "y", "x", "both"),
     poly_degree = 3,
     polynomial = TRUE,      # NEW: Turn polynomial fitting on/off
     rsquare = FALSE,        # NEW: Show R² on plot
     level = 0.95,
+    points = TRUE,          # NEW: Show/hide points
     point_alpha = 0.15, point_size = 1.2,
     curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
@@ -3078,6 +3079,7 @@ bivariate_plot <- function(
       polynomial = polynomial,
       rsquare = rsquare,
       level = level,
+      points = points,
       point_alpha = point_alpha,
       point_size = point_size,
       curve_color = curve_color,
@@ -3536,14 +3538,21 @@ bivariate_plot <- function(
       }
       
       p <- p +
-        ggplot2::geom_point(
-          alpha  = point_alpha,
-          size   = point_size,
-          position = ggplot2::position_jitter(
-            width = jitter_width,
-            height = 0
-          )
-        ) +
+        # Add points (if requested)
+        {
+          if (points) {
+            ggplot2::geom_point(
+              alpha  = point_alpha,
+              size   = point_size,
+              position = ggplot2::position_jitter(
+                width = jitter_width,
+                height = 0
+              )
+            )
+          } else {
+            NULL
+          }
+        } +
         # Add reference line at y=0 when Y is standardized
         {
           if (standardize %in% c("y", "both")) {
@@ -3613,13 +3622,20 @@ bivariate_plot <- function(
       }
       
       p <- p +
-        ggplot2::geom_jitter(
-          width  = jitter_width,
-          height = 0,
-          alpha  = point_alpha,
-          size   = point_size,
-          color  = unname(plot_colors[plot_point_color])
-        ) +
+        # Add points (if requested)
+        {
+          if (points) {
+            ggplot2::geom_jitter(
+              width  = jitter_width,
+              height = 0,
+              alpha  = point_alpha,
+              size   = point_size,
+              color  = unname(plot_colors[plot_point_color])
+            )
+          } else {
+            NULL
+          }
+        } +
         # Add reference line at y=0 when Y is standardized
         {
           if (standardize %in% c("y", "both")) {
@@ -3738,10 +3754,17 @@ bivariate_plot <- function(
       
       # points + polynomial regression
       p <- p +
-        ggplot2::geom_point(
-          alpha = point_alpha,
-          size  = point_size
-        ) +
+        # Add points (if requested)
+        {
+          if (points) {
+            ggplot2::geom_point(
+              alpha = point_alpha,
+              size  = point_size
+            )
+          } else {
+            NULL
+          }
+        } +
         # Add reference line at y=0 when Y is standardized
         {
           if (standardize %in% c("y", "both")) {
@@ -3814,11 +3837,18 @@ bivariate_plot <- function(
       
       # points + polynomial regression
       p <- p +
-        ggplot2::geom_point(
-          alpha = point_alpha,
-          size  = point_size,
-          color = unname(plot_colors[plot_point_color])
-        ) +
+        # Add points (if requested)
+        {
+          if (points) {
+            ggplot2::geom_point(
+              alpha = point_alpha,
+              size  = point_size,
+              color = unname(plot_colors[plot_point_color])
+            )
+          } else {
+            NULL
+          }
+        } +
         # Add reference line at y=0 when Y is standardized
         {
           if (standardize %in% c("y", "both")) {
@@ -3910,6 +3940,7 @@ bivariate_plot <- function(
     polynomial = TRUE,
     rsquare = FALSE,
     level = 0.95,
+    points = TRUE,
     point_alpha = 0.15,
     point_size = 1.2,
     curve_color = plot_curve_color,
@@ -3981,6 +4012,7 @@ bivariate_plot <- function(
         polynomial = polynomial,
         rsquare = rsquare,
         level = level,
+        points = points,
         point_alpha = point_alpha,
         point_size = point_size,
         curve_color = curve_color,
