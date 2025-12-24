@@ -18,6 +18,7 @@ plot_shading <- 0.25
 plot_point_color <- "blue"    # color for scatter points
 plot_curve_color <- "red"     # color for fitted curves/lines  
 plot_band_color  <- "red"     # color for confidence bands/ribbons
+plot_fill_color  <- "blue"    # color for histograms/bars (univariate_plot)
 
 # Confidence band X-axis coverage (inner percentage of data to show)
 # 0.95 = show bands for inner 95% of X data (2.5th to 97.5th percentile)
@@ -880,7 +881,8 @@ standardize_residuals <- function(model, vars = NULL, na.rm = TRUE) {
 # Auto-detects categorical variables from ORDINAL/NOMINAL declarations.
 
 univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL, 
-                            bins = 30, font_size = 14, stats = FALSE, print = FALSE) {
+                            bins = 30, font_size = 14, stats = FALSE, 
+                            fill_color = plot_fill_color, print = FALSE) {
   # Handle common usage: univariate_plot(model) where model is first positional arg
   if (is.null(model) && !is.null(vars)) {
     # Check if 'vars' is actually a model object (S4 with @imputations)
@@ -972,7 +974,13 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
     }
   }
   
-  fill_col <- unname(plot_colors["blue"])
+  # Get fill color (can be color name or hex code)
+  if (fill_color %in% names(plot_colors)) {
+    fill_col <- unname(plot_colors[fill_color])
+  } else {
+    fill_col <- fill_color  # Use as-is (hex code)
+  }
+  
   n_sets   <- length(model@imputations)
   
   # Get cluster ID for level-2 detection
@@ -1010,6 +1018,15 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
       return(NULL)
     }
     
+    # For bin calculation, use ALL values (not deduplicated) to get smoother histograms
+    # This gives better visual representation even for level-2 variables
+    if (is_level2) {
+      x_for_bins <- unlist(lapply(model@imputations, `[[`, v), use.names = FALSE)
+      x_for_bins <- x_for_bins[is.finite(x_for_bins)]
+    } else {
+      x_for_bins <- x
+    }
+    
     title_text <- paste0("Distribution Over ", n_sets, " Imputed Data Sets: ", v)
     
     # Determine if discrete (from ORDINAL/NOMINAL declarations)
@@ -1035,10 +1052,29 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
       
     } else {
       # Continuous: histogram with density
+      # Use optimal bin width if bins not explicitly set
+      bins_to_use <- bins  # Local copy to avoid affecting other variables
+      if (bins == 30) {  # Default value check
+        # Freedman-Diaconis rule for optimal bin width
+        # Use x_for_bins (all values) for calculation, gives smoother histograms
+        IQR_x <- stats::IQR(x_for_bins, na.rm = TRUE)
+        if (IQR_x > 0) {
+          bin_width <- 2 * IQR_x / (length(x_for_bins)^(1/3))
+          bins_optimal <- ceiling((max(x_for_bins, na.rm = TRUE) - min(x_for_bins, na.rm = TRUE)) / bin_width)
+          bins_to_use <- max(10, min(100, bins_optimal))  # Constrain between 10 and 100
+          message(sprintf("Variable '%s': n=%d, IQR=%.3f, optimal bins=%d (constrained to %d)", 
+                          v, length(x_for_bins), IQR_x, bins_optimal, bins_to_use))
+        } else {
+          message(sprintf("Variable '%s': IQR=0, using default bins=%d", v, bins_to_use))
+        }
+      } else {
+        message(sprintf("Variable '%s': using specified bins=%d", v, bins_to_use))
+      }
+      
       p <- ggplot2::ggplot(data.frame(x = x),
                            ggplot2::aes(x = x, y = ggplot2::after_stat(density))) +
         ggplot2::geom_histogram(
-          bins  = bins,
+          bins  = bins_to_use,
           fill  = fill_col,
           color = fill_col,
           alpha = plot_shading
@@ -1101,7 +1137,7 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
       # Only create cluster plot for level-1 variables
       if (!is_level2 && v %in% names(d0)) {
         cluster_plot <- tryCatch({
-          .build_univariate_cluster_plot(model, v, cluster_id, font_size)
+          .build_univariate_cluster_plot(model, v, cluster_id, font_size, fill_col)
         }, error = function(e) {
           message("Could not create cluster plot for '", v, "': ", e$message)
           NULL
@@ -1124,7 +1160,12 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
 }
 
 # HELPER: Build cluster index plot for level-1 variables ----
-.build_univariate_cluster_plot <- function(model, var_name, cluster_id, font_size = 14) {
+.build_univariate_cluster_plot <- function(model, var_name, cluster_id, font_size = 14, fill_col = NULL) {
+  # Default color if not provided
+  if (is.null(fill_col)) {
+    fill_col <- unname(plot_colors["blue"])
+  }
+  
   # Stack data across imputations
   data_list <- lapply(seq_along(model@imputations), function(i) {
     imp_df <- model@imputations[[i]]
@@ -1210,7 +1251,7 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
     ggplot2::geom_point(
       alpha    = 0.20,
       size     = 1.0,
-      color    = unname(plot_colors[plot_point_color]),
+      color    = fill_col,
       position = ggplot2::position_jitter(width = 0.10, height = 0)  # Further reduced jitter
     ) +
     ggplot2::geom_hline(
@@ -1343,6 +1384,8 @@ imputation_plot <- function(
     discrete_vars = NULL,
     bins = 30,
     font_size = 14,
+    observed_color = plot_fill_color,
+    imputed_color = plot_curve_color,
     print = FALSE
 ) {
   # Handle common usage: imputation_plot(model) where model is first positional arg
@@ -1396,8 +1439,18 @@ imputation_plot <- function(
     }
   }
   
-  obs_col <- unname(plot_colors["blue"])
-  imp_col <- unname(plot_colors["red"])
+  # Get colors (can be color names or hex codes)
+  if (observed_color %in% names(plot_colors)) {
+    obs_col <- unname(plot_colors[observed_color])
+  } else {
+    obs_col <- observed_color  # Use as-is (hex code)
+  }
+  
+  if (imputed_color %in% names(plot_colors)) {
+    imp_col <- unname(plot_colors[imputed_color])
+  } else {
+    imp_col <- imputed_color  # Use as-is (hex code)
+  }
   n_imps  <- length(model@imputations)
   
   # Build plot for one variable
@@ -1490,8 +1543,19 @@ imputation_plot <- function(
         binwidth <- 1
         boundary <- floor(min(c(obs_vals, imp_vals), na.rm = TRUE)) - 0.5
       } else {
-        # Continuous data: use bins parameter
-        binwidth <- diff(rng) / bins
+        # Continuous data: use optimal bins if default
+        bins_to_use <- bins
+        if (bins == 30) {  # Default value check
+          # Freedman-Diaconis rule for optimal bin width
+          all_vals <- c(obs_vals, imp_vals)
+          IQR_x <- stats::IQR(all_vals, na.rm = TRUE)
+          if (IQR_x > 0) {
+            bin_width_opt <- 2 * IQR_x / (length(all_vals)^(1/3))
+            bins_optimal <- ceiling(diff(rng) / bin_width_opt)
+            bins_to_use <- max(10, min(100, bins_optimal))  # Constrain between 10 and 100
+          }
+        }
+        binwidth <- diff(rng) / bins_to_use
         boundary <- rng[1]
       }
       
@@ -3159,6 +3223,7 @@ bivariate_plot <- function(
     level = 0.95,
     points = TRUE,          # NEW: Show/hide points
     point_alpha = 0.15, point_size = 1.2,
+    point_color = plot_point_color,
     curve_color = plot_curve_color, band_fill = plot_band_color,
     font_size = 14,
     lines = FALSE,
@@ -3180,6 +3245,25 @@ bivariate_plot <- function(
     stop("poly_degree must be a positive integer")
   }
   poly_degree <- as.integer(poly_degree)
+  
+  # Convert color parameters (can be color names or hex codes)
+  if (point_color %in% names(plot_colors)) {
+    point_col <- unname(plot_colors[point_color])
+  } else {
+    point_col <- point_color  # Use as-is (hex code)
+  }
+  
+  if (curve_color %in% names(plot_colors)) {
+    curve_col <- unname(plot_colors[curve_color])
+  } else {
+    curve_col <- curve_color  # Use as-is (hex code)
+  }
+  
+  if (band_fill %in% names(plot_colors)) {
+    band_col <- unname(plot_colors[band_fill])
+  } else {
+    band_col <- band_fill  # Use as-is (hex code)
+  }
   
   ## --- DISPATCH: Single plot mode vs. multiple plots mode ---
   
@@ -3227,6 +3311,7 @@ bivariate_plot <- function(
       points = points,
       point_alpha = point_alpha,
       point_size = point_size,
+      point_color = point_color,
       curve_color = curve_color,
       band_fill = band_fill,
       font_size = font_size,
@@ -3781,7 +3866,7 @@ bivariate_plot <- function(
               height = 0,
               alpha  = point_alpha,
               size   = point_size,
-              color  = unname(plot_colors[plot_point_color])
+              color  = point_col
             )
           } else {
             NULL
@@ -3801,7 +3886,7 @@ bivariate_plot <- function(
           data        = mean_df,
           ggplot2::aes(x = x, y = mean),
           inherit.aes = FALSE,
-          color       = unname(plot_colors[curve_color]),
+          color       = curve_col,
           linewidth   = 1.2
         ) +
         # Error bars showing confidence intervals at each discrete level (if requested)
@@ -3812,7 +3897,7 @@ bivariate_plot <- function(
               ggplot2::aes(x = x, ymin = lwr, ymax = upr),
               inherit.aes = FALSE,
               width       = 0,  # No caps, just vertical lines
-              color       = unname(plot_colors[curve_color]),
+              color       = curve_col,
               linewidth   = 0.9
             )
           } else {
@@ -3825,7 +3910,7 @@ bivariate_plot <- function(
           ggplot2::aes(x = x, y = mean),
           inherit.aes = FALSE,
           size        = 3,
-          color       = unname(plot_colors[curve_color])
+          color       = curve_col
         ) +
         ggplot2::scale_x_continuous(breaks = sort(unique(mean_df$x))) +
         ggplot2::scale_y_continuous(breaks = y_breaks, limits = y_limits) +
@@ -4007,7 +4092,7 @@ bivariate_plot <- function(
             ggplot2::geom_point(
               alpha = point_alpha,
               size  = point_size,
-              color = unname(plot_colors[plot_point_color])
+              color = point_col
             )
           } else {
             NULL
@@ -4034,7 +4119,7 @@ bivariate_plot <- function(
                   data        = curve_df,
                   ggplot2::aes(x = x, ymin = lwr, ymax = upr),
                   inherit.aes = FALSE,
-                  fill        = unname(plot_colors[band_fill]),
+                  fill        = band_col,
                   alpha       = plot_shading
                 )
               )
@@ -4046,7 +4131,7 @@ bivariate_plot <- function(
             data        = curve_df,
             ggplot2::aes(x = x, y = mean),
             inherit.aes = FALSE,
-            color       = unname(plot_colors[curve_color]),
+            color       = curve_col,
             linewidth   = 1.2
           )
       }
@@ -4115,6 +4200,7 @@ bivariate_plot <- function(
     points = TRUE,
     point_alpha = 0.15,
     point_size = 1.2,
+    point_color = plot_point_color,
     curve_color = plot_curve_color,
     band_fill = plot_band_color,
     font_size = 14,
@@ -4122,6 +4208,25 @@ bivariate_plot <- function(
     print = FALSE
 ) {
   standardize <- match.arg(standardize)
+  
+  # Convert color parameters (can be color names or hex codes)
+  if (point_color %in% names(plot_colors)) {
+    point_col <- unname(plot_colors[point_color])
+  } else {
+    point_col <- point_color  # Use as-is (hex code)
+  }
+  
+  if (curve_color %in% names(plot_colors)) {
+    curve_col <- unname(plot_colors[curve_color])
+  } else {
+    curve_col <- curve_color  # Use as-is (hex code)
+  }
+  
+  if (band_fill %in% names(plot_colors)) {
+    band_col <- unname(plot_colors[band_fill])
+  } else {
+    band_col <- band_fill  # Use as-is (hex code)
+  }
   
   # Auto-populate discrete_x from ORDINAL/NOMINAL if not provided
   if (is.null(discrete_x)) {
