@@ -1055,18 +1055,26 @@ univariate_plot <- function(vars = NULL, model = NULL, discrete_vars = NULL,
       # Use optimal bin width if bins not explicitly set
       bins_to_use <- bins  # Local copy to avoid affecting other variables
       if (bins == 30) {  # Default value check
-        # Freedman-Diaconis rule for optimal bin width
-        # Use x_for_bins (all values) for calculation, gives smoother histograms
-        IQR_x <- stats::IQR(x_for_bins, na.rm = TRUE)
-        if (IQR_x > 0) {
-          bin_width <- 2 * IQR_x / (length(x_for_bins)^(1/3))
-          bins_optimal <- ceiling((max(x_for_bins, na.rm = TRUE) - min(x_for_bins, na.rm = TRUE)) / bin_width)
-          bins_to_use <- max(10, min(100, bins_optimal))  # Constrain between 10 and 100
-          message(sprintf("Variable '%s': n=%d, IQR=%.3f, optimal bins=%d (constrained to %d)", 
-                          v, length(x_for_bins), IQR_x, bins_optimal, bins_to_use))
+        # Smart binning: adapts to data characteristics
+        n_obs <- length(x_for_bins)
+        n_unique <- length(unique(x_for_bins))
+        
+        # For data with limited unique values (common in psychology/social science),
+        # use the unique values directly (one bin per value, no gaps)
+        if (n_unique <= 50) {
+          bins_to_use <- n_unique
+          message(sprintf("Variable '%s': n=%d, unique=%d, using unique values as bins=%d", 
+                          v, n_obs, n_unique, bins_to_use))
         } else {
-          message(sprintf("Variable '%s': IQR=0, using default bins=%d", v, bins_to_use))
+          # For continuous-like data (many unique values), use ggplot2's default (30)
+          # This is a reasonable balance that works well across most data types
+          bins_to_use <- 30
+          message(sprintf("Variable '%s': n=%d, unique=%d, using default bins=%d", 
+                          v, n_obs, n_unique, bins_to_use))
         }
+        
+        # Ensure minimum of 10 bins for stability
+        bins_to_use <- max(10, bins_to_use)
       } else {
         message(sprintf("Variable '%s': using specified bins=%d", v, bins_to_use))
       }
@@ -1543,17 +1551,22 @@ imputation_plot <- function(
         binwidth <- 1
         boundary <- floor(min(c(obs_vals, imp_vals), na.rm = TRUE)) - 0.5
       } else {
-        # Continuous data: use optimal bins if default
+        # Continuous data: smart binning based on data characteristics
         bins_to_use <- bins
         if (bins == 30) {  # Default value check
-          # Freedman-Diaconis rule for optimal bin width
           all_vals <- c(obs_vals, imp_vals)
-          IQR_x <- stats::IQR(all_vals, na.rm = TRUE)
-          if (IQR_x > 0) {
-            bin_width_opt <- 2 * IQR_x / (length(all_vals)^(1/3))
-            bins_optimal <- ceiling(diff(rng) / bin_width_opt)
-            bins_to_use <- max(10, min(100, bins_optimal))  # Constrain between 10 and 100
+          n_obs <- length(all_vals)
+          n_unique <- length(unique(all_vals))
+          
+          # For discrete/limited-range data, use unique values
+          if (n_unique <= 50) {
+            bins_to_use <- n_unique
+          } else {
+            # For continuous data, use ggplot2 default (30)
+            bins_to_use <- 30
           }
+          
+          bins_to_use <- max(10, bins_to_use)
         }
         binwidth <- diff(rng) / bins_to_use
         boundary <- rng[1]
@@ -2968,12 +2981,24 @@ residuals_plot <- function(
         z_vals <- z_vals[is.finite(z_vals)]
         if (!length(z_vals)) return(NULL)
         
+        # Smart binning: adapts to data characteristics
+        n_obs <- length(z_vals)
+        n_unique <- length(unique(z_vals))
+        
+        # For discrete/limited-range data, use unique values
+        if (n_unique <= 50) {
+          bins_to_use <- max(10, n_unique)
+        } else {
+          # For continuous residuals, use ggplot2 default (30)
+          bins_to_use <- 30
+        }
+        
         ggplot2::ggplot(
           data.frame(z = z_vals),
           ggplot2::aes(x = z, y = ggplot2::after_stat(density))
         ) +
           ggplot2::geom_histogram(
-            bins  = 100,  # fixed for residual_plot()
+            bins  = bins_to_use,
             fill  = unname(plot_colors[plot_point_color]),
             color = unname(plot_colors[plot_point_color]),
             alpha = plot_shading
