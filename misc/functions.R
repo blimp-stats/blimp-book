@@ -4353,3 +4353,574 @@ bivariate_plot <- function(
     plots
   }
 }
+
+# CHI-BAR TEST OF RANDOM SLOPES ----
+
+#' Chi-Bar-Square Test for Random Slopes in rblimp Models
+#' 
+#' Computes chi-bar-square tests for random slopes using MCMC-based Wald 
+#' chi-square statistics from rblimp model output. Tests the null hypothesis
+#' that both the slope variance and intercept-slope covariance are zero.
+#' 
+#' IMPORTANT: This test is designed for models with a SINGLE random slope.
+#' If your model has multiple random slopes, this test may be invalid because
+#' it does not account for correlations with other random effects. See Details.
+#'
+#' @param model An rblimp model object with random slopes
+#' @param DV Name of the dependent variable (e.g., "Empower")
+#' @param IV Name of the predictor variable with random slope (e.g., "LMX")
+#'
+#' @return A list containing:
+#'   - summary_table: Data frame with results from different methods
+#'   - wald_chisq: The computed Wald chi-square statistic
+#'   - rho: Correlation between slope variance and covariance parameters
+#'   - theta: Level probability (for Case 6)
+#'   - posterior_means: Vector of posterior means (used for Wald test)
+#'   - posterior_medians: Vector of posterior medians (used for reporting)
+#'   - posterior_cov: Covariance matrix of the two parameters
+#'   - n_random_slopes: Number of random slopes detected in the model
+#'   - warning_multiple_slopes: Logical indicating if multiple slopes detected
+#'
+#' @details
+#' ## Point Estimates: Median vs Mean
+#' The function reports posterior **medians** for the variance and covariance
+#' parameters, following rblimp's convention. However, the Wald chi-square test
+#' uses posterior **means** as required by the test statistic formula. This is
+#' appropriate because variance parameters often have skewed posterior distributions,
+#' making the median a better point estimate for reporting, while the mean is 
+#' required for the quadratic form in the Wald test.
+#' 
+#' ## Model Requirements
+#' This test assumes your model has:
+#' - Random intercepts
+#' - ONE random slope (for the IV being tested)
+#' - Optional: fixed effects, level-2 predictors
+#' 
+#' ## Multiple Random Slopes
+#' If your model has multiple random slopes (e.g., random slopes for both
+#' LMX and another variable), the test becomes more complex:
+#' 
+#' **Option 1: Test Each Slope Separately (INVALID)**
+#' Running this test separately for each slope is technically invalid because
+#' it ignores the correlation structure among all random effects. The weights
+#' for the chi-bar-square distribution depend on the full covariance structure.
+#' 
+#' **Option 2: Joint Test (REQUIRES EXTENSION)**
+#' To properly test multiple random slopes simultaneously, you would need:
+#' - Test all slope variances and covariances jointly
+#' - Account for full covariance matrix of all random effects
+#' - Use higher-dimensional chi-bar-square distribution
+#' - Weights become much more complex (see Stoel et al. 2006)
+#' 
+#' For now, this function only handles the single random slope case. If you
+#' have multiple random slopes, consider:
+#' 1. Testing slopes in separate models (each with only one random slope)
+#' 2. Using simulation-based methods (e.g., parametric bootstrap)
+#' 3. Consulting Stoel et al. (2006) for the general multivariate case
+#' 
+#' @references
+#' Stoel, R.D., Garre, F.G., Dolan, C., & van den Wittenboer, G. (2006). 
+#' On the likelihood ratio test in structural equation modeling when 
+#' parameters are subject to boundary constraints. *Psychological Methods*, 
+#' 11(4), 439-455.
+#'
+#' @export
+chibar_test <- function(model, DV, IV) {
+  
+  # Extract iterations object
+  iterations <- model@iterations
+  
+  # Get column names
+  col_names <- names(iterations)
+  
+  # Use the provided DV name
+  dv_name <- DV
+  predictor_name <- IV
+  
+  # Construct the parameter column names
+  slope_var_name <- paste0(dv_name, ".level-2 slope variance of.", predictor_name)
+  covar_name <- paste0(dv_name, ".level-2 intercept covariance with.", predictor_name)
+  
+  # Check for multiple random slopes in the model
+  slope_pattern <- paste0(dv_name, ".level-2 slope variance of.")
+  slope_columns <- grep(slope_pattern, col_names, value = TRUE, fixed = TRUE)
+  n_random_slopes <- length(slope_columns)
+  
+  warning_multiple_slopes <- FALSE
+  if (n_random_slopes > 1) {
+    warning_multiple_slopes <- TRUE
+    warning(
+      "\n",
+      "========================================================================\n",
+      "WARNING: Multiple random slopes detected in model!\n",
+      "========================================================================\n",
+      "Your model appears to have ", n_random_slopes, " random slopes:\n",
+      paste("  -", gsub(paste0(dv_name, ".level-2 slope variance of."), "", slope_columns), 
+            collapse = "\n"), "\n\n",
+      "This test is designed for models with a SINGLE random slope.\n",
+      "Testing each slope separately (as done here) is technically INVALID\n",
+      "because it ignores correlations among all random effects.\n\n",
+      "The proper test would need to jointly test all random slopes and\n",
+      "account for the full covariance structure (see Stoel et al. 2006).\n\n",
+      "Recommendations:\n",
+      "  1. Re-fit separate models, each with only one random slope\n",
+      "  2. Use simulation-based methods (parametric bootstrap)\n",
+      "  3. Interpret these results with extreme caution\n",
+      "========================================================================\n"
+    )
+  }
+  
+  # Check if columns exist
+  if (!slope_var_name %in% col_names) {
+    stop("Cannot find column: ", slope_var_name, "\n",
+         "Available columns: ", paste(col_names, collapse = ", "))
+  }
+  
+  if (!covar_name %in% col_names) {
+    stop("Cannot find column: ", covar_name, "\n",
+         "Available columns: ", paste(col_names, collapse = ", "))
+  }
+  
+  # Extract MCMC samples
+  slope_var_samples <- iterations[[slope_var_name]]
+  covar_samples <- iterations[[covar_name]]
+  
+  # Remove any NA or infinite values
+  valid_idx <- complete.cases(slope_var_samples, covar_samples) & 
+    is.finite(slope_var_samples) & 
+    is.finite(covar_samples)
+  
+  if (sum(valid_idx) < length(slope_var_samples)) {
+    warning(sum(!valid_idx), " iterations removed due to NA or infinite values")
+  }
+  
+  slope_var_samples <- slope_var_samples[valid_idx]
+  covar_samples <- covar_samples[valid_idx]
+  
+  n_samples <- length(slope_var_samples)
+  
+  if (n_samples < 100) {
+    warning("Fewer than 100 valid MCMC samples may give unstable estimates")
+  }
+  
+  # Compute posterior means (theta) - USED FOR WALD TEST
+  theta <- c(mean(slope_var_samples), mean(covar_samples))
+  names(theta) <- c("slope_variance", "intercept_slope_covariance")
+  
+  # Compute posterior medians - USED FOR REPORTING
+  # (Parameters may have skewed distributions)
+  theta_median <- c(median(slope_var_samples), median(covar_samples))
+  names(theta_median) <- c("slope_variance", "intercept_slope_covariance")
+  
+  # Null hypothesis (theta_0)
+  theta_0 <- c(0, 0)
+  
+  # Compute covariance matrix of the parameters
+  param_matrix <- cbind(slope_var_samples, covar_samples)
+  cov_matrix <- cov(param_matrix)
+  
+  # Compute Wald chi-square statistic
+  # χ²_MCMC = (θ - θ₀)' cov(θ)⁻¹ (θ - θ₀)
+  theta_diff <- theta - theta_0
+  
+  # Check if covariance matrix is invertible
+  if (det(cov_matrix) < 1e-10) {
+    warning("Covariance matrix is nearly singular. Results may be unstable.")
+  }
+  
+  cov_inv <- solve(cov_matrix)
+  wald_chisq <- as.numeric(t(theta_diff) %*% cov_inv %*% theta_diff)
+  
+  # Compute correlation between parameters (for Case 6)
+  rho <- cor(slope_var_samples, covar_samples)
+  
+  # Compute level probability (Self & Liang Case 6)
+  theta_level <- acos(-rho) / pi
+  
+  # =========================================================================
+  # Compute p-values using different methods
+  # =========================================================================
+  
+  # Method 1: Standard chi-square(2)
+  p_standard <- pchisq(wald_chisq, df = 2, lower.tail = FALSE)
+  
+  # Method 2: Stram & Lee (1994) - "Most common"
+  # Weights: 0.50, 0.25, 0.25 for chi-sq(0, 1, 2)
+  w_stram_lee <- c(0.50, 0.25, 0.25)
+  # P(chi-sq(0) > stat) = 0 if stat > 0, so first term drops out
+  p_stram_lee <- w_stram_lee[2] * pchisq(wald_chisq, df = 1, lower.tail = FALSE) +
+    w_stram_lee[3] * pchisq(wald_chisq, df = 2, lower.tail = FALSE)
+  
+  # Method 3: Self & Liang (1987) Case 6 - Correlation-adjusted
+  # Weights depend on rho
+  w0_case6 <- 0.5
+  w1_case6 <- 0.5 - theta_level
+  w2_case6 <- theta_level
+  w_case6 <- c(w0_case6, w1_case6, w2_case6)
+  
+  # P(chi-sq(0) > stat) = 0 if stat > 0, so first term drops out
+  p_case6 <- w_case6[2] * pchisq(wald_chisq, df = 1, lower.tail = FALSE) +
+    w_case6[3] * pchisq(wald_chisq, df = 2, lower.tail = FALSE)
+  
+  # =========================================================================
+  # Create summary table
+  # =========================================================================
+  
+  summary_table <- data.frame(
+    Method = c(
+      "Standard chi-square",
+      "Stram & Lee (1994)",
+      "Self & Liang (1987) Case 6"
+    ),
+    ChiSq = round(rep(wald_chisq, 3), 3),
+    dfWeights = c(
+      "df = 2",
+      sprintf("(%.2f, %.2f, %.2f)", w_stram_lee[1], w_stram_lee[2], w_stram_lee[3]),
+      sprintf("(%.2f, %.2f, %.2f)", w_case6[1], w_case6[2], w_case6[3])
+    ),
+    PValue = round(c(p_standard, p_stram_lee, p_case6), 3),
+    Notes = c(
+      "Ignores boundary issue",
+      "Assumes independence (rho=0)",
+      sprintf("Uses rho=%.3f, theta=%.3f", rho, theta_level)
+    ),
+    stringsAsFactors = FALSE
+  )
+  
+  # Add assumption note as an attribute
+  assumption_note <- paste0(
+    "ASSUMPTION: Model has only ONE random slope (", predictor_name, ").\n",
+    if (n_random_slopes > 1) {
+      paste0("WARNING: ", n_random_slopes, " random slopes detected. Test may be invalid!")
+    } else {
+      "Assumption satisfied."
+    }
+  )
+  
+  # =========================================================================
+  # Create result object
+  # =========================================================================
+  
+  result <- list(
+    summary_table = summary_table,
+    assumption_note = assumption_note,
+    wald_chisq = wald_chisq,
+    rho = rho,
+    theta = theta_level,
+    posterior_means = theta,
+    posterior_medians = theta_median,
+    posterior_cov = cov_matrix,
+    n_samples = n_samples,
+    predictor_name = predictor_name,
+    dv_name = dv_name,
+    n_random_slopes = n_random_slopes,
+    all_random_slopes = gsub(paste0(dv_name, ".level-2 slope variance of."), "", slope_columns),
+    warning_multiple_slopes = warning_multiple_slopes,
+    slope_var_samples = slope_var_samples,
+    covar_samples = covar_samples
+  )
+  
+  class(result) <- "chibar_rblimp"
+  
+  return(result)
+}
+
+
+#' Print method for chibar_rblimp objects
+#' @export
+print.chibar_rblimp <- function(x, digits = 3, ...) {
+  cat("=================================================================\n")
+  cat("Chi-Bar-Square Test for Random Slope\n")
+  cat("=================================================================\n")
+  cat("\n")
+  cat("Model:", x$dv_name, "~ ...\n")
+  cat("Random slope predictor:", x$predictor_name, "\n")
+  cat("MCMC samples:", x$n_samples, "\n")
+  cat("\n")
+  cat("Testing H0: var(slope) = 0 AND cov(intercept, slope) = 0\n")
+  cat("\n")
+  
+  # Print assumption note at the top
+  if (x$warning_multiple_slopes) {
+    cat("*** WARNING: MULTIPLE RANDOM SLOPES DETECTED ***\n")
+    cat("Random slopes in model:", paste(x$all_random_slopes, collapse = ", "), "\n")
+    cat("This test assumes ONLY ONE random slope.\n")
+    cat("Results may be INVALID. See documentation for details.\n")
+  } else {
+    cat("Note: Test assumes that the fitted model has only one random slope.\n")
+  }
+  cat("\n")
+  
+  cat("-----------------------------------------------------------------\n")
+  cat("Posterior Estimates:\n")
+  cat("-----------------------------------------------------------------\n")
+  cat("\n")
+  cat(sprintf("  Slope variance:              %8.*f\n", digits, x$posterior_medians[1]))
+  cat(sprintf("  Intercept-slope covariance:  %8.*f\n", digits, x$posterior_medians[2]))
+  cat(sprintf("  Parameter correlation (rho): %8.*f\n", digits, x$rho))
+  cat("\n")
+  
+  cat("-----------------------------------------------------------------\n")
+  cat("Wald Chi-Square Statistic:\n")
+  cat("-----------------------------------------------------------------\n")
+  cat("\n")
+  cat(sprintf("  χ² = %.*f\n", digits, x$wald_chisq))
+  cat("\n")
+  
+  cat("-----------------------------------------------------------------\n")
+  cat("Test Results:\n")
+  cat("-----------------------------------------------------------------\n")
+  cat("\n")
+  
+  # Column starting positions from desired_spacing.dat (0-indexed):
+  # Method: 0, ChiSq: 30, dfWeights: 39, PValue: 61, Notes: 71
+  
+  # Build each row by positioning columns at exact starting positions
+  for (i in 0:nrow(x$summary_table)) {
+    if (i == 0) {
+      # Header row
+      method_text <- "Method"
+      chisq_text <- "ChiSq"
+      weights_text <- "dfWeights"
+      pvalue_text <- "PValue"
+      notes_text <- "Notes"
+    } else {
+      # Data rows
+      method_text <- x$summary_table$Method[i]
+      chisq_text <- sprintf("%.3f", x$summary_table$ChiSq[i])
+      weights_text <- x$summary_table$dfWeights[i]
+      pvalue_text <- sprintf("%.3f", x$summary_table$PValue[i])
+      notes_text <- x$summary_table$Notes[i]
+    }
+    
+    # Build the line with exact column positions
+    line <- sprintf("%-30s%-9s%-22s%-10s%s",
+                    method_text,
+                    chisq_text, 
+                    weights_text,
+                    pvalue_text,
+                    notes_text)
+    cat(line, "\n", sep="")
+  }
+  
+  cat("\n")
+  cat("-----------------------------------------------------------------\n")
+  
+  invisible(x)
+}
+
+
+#' Plot method for chibar_rblimp objects
+#' @export
+plot.chibar_rblimp <- function(x, ...) {
+  par(mfrow = c(2, 2))
+  
+  # Plot 1: Joint distribution of parameters
+  plot(x$slope_var_samples, x$covar_samples,
+       xlab = "Slope Variance",
+       ylab = "Intercept-Slope Covariance",
+       main = sprintf("Joint Posterior Distribution\nrho = %.3f", x$rho),
+       pch = 16, col = rgb(0, 0, 0, 0.2),
+       xlim = range(c(0, x$slope_var_samples)),
+       ylim = range(c(min(x$covar_samples), max(x$covar_samples))))
+  abline(h = 0, v = 0, col = "red", lty = 2, lwd = 2)
+  points(x$posterior_means[1], x$posterior_means[2], 
+         pch = 19, col = "blue", cex = 2)
+  legend("topright", legend = c("Posterior samples", "Posterior mean", "Null (0,0)"),
+         pch = c(16, 19, NA), lty = c(NA, NA, 2), 
+         col = c(rgb(0,0,0,0.5), "blue", "red"), cex = 0.8)
+  
+  # Plot 2: Trace plot - Slope variance
+  plot(x$slope_var_samples, type = "l",
+       xlab = "Iteration",
+       ylab = "Slope Variance",
+       main = "MCMC Trace: Slope Variance",
+       col = rgb(0, 0, 0, 0.7))
+  abline(h = x$posterior_means[1], col = "blue", lwd = 2)
+  
+  # Plot 3: Trace plot - Covariance
+  plot(x$covar_samples, type = "l",
+       xlab = "Iteration",
+       ylab = "Intercept-Slope Covariance",
+       main = "MCMC Trace: Covariance",
+       col = rgb(0, 0, 0, 0.7))
+  abline(h = x$posterior_means[2], col = "blue", lwd = 2)
+  abline(h = 0, col = "red", lty = 2, lwd = 2)
+  
+  # Plot 4: P-value comparison
+  methods <- x$summary_table$Method
+  p_values <- x$summary_table$P_Value
+  
+  barplot(p_values, 
+          names.arg = c("Standard\nchi-sq(2)", "Stram-Lee\n(rho=0)", "Case 6\n(rho-adj)"),
+          ylab = "P-value",
+          main = "P-value Comparison",
+          col = c("gray70", "skyblue", "steelblue"),
+          ylim = c(0, max(p_values) * 1.2))
+  abline(h = 0.05, col = "red", lty = 2, lwd = 2)
+  abline(h = 0.10, col = "orange", lty = 2, lwd = 1)
+  text(1:3, p_values, labels = sprintf("%.4f", p_values), 
+       pos = 3, cex = 0.9)
+  legend("topright", legend = c("alpha = 0.05", "alpha = 0.10"),
+         lty = 2, col = c("red", "orange"), lwd = c(2, 1), cex = 0.8)
+  
+  par(mfrow = c(1, 1))
+}
+
+
+#' Summary method for chibar_rblimp objects
+#' @export
+summary.chibar_rblimp <- function(object, ...) {
+  cat("\n")
+  cat("=================================================================\n")
+  cat("DETAILED SUMMARY: Chi-Bar-Square Test for Random Slope\n")
+  cat("=================================================================\n")
+  cat("\n")
+  
+  # Model info
+  cat("Model Information:\n")
+  cat("------------------\n")
+  cat("Dependent variable:", object$dv_name, "\n")
+  cat("Random slope predictor:", object$predictor_name, "\n")
+  cat("MCMC samples used:", object$n_samples, "\n")
+  cat("Number of random slopes in model:", object$n_random_slopes, "\n")
+  if (object$n_random_slopes > 1) {
+    cat("All random slopes:", paste(object$all_random_slopes, collapse = ", "), "\n")
+    cat("\n*** WARNING: Multiple random slopes detected! ***\n")
+  }
+  cat("\n")
+  
+  # Hypothesis
+  cat("Null Hypothesis:\n")
+  cat("----------------\n")
+  cat("H0: var(", object$predictor_name, " slope) = 0 AND\n", sep = "")
+  cat("    cov(intercept, ", object$predictor_name, " slope) = 0\n", sep = "")
+  cat("\n")
+  
+  # Posterior summaries
+  cat("Posterior Summaries:\n")
+  cat("--------------------\n")
+  cat("(Medians reported; means used for Wald test)\n")
+  cat(sprintf("Slope variance:              Median = %8.4f, Mean = %8.4f, SD = %8.4f\n", 
+              object$posterior_medians[1],
+              object$posterior_means[1], 
+              sqrt(object$posterior_cov[1,1])))
+  cat(sprintf("Intercept-slope covariance:  Median = %8.4f, Mean = %8.4f, SD = %8.4f\n", 
+              object$posterior_medians[2],
+              object$posterior_means[2], 
+              sqrt(object$posterior_cov[2,2])))
+  cat("\n")
+  
+  # Covariance structure
+  cat("Parameter Covariance Matrix:\n")
+  cat("----------------------------\n")
+  print(object$posterior_cov, digits = 4)
+  cat("\n")
+  cat(sprintf("Parameter correlation (rho): %.4f\n", object$rho))
+  cat("\n")
+  
+  # Test statistic
+  cat("Wald Chi-Square Statistic:\n")
+  cat("--------------------------\n")
+  cat("Formula: χ² = (θ - θ₀)' cov(θ)⁻¹ (θ - θ₀)\n")
+  cat(sprintf("Value:   χ² = %.4f\n", object$wald_chisq))
+  cat("\n")
+  
+  # Chi-bar-square details
+  cat("Chi-Bar-Square Distribution Details:\n")
+  cat("-------------------------------------\n")
+  cat("\nStram & Lee (1994) weights:\n")
+  cat("  Assumes independence (rho = 0)\n")
+  cat("  w0 = 0.50 (chi-sq 0), w1 = 0.25 (chi-sq 1), w2 = 0.25 (chi-sq 2)\n")
+  cat("\n")
+  cat("Self & Liang Case 6 weights:\n")
+  cat(sprintf("  Accounts for correlation (rho = %.4f)\n", object$rho))
+  cat(sprintf("  Level probability theta = %.4f\n", object$theta))
+  cat(sprintf("  w0 = %.4f (chi-sq 0), w1 = %.4f (chi-sq 1), w2 = %.4f (chi-sq 2)\n",
+              0.5, 0.5 - object$theta, object$theta))
+  cat("\n")
+  
+  # Results table
+  cat("Test Results:\n")
+  cat("-------------\n")
+  print(object$summary_table, row.names = FALSE, digits = 4)
+  cat("\n")
+  
+  # Model assumptions
+  cat("Model Assumptions:\n")
+  cat("------------------\n")
+  cat(object$assumption_note, "\n")
+  cat("\n")
+  
+  # Recommendations
+  cat("Recommendations:\n")
+  cat("----------------\n")
+  
+  if (object$warning_multiple_slopes) {
+    cat("*** CRITICAL: Model has multiple random slopes ***\n")
+    cat("\nThis test is INVALID for models with multiple random slopes.\n")
+    cat("The test ignores correlations among all random effects.\n\n")
+    cat("To obtain valid results:\n")
+    cat("  1. Refit model with ONLY the random slope you want to test\n")
+    cat("  2. Use simulation-based methods (parametric bootstrap)\n")
+    cat("  3. Implement joint test for all random slopes (see Stoel et al. 2006)\n")
+  } else {
+    if (abs(object$rho) > 0.3) {
+      cat("* Parameter correlation is substantial (|rho| > 0.3)\n")
+      cat("  → RECOMMEND using Case 6 (correlation-adjusted) p-value\n")
+    } else if (abs(object$rho) > 0.15) {
+      cat("* Parameter correlation is moderate (0.15 < |rho| < 0.3)\n")
+      cat("  → Case 6 provides more accurate p-value\n")
+    } else {
+      cat("* Parameter correlation is small (|rho| < 0.15)\n")
+      cat("  → Case 6 and Stram-Lee give similar results\n")
+    }
+    
+    p_diff <- abs(object$summary_table$P_Value[2] - object$summary_table$P_Value[3])
+    if (p_diff > 0.01) {
+      cat(sprintf("* P-values differ by %.4f between methods\n", p_diff))
+      cat("  → Correlation adjustment matters for this test\n")
+    }
+  }
+  
+  cat("\n")
+  cat("=================================================================\n")
+  
+  invisible(object)
+}
+
+
+# ============================================================================
+# EXAMPLE USAGE
+# ============================================================================
+
+if (FALSE) {
+  # Assuming you have an rblimp model object called 'model2'
+  # with a random slope for predictor 'LMX' and DV 'Empower'
+  
+  # Run the test
+  result <- chibar_test_rblimp(
+    model = model2, 
+    DV = "Empower",
+    IV = "LMX"
+  )
+  
+  # Print results
+  print(result)
+  
+  # Detailed summary
+  summary(result)
+  
+  # Diagnostic plots
+  plot(result)
+  
+  # Access specific components
+  result$summary_table
+  result$wald_chisq
+  result$rho
+  result$posterior_means
+  result$n_random_slopes  # Check how many random slopes detected
+  
+  # Just get the table
+  result$summary_table
+}
