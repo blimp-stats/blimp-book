@@ -4368,7 +4368,10 @@ bivariate_plot <- function(
 #'
 #' @param model An rblimp model object with random slopes
 #' @param DV Name of the dependent variable (e.g., "Empower")
-#' @param IV Name of the predictor variable with random slope (e.g., "LMX")
+#' @param IV Name of the predictor variable with random slope. For nominal variables,
+#'   you can specify either the root name (e.g., "Male") or the full dummy code name
+#'   (e.g., "Male.1"). If you specify the root name and the variable has multiple
+#'   dummy codes (3+ categories), the function will throw an error.
 #'
 #' @return A list containing:
 #'   - summary_table: Data frame with results from different methods
@@ -4382,6 +4385,19 @@ bivariate_plot <- function(
 #'   - warning_multiple_slopes: Logical indicating if multiple slopes detected
 #'
 #' @details
+#' ## Nominal Variables
+#' When testing random slopes for nominal (categorical) variables, rblimp creates
+#' dummy codes with numeric suffixes (e.g., Male.1, Male.2). You can specify either:
+#' 
+#' **For binary variables (2 categories):**
+#' - Use root name: `chibar_test(model, DV="Y", IV="Male")` 
+#' - Or full name: `chibar_test(model, DV="Y", IV="Male.1")`
+#' 
+#' **For multicategorical variables (3+ categories):**
+#' - The function will throw an error if you use the root name
+#' - This test cannot handle multiple dummy codes simultaneously
+#' - Recommendation: Recode to binary or use alternative testing methods
+#' 
 #' ## Point Estimates: Median vs Mean
 #' The function reports posterior **medians** for the variance and covariance
 #' parameters, following rblimp's convention. However, the Wald chi-square test
@@ -4427,21 +4443,54 @@ bivariate_plot <- function(
 #' @export
 chibar_test <- function(model, DV, IV) {
   
-  # Extract iterations object
+  # Extract MCMC iterations from model ----
   iterations <- model@iterations
-  
-  # Get column names
   col_names <- names(iterations)
-  
-  # Use the provided DV name
   dv_name <- DV
   predictor_name <- IV
   
-  # Construct the parameter column names
+  # Handle nominal variables with dummy codes ----
+  # If IV is a nominal variable (e.g., "Male"), rblimp creates dummy codes
+  # like "Male.1", "Male.2", etc. This section handles both root names and
+  # full dummy code names, and validates that only binary variables are used.
+  slope_pattern <- paste0(dv_name, ".level-2 slope variance of.")
+  all_slope_columns <- grep(slope_pattern, col_names, value = TRUE, fixed = TRUE)
+  
+  # Extract just the predictor names from slope columns
+  all_predictors <- gsub(slope_pattern, "", all_slope_columns)
+  
+  # Check if the IV specified needs a numeric suffix
+  if (!predictor_name %in% all_predictors) {
+    # Look for predictor_name with numeric suffixes (e.g., Male.1, Male.2)
+    pattern_with_suffix <- paste0("^", predictor_name, "\\.[0-9]+$")
+    matching_predictors <- grep(pattern_with_suffix, all_predictors, value = TRUE)
+    
+    if (length(matching_predictors) == 0) {
+      stop("Cannot find random slope for predictor: ", predictor_name, "\n",
+           "Available random slopes: ", paste(all_predictors, collapse = ", "))
+    }
+    
+    if (length(matching_predictors) > 1) {
+      stop(
+        "Multiple dummy codes detected for predictor '", predictor_name, "': ",
+        paste(matching_predictors, collapse = ", "), "\n",
+        "This function only allows binary nominal variables with a SINGLE dummy code.\n",
+        "Please recode to a binary variable or specify the exact dummy code to test."
+      )
+    }
+    
+    # Use the single matching predictor with suffix
+    predictor_name <- matching_predictors[1]
+    message("Note: Using dummy code '", predictor_name, "' for nominal variable '", IV, "'")
+  }
+  
+  # Construct parameter column names for rblimp output
   slope_var_name <- paste0(dv_name, ".level-2 slope variance of.", predictor_name)
   covar_name <- paste0(dv_name, ".level-2 intercept covariance with.", predictor_name)
   
-  # Check for multiple random slopes in the model
+  # Check for multiple random slopes (validity check) ----
+  # This test is only valid for models with a SINGLE random slope.
+  # If multiple slopes exist, issue a warning.
   slope_pattern <- paste0(dv_name, ".level-2 slope variance of.")
   slope_columns <- grep(slope_pattern, col_names, value = TRUE, fixed = TRUE)
   n_random_slopes <- length(slope_columns)
@@ -4470,6 +4519,8 @@ chibar_test <- function(model, DV, IV) {
     )
   }
   
+  # Extract and validate MCMC samples ----
+  # Get the posterior samples for slope variance and intercept-slope covariance
   # Check if columns exist
   if (!slope_var_name %in% col_names) {
     stop("Cannot find column: ", slope_var_name, "\n",
@@ -4503,24 +4554,27 @@ chibar_test <- function(model, DV, IV) {
     warning("Fewer than 100 valid MCMC samples may give unstable estimates")
   }
   
-  # Compute posterior means (theta) - USED FOR WALD TEST
+  # Compute Wald chi-square statistic ----
+  # Uses posterior means (not medians) as required by the quadratic form.
+  # Medians are computed separately for reporting since variance parameters
+  # often have skewed distributions.
+  
+  # Posterior means (used in Wald test)
   theta <- c(mean(slope_var_samples), mean(covar_samples))
   names(theta) <- c("slope_variance", "intercept_slope_covariance")
   
-  # Compute posterior medians - USED FOR REPORTING
-  # (Parameters may have skewed distributions)
+  # Posterior medians (used for reporting only)
   theta_median <- c(median(slope_var_samples), median(covar_samples))
   names(theta_median) <- c("slope_variance", "intercept_slope_covariance")
   
-  # Null hypothesis (theta_0)
+  # Null hypothesis: both parameters are zero
   theta_0 <- c(0, 0)
   
-  # Compute covariance matrix of the parameters
+  # Covariance matrix of the parameters
   param_matrix <- cbind(slope_var_samples, covar_samples)
   cov_matrix <- cov(param_matrix)
   
-  # Compute Wald chi-square statistic
-  # χ²_MCMC = (θ - θ₀)' cov(θ)⁻¹ (θ - θ₀)
+  # Wald chi-square: χ²_MCMC = (θ - θ₀)' Σ⁻¹ (θ - θ₀)
   theta_diff <- theta - theta_0
   
   # Check if covariance matrix is invertible
@@ -4537,34 +4591,36 @@ chibar_test <- function(model, DV, IV) {
   # Compute level probability (Self & Liang Case 6)
   theta_level <- acos(-rho) / pi
   
-  # =========================================================================
-  # Compute p-values using different methods
-  # =========================================================================
+  # Compute p-values using different methods ----
+  # Three approaches to testing variance at boundary (zero):
+  # 1. Standard: Ignores boundary constraint (liberal)
+  # 2. Stram & Lee: Assumes independence between parameters (rho=0)
+  # 3. Self & Liang Case 6: Adjusts for observed correlation
   
-  # Method 1: Standard chi-square(2)
+  # Method 1: Standard chi-square test with df=2
+  # Treats this like a regular Wald test, ignoring the fact that
+  # variance parameters are constrained to be non-negative
   p_standard <- pchisq(wald_chisq, df = 2, lower.tail = FALSE)
   
-  # Method 2: Stram & Lee (1994) - "Most common"
-  # Weights: 0.50, 0.25, 0.25 for chi-sq(0, 1, 2)
+  # Method 2: Stram & Lee (1994) chi-bar-square
+  # Most commonly cited approach. Assumes independence (rho=0).
+  # Mixture weights: 0.50 (point mass at 0), 0.25 (chi-sq(1)), 0.25 (chi-sq(2))
   w_stram_lee <- c(0.50, 0.25, 0.25)
-  # P(chi-sq(0) > stat) = 0 if stat > 0, so first term drops out
   p_stram_lee <- w_stram_lee[2] * pchisq(wald_chisq, df = 1, lower.tail = FALSE) +
     w_stram_lee[3] * pchisq(wald_chisq, df = 2, lower.tail = FALSE)
   
-  # Method 3: Self & Liang (1987) Case 6 - Correlation-adjusted
-  # Weights depend on rho
+  # Method 3: Self & Liang (1987) Case 6
+  # Adjusts mixture weights based on observed correlation (rho)
+  # theta = acos(-rho)/pi determines the weight for chi-sq(2)
   w0_case6 <- 0.5
   w1_case6 <- 0.5 - theta_level
   w2_case6 <- theta_level
   w_case6 <- c(w0_case6, w1_case6, w2_case6)
   
-  # P(chi-sq(0) > stat) = 0 if stat > 0, so first term drops out
   p_case6 <- w_case6[2] * pchisq(wald_chisq, df = 1, lower.tail = FALSE) +
     w_case6[3] * pchisq(wald_chisq, df = 2, lower.tail = FALSE)
   
-  # =========================================================================
-  # Create summary table
-  # =========================================================================
+  # Create summary table ----
   
   summary_table <- data.frame(
     Method = c(
@@ -4597,9 +4653,7 @@ chibar_test <- function(model, DV, IV) {
     }
   )
   
-  # =========================================================================
-  # Create result object
-  # =========================================================================
+  # Create result object ----
   
   result <- list(
     summary_table = summary_table,
@@ -4890,23 +4944,40 @@ summary.chibar_rblimp <- function(object, ...) {
 }
 
 
-# ============================================================================
-# EXAMPLE USAGE
-# ============================================================================
+# Example Usage ----
 
 if (FALSE) {
-  # Assuming you have an rblimp model object called 'model2'
-  # with a random slope for predictor 'LMX' and DV 'Empower'
-  
-  # Run the test
-  result <- chibar_test_rblimp(
+  # Example 1: Continuous predictor
+  # ---
+  result <- chibar_test(
     model = model2, 
     DV = "Empower",
     IV = "LMX"
   )
-  
-  # Print results
   print(result)
+  
+  # Example 2: Binary nominal variable (specify root name)
+  # ---
+  # Male is coded 0/1, rblimp creates Male.1 dummy
+  result <- chibar_test(
+    model = model4,
+    DV = "Empower", 
+    IV = "Male"  # Can use root name for binary variables
+  )
+  
+  # Or equivalently:
+  result <- chibar_test(
+    model = model4,
+    DV = "Empower",
+    IV = "Male.1"  # Can specify full dummy code name
+  )
+  
+  # Example 3: Multicategorical variable (WILL ERROR)
+  # ---
+  # If Race is coded 1/2/3, rblimp creates Race.2 and Race.3
+  # This will throw an error:
+  # result <- chibar_test(model, DV="Y", IV="Race")
+  # Error: Multiple dummy codes detected
   
   # Detailed summary
   summary(result)
@@ -4919,8 +4990,5 @@ if (FALSE) {
   result$wald_chisq
   result$rho
   result$posterior_means
-  result$n_random_slopes  # Check how many random slopes detected
-  
-  # Just get the table
-  result$summary_table
+  result$posterior_medians
 }
