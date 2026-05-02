@@ -1,4 +1,4 @@
-"id","female","els","age","inflam_crp","inflam_il6","inflam_tnf","inflam_ifn","inflam_sum","dpdd","hdd"
+id,female,els,age,inflam_crp,inflam_il6,inflam_tnf,inflam_ifn,inflam,dpdd,hdd
 1,0,1,39,-0.393,-0.94,2.324,0.096,0.201,4.685,4
 2,0,1,51,0.334,-0.637,-0.677,-0.535,-2.839,6.875,7
 3,1,0,52,-0.433,0.176,0.912,-0.116,-0.137,2.71,7

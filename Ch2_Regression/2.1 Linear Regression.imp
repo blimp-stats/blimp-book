@@ -1,0 +1,12 @@
+## Blimp linear regression script
+
+DATA: inflammation.csv;       				# data with names in first row
+# VARIABLES: id female els age 				# commented out variable list
+# inflam_crp inflam_il6 inflam_tnf			# names are in the csv data
+# inflam_ifn inflam_sum dpdd hdd;  
+MISSING: NA;           						# missing value code
+ORDINAL: female els;         				# binary and ordinal variables         
+CENTER: female els age inflam_sum; 			# center predictors  
+MODEL: dpdd ~ female els age inflam_sum;	# regression model
+SEED: 90291;                  				# random number seed
+BURN: 10000;                  				# warm-up iterations

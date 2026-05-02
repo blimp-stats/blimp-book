@@ -8,6 +8,8 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 #------------------------------------------------------------------------------#
 
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
+set_blimp('/applications/blimp/blimp')
 
 # READ DATA ----
 
@@ -27,11 +29,12 @@ model1 <- rblimp(
   nominal = 'female els',
   model = 'dpdd ~ female els age inflam_sum', 
   seed = 90291,
+  chains = 4,
   burn = 10000,
   iter = 10000)
 
 # trace plot of model parameters
-trace_plot(model1, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
+trace_plot(model1, 'dpdd') + ggplot2::xlim(0, 50) + ggplot2::theme_minimal()
 
 # print output
 output(model1)
@@ -44,15 +47,17 @@ posterior_plot(model1,'dpdd')
 #------------------------------------------------------------------------------#
 
 # mean-centered predictors
-model2 <- rblimp(
-  data = inflamm,
-  nominal = 'female els',
-  center = 'female els age inflam_sum',
-  model = 'dpdd ~ female els age inflam_sum', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+mymodel <- rblimp(
+  data = inflammation,             		             # R data frame
+  ordinal = 'female els',          		             # binary and ordinal variables         
+  center = 'female els age inflam_sum',	           # center predictors  
+	model = 'dpdd ~ female els age inflam_sum;',     # regression model
+  seed = 90291,               		                 # random number seed
+  burn = 10000,               		                 # warm-up iterations
+  iter = 10000                		                 # analysis iterations
+)
+output(mymodel)               		                 # print output
+
 
 # trace plot of model parameters
 trace_plot(model2, 'dpdd') + ggplot2::xlim(0, 250) + ggplot2::theme_minimal()
