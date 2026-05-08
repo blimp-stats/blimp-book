@@ -1,7 +1,7 @@
 # LINEAR REGRESSION
 
 # plotting functions
-# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -118,7 +118,7 @@ book_theme <- ggplot2::theme(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 2.2: TRACE PLOT ----
+# FIGURE 2.2: SINGLE-CHAIN TRACE PLOT ----
 #------------------------------------------------------------------------------#
 
 # Fit single-chain model for trace plot diagnostic
@@ -137,6 +137,47 @@ output(mod_1chain)
 # Build trace plot
 fig2_2 <- trace_plot(mod_1chain, 6) +
   ggplot2::xlim(0, 100) +
+  ggplot2::scale_color_manual(values = "black") +
+  ggplot2::ylab("Slope Parameter") +
+  ggplot2::labs(title = NULL, subtitle = NULL) +
+  ggplot2::theme_classic(base_size = 14, base_family = "Minion Pro") +
+  book_theme +
+  ggplot2::theme(
+    text            = ggplot2::element_text(size = 20),
+    axis.title      = ggplot2::element_text(size = 20),
+    axis.text       = ggplot2::element_text(size = 20),
+    legend.position = "none"
+  )
+
+ggplot2::ggsave(
+  filename = "~/desktop/Figure 2.2.pdf",
+  plot     = fig2_2,
+  width    = 11,
+  height   = 8.5,
+  units    = "in",
+  device   = cairo_pdf
+)
+
+#------------------------------------------------------------------------------#
+# FIGURE 2.5: TRACE PLOTS ----
+#------------------------------------------------------------------------------#
+
+# Fit single-chain model for trace plot diagnostic
+mod_1chain <- rblimp(
+  data    = inflammation,
+  ordinal = 'els female',
+  center  = 'inflam els female age',
+  model   = 'dpdd ~ inflam els female age',
+  seed    = 90291,
+  chains  = 1,
+  burn    = 10000,
+  iter    = 10000
+)
+output(mod_1chain)
+
+# Build trace plot
+fig2_5a <- trace_plot(mod1, 6) +
+  ggplot2::xlim(0, 10000) +
   ggplot2::scale_color_manual(values = "black") +
   ggplot2::ylab("Slope Parameter") +
   ggplot2::labs(title = NULL, subtitle = NULL) +
