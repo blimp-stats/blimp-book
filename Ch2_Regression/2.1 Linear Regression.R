@@ -21,69 +21,72 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 inflammation <- read.csv(data_url)
 
-summarytools::dfSummary(inflammation)
-summary(inflammation)
-
 #------------------------------------------------------------------------------#
-# FIT LINEAR REGRESSION MODEL ----
+# LINEAR REGRESSION MODEL ----
 #------------------------------------------------------------------------------#
 
-# mean-centered predictors
+# linear regression
 mod1 <- rblimp(
-  data = inflammation,             		       # R data frame
-  ordinal = 'els female',          		       # binary and ordinal variables         
-  center = 'inflam els female age',	         # center predictors  
-	model = 'dpdd ~ inflam els female age;',   # regression model
-  seed = 90291,               		           # random number seed
-  burn = 10000,               		           # warm-up iterations
-  iter = 10000)                		           # analysis iteration
-
-output(mod1)               		               # print output
-
-
-model@estimates
-
-# trace plot of model parameters
-trace_plot(model, 6) + ggplot2::xlim(0, 100) + ggplot2::theme_minimal()
+  data = inflammation,             		             # R data frame
+  ordinal = 'els female',          		             # binary and ordinal variables         
+  center = 'inflam els female age',	               # center predictors  
+	model = 'dpdd ~ inflam els female age;',         # regression model
+  seed = 90291,               		                 # random number seed
+  burn = 10000,               		                 # warm-up iterations
+  iter = 10000)                		                 # analysis iteration
+      
+output(mod1)               		                     # print output
 
 #------------------------------------------------------------------------------#
-# WALD ----
+# CUSTOM WALD TEST ----
 #------------------------------------------------------------------------------#
 
-# mean-centered predictors
+# method 1: label parameters
 mod2 <- rblimp(
-  data = inflammation,             		       # R data frame
-  ordinal = 'els female',          		       # binary and ordinal variables         
-  center = 'inflam els female age',	         # center predictors  
-  model = 'dpdd ~ inflam@b1 els@b2 female age;',    # regression model
-  waldtest = 'b1 = 0; b2 = 0',
-  seed = 90291,               		           # random number seed
-  burn = 10000,               		           # warm-up iterations
-  iter = 10000)                		           # analysis iteration
+  data = inflammation,             		             # R data frame
+  ordinal = 'els female',          		             # binary and ordinal variables         
+  center = 'inflam els female age',	               # center predictors  
+  model = 'dpdd ~ inflam@b1 els@b2 female age;',   # labeled slopes
+  seed = 90291,               		                 # random number seed
+  waldtest = 'b1 = 0; b2 = 0',                     # wald test
+  burn = 10000,               		                 # warm-up iterations
+  iter = 10000)                		                 # analysis iteration
 
-output(mod2)               		               # print output
+output(mod2)               		                     # print output
 
-# mean-centered predictors
+# method 2: label parameters
 mod3 <- rblimp(
-  data = inflammation,             		       # R data frame
-  ordinal = 'els female',          		       # binary and ordinal variables         
-  center = 'inflam els female age',	         # center predictors  
-  model = 'dpdd ~ inflam@b1 els@b2 female@b3 age@b4;',    # regression model
-  waldtest = c('b1:b2 = 0', 'b3:b4 = 0'),
-  seed = 90291,               		           # random number seed
-  burn = 10000,               		           # warm-up iterations
-  iter = 10000)                		           # analysis iteration
+  data = inflammation,             		             # R data frame
+  ordinal = 'els female',          		             # binary and ordinal variables         
+  center = 'inflam els female age',	               # center predictors  
+  model = 'dpdd ~ inflam els female age',          # regression model
+  seed = 90291,               		                 # random number seed
+  waldtest = 'dpdd ~ female age',                  # wald test as nested model
+  burn = 10000,               		                 # warm-up iterations
+  iter = 10000)                		                 # analysis iteration
 
-output(mod3)               		               # print output
+output(mod3)               		                     # print output
 
-
+# multiple wald tests
+mod4 <- rblimp(
+  data = inflammation,             		                    # R data frame
+  ordinal = 'els female',          		                    # binary and ordinal variables         
+  center = 'inflam els female age',	                      # center predictors  
+  model = 'dpdd ~ inflam@b1 els@b2 female@b3 age@b4;',    # labeled slopes
+  waldtest = c('b1:b2 = 0', 'b3:b4 = 0'),                 # vector of tests
+  seed = 90291,               		                        # random number seed
+  burn = 10000,               		                        # warm-up iterations
+  iter = 10000)                		                        # analysis iteration
+             
+output(mod4)               		                            # print output
+            		          
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 # save multiply imputed data sets
-mod4 <- rblimp(
+mod5 <- rblimp(
   data = inflammation,             		       # R data frame
   ordinal = 'els female',          		       # binary and ordinal variables         
   center = 'inflam els female age',	         # center predictors  
@@ -93,12 +96,12 @@ mod4 <- rblimp(
   iter = 10000,                              # analysis iterations
   nimps = 20)                                # save 20 imputed data sets                		           
 
-output(mod4)
+output(mod5)
 
 # plot distributions
-posterior_plot(mod4)
-distribution_plot(mod4)
-residuals_plot(mod4)
+posterior_plot(mod5)
+distribution_plot(mod5)
+residuals_plot(mod5)
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -160,7 +163,7 @@ ggplot2::ggsave(
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
-  mod4,
+  mod5,
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
@@ -189,7 +192,7 @@ ggplot2::ggsave(
 
 # Residual distribution in B&W
 dp <- distribution_plot(
-  mod4,
+  mod5,
   vars           = "dpdd.residual",
   observed_color = "grey40",
   imputed_color  = "grey40",
@@ -200,7 +203,7 @@ dp <- distribution_plot(
 
 # Residual diagnostics in B&W
 rp <- residuals_plot(
-  mod4,
+  mod5,
   point_color  = "grey40",
   curve_color  = "black",
   font_size    = 20,
