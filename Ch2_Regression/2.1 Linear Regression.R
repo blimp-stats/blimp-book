@@ -162,23 +162,10 @@ ggplot2::ggsave(
 # FIGURE 2.5: TRACE PLOTS ----
 #------------------------------------------------------------------------------#
 
-# Fit single-chain model for trace plot diagnostic
-mod_1chain <- rblimp(
-  data    = inflammation,
-  ordinal = 'els female',
-  center  = 'inflam els female age',
-  model   = 'dpdd ~ inflam els female age',
-  seed    = 90291,
-  chains  = 1,
-  burn    = 10000,
-  iter    = 10000
-)
-output(mod_1chain)
 
-# Build trace plot
-fig2_5a <- trace_plot(mod1, 6) +
-  ggplot2::xlim(0, 10000) +
-  ggplot2::scale_color_manual(values = "black") +
+fig2_5a <- trace_plot(mod1, 3) +
+  ggplot2::xlim(9500, 10000) +
+  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
   ggplot2::ylab("Slope Parameter") +
   ggplot2::labs(title = NULL, subtitle = NULL) +
   ggplot2::theme_classic(base_size = 14, base_family = "Minion Pro") +
@@ -190,11 +177,46 @@ fig2_5a <- trace_plot(mod1, 6) +
     legend.position = "none"
   )
 
+# different example that doesn't converge
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/convergence%20problem%20data.csv'
+noconverge <- read.csv(data_url)
+
+failure <- rblimp(
+  data = noconverge,
+  nominal = 'genderid race',
+  model = 'sleep ~ age genderid race',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  options = 'pinfo'
+)
+output(failure)
+
+fig2_5b <- trace_plot(failure, 63) +
+  ggplot2::xlim(9500, 10000) +
+  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
+  ggplot2::ylab("Intercept Parameter") +
+  ggplot2::labs(title = NULL, subtitle = NULL) +
+  ggplot2::theme_classic(base_size = 14, base_family = "Minion Pro") +
+  book_theme +
+  ggplot2::theme(
+    text            = ggplot2::element_text(size = 20),
+    axis.title      = ggplot2::element_text(size = 20),
+    axis.text       = ggplot2::element_text(size = 20),
+    legend.position = "none"
+  )
+
+fig2_5 <- (fig2_5a / fig2_5b) +
+  plot_layout(guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  ggplot2::labs(title = NULL)
+
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.2.pdf",
-  plot     = fig2_2,
-  width    = 11,
-  height   = 8.5,
+  filename = "~/desktop/Figure 2.5.pdf",
+  plot     = fig2_5,
+  width    = 8.5,
+  height   = 11,
   units    = "in",
   device   = cairo_pdf
 )
