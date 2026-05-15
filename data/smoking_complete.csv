@@ -1,4 +1,4 @@
-"id","intensity","hvysmoker","age","parsmoke","female","race","income","pareduc"
+id,smoking,hvysmoker,age,parsmoke,female,race,income,pareduc
 1,9,0,19,1,0,1,9,1
 2,8,0,24,0,0,1,12,2
 3,10,0,20,1,0,1,6,2
