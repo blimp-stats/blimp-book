@@ -1,4 +1,4 @@
-id,male,age,college,cigage,cigdays,alcage,alcdays,drinker,drinkfreq
+id,male,age,college,agetrycig,cigdays,agetryalc,alcdays,drinker,drinkfreq
 1,0,12,NA,NA,0,NA,0,0,0
 2,0,48,1,NA,0,16,0,0,0
 3,1,28,1,15,30,13,0,0,0

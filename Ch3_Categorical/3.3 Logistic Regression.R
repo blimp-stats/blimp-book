@@ -20,10 +20,10 @@ library(rblimp)
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcohol.csv'
 
 # create data frame from github data
-alcoholuse <- read.csv(data_url)
+alcohol <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # FIT BINARY LOGISTIC MODEL ----
@@ -31,7 +31,7 @@ alcoholuse <- read.csv(data_url)
 
 # binary logistic regression
 mod1 <- rblimp(
-  data = alcoholuse,
+  data = alcohol,
   ordinal = 'college male',
   nominal = 'drinker',
   model = 'drinker ~ alcage college age male', 
