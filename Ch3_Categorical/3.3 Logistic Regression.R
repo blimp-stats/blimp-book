@@ -32,7 +32,8 @@ alcoholuse <- read.csv(data_url)
 # binary logistic regression
 mod1 <- rblimp(
   data = alcoholuse,
-  nominal = 'drinker college male',
+  ordinal = 'college male',
+  nominal = 'drinker',
   model = 'drinker ~ alcage college age male', 
   seed = 90291,
   burn = 10000,
