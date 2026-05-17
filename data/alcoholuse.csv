@@ -1,4 +1,4 @@
-"id","male","age","ethnicity","college","cigage","cigearly","cigdays","alcage","alcearly","alcdays","drinker","drinkingfreq"
+id,male,age,ethnicity,college,cigage,cigearly,cigdays,alcage,alcearly,alcdays,drinker,drinkfreq
 1,0,12,1,NA,NA,NA,0,NA,NA,0,0,0
 2,0,48,3,1,NA,NA,0,16,0,0,0,0
 3,1,28,1,1,15,0,30,13,1,0,0,0

@@ -11,6 +11,8 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
+library(patchwork)
 library(rblimp)
 
 #------------------------------------------------------------------------------#
@@ -28,18 +30,16 @@ alcoholuse <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 # binary logistic regression
-model1 <- rblimp(
+mod1 <- rblimp(
   data = alcoholuse,
   nominal = 'drinker college male',
-  # fixed = 'male',
   model = 'drinker ~ alcage college age male', 
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  iter = 10000)
 
 # print output
-output(model1)
+output(mod1)
 
 # plot parameter distributions
 posterior_plot(model1,'drinker')
@@ -48,25 +48,7 @@ posterior_plot(model1,'drinker')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# plot imputed vs. observed values
-imputation_plot(model1)
 
-# # plot distributions and residuals
-# univariate_plot(vars = c('intensity','drinker.1.residual'), model2)
-
-# plot individual-level predicted probabilities
-bivariate_plot(y_vars = 'drinker.1.probability', 
-               x_vars = c('alcage','college','age','male'),
-               model = model1)
-
-# plot standardized residuals vs. predicted values
-# bivariate_plot(drinker.1.residual ~ turnover.predicted, standardize = 'y', model = model1)
-
-# plot standardized residuals vs. numeric predictors
-bivariate_plot(y_vars = 'drinker.1.residual', 
-               x_vars = c('alcage','age'),
-               standardize = 'y',
-               model = model1)
 
 #------------------------------------------------------------------------------#
 # FIT MULTINOMIAL LOGISTIC MODEL ----

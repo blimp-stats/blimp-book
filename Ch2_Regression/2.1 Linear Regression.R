@@ -10,8 +10,6 @@ source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/funct
 library(ggplot2)
 library(patchwork)
 library(rblimp)
-set_blimp('/applications/blimp/blimp-nightly')
-# set_blimp('/applications/blimp/blimp')
 
 # READ DATA ----
 
@@ -96,7 +94,7 @@ mod5 <- rblimp(
   iter = 10000,                              # analysis iterations
   nimps = 20)                                # save 20 imputed data sets                		           
 
-output(mod5)
+output(mod5)                                 # print output
 
 # plot distributions
 posterior_plot(mod5)
