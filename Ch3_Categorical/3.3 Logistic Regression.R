@@ -34,7 +34,7 @@ mod1 <- rblimp(
   data = alcohol,
   ordinal = 'college male',
   nominal = 'drinker',
-  model = 'drinker ~ alcage college age male', 
+  model = 'drinker ~ agetryalc college age male; DEBUG: compact_output', 
   seed = 90291,
   burn = 10000,
   iter = 10000)
@@ -60,7 +60,7 @@ model2 <- rblimp(
   data = alcoholuse,
   nominal = 'drinkingfreq college male',
   # fixed = 'male',
-  model = 'drinkingfreq ~ alcage college age male', 
+  model = 'drinkfreq ~ agetryalc college age male', 
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -76,24 +76,23 @@ posterior_plot(model2,'drinkingfreq')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# plot imputed vs. observed values
-imputation_plot(model2)
+# binary logistic regression
+mod3 <- rblimp(
+  data = alcohol,
+  ordinal = 'college male',
+  nominal = 'drinker',
+  model = 'drinker ~ agetryalc college age male', 
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
 
-# # plot distributions and residuals
-# univariate_plot(vars = c('intensity','drinker.1.residual'), model2)
+# print output
+output(mod3)
 
-# plot individual-level predicted probabilities
-bivariate_plot(y_vars = c('drinkingfreq.1.probability','drinkingfreq.2.probability'), 
-               x_vars = c('alcage','college','age','male'),
-               model = model2)
+summary(alcohol$agetryalc)
 
-# plot standardized residuals vs. predicted values
-# bivariate_plot(drinker.1.residual ~ turnover.predicted, standardize = 'y', model = model1)
-
-# plot standardized residuals vs. numeric predictors
-bivariate_plot(y_vars = c('drinkingfreq.1.residual','drinkingfreq.2.residual'), 
-               x_vars = c('alcage','age'),
-               standardize = 'y',
-               model = model2)
-
-
+# plot distributions
+posterior_plot(mod3)
+distribution_plot(mod3)
+residuals_plot(mod3)

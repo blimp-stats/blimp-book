@@ -31,7 +31,7 @@ mod1 <- rblimp(
     ordinal = 'parsmoke',
     nominal = 'educ',
     center = 'age',
-    model = 'smoking ~ parsmoke educ age', 
+    model = 'smoking ~ parsmoke educ age; DEBUG: compact_output', 
     seed = 90291,
     burn = 10000,
     iter = 10000)
@@ -147,6 +147,34 @@ ggplot2::ggsave(
   plot     = fig3_1,
   width    = 8.5,
   height   = 11,
+  units    = "in",
+  device   = cairo_pdf
+)
+
+#------------------------------------------------------------------------------#
+# FIGURE 3.6: DISTRIBUTIONS ----
+#------------------------------------------------------------------------------#
+
+dp <- distribution_plot(
+  mod3,
+  observed_color = "grey60",
+  imputed_color  = "grey40",
+  density_color  = "black",
+  font_size      = 16,
+  line_width     = 0.5
+)
+
+fig3_6 <- dp$agetryalc +
+  plot_layout(guides = "collect") +
+  plot_annotation() &
+  book_theme &
+  ggplot2::labs(title = NULL)
+
+ggplot2::ggsave(
+  filename = "~/desktop/Figure 3.6.pdf",
+  plot     = fig3_6,
+  width    = 11,
+  height   = 8.5,
   units    = "in",
   device   = cairo_pdf
 )
