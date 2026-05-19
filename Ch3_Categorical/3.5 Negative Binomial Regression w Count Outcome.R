@@ -17,10 +17,10 @@ library(rblimp)
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcohol.csv'
 
 # create data frame from github data
-alcoholuse <- read.csv(data_url)
+alcohol <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # FIT MODEL ----
@@ -28,11 +28,11 @@ alcoholuse <- read.csv(data_url)
 
 # negative binomial regression
 model1 <- rblimp(
-    data = alcoholuse,
-    nominal = 'college male',
+    data = alcohol,
+    ordinal = 'college male',
     count = 'alcdays',
     # fixed = 'male',
-    model = 'alcdays ~ alcage college age male', 
+    model = 'alcdays ~ agetryalc college age male', 
     seed = 90291,
     burn = 10000,
     iter = 10000,
