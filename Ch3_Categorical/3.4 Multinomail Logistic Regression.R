@@ -34,7 +34,7 @@ mod1 <- rblimp(
   data = alcohol,
   ordinal = 'college male',
   nominal = 'drinkfreq',
-  # fixed = 'male',
+  center = 'agetryalc age',
   model = 'drinkfreq ~ agetryalc college age male', 
   seed = 90291,
   burn = 10000,
@@ -42,6 +42,8 @@ mod1 <- rblimp(
 
 # print output
 output(mod1)
+
+# plot parameter distributions
 posterior_plot(mod1,'drinkfreq')
 
 #------------------------------------------------------------------------------#
@@ -53,24 +55,38 @@ mod2 <- rblimp(
   data = alcohol,
   ordinal = 'college male',
   nominal = 'drinkfreq',
+  center = 'agetryalc age',
   model = 'drinkfreq ~ agetryalc college age male', 
   seed = 90291,
   burn = 10000,
   iter = 10000,
   nimps = 20)
 
-# print output
-output(mod2)
-posterior_plot(mod1,'drinkfreq')
+mod2o <- rblimp(
+  data = alcohol,
+  ordinal = 'drinkfreq college male',
+  # nominal = 'drinkfreq',
+  center = 'agetryalc age',
+  model = 'drinkfreq ~ agetryalc college age male', 
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
 
+names(mod2o)
 names(mod2)
 
-names(mod2@average_imp)
+# print output
+output(mod2)
 
-# plot distributions
-posterior_plot(mod3)
-distribution_plot(mod3)
-residuals_plot(mod3)
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+
+# plot distributions and binned residuals
+distribution_plot(mod2)
+residuals_plot(mod2)
+residuals_plot(mod2o)
+
+mod2@
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

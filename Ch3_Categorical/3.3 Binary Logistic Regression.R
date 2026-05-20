@@ -30,7 +30,7 @@ mod1 <- rblimp(
   data = alcohol,
   ordinal = 'college male',
   nominal = 'drinker',
-  center = 'age',
+  center = 'agetryalc age',
   model = 'drinker ~ agetryalc college age male', 
   seed = 90291,
   burn = 10000,
@@ -51,61 +51,74 @@ mod2 <- rblimp(
   data = alcohol,
   ordinal = 'college male',
   nominal = 'drinker',
-  center = 'age',
-  model = 'drinker ~ agetryalc college age male; DEBUG: compact_output', 
+  center = 'agetryalc age',
+  model = 'drinker ~ agetryalc college age male', 
   seed = 90291,
   burn = 10000,
   iter = 10000,
   nimps = 20)
 
-mod2q <- rblimp(
-  data = alcohol,
-  ordinal = 'college male',
-  nominal = 'drinker',
-  center = 'age',
-  model = 'drinker ~ agetryalc college age age^2 age^3 male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# mod2p <- rblimp(
-#   data = alcohol,
-#   ordinal = 'college male drinker',
-#   model = 'drinker ~ agetryalc college age male',
-#   seed = 90291,
-#   burn = 10000,
-#   iter = 10000,
-#   nimps = 20)
-# output(mod2p)
 
 # print output
 output(mod2)
 posterior_plot(mod2)
 
-names(mod2)
-
-
-
 source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
-# plot distributions
+# plot distributions and binned residuals
 distribution_plot(mod2)
 residuals_plot(mod2)
-residuals_plot(mod2q)
+
+#------------------------------------------------------------------------------#
+# MARGINAL PREDICTED PROBABILITIES ----
+#------------------------------------------------------------------------------#
 
 # average marginal predicted probabilities by college x male
 library(mitml)
 
-probs <- with(as.mitml(mod2),
+implist <- as.mitml(mod2)    	 # mitml-compatible list of data frames
+probs <- with(implist,		     # fit lm to each data sets
               lm(drinker.1.probability ~ 0 +
                    I((male == 0) * (college == 0)) +
                    I((male == 0) * (college == 1)) +
                    I((male == 1) * (college == 0)) +
                    I((male == 1) * (college == 1))))
 
-testEstimates(probs)
+testEstimates(probs)			      # pool estimates and standard errors
 
+#------------------------------------------------------------------------------#
+# LOGISTIC MODEL WITH CURVILINEAR AGE EFFECTS ----
+#------------------------------------------------------------------------------#
+
+# quadratic age effect
+mod3 <- rblimp(
+  data = alcohol,
+  ordinal = 'college male',
+  nominal = 'drinker',
+  center = 'agetryalc age',
+  model = 'drinker ~ agetryalc college age age^2 male', 
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# plot binned residuals
+residuals_plot(mod3)
+
+# cubic age effect
+mod4 <- rblimp(
+  data = alcohol,
+  ordinal = 'college male',
+  nominal = 'drinker',
+  center = 'agetryalc age',
+  model = 'drinker ~ agetryalc college age age^2 age^3 male', 
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
+
+# plot binned residuals
+residuals_plot(mod4)
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -130,7 +143,7 @@ dp <- distribution_plot(
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
-  font_size      = 16,
+  font_size      = 20,
   line_width     = 0.5
 )
 
@@ -150,7 +163,7 @@ ggplot2::ggsave(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.7: DISTRIBUTIONS ----
+# FIGURE 3.7: PREDICTED PROBABILITIES ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -158,19 +171,57 @@ dp <- distribution_plot(
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
-  font_size      = 16,
+  font_size      = 20,
   line_width     = 0.5
 )
 
-fig3_7 <- dp$drinker.1.probability +
+rp <- residuals_plot(
+  mod2,
+  point_color  = "grey40",
+  curve_color  = "black",
+  font_size    = 20,
+  line_width   = 0.6,
+  label_family = "Minion Pro"
+)
+
+fig3_7 <- dp$drinker.1.probability / rp$drinker.college.probability +
+  plot_annotation(tag_levels = "A") &
   book_theme &
-  ggplot2::labs(title = NULL)
+  ggplot2::labs(title = NULL) &
+  ggplot2::scale_color_manual(values = rep("black", 7))
 
 ggplot2::ggsave(
   filename = "~/desktop/Figure 3.7.pdf",
   plot     = fig3_7,
-  width    = 11,
-  height   = 8.5,
+  width    = 8.5,
+  height   = 11,
+  units    = "in",
+  device   = cairo_pdf
+)
+
+#------------------------------------------------------------------------------#
+# FIGURE 3.8: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
+#------------------------------------------------------------------------------#
+
+rp <- residuals_plot(
+  mod2,
+  point_color  = "grey40",
+  curve_color  = "black",
+  font_size    = 20,
+  line_width   = 0.6,
+  label_family = "Minion Pro"
+)
+
+fig3_8 <- rp$drinker.1.binned / rp$drinker.1.agetryalc / rp$drinker.1.age +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  ggplot2::labs(title = NULL)
+
+ggplot2::ggsave(
+  filename = "~/desktop/Figure 3.8.pdf",
+  plot     = fig3_8,
+  width    = 8.5,
+  height   = 11,
   units    = "in",
   device   = cairo_pdf
 )

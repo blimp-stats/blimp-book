@@ -97,7 +97,6 @@ mod5 <- rblimp(
 output(mod5)                                 # print output
 
 # plot distributions
-posterior_plot(mod5)
 distribution_plot(mod5)
 residuals_plot(mod5)
 
@@ -228,7 +227,7 @@ dp <- distribution_plot(
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
-  font_size      = 16,
+  font_size      = 20,
   line_width     = 0.5
 )
 
