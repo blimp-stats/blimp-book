@@ -1,15 +1,16 @@
-# LOGISTIC REGRESSION FOR BINARY OUTCOMES ----
+# LOGISTIC REGRESSION FOR BINARY OUTCOMES
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
 library(ggplot2)
-library(patchwork)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
@@ -22,52 +23,41 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 alcohol <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# FIT BINARY LOGISTIC MODEL ----
+# BINARY LOGISTIC MODEL ----
 #------------------------------------------------------------------------------#
 
-# binary logistic regression
 mod1 <- rblimp(
-  data = alcohol,
-  ordinal = 'college male',
-  nominal = 'drinker',
-  center = 'agetryalc age',
-  model = 'drinker ~ agetryalc college age male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  data = alcohol,                                # R data frame
+  ordinal = 'college male',                      # binary and ordinal variables
+  nominal = 'drinker',                           # nominal variables (auto dummy coded)
+  center = 'agetryalc age',                      # center predictors
+  model = 'drinker ~ agetryalc college age male', # regression model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-# print output
-output(mod1)
-
-# plot parameter distributions
-posterior_plot(mod1,'drinker')
+output(mod1)                                     # print output
+posterior_plot(mod1, 'drinker')                  # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# binary logistic regression
 mod2 <- rblimp(
-  data = alcohol,
-  ordinal = 'college male',
-  nominal = 'drinker',
-  center = 'agetryalc age',
-  model = 'drinker ~ agetryalc college age male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  data = alcohol,                                # R data frame
+  ordinal = 'college male',                      # binary and ordinal variables
+  nominal = 'drinker',                           # nominal variables (auto dummy coded)
+  center = 'agetryalc age',                      # center predictors
+  model = 'drinker ~ agetryalc college age male', # regression model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
+output(mod2)                                     # print output
 
-# print output
-output(mod2)
-posterior_plot(mod2)
-
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
-
-# plot distributions and binned residuals
-distribution_plot(mod2)
-residuals_plot(mod2)
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot binned residuals
 
 #------------------------------------------------------------------------------#
 # MARGINAL PREDICTED PROBABILITIES ----
@@ -76,60 +66,62 @@ residuals_plot(mod2)
 # average marginal predicted probabilities by college x male
 library(mitml)
 
-implist <- as.mitml(mod2)    	 # mitml-compatible list of data frames
-probs <- with(implist,		     # fit lm to each data sets
+implist <- as.mitml(mod2)                        # mitml-compatible list of data frames
+probs <- with(implist,                           # fit lm to each data set
               lm(drinker.1.probability ~ 0 +
                    I((male == 0) * (college == 0)) +
                    I((male == 0) * (college == 1)) +
                    I((male == 1) * (college == 0)) +
                    I((male == 1) * (college == 1))))
 
-testEstimates(probs)			      # pool estimates and standard errors
+testEstimates(probs)                             # pool estimates and standard errors
 
 #------------------------------------------------------------------------------#
-# LOGISTIC MODEL WITH CURVILINEAR AGE EFFECTS ----
+# LOGISTIC MODELS WITH CURVILINEAR AGE EFFECTS ----
 #------------------------------------------------------------------------------#
 
 # quadratic age effect
 mod3 <- rblimp(
-  data = alcohol,
-  ordinal = 'college male',
-  nominal = 'drinker',
-  center = 'agetryalc age',
-  model = 'drinker ~ agetryalc college age age^2 male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  data = alcohol,                                # R data frame
+  ordinal = 'college male',                      # binary and ordinal variables
+  nominal = 'drinker',                           # nominal variables (auto dummy coded)
+  center = 'agetryalc age',                      # center predictors
+  model = 'drinker ~ agetryalc college age age^2 male', # regression with quadratic age
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-# plot binned residuals
-residuals_plot(mod3)
+residuals_plot(mod3)                             # plot binned residuals
 
 # cubic age effect
 mod4 <- rblimp(
-  data = alcohol,
-  ordinal = 'college male',
-  nominal = 'drinker',
-  center = 'agetryalc age',
-  model = 'drinker ~ agetryalc college age age^2 age^3 male', 
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  data = alcohol,                                # R data frame
+  ordinal = 'college male',                      # binary and ordinal variables
+  nominal = 'drinker',                           # binary outcome (auto dummy coded)
+  center = 'agetryalc age',                      # center predictors
+  model = 'drinker ~ agetryalc college age age^2 age^3 male', # regression with cubic age
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-# plot binned residuals
-residuals_plot(mod4)
+residuals_plot(mod4)                             # plot binned residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
 #------------------------------------------------------------------------------#
 
+library(patchwork)
+
 book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro"),
-  axis.text         = ggplot2::element_text(color = "black"),
+  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
+  axis.text         = ggplot2::element_text(color = "black", size = 18),
   axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5),
   axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
   axis.ticks.length = grid::unit(4, "pt"),
+  legend.text       = ggplot2::element_text(size = 18),
+  legend.title      = ggplot2::element_text(size = 18),
   plot.tag          = ggplot2::element_text(face = "bold", size = 22),
   legend.position   = "bottom"
 )
@@ -143,7 +135,7 @@ dp <- distribution_plot(
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
-  font_size      = 20,
+  font_size      = 18,
   line_width     = 0.5
 )
 
@@ -171,7 +163,7 @@ dp <- distribution_plot(
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
-  font_size      = 20,
+  font_size      = 18,
   line_width     = 0.5
 )
 
@@ -179,7 +171,7 @@ rp <- residuals_plot(
   mod2,
   point_color  = "grey40",
   curve_color  = "black",
-  font_size    = 20,
+  font_size    = 18,
   line_width   = 0.6,
   label_family = "Minion Pro"
 )
@@ -207,7 +199,7 @@ rp <- residuals_plot(
   mod2,
   point_color  = "grey40",
   curve_color  = "black",
-  font_size    = 20,
+  font_size    = 18,
   line_width   = 0.6,
   label_family = "Minion Pro"
 )

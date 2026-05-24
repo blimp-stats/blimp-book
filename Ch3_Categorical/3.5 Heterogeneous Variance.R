@@ -1,0 +1,125 @@
+# LINEAR REGRESSION
+
+# plotting functions
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+
+#------------------------------------------------------------------------------#
+# LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
+
+library(ggplot2)
+library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
+
+#------------------------------------------------------------------------------#
+# READ DATA ----
+#------------------------------------------------------------------------------#
+
+# github url for raw data
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
+
+# create data frame from github data
+inflammation <- read.csv(data_url)
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH CONSTANT VARIANCE ----
+#------------------------------------------------------------------------------#
+
+mod0 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = 'dpdd ~ inflam els female age',        # regression model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+output(mod0)                                     # print output
+
+residuals_plot(mod2)                             # plot person-standardized residuals
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH HETEROSCEDASTIC VARIATION ----
+#------------------------------------------------------------------------------#
+
+mod1 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+    dpdd ~ inflam els female age;                # regression model
+    var(dpdd) ~ inflam age age^2',               # log variance model       
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
+
+output(mod1)                                     # print output
+posterior_plot(mod1, 'dpdd')                     # plot parameter distributions
+
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
+mod2 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+    dpdd ~ inflam els female age;                # regression model
+    var(dpdd) ~ inflam age age^2',               # log variance model       
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+output(mod2)               		                   # print output
+
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot person-standardized residuals
+
+#------------------------------------------------------------------------------#
+# BOOK FIGURE THEME ----
+#------------------------------------------------------------------------------#
+
+library(patchwork)
+
+book_theme <- ggplot2::theme(
+  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
+  axis.text         = ggplot2::element_text(color = "black", size = 18),
+  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.ticks.length = grid::unit(4, "pt"),
+  legend.text       = ggplot2::element_text(size = 18),
+  legend.title      = ggplot2::element_text(size = 18),
+  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
+  legend.position   = "bottom"
+)
+
+#------------------------------------------------------------------------------#
+# FIGURE 3.10: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
+#------------------------------------------------------------------------------#
+
+rp <- residuals_plot(
+  mod2,
+  point_color  = "grey40",
+  curve_color  = "black",
+  font_size    = 18,
+  line_width   = 0.6,
+  label_family = "Minion Pro"
+)
+
+fig3_10 <- rp$dpdd.index / rp$dpdd.inflam / rp$dpdd.age +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  ggplot2::labs(title = NULL)
+
+ggplot2::ggsave(
+  filename = "~/desktop/Figure 3.10.pdf",
+  plot     = fig3_10,
+  width    = 8.5,
+  height   = 11,
+  units    = "in",
+  device   = cairo_pdf
+)

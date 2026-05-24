@@ -2,7 +2,7 @@
 ---------------------------------------------------------------------------
 
                                    Blimp
-                                   4.0.2
+                                   4.0.4
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -47,30 +47,31 @@ ALGORITHMIC OPTIONS SPECIFIED:
 
 BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
 
-  NOTE: Split chain PSR is being used. This splits each chain's
-        iterations to create twice as many chains.
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
 
-  Comparing iterations across 2 chains     Highest PSR   Parameter #  
-                          251 to 500             1.046            14  
-                          501 to 1000            1.020            23  
-                          751 to 1500            1.016            14  
-                         1001 to 2000            1.014            31  
-                         1251 to 2500            1.015            31  
-                         1501 to 3000            1.004            31  
-                         1751 to 3500            1.006            15  
-                         2001 to 4000            1.003            15  
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.064            14  
+                          501 to 1000            1.012            23  
+                          751 to 1500            1.017            14  
+                         1001 to 2000            1.010            14  
+                         1251 to 2500            1.008            31  
+                         1501 to 3000            1.005            21  
+                         1751 to 3500            1.003            21  
+                         2001 to 4000            1.004            31  
                          2251 to 4500            1.004            26  
-                         2501 to 5000            1.003            14  
-                         2751 to 5500            1.005            14  
-                         3001 to 6000            1.005            14  
-                         3251 to 6500            1.003            15  
-                         3501 to 7000            1.002            33  
-                         3751 to 7500            1.002            20  
-                         4001 to 8000            1.003            14  
-                         4251 to 8500            1.004            14  
-                         4501 to 9000            1.006            14  
-                         4751 to 9500            1.005            14  
-                         5001 to 10000           1.003            14  
+                         2501 to 5000            1.003            26  
+                         2751 to 5500            1.003            26  
+                         3001 to 6000            1.003            14  
+                         3251 to 6500            1.004            26  
+                         3501 to 7000            1.002            26  
+                         3751 to 7500            1.004            20  
+                         4001 to 8000            1.003            26  
+                         4251 to 8500            1.003            14  
+                         4501 to 9000            1.004            14  
+                         4751 to 9500            1.003            14  
+                         5001 to 10000           1.002            14  
 
 
 METROPOLIS-HASTINGS ACCEPTANCE RATES:
@@ -78,14 +79,14 @@ METROPOLIS-HASTINGS ACCEPTANCE RATES:
   Chain 1:
 
     Variable                            Type    Probability   Target Value 
-    female                         parameter          0.509          0.500 
+    female                         parameter          0.513          0.500 
     els                           imputation          0.501          0.500 
-    els                            parameter          0.484          0.500 
-    age                            parameter          0.582          0.500 
-    inflam                        imputation          0.486          0.500 
-    inflam                         parameter          0.464          0.500 
+    els                            parameter          0.482          0.500 
+    age                            parameter          0.584          0.500 
+    inflam                        imputation          0.487          0.500 
+    inflam                         parameter          0.469          0.500 
 
-  NOTE: Suppressing printing of 1 chains.
+  NOTE: Suppressing printing of 3 chains.
         Use keyword 'tuneinfo' in options to override.
 
 
@@ -135,8 +136,8 @@ MODEL FIT:
   INFORMATION CRITERIA
 
     Conditional Likelihood
-      DIC2                  1742.115
-      WAIC                  1756.679
+      DIC2                  1742.102
+      WAIC                  1756.747
 
 
 IMPUTED DATA SUMMARIES:
@@ -147,11 +148,11 @@ IMPUTED DATA SUMMARIES:
 Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
                                 ------------------------------------------------------------------------------
 
-  dpdd                                6.161      4.509      3.332      5.490      8.112     -3.521     29.142 
+  dpdd                                6.162      4.509      3.332      5.492      8.112     -3.517     29.142 
   female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
   els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
   age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
-  inflam                              0.024      2.846     -1.900     -0.448      1.628     -5.830     15.157 
+  inflam                              0.024      2.846     -1.901     -0.449      1.628     -5.821     15.157 
 
                                 ------------------------------------------------------------------------------
 
@@ -165,7 +166,7 @@ CORRELATIONS AMONG RESIDUALS:
 
 OUTCOME MODEL ESTIMATES:
 
-  Summaries based on 10000 iterations using 2 chains.
+  Summaries based on 10000 iterations using 4 chains.
   NOTE: Estimate column based on posterior median.
 
 
@@ -177,27 +178,27 @@ Grand Mean Centered: age els female inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 Variances:                      
-  Residual Var.                      19.438      1.758     16.452     23.325        ---        ---   7069.914 
+  Residual Var.                      19.456      1.759     16.448     23.295        ---        ---   7372.352 
 
 Coefficients:                   
-  Intercept                           6.162      0.282      5.615      6.723    478.510      0.000   6171.847 
-  inflam                              0.385      0.098      0.193      0.579     15.589      0.000   6539.071 
-  els                                -0.384      0.593     -1.548      0.754      0.437      0.509   6426.409 
-  female                             -0.287      0.580     -1.424      0.845      0.248      0.619   7786.669 
-  age                                 0.017      0.051     -0.082      0.118      0.119      0.730   7520.277 
+  Intercept                           6.162      0.285      5.603      6.718    468.819      0.000   5611.423 
+  inflam                              0.386      0.098      0.194      0.581     15.741      0.000   6360.690 
+  els                                -0.379      0.589     -1.540      0.769      0.427      0.514   6478.904 
+  female                             -0.303      0.582     -1.445      0.845      0.267      0.606   7897.050 
+  age                                 0.017      0.051     -0.081      0.117      0.113      0.736   7576.211 
 
 Standard Deviations:            
-  Residual SD                         4.409      0.198      4.056      4.830        ---        ---   7040.785 
+  Residual SD                         4.411      0.198      4.056      4.826        ---        ---   7380.320 
 
 Standardized Coefficients:      
-  inflam                              0.239      0.058      0.122      0.350     16.903      0.000   6402.923 
-  els                                -0.041      0.063     -0.163      0.081      0.440      0.507   6416.339 
-  female                             -0.030      0.061     -0.148      0.088      0.249      0.618   7791.622 
-  age                                 0.022      0.062     -0.102      0.144      0.120      0.729   7534.758 
+  inflam                              0.241      0.058      0.123      0.350     17.081      0.000   6261.251 
+  els                                -0.040      0.062     -0.161      0.082      0.430      0.512   6471.615 
+  female                             -0.032      0.061     -0.150      0.089      0.268      0.605   7913.121 
+  age                                 0.021      0.062     -0.099      0.142      0.114      0.735   7578.705 
 
 Proportion Variance Explained   
-  by Coefficients                     0.071      0.029      0.025      0.135        ---        ---   6756.655 
-  by Residual Variation               0.929      0.029      0.865      0.975        ---        ---   6756.655 
+  by Coefficients                     0.071      0.029      0.025      0.136        ---        ---   6554.014 
+  by Residual Variation               0.929      0.029      0.864      0.975        ---        ---   6554.014 
 
                                 ------------------------------------------------------------------------------
 
@@ -206,7 +207,7 @@ Proportion Variance Explained
 
 PREDICTOR MODEL ESTIMATES:
 
-  Summaries based on 10000 iterations using 2 chains.
+  Summaries based on 10000 iterations using 4 chains.
   NOTE: Estimate column based on posterior median.
 
 
@@ -216,12 +217,12 @@ Complete predictor: female
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.351      0.076     -0.501     -0.198     21.630      0.000   1336.368 
+Grand Mean                           -0.354      0.079     -0.513     -0.196     20.354      0.000   1329.707 
 
 Level 1:                                                                                                      
-  els                                 0.044      0.093     -0.139      0.228      0.218      0.640   2579.298 
-  age                                -0.028      0.014     -0.055     -0.001      4.060      0.044   4327.807 
-  inflam                              0.012      0.028     -0.043      0.067      0.197      0.657   3659.939 
+  els                                 0.042      0.092     -0.137      0.222      0.208      0.648   2463.840 
+  age                                -0.028      0.014     -0.056     -0.001      4.002      0.045   4113.398 
+  inflam                              0.012      0.028     -0.042      0.066      0.198      0.656   3837.821 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
@@ -235,12 +236,12 @@ Missing predictor:  els
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.297      0.078     -0.446     -0.144     14.477      0.000   1051.898 
+Grand Mean                           -0.295      0.080     -0.450     -0.142     13.491      0.000   1029.884 
 
 Level 1:                                                                                                      
-  female                              0.042      0.094     -0.141      0.227      0.207      0.649   2243.041 
-  age                                -0.038      0.014     -0.065     -0.010      7.157      0.007   3673.653 
-  inflam                              0.047      0.027     -0.006      0.101      2.962      0.085   2919.975 
+  female                              0.042      0.092     -0.137      0.222      0.209      0.648   2326.979 
+  age                                -0.038      0.014     -0.067     -0.010      7.068      0.008   3555.858 
+  inflam                              0.047      0.027     -0.007      0.100      2.946      0.086   3319.176 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
@@ -254,13 +255,13 @@ Complete predictor: age
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           45.582      0.327     44.946     46.226  19417.954      0.000   1637.144 
+Grand Mean                           45.586      0.334     44.906     46.242  18637.891      0.000   1715.558 
 
 Level 1:                                                                                                      
-  female                             -0.821      0.404     -1.609     -0.015      4.108      0.043   6319.388 
-  els                                -1.115      0.405     -1.889     -0.295      7.497      0.006   5786.689 
-  inflam                              0.184      0.121     -0.050      0.419      2.333      0.127   7470.411 
-  Residual Var.                      29.830      2.579     25.225     35.440        ---        ---   8688.424 
+  female                             -0.818      0.401     -1.613     -0.031      4.199      0.040   6173.427 
+  els                                -1.118      0.405     -1.885     -0.300      7.550      0.006   5878.517 
+  inflam                              0.187      0.120     -0.051      0.421      2.411      0.120   7741.550 
+  Residual Var.                      29.827      2.612     25.231     35.515        ---        ---   8166.676 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -271,13 +272,13 @@ Missing predictor:  inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                            0.027      0.169     -0.316      0.351      0.019      0.890   1721.768 
+Grand Mean                            0.019      0.168     -0.317      0.348      0.011      0.915   1618.970 
 
 Level 1:                                                                                                      
-  female                              0.097      0.218     -0.340      0.517      0.196      0.658   5511.084 
-  els                                 0.369      0.215     -0.062      0.785      2.929      0.087   5388.876 
-  age                                 0.049      0.032     -0.013      0.111      2.305      0.129   6441.068 
-  Residual Var.                       7.916      0.695      6.716      9.437        ---        ---   6437.300 
+  female                              0.101      0.220     -0.340      0.523      0.195      0.659   5348.915 
+  els                                 0.366      0.215     -0.061      0.785      2.886      0.089   5302.697 
+  age                                 0.049      0.032     -0.014      0.112      2.320      0.128   6352.821 
+  Residual Var.                       7.916      0.693      6.733      9.447        ---        ---   6349.045 
                                                                                                               
                                 ------------------------------------------------------------------------------
 

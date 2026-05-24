@@ -1,15 +1,16 @@
 # NEGATIVE BINOMIAL REGRESSION FOR COUNT OUTCOMES
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
 library(ggplot2)
-library(patchwork)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 # READ DATA ----
 
@@ -23,13 +24,12 @@ inflammation <- read.csv(data_url)
 # NEGATIVE BINOMIAL REGRESSION MODEL ----
 #------------------------------------------------------------------------------#
 
-# regression model with a count outcome
 mod1 <- rblimp(
   data = inflammation,             		             # R data frame
   ordinal = 'els female',          		             # binary and ordinal variables 
   count = 'hdd',                                   # count outcome with negative binomial model
-  center = 'inflam els female age',	               # center predictors  
-  model = 'hdd ~ inflam els female age;',          # regression model
+  center = 'inflam age',	                         # center predictors  
+  model = 'hdd ~ inflam els female age',           # regression model
   seed = 90291,               		                 # random number seed
   burn = 10000,               		                 # warm-up iterations
   iter = 10000)                		                 # analysis iteration
@@ -41,7 +41,6 @@ posterior_plot(mod1)                               # plot parameter distribution
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# regression model with a count outcome
 mod2 <- rblimp(
   data = inflammation,             		             # R data frame
   ordinal = 'els female',          		             # binary and ordinal variables 
@@ -55,8 +54,51 @@ mod2 <- rblimp(
 
 output(mod2)               		                     # print output
 
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot standardized Pearson residuals
 
-# plot distributions and binned residuals
-distribution_plot(mod2)
-residuals_plot(mod2)
+#------------------------------------------------------------------------------#
+# BOOK FIGURE THEME ----
+#------------------------------------------------------------------------------#
+
+library(patchwork)
+
+book_theme <- ggplot2::theme(
+  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
+  axis.text         = ggplot2::element_text(color = "black", size = 18),
+  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.ticks.length = grid::unit(4, "pt"),
+  legend.text       = ggplot2::element_text(size = 18),
+  legend.title      = ggplot2::element_text(size = 18),
+  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
+  legend.position   = "bottom"
+)
+
+#------------------------------------------------------------------------------#
+# FIGURE 3.6: DISTRIBUTIONS ----
+#------------------------------------------------------------------------------#
+
+dp <- distribution_plot(
+  mod2,
+  observed_color = "grey60",
+  imputed_color  = "grey40",
+  density_color  = "black",
+  font_size      = 18,
+  line_width     = 0.5
+)
+
+fig3_9 <- dp$hdd +
+  plot_layout(guides = "collect") +
+  plot_annotation() &
+  book_theme &
+  ggplot2::labs(title = NULL)
+
+ggplot2::ggsave(
+  filename = "~/desktop/Figure 3.9.pdf",
+  plot     = fig3_9,
+  width    = 11,
+  height   = 8.5,
+  units    = "in",
+  device   = cairo_pdf
+)

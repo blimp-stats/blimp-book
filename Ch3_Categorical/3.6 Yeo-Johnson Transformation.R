@@ -23,69 +23,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 inflammation <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# LINEAR REGRESSION MODEL ----
+# LINEAR REGRESSION WITH CONSTANT VARIANCE ----
 #------------------------------------------------------------------------------#
 
-mod1 <- rblimp(
-  data = inflammation,                           # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  center = 'inflam age',                         # center predictors
-  model = 'dpdd ~ inflam els female age',        # regression model
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod1)                                     # print output
-posterior_plot(mod1, 'dpdd')                     # plot parameter distributions
-
-#------------------------------------------------------------------------------#
-# CUSTOM WALD TEST ----
-#------------------------------------------------------------------------------#
-
-# method 1: parameter labels
-mod2 <- rblimp(
-  data = inflammation,                           # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  center = 'inflam age',                         # center predictors
-  model = 'dpdd ~ inflam@b1 els@b2 female age',  # labeled slopes
-  seed = 90291,                                  # random number seed
-  waldtest = 'b1 = 0; b2 = 0',                   # wald test
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod2)                                     # print output
-
-# method 2: nested model
-mod3 <- rblimp(
-  data = inflammation,                           # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  center = 'inflam age',                         # center predictors
-  model = 'dpdd ~ inflam els female age',        # regression model
-  seed = 90291,                                  # random number seed
-  waldtest = 'dpdd ~ female age',                # wald test as nested model
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod3)                                     # print output
-
-# multiple wald tests
-mod4 <- rblimp(
-  data = inflammation,                           # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  center = 'inflam age',                         # center predictors
-  model = 'dpdd ~ inflam@b1 els@b2 female@b3 age@b4',  # labeled slopes
-  waldtest = c('b1:b2 = 0', 'b3:b4 = 0'),        # vector of tests
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod4)                                     # print output
-
-#------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#------------------------------------------------------------------------------#
-
-mod5 <- rblimp(
+mod0 <- rblimp(
   data = inflammation,                           # R data frame
   ordinal = 'els female',                        # binary and ordinal variables
   center = 'inflam age',                         # center predictors
@@ -93,12 +34,136 @@ mod5 <- rblimp(
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets                                 
+
+output(mod0)                                     # print output
+
+residuals_plot(mod0)                             # plot residuals
+
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH YEO-JOHNSON TRANSFORMATION ----
+#------------------------------------------------------------------------------#
+
+mod1 <- rblimp(
+  data = inflammation,                           # R data frame
+  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = 'yjt(dpddcent) ~ inflam els female age', # regression model w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
+
+output(mod1)                                     # print output
+posterior_plot(mod1, 'dpddcent')                 # plot parameter distributions
+
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
+mod2 <- rblimp(
+  data = inflammation,                           # R data frame
+  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = 'yjt(dpddcent) ~ inflam els female age', # regression model w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
-output(mod5)                                     # print output
+output(mod2)               		                   # print output
+
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot residuals
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH YEO-JOHNSON TRANSFORMED PREDICTOR ----
+#------------------------------------------------------------------------------#
+
+mod3 <- rblimp(
+  data = inflammation,                           # R data frame
+  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+    yjt(dpddcent) ~ inflam els female age;       # outcome w yeo-johnson transform
+    yjt(inflam) ~ els female age',               # predictor w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
+
+output(mod3)                                     # print output
+posterior_plot(mod3, 'dpddcent')                 # plot parameter distributions
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH NORMALIZING TRANSFORMATIONS ----
+#------------------------------------------------------------------------------#
+
+# log transform
+mod4 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+  dpddnorm = ln(dpdd + 1);                       # definition variable adds transform to data
+  ln(dpdd + 1) ~ inflam els female age',         # regression model w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+distribution_plot(mod4)                          # plot observed and imputed distributions
+residuals_plot(mod4)                             # plot residuals
+
+# inverse  transform
+mod5 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+  dpddnorm = (1 / (dpdd + 1));                   # # definition variable adds transform to data
+  (1 / (dpdd + 1)) ~ inflam els female age',     # regression model w inverse transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
 distribution_plot(mod5)                          # plot observed and imputed distributions
 residuals_plot(mod5)                             # plot residuals
+
+# square root transform
+mod6 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+  dpddnorm = sqrt(dpdd);                         # # definition variable adds transform to data
+  sqrt(dpdd) ~ inflam els female age',           # regression model w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+distribution_plot(mod6)                          # plot observed and imputed distributions
+residuals_plot(mod6)                             # plot residuals
+
+# inverse square root transform
+mod7 <- rblimp(
+  data = inflammation,                           # R data frame
+  ordinal = 'els female',                        # binary and ordinal variables
+  center = 'inflam age',                         # center predictors
+  model = '
+  dpddnorm = (1 / sqrt(dpdd + 1));               # # definition variable adds transform to data
+  (1 / sqrt(dpdd + 1)) ~ inflam els female age', # regression model w yeo-johnson transform
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+distribution_plot(mod7)                          # plot observed and imputed distributions
+residuals_plot(mod7)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -118,104 +183,13 @@ book_theme <- ggplot2::theme(
   legend.position   = "bottom"
 )
 
-#------------------------------------------------------------------------------#
-# FIGURE 2.2: SINGLE-CHAIN TRACE PLOT ----
-#------------------------------------------------------------------------------#
-
-# fit single-chain model for trace plot diagnostic
-mod_1chain <- rblimp(
-  data    = inflammation,
-  ordinal = 'els female',
-  center  = 'inflam age',
-  model   = 'dpdd ~ inflam els female age',
-  seed    = 90291,
-  chains  = 1,
-  burn    = 10000,
-  iter    = 10000
-)
-output(mod_1chain)
-
-fig2_2 <- trace_plot(mod_1chain, 6) +
-  ggplot2::xlim(0, 100) +
-  ggplot2::scale_color_manual(values = "black") +
-  ggplot2::ylab("Slope Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 20, base_family = "Minion Pro") +
-  book_theme +
-  ggplot2::theme(
-    text            = ggplot2::element_text(size = 20),
-    axis.title      = ggplot2::element_text(size = 20),
-    axis.text       = ggplot2::element_text(size = 20),
-    legend.position = "none"
-  )
-
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.2.pdf",
-  plot     = fig2_2,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
 
 #------------------------------------------------------------------------------#
-# FIGURE 2.5: TRACE PLOTS ----
-#------------------------------------------------------------------------------#
-
-fig2_5a <- trace_plot(mod1, 3) +
-  ggplot2::xlim(9500, 10000) +
-  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
-  ggplot2::ylab("Slope Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 18, base_family = "Minion Pro") +
-  book_theme +
-  ggplot2::theme(legend.position = "none")
-
-# different example that doesn't converge
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/convergence%20problem%20data.csv'
-noconverge <- read.csv(data_url)
-
-failure <- rblimp(
-  data = noconverge,
-  nominal = 'genderid race',
-  model = 'sleep ~ age genderid race',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  options = 'pinfo'
-)
-output(failure)
-
-fig2_5b <- trace_plot(failure, 63) +
-  ggplot2::xlim(9500, 10000) +
-  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
-  ggplot2::ylab("Intercept Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 18, base_family = "Minion Pro") +
-  book_theme +
-  ggplot2::theme(legend.position = "none")
-
-fig2_5 <- (fig2_5a / fig2_5b) +
-  plot_layout(guides = "collect") +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  ggplot2::labs(title = NULL)
-
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.5.pdf",
-  plot     = fig2_5,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
-
-#------------------------------------------------------------------------------#
-# FIGURE 2.6: DISTRIBUTIONS ----
+# FIGURE 3.12: DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
-  mod5,
+  mod2,
   observed_color = "grey60",
   imputed_color  = "grey40",
   density_color  = "black",
@@ -223,15 +197,14 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig2_6 <- (dp$dpdd / dp$inflam) +
-  plot_layout(guides = "collect") +
+fig3_12 <- dp$dpddcent.yjt / dp$dpddcent +
   plot_annotation(tag_levels = "A") &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.6.pdf",
-  plot     = fig2_6,
+  filename = "~/desktop/Figure 3.12.pdf",
+  plot     = fig3_12,
   width    = 8.5,
   height   = 11,
   units    = "in",
@@ -239,21 +212,11 @@ ggplot2::ggsave(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 2.7: RESIDUAL DISTRIBUTION + STANDARDIZED RESIDUAL INDEX ----
+# FIGURE 3.13: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
 #------------------------------------------------------------------------------#
 
-dp <- distribution_plot(
-  mod5,
-  vars           = "dpdd.residual",
-  observed_color = "grey40",
-  imputed_color  = "grey40",
-  density_color  = "black",
-  font_size      = 18,
-  line_width     = 0.6
-)
-
 rp <- residuals_plot(
-  mod5,
+  mod2,
   point_color  = "grey40",
   curve_color  = "black",
   font_size    = 18,
@@ -261,26 +224,34 @@ rp <- residuals_plot(
   label_family = "Minion Pro"
 )
 
-fig2_7 <- dp$dpdd.residual / rp$dpdd.index +
+fig3_13 <- rp$dpddcent.index / rp$dpddcent.inflam / rp$dpddcent.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.7.pdf",
-  plot     = fig2_7,
+  filename = "~/desktop/Figure 3.13.pdf",
+  plot     = fig3_13,
   width    = 8.5,
   height   = 11,
   units    = "in",
   device   = cairo_pdf
 )
+
+
+
+
+
+
+
+
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.8: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
 #------------------------------------------------------------------------------#
 
 rp <- residuals_plot(
-  mod5,
+  mod2,
   point_color  = "grey40",
   curve_color  = "black",
   font_size    = 18,
@@ -288,43 +259,16 @@ rp <- residuals_plot(
   label_family = "Minion Pro"
 )
 
-fig2_8 <- rp$dpdd.predicted / rp$dpdd.inflam / rp$dpdd.age +
+fig3_10 <- rp$dpdd.index / rp$dpdd.inflam / rp$dpdd.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.8.pdf",
-  plot     = fig2_8,
+  filename = "~/desktop/Figure 3.10.pdf",
+  plot     = fig3_10,
   width    = 8.5,
   height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
-
-#------------------------------------------------------------------------------#
-# FIGURE 2.9: COOK'S D AND LEVERAGE ----
-#------------------------------------------------------------------------------#
-
-rp <- residuals_plot(
-  mod5,
-  point_color  = "grey40",
-  curve_color  = "black",
-  font_size    = 18,
-  line_width   = 0.6,
-  label_family = "Minion Pro"
-)
-
-fig2_9 <- rp$dpdd.leverage / rp$dpdd.cooks +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  ggplot2::labs(title = NULL)
-
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.9.pdf",
-  plot     = fig2_9,
-  width    = 11,
-  height   = 8.5,
   units    = "in",
   device   = cairo_pdf
 )
