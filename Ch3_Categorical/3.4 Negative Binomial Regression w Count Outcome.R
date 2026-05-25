@@ -76,7 +76,7 @@ book_theme <- ggplot2::theme(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.6: DISTRIBUTIONS ----
+# FIGURE 3.8: OVERLAY DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -88,15 +88,15 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig3_9 <- dp$hdd +
+fig3_8 <- dp$hdd +
   plot_layout(guides = "collect") +
   plot_annotation() &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.9.pdf",
-  plot     = fig3_9,
+  filename = "~/desktop/Figure 3.8.pdf",
+  plot     = fig3_8,
   width    = 11,
   height   = 8.5,
   units    = "in",

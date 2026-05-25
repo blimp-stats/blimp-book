@@ -50,10 +50,9 @@ mod2 <- rblimp(
   center = 'age',                                # center predictors
   model = 'cigsperday ~ intercept@b0 parsmoke@b1 educ.2@b2 educ.3@b3 age', # label dummy codes
   parameters = '
-    p_parsmoke = .452;                           # proportion of smokers
-    mean_educ1 = b0 + (p_parsmoke * b1);         # group 1 mean
-    mean_educ2 = b0 + b2 + (p_parsmoke * b1);    # group 2 mean
-    mean_educ3 = b0 + b3 + (p_parsmoke * b1);    # group 3 mean
+    mean_educ1 = b0 + (.452 * b1);               # group 1 mean
+    mean_educ2 = mean_educ1 + b2;                # group 2 mean
+    mean_educ3 = mean_educ1 + b3;                # group 3 mean
     educ2_vs_educ3 = mean_educ3 – mean_educ2;',  # group 3 vs. 2 contrast
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
@@ -80,6 +79,25 @@ output(mod3)                                     # print output
 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+#------------------------------------------------------------------------------#
+# LINEAR REGRESSION WITH A LATENT RESPONSE VARIABLE PREDICTOR ----
+#------------------------------------------------------------------------------#
+
+mod4 <- rblimp(
+  data = smoking,                                # R data frame
+  ordinal = 'parsmoke',                          # binary and ordinal variables
+  nominal = 'educ',                              # nominal variables (auto dummy coded)
+  center = 'age',                                # center predictors
+  model = '
+    cigsperday ~ parsmoke.latent educ age;       # focal model w latent predictor
+    parsmoke ~ educ age',                        # predictor model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
+
+output(mod4)                                     # print output
+posterior_plot(mod4, 'cigsperday')               # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -132,7 +150,7 @@ ggplot2::ggsave(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.5: DISTRIBUTIONS ----
+# FIGURE 3.3: DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -144,15 +162,15 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig3_5 <- dp$cigsperday +
+fig3_3 <- dp$cigsperday +
   plot_layout(guides = "collect") +
   plot_annotation() &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.5.pdf",
-  plot     = fig3_5,
+  filename = "~/desktop/Figure 3.3.pdf",
+  plot     = fig3_3,
   width    = 11,
   height   = 8.5,
   units    = "in",

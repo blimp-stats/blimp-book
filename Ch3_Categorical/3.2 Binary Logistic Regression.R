@@ -127,7 +127,7 @@ book_theme <- ggplot2::theme(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.6: DISTRIBUTIONS ----
+# FIGURE 3.5: DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -139,15 +139,15 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig3_6 <- dp$agetryalc +
+fig3_5 <- dp$agetryalc +
   plot_layout(guides = "collect") +
   plot_annotation() &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.6.pdf",
-  plot     = fig3_6,
+  filename = "~/desktop/Figure 3.5.pdf",
+  plot     = fig3_5,
   width    = 11,
   height   = 8.5,
   units    = "in",
@@ -155,7 +155,7 @@ ggplot2::ggsave(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.7: PREDICTED PROBABILITIES ----
+# FIGURE 3.6: PREDICTED PROBABILITIES ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -176,15 +176,15 @@ rp <- residuals_plot(
   label_family = "Minion Pro"
 )
 
-fig3_7 <- dp$drinker.1.probability / rp$drinker.college.probability +
+fig3_6 <- dp$drinker.1.probability / rp$drinker.college.probability +
   plot_annotation(tag_levels = "A") &
   book_theme &
   ggplot2::labs(title = NULL) &
   ggplot2::scale_color_manual(values = rep("black", 7))
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.7.pdf",
-  plot     = fig3_7,
+  filename = "~/desktop/Figure 3.6.pdf",
+  plot     = fig3_6,
   width    = 8.5,
   height   = 11,
   units    = "in",
@@ -192,7 +192,7 @@ ggplot2::ggsave(
 )
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.8: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
+# FIGURE 3.7: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
 #------------------------------------------------------------------------------#
 
 rp <- residuals_plot(
@@ -204,14 +204,14 @@ rp <- residuals_plot(
   label_family = "Minion Pro"
 )
 
-fig3_8 <- rp$drinker.1.binned / rp$drinker.1.agetryalc / rp$drinker.1.age +
+fig3_7 <- rp$drinker.1.binned / rp$drinker.1.agetryalc / rp$drinker.1.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.8.pdf",
-  plot     = fig3_8,
+  filename = "~/desktop/Figure 3.7.pdf",
+  plot     = fig3_7,
   width    = 8.5,
   height   = 11,
   units    = "in",
