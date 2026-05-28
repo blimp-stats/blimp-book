@@ -10,3 +10,10 @@ MODEL: dpdd ~ inflam els female age;	    # regression model
 SEED: 90291;                  				# random number seed
 BURN: 10000;                  				# warm-up iterations
 ITER: 10000;                  				# analysis iterations
+
+
+SAVE:
+estimates = est.dat;          # parameter summary tables 
+iterations = iter.dat;        # iteration-specific parameter values 
+avgimp = avgimp.dat;          # filled-in data with average imputations 
+

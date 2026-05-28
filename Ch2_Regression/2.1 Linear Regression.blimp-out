@@ -283,3 +283,11 @@ Level 1:
                                 ------------------------------------------------------------------------------
 
 
+
+VARIABLE ORDER IN IMPUTED DATA:
+
+    avgimp = 'avgimp.dat'
+
+     id female els age inflam_cr inflam_i6 inflam_tn inflam_if inflam dpdd hdd
+    
+
