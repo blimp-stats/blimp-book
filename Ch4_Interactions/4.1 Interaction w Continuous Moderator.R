@@ -40,11 +40,29 @@ mod0 <- rblimp(
 output(mod0)                                     # print output
 
 #------------------------------------------------------------------------------#
-# FIT INTERACTIVE MODEL ----
+# MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
 # comment
 mod1 <- rblimp(
+  data = reading, 
+  ordinal = 'hispanic',
+  center = 'read1 lrnprob1',
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 hispanic',  
+  seed = 90291,                                              
+  burn = 10000,                                              
+  iter = 10000)                                                
+
+output(mod1)                                     # print output
+posterior_plot(mod1, 'read9')               # plot parameter distributions
+
+
+#------------------------------------------------------------------------------#
+# PROBING INTERACTION ----
+#------------------------------------------------------------------------------#
+
+# comment
+mod2 <- rblimp(
   data = reading, 
   ordinal = 'hispanic',
   center = 'read1 lrnprob1',
@@ -55,15 +73,7 @@ mod1 <- rblimp(
   iter = 10000)                                                
 
 # print output
-output(mod1)
-
-# plot parameter distributions
-posterior_plot(model,'read9')
-
-
-#------------------------------------------------------------------------------#
-# PROBING INTERACTION ----
-#------------------------------------------------------------------------------#
+output(mod2)
 
 # plot conditional effects and johnson-neyman regions of significance
 simple_plot(read9 ~ read1 | lrnprob1, model)
