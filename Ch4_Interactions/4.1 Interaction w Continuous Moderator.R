@@ -1,13 +1,16 @@
 # INTERACTION INVOLVING A CONTINUOUS MODERATOR
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
@@ -20,30 +23,52 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 reading <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# FIT INTERACTIVE MODEL ----
+# LINEAR REGRESSION MODEL ----
 #------------------------------------------------------------------------------#
 
-# interaction with a continuous moderator
-model <- rblimp(
+# comment
+mod0 <- rblimp(
   data = reading, 
-  nominal = 'male hispanic',
+  ordinal = 'hispanic',
   center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 male hispanic',  
-  simple = 'read1 | lrnprob1',      
+  model = 'read9 ~ read1 lrnprob1 hispanic',  
   seed = 90291,                                              
   burn = 10000,                                              
   iter = 10000,
-  nimps = 20)                                                
+  nimps = 20)   
+
+output(mod0)                                     # print output
+
+#------------------------------------------------------------------------------#
+# FIT INTERACTIVE MODEL ----
+#------------------------------------------------------------------------------#
+
+# comment
+mod1 <- rblimp(
+  data = reading, 
+  ordinal = 'hispanic',
+  center = 'read1 lrnprob1',
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 hispanic',  
+  simple = 'read1 | lrnprob1',      
+  seed = 90291,                                              
+  burn = 10000,                                              
+  iter = 10000)                                                
 
 # print output
-output(model)
+output(mod1)
 
 # plot parameter distributions
 posterior_plot(model,'read9')
 
+
+#------------------------------------------------------------------------------#
+# PROBING INTERACTION ----
+#------------------------------------------------------------------------------#
+
 # plot conditional effects and johnson-neyman regions of significance
 simple_plot(read9 ~ read1 | lrnprob1, model)
 jn_plot(read9 ~ read1 | lrnprob1, model)
+
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
