@@ -1,4 +1,4 @@
-id,male,esl,lrnprob1,lrnprob1risk,lrnprob1atrisk,read1,read9
+id,male,esl,lrnprob1,lprisk,lpatrisk,read1,read9
 1,0,1,57,2,1,105,123
 2,0,0,59,2,1,153,123
 3,0,0,49,1,0,123,119
