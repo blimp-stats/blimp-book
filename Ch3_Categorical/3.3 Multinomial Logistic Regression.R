@@ -68,7 +68,7 @@ library(patchwork)
 book_theme <- ggplot2::theme(
   text              = ggplot2::element_text(family = "Minion Pro", size = 18),
   axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
   axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
   axis.ticks.length = grid::unit(4, "pt"),
   legend.text       = ggplot2::element_text(size = 18),

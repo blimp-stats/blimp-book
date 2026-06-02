@@ -23,76 +23,70 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 reading <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# LINEAR REGRESSION MODEL ----
-#------------------------------------------------------------------------------#
-
-# comment
-mod0 <- rblimp(
-  data = reading, 
-  ordinal = 'esl',
-  center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 esl',  
-  seed = 90291,                                              
-  burn = 10000,                                              
-  iter = 10000,
-  nimps = 20)   
-
-output(mod0)                                     # print output
-
-#------------------------------------------------------------------------------#
 # MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
-# comment
+# add the product term
 mod1 <- rblimp(
-  data = reading, 
-  ordinal = 'esl',
-  center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl',  
-  seed = 90291,                                              
-  burn = 10000,                                              
-  iter = 10000)                                                
+  data = reading,                                # R data frame
+  ordinal = 'esl',                               # binary and ordinal variables
+  center = 'read1 lrnprob1',                     # center predictors
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-posterior_plot(mod1, 'read9')               # plot parameter distributions
+posterior_plot(mod1, 'read9')                    # plot parameter distributions
 
 
 #------------------------------------------------------------------------------#
 # PROBING INTERACTION ----
 #------------------------------------------------------------------------------#
 
-# comment
+# probe simple slopes
 mod2 <- rblimp(
-  data = reading, 
-  ordinal = 'esl',
-  center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl; DEBUG: compact_output',  
-  simple = 'read1 | lrnprob1',      
-  seed = 90291,                                              
-  burn = 10000,                                              
-  iter = 10000)                                                
+  data = reading,                                # R data frame
+  ordinal = 'esl',                               # binary and ordinal variables
+  center = 'read1 lrnprob1',                     # center predictors
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  simple = 'read1 | lrnprob1',                   # conditional effects of read1 at SD units
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-# print output
-output(mod2)
+output(mod2)                                     # print output
+simple_plot(read9 ~ read1 | lrnprob1, mod2)      # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob1, mod2)          # plot johnson-neyman regions
 
-# plot conditional effects and johnson-neyman regions of significance
-simple_plot(read9 ~ read1 | lrnprob1, mod2)
-jn_plot(read9 ~ read1 | lrnprob1, mod2)
-
-# comment
+# simple slopes at quantiles
 mod3 <- rblimp(
-  data = reading, 
-  ordinal = 'esl',
-  center = 'read1 lrnprob1',
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl; DEBUG: compact_output',  
-  simple = 'read1 | lrnprob1 @ quantile',      
-  seed = 90291,                                              
-  burn = 10000,                                              
-  iter = 10000)                                                
+  data = reading,                                # R data frame
+  ordinal = 'esl',                               # binary and ordinal variables
+  center = 'read1 lrnprob1',                     # center predictors
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  simple = 'read1 | lrnprob1 @ quantile',        # conditional effects at 16/50/84% quantiles
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-# print output
-output(mod3)
-simple_plot(read9 ~ read1 | lrnprob1, mod3)
+output(mod3)                                     # print output
+simple_plot(read9 ~ read1 | lrnprob1, mod3)      # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob1, mod3)          # plot johnson-neyman regions
+
+# simple slopes at quartiles
+mod4 <- rblimp(
+  data = reading,                                # R data frame
+  ordinal = 'esl',                               # binary and ordinal variables
+  center = 'read1 lrnprob1',                     # center predictors
+  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  simple = 'read1 | lrnprob1 @ quartile',        # conditional effects at quartiles
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
+
+output(mod4)                                     # print output
+simple_plot(read9 ~ read1 | lrnprob1, mod4)      # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -103,7 +97,7 @@ library(patchwork)
 book_theme <- ggplot2::theme(
   text              = ggplot2::element_text(family = "Minion Pro", size = 18),
   axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5),
+  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
   axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
   axis.ticks.length = grid::unit(4, "pt"),
   legend.text       = ggplot2::element_text(size = 18),
@@ -116,16 +110,16 @@ book_theme <- ggplot2::theme(
 # FIGURE 4.2 ----
 #------------------------------------------------------------------------------#
 
-# --- make the plots ---
-fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod2)
-fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod2)
+# make the plots
+fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod3)
+fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod3)
 
-# --- Panel B: grey the non-significant region; reword subtitle ---
+# grey the non-significant region and reword subtitle
 fig4_2B <- fig4_2B +
   ggplot2::scale_fill_manual(values = c("grey80", NA)) +   # FALSE = non-sig = grey; TRUE = sig = none
   ggplot2::labs(subtitle = "Shaded area represents 0 within 95% interval\nBound: -24")
 
-# --- Panel A: linetype by moderator level (line layers only), black lines, drop CI ribbons ---
+# linetype by moderator level (line layers only), black lines, drop CI ribbons ---
 for (i in which(vapply(fig4_2A$layers,
                        function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
   q <- fig4_2A$layers[[i]]$mapping[["colour"]]
@@ -139,13 +133,13 @@ fig4_2A <- fig4_2A +
   ggplot2::scale_linetype_manual(
     values = c("dashed", "solid", "dotted"),               # middle = solid
     name   = "First-grade learning problems",
-    labels = c("-1 SD", "Mean", "+1 SD")
+    labels = c("16%", "50%", "84%")
   ) +
   ggplot2::scale_colour_manual(values = rep("black", 3)) +
   ggplot2::guides(colour = "none", fill = "none") +
   ggplot2::labs(subtitle = NULL)                           # drop "Centered variables: ..."
 
-# --- compose; FORCE white panels + no grid on every subplot (applied last) ---
+# force white panels + no grid on every subplot
 fig4_2 <- (fig4_2A / fig4_2B) +
   plot_annotation(tag_levels = "A") &
   book_theme &
