@@ -19,16 +19,22 @@ set_blimp('/applications/blimp/blimp-nightly')
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
 
+# create data frame from github data
+reading <- read.csv(data_url)
+
+
 #------------------------------------------------------------------------------#
 # MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
+reading$lphigh <- as.integer(reading$lpcat3 == 3)
+
 # add the product term
 mod1 <- rblimp(
   data = reading,                                # R data frame
-  ordinal = 'esl',                               # binary and ordinal variables
+  ordinal = 'esl lpcat2',                               # binary and ordinal variables
   center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  model = 'read9 ~ read1 lpcat2 read1*lpcat2 esl', # product term
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
