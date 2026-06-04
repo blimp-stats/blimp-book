@@ -1,0 +1,15 @@
+#!nightly
+DATA: ../data/reading.csv;       			# data with names in first row
+# VARIABLES: id male esl lrnprob1 		# commented out variable list
+# lprobhi1 lproblev1 read1 read9;		# names are in the csv data
+MISSING: NA;           				# missing value code
+ORDINAL: esl;         		     		# binary and ordinal variables
+NOMINAL: lproblev1;         			# automatic dummy coding          
+CENTER: read1; 		 	 		# center predictors  
+MODEL: read9 ~ read1 lproblev1.1 lproblev1.2 
+  read1*lproblev1.1@b4 read1*lproblev1.2@b5 esl;  # product terms
+SIMPLE: read1 | lproblev1;
+WALDTEST: b4:b5 = 0;  				# wald test of interaction
+SEED: 90291;                  		# random number seed
+BURN: 10000;                  		# warm-up iterations
+ITER: 10000;                  		# analysis iterations

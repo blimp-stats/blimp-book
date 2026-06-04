@@ -61,8 +61,8 @@ mod3 <- rblimp(
   ordinal = 'els female',                        # binary and ordinal variables
   center = 'inflam age',                         # center predictors
   model = 'dpdd ~ inflam els female age',        # regression model
-  seed = 90291,                                  # random number seed
   waldtest = 'dpdd ~ female age',                # wald test as nested model
+  seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
@@ -117,6 +117,22 @@ book_theme <- ggplot2::theme(
   plot.tag          = ggplot2::element_text(face = "bold", size = 22),
   legend.position   = "bottom"
 )
+
+# uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
+.upcase_vars <- function(s) {
+  if (!is.character(s) || length(s) != 1) return(s)
+  toks <- strsplit(s, " ", fixed = TRUE)[[1]]
+  is_var <- grepl("[a-z]", toks) & !grepl("[A-Z]", toks)   # has lowercase, no uppercase
+  toks[is_var] <- toupper(toks[is_var])
+  paste(toks, collapse = " ")
+}
+
+caps_axes <- structure(list(), class = "caps_axes")
+ggplot_add.caps_axes <- function(object, plot, ...) {
+  plot$labels$x <- .upcase_vars(plot$labels$x)
+  plot$labels$y <- .upcase_vars(plot$labels$y)
+  plot
+}
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.2: SINGLE-CHAIN TRACE PLOT ----
@@ -264,6 +280,7 @@ fig2_7 <- (dp$dpdd / dp$inflam) +
   plot_layout(guides = "collect") +
   plot_annotation(tag_levels = "A") &
   book_theme &
+  caps_axes &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
@@ -301,6 +318,7 @@ rp <- residuals_plot(
 fig2_8 <- dp$dpdd.residual / rp$dpdd.index +
   plot_annotation(tag_levels = "A") &
   book_theme &
+  caps_axes &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
@@ -328,6 +346,7 @@ rp <- residuals_plot(
 fig2_9 <- rp$dpdd.predicted / rp$dpdd.inflam / rp$dpdd.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
+  caps_axes &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(
@@ -355,6 +374,7 @@ rp <- residuals_plot(
 fig2_10 <- rp$dpdd.leverage / rp$dpdd.cooks +
   plot_annotation(tag_levels = "A") &
   book_theme &
+  caps_axes &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(

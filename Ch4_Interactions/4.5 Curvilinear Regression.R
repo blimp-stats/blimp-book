@@ -1,13 +1,16 @@
 # CURVILINEAR REGRESSION
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
@@ -20,43 +23,36 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 math <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# FIT MODEL ----
+# CURVILINEAR MODEL ----
 #------------------------------------------------------------------------------#
 
-# curvilinear regression
-model <- rblimp(
-    data = math,
-    ordinal = 'frlunch male',
-    fixed = 'male mathpre',
-    center = 'anxiety',
-    model = 'mathpost ~ anxiety anxiety^2 frlunch mathpre male',
-    seed = 12345,
-    burn = 10000,
-    iter = 10000,
-    nimps = 20)
+mod1 <- rblimp(
+    data = math,                                 # R data frame
+    ordinal = 'frlunch male',                    # binary and ordinal variables
+    center = 'anxiety mathpre',                  # center predictors
+    model = 'mathpost ~ anxiety anxiety^2 mathpre frlunch male',  # quadratic term
+    seed = 90291,                                # random number seed
+    burn = 10000,                                # warm-up iterations
+    iter = 10000)                                # analysis iterations
 
-# print output
-output(model)
-
-# plot parameter distributions
-posterior_plot(model,'mathpost')
+output(mod1)                                     # print output
+posterior_plot(mod1, 'mathpost')                 # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# plot imputed vs. observed values
-imputation_plot(model)
+mod2 <- rblimp(
+  data = math,                                   # R data frame
+  ordinal = 'frlunch male',                      # binary and ordinal variables
+  center = 'anxiety mathpre',                    # center predictors
+  model = 'mathpost ~ anxiety anxiety^2 mathpre frlunch male',  # quadratic term
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 data sets
 
-# plot distributions and residuals
-univariate_plot(vars = c('mathpost','mathpost.residual'), model)
-
-# plot standardized residuals vs. predicted values
-bivariate_plot(mathpost.residual ~ mathpost.predicted, standardize = 'y', model = model)
-
-# plot standardized residuals vs. numeric predictors
-bivariate_plot(y_vars = 'mathpost.residual', 
-               x_vars = c('anxiety','mathpre'),
-               standardize = 'y',
-               model = model)
+output(mod2)                                     # print output
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot residuals
 

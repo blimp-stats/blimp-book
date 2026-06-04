@@ -1,4 +1,4 @@
-# INTERACTION INVOLVING A CONTINUOUS MODERATOR
+# INTERACTION INVOLVING A CONTINUOUS PREDICTOR AND A MULTICATEGORICAL MODERATOR
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -19,71 +19,69 @@ set_blimp('/applications/blimp/blimp-nightly')
 # github url for raw data
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
 
+# create data frame from github data
+reading <- read.csv(data_url)
+
 #------------------------------------------------------------------------------#
 # MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
-# add the product term
+# compact specification
 mod1 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  center = 'read1',                              # center predictors
+  model = 'read9 ~ read1 lproblev1 read1*lproblev1 esl', # product term
+  simple = 'read1 | lproblev1',                  # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev1 esl',      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'read9')                    # plot parameter distributions
+simple_plot(read9 ~ read1 | lproblev1, mod1)     # plot conditional effects
 
-
-#------------------------------------------------------------------------------#
-# PROBING INTERACTION ----
-#------------------------------------------------------------------------------#
-
-# probe simple slopes
+# explicit specification
 mod2 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1',                   # conditional effects of read1 at SD units
+  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  center = 'read1',                              # center predictors
+  model = '
+    read9 ~ read1 lproblev1.1 lproblev1.2 
+      read1*lproblev1.1@b4 read1*lproblev1.2@b5 esl', # product term
+  simple = 'read1 | lproblev1.1',                # conditional effects by group
+  waldtest = 'b4 - b5 = 0',                      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod2)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob1, mod2)          # plot johnson-neyman regions
+posterior_plot(mod2, 'read9')                    # plot parameter distributions
+simple_plot(read9 ~ read1 | lproblev1, mod2)     # plot conditional effects
 
-# simple slopes at quantiles
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
 mod3 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1 @ quantile',        # conditional effects at 16/50/84% quantiles
+  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  center = 'read1',                              # center predictors
+  model = 'read9 ~ read1 lproblev1 read1*lproblev1 esl', # product term
+  simple = 'read1 | lproblev1',                  # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev1 esl',      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
 output(mod3)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod3)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob1, mod3)          # plot johnson-neyman regions
-
-# simple slopes at quartiles
-mod4 <- rblimp(
-  data = reading,                                # R data frame
-  ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1 @ quartile',        # conditional effects at quartiles
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod4)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod4)      # plot conditional effects
+distribution_plot(mod3)                          # plot observed and imputed distributions
+residuals_plot(mod3)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -103,57 +101,66 @@ book_theme <- ggplot2::theme(
   legend.position   = "bottom"
 )
 
-#------------------------------------------------------------------------------#
-# FIGURE 4.2 ----
-#------------------------------------------------------------------------------#
-
-# make the plots
-fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod3)
-fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod3)
-
-# grey the non-significant region and reword subtitle
-fig4_2B <- fig4_2B +
-  ggplot2::scale_fill_manual(values = c("grey80", NA)) +   # FALSE = non-sig = grey; TRUE = sig = none
-  ggplot2::labs(subtitle = "Shaded area represents 0 within 95% interval\nBound: -24")
-
-# linetype by moderator level (line layers only), black lines, drop CI ribbons ---
-for (i in which(vapply(fig4_2A$layers,
-                       function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
-  q <- fig4_2A$layers[[i]]$mapping[["colour"]]
-  if (is.null(q)) q <- fig4_2A$mapping[["colour"]]
-  fig4_2A$layers[[i]]$mapping[["linetype"]] <- q
+# uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
+.upcase_vars <- function(s) {
+  if (!is.character(s) || length(s) != 1) return(s)
+  toks <- strsplit(s, " ", fixed = TRUE)[[1]]
+  is_var <- grepl("[a-z]", toks) & !grepl("[A-Z]", toks)   # has lowercase, no uppercase
+  toks[is_var] <- toupper(toks[is_var])
+  paste(toks, collapse = " ")
 }
-fig4_2A$layers <- fig4_2A$layers[
-  !vapply(fig4_2A$layers, function(l) inherits(l$geom, "GeomRibbon"), logical(1))
+
+caps_axes <- structure(list(), class = "caps_axes")
+ggplot_add.caps_axes <- function(object, plot, ...) {
+  plot$labels$x <- .upcase_vars(plot$labels$x)
+  plot$labels$y <- .upcase_vars(plot$labels$y)
+  plot
+}
+
+#------------------------------------------------------------------------------#
+# FIGURE 4.4 ----
+#------------------------------------------------------------------------------#
+
+fig4_4 <- simple_plot(read9 ~ read1 | lproblev1, mod1)
+
+# linetype by group on the line layers only
+for (i in which(vapply(fig4_4$layers,
+                       function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
+  q <- fig4_4$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig4_4$mapping[["colour"]]
+  fig4_4$layers[[i]]$mapping[["linetype"]] <- q
+}
+
+# drop the three CI ribbons
+fig4_4$layers <- fig4_4$layers[
+  !vapply(fig4_4$layers, function(l) inherits(l$geom, "GeomRibbon"), logical(1))
 ]
-fig4_2A <- fig4_2A +
+
+fig4_4 <- fig4_4 +
   ggplot2::scale_linetype_manual(
-    values = c("dashed", "solid", "dotted"),               # middle = solid
-    name   = "First-grade learning problems",
-    labels = c("16%", "50%", "84%")
+    values = c("solid", "dashed", "dotted"),
+    name   = "Learning problems",
+    labels = c("Low", "High", "Medium")   # <- ORDER IS NOT low/med/high; see note
   ) +
   ggplot2::scale_colour_manual(values = rep("black", 3)) +
   ggplot2::guides(colour = "none", fill = "none") +
-  ggplot2::labs(subtitle = NULL)                           # drop "Centered variables: ..."
-
-# force white panels + no grid on every subplot
-fig4_2 <- (fig4_2A / fig4_2B) +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  ggplot2::labs(title = NULL) &
+  ggplot2::labs(title = NULL, subtitle = NULL) +
+  book_theme +
+  caps_axes +
   ggplot2::theme(
     panel.background = ggplot2::element_rect(fill = "white", colour = NA),
     plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
     panel.grid.major = ggplot2::element_blank(),
     panel.grid.minor = ggplot2::element_blank(),
-    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5)
+    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),
+    legend.position  = "bottom"
   )
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 4.2.pdf",
-  plot     = fig4_2,
-  width    = 8.5,
-  height   = 11,
+  filename = "~/desktop/Figure 4.4.pdf",
+  plot     = fig4_4,
+  width    = 11,
+  height   = 8.5,
   units    = "in",
   device   = cairo_pdf
 )

@@ -75,6 +75,22 @@ book_theme <- ggplot2::theme(
   legend.position   = "bottom"
 )
 
+# uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
+.upcase_vars <- function(s) {
+  if (!is.character(s) || length(s) != 1) return(s)
+  toks <- strsplit(s, " ", fixed = TRUE)[[1]]
+  is_var <- grepl("[a-z]", toks) & !grepl("[A-Z]", toks)   # has lowercase, no uppercase
+  toks[is_var] <- toupper(toks[is_var])
+  paste(toks, collapse = " ")
+}
+
+caps_axes <- structure(list(), class = "caps_axes")
+ggplot_add.caps_axes <- function(object, plot, ...) {
+  plot$labels$x <- .upcase_vars(plot$labels$x)
+  plot$labels$y <- .upcase_vars(plot$labels$y)
+  plot
+}
+
 #------------------------------------------------------------------------------#
 # FIGURE 3.8: OVERLAY DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
@@ -92,6 +108,7 @@ fig3_8 <- dp$hdd +
   plot_layout(guides = "collect") +
   plot_annotation() &
   book_theme &
+  caps_axes &
   ggplot2::labs(title = NULL)
 
 ggplot2::ggsave(

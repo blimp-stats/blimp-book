@@ -1,4 +1,4 @@
-# LINEAR REGRESSION WITH CATEGORICAL PREDICTORS
+# INTERACTION INVOLVING A CATEGORICAL PREDICTOR AND A CATEGORICAL MODERATOR
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -17,87 +17,73 @@ set_blimp('/applications/blimp/blimp-nightly')
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/smoking.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
 
 # create data frame from github data
-smoking <- read.csv(data_url)
+inflamm <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# LINEAR REGRESSION MODEL ----
+# MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
+# basic specification
 mod1 <- rblimp(
-  data = smoking,                                # R data frame
-  ordinal = 'parsmoke',                          # binary and ordinal variables
-  nominal = 'educ',                              # nominal variables (auto dummy coded)
+  data = inflamm,                                # R data frame
+  ordinal = 'female els',                        # binary and ordinal variables
   center = 'age',                                # center predictors
-  model = 'cigsperday ~ parsmoke educ age',      # regression model
+  model = 'inflam ~ intercept els female female*els age',  # product term
+  simple = 'els | female',                       # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-posterior_plot(mod1, 'cigsperday')               # plot parameter distributions
+posterior_plot(mod1, 'inflam')                   # plot parameter distributions
+simple_plot(inflam ~ els | female, mod1)         # plot conditional effects
 
-#------------------------------------------------------------------------------#
-# GROUP MEANS AND CONTRASTS ----
-#------------------------------------------------------------------------------#
-
+# compute group means
 mod2 <- rblimp(
-  data = smoking,                                # R data frame
-  ordinal = 'parsmoke',                          # binary and ordinal variables
-  nominal = 'educ',                              # nominal variables (auto dummy coded)
+  data = inflamm,                                # R data frame
+  ordinal = 'female els',                        # binary and ordinal variables
   center = 'age',                                # center predictors
-  model = 'cigsperday ~ intercept@b0 parsmoke@b1 educ.2@b2 educ.3@b3 age', # label dummy codes
-  parameters = '
-    mean_educ1 = b0 + (.452 * b1);               # group 1 mean
-    mean_educ2 = mean_educ1 + b2;                # group 2 mean
-    mean_educ3 = mean_educ1 + b3;                # group 3 mean
-    educ2_vs_educ3 = mean_educ3 – mean_educ2;',  # group 3 vs. 2 contrast
+  model = 'inflam ~ intercept@b0 els@b1 female@b2 female*els@b3 age',  # product term
+  simple = 'els | female',                       # conditional effects by group
+  parameters = '                               
+    mean_sex0els0 = b0;                              # group mean (fem = 0, els = 0)
+    mean_sex0els1 = b0 + b1;                         # group mean (fem = 0, els = 1)
+    mean_sex1els0 = b0 + b2;                         # group mean (fem = 1, els = 0)
+    mean_sex1els1 = b0 + b1 + b2 + b3;',             # group mean (fem = 1, els = 1)
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
+posterior_plot(mod2, 'inflam')                   # plot parameter distributions
+simple_plot(inflam ~ els | female, mod2)         # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = smoking,                                # R data frame
-  ordinal = 'parsmoke',                          # binary and ordinal variables
-  nominal = 'educ',                              # nominal variables (auto dummy coded)
+  data = inflamm,                                # R data frame
+  ordinal = 'female els',                        # binary and ordinal variables
   center = 'age',                                # center predictors
-  model = 'cigsperday ~ parsmoke educ age',      # regression model
+  model = 'inflam ~ intercept@b0 els@b1 female@b2  female*els@b3 age',  # product term
+  simple = 'els | female',                       # conditional effects by group
+  parameters = '                               
+    mean_f0e0 = b0;                              # group mean (fem = 0, els = 0)
+    mean_f0e1 = b0 + b1;                         # group mean (fem = 0, els = 1)
+    mean_f1e0 = b0 + b2;                         # group mean (fem = 1, els = 0)
+    mean_f1e1 = b0 + b1 + b2 + b3;',             # group mean (fem = 1, els = 1)
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
 output(mod3)                                     # print output
-
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
-
-#------------------------------------------------------------------------------#
-# LINEAR REGRESSION WITH A LATENT RESPONSE VARIABLE PREDICTOR ----
-#------------------------------------------------------------------------------#
-
-mod4 <- rblimp(
-  data = smoking,                                # R data frame
-  ordinal = 'parsmoke',                          # binary and ordinal variables
-  nominal = 'educ',                              # nominal variables (auto dummy coded)
-  center = 'age',                                # center predictors
-  model = '
-    cigsperday ~ parsmoke.latent educ age;       # focal model w latent predictor
-    parsmoke ~ educ age',                        # predictor model
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000)                                  # analysis iterations
-
-output(mod4)                                     # print output
-posterior_plot(mod4, 'cigsperday')               # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -134,61 +120,49 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.1 ----
+# FIGURE 4.5 ----
 #------------------------------------------------------------------------------#
 
-dp <- distribution_plot(
-  mod3,
-  observed_color = "grey60",
-  imputed_color  = "grey40",
-  density_color  = "black",
-  font_size      = 18,
-  line_width     = 0.5
-)
+# make the plots
+fig4_5 <- simple_plot(inflam ~ els | female, mod1)
 
-fig3_1A <- dp$parsmoke
-fig3_1B <- dp$parsmoke.latent +
-  geom_vline(xintercept = 0, linewidth = 0.5)
+# linetype by moderator level on the line layers only
+for (i in which(vapply(fig4_5$layers,
+                       function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
+  q <- fig4_5$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig4_5$mapping[["colour"]]
+  fig4_5$layers[[i]]$mapping[["linetype"]] <- q
+}
 
-fig3_1 <- (fig3_1A / fig3_1B) +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  caps_axes &
-  ggplot2::labs(title = NULL) &
-  ggplot2::theme(legend.position = "none")
+# make the two CI ribbons a bit more visible
+for (i in which(vapply(fig4_5$layers,
+                       function(l) inherits(l$geom, "GeomRibbon"), logical(1)))) {
+  fig4_5$layers[[i]]$aes_params$alpha <- 0.35
+}
+
+fig4_5 <- fig4_5 +
+  ggplot2::scale_colour_manual(values = c("black", "black"), guide = "none") +
+  ggplot2::scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
+  ggplot2::scale_linetype_manual(
+    values = c("solid", "dashed"),           # @0 solid, @1 dashed
+    name   = "Sex",
+    labels = c("Males", "Females")   # set to your moderator's coding
+  ) +
+  ggplot2::labs(title = NULL, subtitle = NULL) +
+  book_theme +
+  caps_axes +
+  ggplot2::theme(
+    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+    plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),
+    legend.position  = "bottom"
+  )
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.1.pdf",
-  plot     = fig3_1,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
-
-#------------------------------------------------------------------------------#
-# FIGURE 3.3: DISTRIBUTIONS ----
-#------------------------------------------------------------------------------#
-
-dp <- distribution_plot(
-  mod3,
-  observed_color = "grey60",
-  imputed_color  = "grey40",
-  density_color  = "black",
-  font_size      = 18,
-  line_width     = 0.5
-)
-
-fig3_3 <- dp$cigsperday +
-  plot_layout(guides = "collect") +
-  plot_annotation() &
-  book_theme &
-  caps_axes &
-  ggplot2::labs(title = NULL)
-
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.3.pdf",
-  plot     = fig3_3,
+  filename = "~/desktop/Figure 4.5.pdf",
+  plot     = fig4_5,
   width    = 11,
   height   = 8.5,
   units    = "in",

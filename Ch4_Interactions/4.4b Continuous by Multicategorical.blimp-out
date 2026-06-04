@@ -1,0 +1,325 @@
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+  NOTE: The following nominal variables have automatically
+        been assigned a reference group.
+
+          'lproblev1' with reference value '0'
+
+        To change reference group use the following command:
+          NOMINAL: variable_name(reference_value);
+
+  NOTE: The following variables have been renamed
+        to be 9 characters or less.
+
+           lproblev1.1 -> lproblev2
+           lproblev1.2 -> lproblev3
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.044            19  
+                          501 to 1000            1.045            33  
+                          751 to 1500            1.024            33  
+                         1001 to 2000            1.010            33  
+                         1251 to 2500            1.007            33  
+                         1501 to 3000            1.006            20  
+                         1751 to 3500            1.007            33  
+                         2001 to 4000            1.012            33  
+                         2251 to 4500            1.009            28  
+                         2501 to 5000            1.008            33  
+                         2751 to 5500            1.013            33  
+                         3001 to 6000            1.006            28  
+                         3251 to 6500            1.007            33  
+                         3501 to 7000            1.009            33  
+                         3751 to 7500            1.008            33  
+                         4001 to 8000            1.008            33  
+                         4251 to 8500            1.006            33  
+                         4501 to 9000            1.004            33  
+                         4751 to 9500            1.004            33  
+                         5001 to 10000           1.005            33  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    esl                           imputation          0.485          0.500 
+    lproblev1                     imputation          0.446          0.500 
+    read1                         imputation          0.501          0.500 
+    read1                          parameter          0.472          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              138
+  Nominal Dummy Codes:
+
+                lproblev1 = lproblev1.1 lproblev1.2
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                    read9 = 17.4       -     M     -     -     -     M     -     M  
+                      esl =  5.1       -     -     -     M     -     M     M     -  
+                lproblev1 =  2.2       -     -     -     -     M     -     -     -  
+                    read1 =  6.5       -     -     M     -     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  71.7  15.2   5.1   2.9   2.2   1.4   0.7   0.7
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         8
+    Predictor Models:       15
+
+  PREDICTORS
+    Incomplete continuous:  read1
+    Incomplete ordinal:     esl
+    Incomplete nominal:     lproblev1
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    read1
+
+  MODELS
+    [1]  read9 ~ Intercept read1 lproblev1.1 lproblev1.2 esl read1*lproblev1.1@b4 
+                 read1*lproblev1.2@b5
+
+
+WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1012.809
+      WAIC                  1028.311
+
+  WALD TESTS (Asparouhov & Muthén, 2021)
+
+  Test #1
+
+    Full:
+      [1]  read9 ~ Intercept read1 lproblev1.1 lproblev1.2 esl read1*lproblev1.1@b4 
+                 read1*lproblev1.2@b5
+
+    Restricted:
+      [1]  read9 ~ Intercept read1 lproblev1.1 lproblev1.2 esl read1*lproblev1.1@b4 
+                 read1*lproblev1.2@b5
+
+    Constraints in Restricted:
+      [1]  b4 = 0
+      [2]  b5 = 0
+
+
+    Wald Statistic (Chi-Square)                 7.644
+    Number of Parameters Tested (df)                2
+    Probability                                 0.022
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  read9                              88.439     14.716     80.837     88.756     97.406     40.871    125.113 
+  esl                                 0.479      0.501      0.000      0.010      1.000      0.000      1.000 
+  lproblev2                           0.258      0.439      0.000      0.000      1.000      0.000      1.000 
+  lproblev3                           0.163      0.371      0.000      0.000      0.000      0.000      1.000 
+  read1                              86.638     19.805     74.092     85.934     99.416     37.172    153.003 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  read9      
+
+Grand Mean Centered: read1
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      79.472     12.046     60.655    107.662        ---        ---   4613.238 
+
+Coefficients:                   
+  Intercept                          93.606      1.515     90.603     96.550   3816.520      0.000   1613.912 
+  read1                               0.461      0.058      0.350      0.576     63.957      0.000   6095.412 
+  lproblev1.1                        -2.604      2.235     -7.031      1.789      1.371      0.242   3753.092 
+  lproblev1.2                        -4.558      3.515    -11.334      2.387      1.669      0.196   1813.564 
+  esl                                -7.758      1.898    -11.493     -4.019     16.683      0.000   4774.335 
+  read1*lproblev1.1                   0.249      0.099      0.053      0.440      6.304      0.012   5242.514 
+  read1*lproblev1.2                   0.295      0.190     -0.060      0.682      2.480      0.115   1912.828 
+
+Standard Deviations:            
+  Residual SD                         8.915      0.662      7.788     10.376        ---        ---   4616.946 
+
+Standardized Coefficients:      
+  read1                               0.610      0.069      0.470      0.739     78.346      0.000   4990.941 
+  lproblev1.1                        -0.077      0.065     -0.206      0.051      1.380      0.240   3788.974 
+  lproblev1.2                        -0.113      0.087     -0.279      0.059      1.687      0.194   1806.384 
+  esl                                -0.259      0.062     -0.377     -0.136     17.668      0.000   4410.501 
+  read1*lproblev1.1                   0.185      0.072      0.040      0.319      6.566      0.010   5178.777 
+  read1*lproblev1.2                   0.133      0.081     -0.029      0.286      2.699      0.100   2094.206 
+
+Proportion Variance Explained   
+  by Coefficients                     0.645      0.048      0.538      0.725        ---        ---   4273.716 
+  by Residual Variation               0.355      0.048      0.275      0.462        ---        ---   4273.716 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  read1 | lproblev1.1 @ 0                                                                                     
+         lproblev1.2 @ 0                                                                                      
+    Intercept                        93.606      1.515     90.603     96.550   3816.520      0.000   1613.912 
+    Slope                             0.461      0.058      0.350      0.576     63.957      0.000   6095.412 
+                                                                                                              
+  read1 | lproblev1.1 @ 1                                                                                     
+         lproblev1.2 @ 0                                                                                      
+    Intercept                        90.985      2.543     86.030     95.943   1280.236      0.000   1596.632 
+    Slope                             0.710      0.079      0.552      0.866     80.049      0.000   5286.008 
+                                                                                                              
+  read1 | lproblev1.1 @ 0                                                                                     
+         lproblev1.2 @ 1                                                                                      
+    Intercept                        89.010      3.707     81.921     96.327    577.062      0.000   1388.407 
+    Slope                             0.754      0.181      0.420      1.124     17.684      0.000   1873.582 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  esl        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.060      0.125     -0.311      0.185      0.224      0.636   2267.792 
+
+Level 1:                                                                                                      
+  lproblev1.1                         0.311      0.175     -0.042      0.644      3.118      0.077   1523.292 
+  lproblev1.2                         0.020      0.201     -0.370      0.408      0.011      0.917   1226.226 
+  read1                               0.015      0.006      0.003      0.028      5.967      0.015   2581.612 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  lproblev1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean: lproblev1.1              -0.498      0.126     -0.756     -0.257     15.643      0.000   2365.400 
+Grand Mean: lproblev1.2              -0.710      0.131     -0.972     -0.458     29.404      0.000   2055.659 
+
+Level 1:                                                                                                      
+  lproblev1.1 ~ esl                   0.322      0.134      0.057      0.582      5.722      0.017   1507.148 
+  lproblev1.1 ~ read1                -0.003      0.006     -0.015      0.010      0.165      0.685   2617.971 
+  lproblev1.2 ~ esl                   0.176      0.156     -0.132      0.476      1.257      0.262   1058.004 
+  lproblev1.2 ~ read1                -0.006      0.008     -0.021      0.009      0.622      0.430   1336.662 
+  Var(lproblev1.1)                    1.000      0.000      1.000      1.000        ---        ---        --- 
+  Cov(lproblev1.2, lproblev1.1)       0.500      0.000      0.500      0.500        ---        ---        --- 
+  Var(lproblev1.2)                    1.000      0.000      1.000      1.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  read1      
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           86.729      1.700     83.284     89.933   2600.555      0.000    675.572 
+
+Level 1:                                                                                                      
+  esl                                 5.320      2.038      1.174      9.138      6.707      0.010   4047.978 
+  lproblev1.1                         0.198      2.849     -5.389      5.838      0.005      0.944   3072.305 
+  lproblev1.2                        -2.239      3.231     -8.288      4.255      0.458      0.498   1676.520 
+  Residual Var.                     350.466     48.918    268.925    459.106        ---        ---   4829.918 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+

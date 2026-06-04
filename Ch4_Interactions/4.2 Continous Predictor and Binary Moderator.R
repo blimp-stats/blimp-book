@@ -1,4 +1,4 @@
-# LOGISTIC REGRESSION FOR MULTICATEGORICAL OUTCOMES
+# INTERACTION INVOLVING A CONTINUOUS PREDICTOR AND A BINARY MODERATOR
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -17,38 +17,40 @@ set_blimp('/applications/blimp/blimp-nightly')
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcohol.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/reading.csv'
 
 # create data frame from github data
-alcohol <- read.csv(data_url)
+reading <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# MULTINOMIAL LOGISTIC MODEL ----
+# MODERATED REGRESSION ----
 #------------------------------------------------------------------------------#
 
+# add the product term
 mod1 <- rblimp(
-  data = alcohol,                                # R data frame
-  ordinal = 'college male',                      # binary and ordinal variables
-  nominal = 'drinkfreq',                         # nominal variables (auto dummy coded)
-  center = 'agetryalc age',                      # center predictors
-  model = 'drinkfreq ~ agetryalc college age male', # regression model
+  data = reading,                                # R data frame
+  ordinal = 'esl lprobhi1',                      # binary and ordinal variables
+  center = 'read1',                              # center predictors
+  model = 'read9 ~ read1 lprobhi1 read1*lprobhi1 esl',  # product term
+  simple = 'read1 | lprobhi1',                   # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-posterior_plot(mod1, 'drinkfreq')                # plot parameter distributions
+posterior_plot(mod1, 'read9')                    # plot parameter distributions
+simple_plot(read9 ~ read1 | lprobhi1, mod1)      # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = alcohol,                                # R data frame
-  ordinal = 'college male',                      # binary and ordinal variables
-  nominal = 'drinkfreq',                         # nominal variables (auto dummy coded)
-  center = 'agetryalc age',                      # center predictors
-  model = 'drinkfreq ~ agetryalc college age male', # regression model
+  data = reading,                                # R data frame
+  ordinal = 'esl lprobhi1',                      # binary and ordinal variables
+  center = 'read1',                              # center predictors
+  model = 'read9 ~ read1 lprobhi1 read1*lprobhi1 esl', # product term
+  simple = 'read1 | lprobhi1',                   # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -57,7 +59,7 @@ mod2 <- rblimp(
 output(mod2)                                     # print output
 
 distribution_plot(mod2)                          # plot observed and imputed distributions
-residuals_plot(mod2)                             # plot binned residuals
+residuals_plot(mod2)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -94,28 +96,50 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.6: DISTRIBUTIONS ----
+# FIGURE 4.3 ----
 #------------------------------------------------------------------------------#
 
-dp <- distribution_plot(
-  mod3,
-  observed_color = "grey60",
-  imputed_color  = "grey40",
-  density_color  = "black",
-  font_size      = 18,
-  line_width     = 0.5
-)
+# make the plots
+fig4_3 <- simple_plot(read9 ~ read1 | lprobhi1, mod1)
 
-fig3_6 <- dp$agetryalc +
-  plot_layout(guides = "collect") +
-  plot_annotation() &
-  book_theme &
-  caps_axes &
-  ggplot2::labs(title = NULL)
+
+# linetype by moderator level on the line layers only
+for (i in which(vapply(fig4_3$layers,
+                       function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
+  q <- fig4_3$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig4_3$mapping[["colour"]]
+  fig4_3$layers[[i]]$mapping[["linetype"]] <- q
+}
+
+# make the two CI ribbons a bit more visible
+for (i in which(vapply(fig4_3$layers,
+                       function(l) inherits(l$geom, "GeomRibbon"), logical(1)))) {
+  fig4_3$layers[[i]]$aes_params$alpha <- 0.35
+}
+
+fig4_3 <- fig4_3 +
+  ggplot2::scale_colour_manual(values = c("black", "black"), guide = "none") +
+  ggplot2::scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
+  ggplot2::scale_linetype_manual(
+    values = c("solid", "dashed"),           # @0 solid, @1 dashed
+    name   = "Learning problems",
+    labels = c("Not elevated", "Elevated")   # set to your moderator's coding
+  ) +
+  ggplot2::labs(title = NULL, subtitle = NULL) +
+  book_theme +
+  caps_axes +
+  ggplot2::theme(
+    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+    plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),
+    legend.position  = "bottom"
+  )
 
 ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.6.pdf",
-  plot     = fig3_6,
+  filename = "~/desktop/Figure 4.3.pdf",
+  plot     = fig4_3,
   width    = 11,
   height   = 8.5,
   units    = "in",
