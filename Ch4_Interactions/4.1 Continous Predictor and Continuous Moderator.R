@@ -146,15 +146,16 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod3)
-fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod3)
+fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod2)
+fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod2)
 
-# grey the non-significant region and reword subtitle
+# grey the non-significant region (NAMED values, so it maps correctly even when
+# only one significance level is present in range)
 fig4_2B <- fig4_2B +
-  ggplot2::scale_fill_manual(values = c("grey80", NA)) +   # FALSE = non-sig = grey; TRUE = sig = none
+  ggplot2::scale_fill_manual(values = c(`TRUE` = NA, `FALSE` = "grey80")) +  # TRUE=sig (no fill); FALSE=non-sig (grey)
   ggplot2::labs(subtitle = "Shaded area represents 0 within 95% interval\nBound: -24")
 
-# linetype by moderator level (line layers only), black lines, drop CI ribbons ---
+# linetype by moderator level (line layers only), black lines, drop CI ribbons
 for (i in which(vapply(fig4_2A$layers,
                        function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
   q <- fig4_2A$layers[[i]]$mapping[["colour"]]
@@ -168,7 +169,7 @@ fig4_2A <- fig4_2A +
   ggplot2::scale_linetype_manual(
     values = c("dashed", "solid", "dotted"),               # middle = solid
     name   = "First-grade learning problems",
-    labels = c("16%", "50%", "84%")
+    labels = c("-1 SD", "Mean", "+1 SD")
   ) +
   ggplot2::scale_colour_manual(values = rep("black", 3)) +
   ggplot2::guides(colour = "none", fill = "none") +
@@ -178,6 +179,7 @@ fig4_2A <- fig4_2A +
 fig4_2 <- (fig4_2A / fig4_2B) +
   plot_annotation(tag_levels = "A") &
   book_theme &
+  caps_axes &                                              # <- apply uppercase axis names
   ggplot2::labs(title = NULL) &
   ggplot2::theme(
     panel.background = ggplot2::element_rect(fill = "white", colour = NA),
