@@ -29,17 +29,17 @@ reading <- read.csv(data_url)
 # add the product term
 mod1 <- rblimp(
   data = reading,                                # R data frame
-  ordinal = 'esl lprobhi1',                      # binary and ordinal variables
+  ordinal = 'esl lprobhi',                      # binary and ordinal variables
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lprobhi1 read1*lprobhi1 esl',  # product term
-  simple = 'read1 | lprobhi1',                   # conditional effects by group
+  model = 'read9 ~ read1 lprobhi read1*lprobhi esl',  # product term
+  simple = 'read1 | lprobhi',                   # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lprobhi1, mod1)      # plot conditional effects
+simple_plot(read9 ~ read1 | lprobhi, mod1)      # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -47,10 +47,10 @@ simple_plot(read9 ~ read1 | lprobhi1, mod1)      # plot conditional effects
 
 mod2 <- rblimp(
   data = reading,                                # R data frame
-  ordinal = 'esl lprobhi1',                      # binary and ordinal variables
+  ordinal = 'esl lprobhi',                      # binary and ordinal variables
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lprobhi1 read1*lprobhi1 esl', # product term
-  simple = 'read1 | lprobhi1',                   # conditional effects by group
+  model = 'read9 ~ read1 lprobhi read1*lprobhi esl', # product term
+  simple = 'read1 | lprobhi',                   # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -100,7 +100,7 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig4_3 <- simple_plot(read9 ~ read1 | lprobhi1, mod1)
+fig4_3 <- simple_plot(read9 ~ read1 | lprobhi, mod1)
 
 
 # linetype by moderator level on the line layers only

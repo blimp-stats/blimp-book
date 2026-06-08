@@ -30,29 +30,29 @@ reading <- read.csv(data_url)
 mod1 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lproblev1 read1*lproblev1 esl', # product term
-  simple = 'read1 | lproblev1',                  # conditional effects by group
-  waldtest = 'read9 ~ read1 lproblev1 esl',      # wald test of interaction
+  model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
+  simple = 'read1 | lproblev',                  # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev esl',      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lproblev1, mod1)     # plot conditional effects
+simple_plot(read9 ~ read1 | lproblev, mod1)     # plot conditional effects
 
 # explicit specification
 mod2 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
   model = '
-    read9 ~ read1 lproblev1.1 lproblev1.2 
-      read1*lproblev1.1@b4 read1*lproblev1.2@b5 esl', # product term
-  simple = 'read1 | lproblev1.1',                # conditional effects by group
+    read9 ~ read1 lproblev.1 lproblev.2 
+      read1*lproblev.1@b4 read1*lproblev.2@b5 esl', # product term
+  simple = 'read1 | lproblev.1',                # conditional effects by group
   waldtest = 'b4 - b5 = 0',                      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
@@ -60,7 +60,7 @@ mod2 <- rblimp(
 
 output(mod2)                                     # print output
 posterior_plot(mod2, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lproblev1, mod2)     # plot conditional effects
+simple_plot(read9 ~ read1 | lproblev, mod2)     # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -69,11 +69,11 @@ simple_plot(read9 ~ read1 | lproblev1, mod2)     # plot conditional effects
 mod3 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev1',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lproblev1 read1*lproblev1 esl', # product term
-  simple = 'read1 | lproblev1',                  # conditional effects by group
-  waldtest = 'read9 ~ read1 lproblev1 esl',      # wald test of interaction
+  model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
+  simple = 'read1 | lproblev',                  # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev esl',      # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -121,7 +121,7 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 # FIGURE 4.4 ----
 #------------------------------------------------------------------------------#
 
-fig4_4 <- simple_plot(read9 ~ read1 | lproblev1, mod1)
+fig4_4 <- simple_plot(read9 ~ read1 | lproblev, mod1)
 
 # linetype by group on the line layers only
 for (i in which(vapply(fig4_4$layers,

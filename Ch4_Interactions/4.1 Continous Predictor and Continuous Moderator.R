@@ -30,8 +30,8 @@ reading <- read.csv(data_url)
 mod1 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
+  center = 'read1 lrnprob',                     # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -47,45 +47,45 @@ posterior_plot(mod1, 'read9')                    # plot parameter distributions
 mod2 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1',                   # conditional effects of read1 at SD units
+  center = 'read1 lrnprob',                     # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
+  simple = 'read1 | lrnprob',                   # conditional effects of read1 at SD units
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod2)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob1, mod2)          # plot johnson-neyman regions
+simple_plot(read9 ~ read1 | lrnprob, mod2)      # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob, mod2)          # plot johnson-neyman regions
 
 # simple slopes at quantiles
 mod3 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1 @ quantile',        # conditional effects at 16/50/84% quantiles
+  center = 'read1 lrnprob',                     # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
+  simple = 'read1 | lrnprob @ quantile',        # conditional effects at 16/50/84% quantiles
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod3)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod3)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob1, mod3)          # plot johnson-neyman regions
+simple_plot(read9 ~ read1 | lrnprob, mod3)      # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob, mod3)          # plot johnson-neyman regions
 
 # simple slopes at quartiles
 mod4 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1 @ quartile',        # conditional effects at quartiles
+  center = 'read1 lrnprob',                     # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
+  simple = 'read1 | lrnprob @ quartile',        # conditional effects at quartiles
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod4)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob1, mod4)      # plot conditional effects
+simple_plot(read9 ~ read1 | lrnprob, mod4)      # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -94,9 +94,9 @@ simple_plot(read9 ~ read1 | lrnprob1, mod4)      # plot conditional effects
 mod5 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob1',                     # center predictors
-  model = 'read9 ~ read1 lrnprob1 read1*lrnprob1 esl', # product term
-  simple = 'read1 | lrnprob1',                   # conditional effects of read1 at SD units
+  center = 'read1 lrnprob',                     # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
+  simple = 'read1 | lrnprob',                   # conditional effects of read1 at SD units
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -146,8 +146,8 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig4_2A <- simple_plot(read9 ~ read1 | lrnprob1, mod2)
-fig4_2B <- jn_plot(read9 ~ read1 | lrnprob1, mod2)
+fig4_2A <- simple_plot(read9 ~ read1 | lrnprob, mod2)
+fig4_2B <- jn_plot(read9 ~ read1 | lrnprob, mod2)
 
 # grey the non-significant region (NAMED values, so it maps correctly even when
 # only one significance level is present in range)
