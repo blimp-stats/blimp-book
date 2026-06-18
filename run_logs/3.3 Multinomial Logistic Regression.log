@@ -1,0 +1,748 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:20:11 2026
+  Chain 3 burn-in started on Jun 17 18:20:11 2026
+  Chain 4 burn-in started on Jun 17 18:20:11 2026
+  Chain 2 burn-in started on Jun 17 18:20:11 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:20:14 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:20:14 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:20:14 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:20:14 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:20:18 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:20:18 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:20:18 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:20:18 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:20:21 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:20:21 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:20:21 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:20:21 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:20:23 2026
+  Chain 2 completed burn-in on Jun 17 18:20:23 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:20:23 2026
+  Chain 3 completed burn-in on Jun 17 18:20:23 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:20:24 2026
+  Chain 1 completed burn-in on Jun 17 18:20:24 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:20:24 2026
+  Chain 4 completed burn-in on Jun 17 18:20:24 2026
+  Chain 3 completed iteration 625 on Jun 17 18:20:24 2026
+  Chain 2 completed iteration 625 on Jun 17 18:20:24 2026
+  Chain 1 completed iteration 625 on Jun 17 18:20:25 2026
+  Chain 4 completed iteration 625 on Jun 17 18:20:25 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:20:25 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:20:25 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:20:26 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:20:26 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:20:26 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:20:26 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:20:26 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:20:26 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:20:27 2026
+  Chain 2 finished on Jun 17 18:20:27 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:20:27 2026
+  Chain 3 finished on Jun 17 18:20:27 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:20:27 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:20:27 2026
+  Chain 1 finished on Jun 17 18:20:27 2026
+  Chain 4 finished on Jun 17 18:20:27 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+  NOTE: The following nominal variables have automatically
+        been assigned a reference group.
+
+          'drinkfreq' with reference value '0'
+
+        To change reference group use the following command:
+          NOMINAL: variable_name(reference_value);
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.041            36  
+                          501 to 1000            1.036            42  
+                          751 to 1500            1.018            36  
+                         1001 to 2000            1.027            37  
+                         1251 to 2500            1.015            42  
+                         1501 to 3000            1.009            37  
+                         1751 to 3500            1.006            36  
+                         2001 to 4000            1.007            37  
+                         2251 to 4500            1.005            37  
+                         2501 to 5000            1.008            36  
+                         2751 to 5500            1.005            36  
+                         3001 to 6000            1.005            27  
+                         3251 to 6500            1.004            27  
+                         3501 to 7000            1.002            42  
+                         3751 to 7500            1.004            42  
+                         4001 to 8000            1.004            42  
+                         4251 to 8500            1.005            42  
+                         4501 to 9000            1.004            42  
+                         4751 to 9500            1.002            42  
+                         5001 to 10000           1.002            36  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    age                            parameter          0.507          0.500 
+    college                       imputation          0.502          0.500 
+    agetryalc                     imputation          0.497          0.500 
+    agetryalc                      parameter          0.554          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              1500
+  Nominal Dummy Codes:
+
+                drinkfreq = drinkfreq.1 drinkfreq.2
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                drinkfreq =  9.7       -     -     -     -     M     M     M     M  
+                     male =  0.0       -     -     -     -     -     -     -     -  
+                      age =  0.0       -     -     -     -     -     -     -     -  
+                  college = 27.9       -     M     -     M     -     M     M     -  
+                agetryalc = 32.9       -     M     M     -     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  50.3  16.1  15.1   8.9   6.2   1.8   1.1   0.6
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         10
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       male
+    Incomplete continuous:  agetryalc
+    Incomplete ordinal:     college
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age agetryalc
+
+  MODELS
+    [1]  drinkfreq ~ Intercept agetryalc college age male
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  2663.060
+      WAIC                  2690.789
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  drinkfreq.1                         0.292      0.455      0.000      0.000      1.000      0.000      1.000 
+  drinkfreq.2                         0.104      0.305      0.000      0.000      0.000      0.000      1.000 
+  male                                0.436      0.496      0.000      0.000      1.000      0.000      1.000 
+  age                                29.014     16.156     17.000     24.000     35.000     12.000     85.000 
+  college                             0.385      0.487      0.000      0.000      1.000      0.000      1.000 
+  agetryalc                          16.435      4.092     14.000     16.000     18.043      4.145     47.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  drinkfreq.1, drinkfreq.2           -0.087      0.033     -0.151     -0.022      7.054      0.008   9732.607 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  drinkfreq  
+
+Grand Mean Centered: age agetryalc
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+drinkfreq.1                     
+
+
+Coefficients:                   
+  Intercept                          -1.032      0.105     -1.235     -0.824     96.238      0.000   4221.614 
+  agetryalc                          -0.009      0.019     -0.048      0.027      0.249      0.618   2086.597 
+  college                             0.433      0.144      0.149      0.714      9.029      0.003   2613.271 
+  age                                 0.012      0.004      0.003      0.020      7.602      0.006   4089.563 
+  male                                0.324      0.129      0.070      0.575      6.240      0.012   5438.841 
+
+Odds Ratio:                     
+  Intercept                           0.356      0.038      0.291      0.439        ---        ---   4265.488 
+  agetryalc                           0.991      0.019      0.954      1.027        ---        ---   2091.092 
+  college                             1.543      0.226      1.161      2.042        ---        ---   2639.837 
+  age                                 1.012      0.004      1.003      1.020        ---        ---   4087.581 
+  male                                1.383      0.180      1.072      1.777        ---        ---   5448.770 
+
+Proportion Variance Explained   
+  by Coefficients                     0.009      0.004      0.003      0.017        ---        ---   3576.111 
+  by Residual Variation               0.991      0.004      0.983      0.997        ---        ---   3576.111 
+
+drinkfreq.2                     
+
+
+Coefficients:                   
+  Intercept                          -2.646      0.189     -3.026     -2.290    197.128      0.000   1807.698 
+  agetryalc                          -0.070      0.029     -0.128     -0.015      5.897      0.015   1847.753 
+  college                             0.578      0.206      0.166      0.983      7.883      0.005   2063.207 
+  age                                 0.029      0.006      0.017      0.040     24.668      0.000   2853.798 
+  male                                1.109      0.203      0.722      1.517     29.936      0.000   2349.372 
+
+Odds Ratio:                     
+  Intercept                           0.071      0.014      0.049      0.101        ---        ---   1813.069 
+  agetryalc                           0.932      0.027      0.880      0.985        ---        ---   1847.631 
+  college                             1.783      0.379      1.180      2.673        ---        ---   2075.338 
+  age                                 1.029      0.006      1.018      1.041        ---        ---   2854.179 
+  male                                3.031      0.642      2.058      4.558        ---        ---   2339.505 
+
+Proportion Variance Explained   
+  by Coefficients                     0.042      0.011      0.024      0.066        ---        ---   2256.930 
+  by Residual Variation               0.958      0.011      0.934      0.976        ---        ---   2256.930 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: male       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.171      0.034     -0.239     -0.105     25.304      0.000   3614.949 
+
+Level 1:                                                                                                      
+  age                                 0.002      0.002     -0.002      0.007      0.937      0.333   2869.190 
+  college                            -0.058      0.047     -0.151      0.032      1.573      0.210   1305.890 
+  agetryalc                          -0.076      0.012     -0.100     -0.053     41.298      0.000   1599.504 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           29.013      0.410     28.228     29.830   5012.236      0.000   1588.502 
+
+Level 1:                                                                                                      
+  male                                0.520      0.519     -0.515      1.529      0.994      0.319   4081.159 
+  college                             0.045      0.578     -1.093      1.154      0.006      0.938   1639.778 
+  agetryalc                           1.575      0.119      1.340      1.803    175.028      0.000   2653.263 
+  Residual Var.                     220.883      8.808    204.857    239.106        ---        ---   4260.945 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  college    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.294      0.042     -0.375     -0.212     49.981      0.000    930.596 
+
+Level 1:                                                                                                      
+  male                               -0.059      0.046     -0.149      0.033      1.572      0.210   1285.172 
+  age                                 0.000      0.003     -0.005      0.005      0.008      0.930   1468.622 
+  agetryalc                          -0.008      0.012     -0.031      0.015      0.500      0.480   1689.251 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  agetryalc  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           16.435      0.131     16.187     16.695  15716.583      0.000    802.545 
+
+Level 1:                                                                                                      
+  male                               -0.995      0.142     -1.272     -0.716     49.087      0.000   1704.121 
+  age                                 0.093      0.007      0.078      0.108    157.649      0.000   1983.934 
+  college                            -0.107      0.151     -0.404      0.192      0.499      0.480   1793.947 
+  Residual Var.                      13.118      0.624     11.956     14.409        ---        ---   2473.996 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 3 burn-in started on Jun 17 18:20:34 2026
+  Chain 2 burn-in started on Jun 17 18:20:34 2026
+  Chain 1 burn-in started on Jun 17 18:20:34 2026
+  Chain 4 burn-in started on Jun 17 18:20:34 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:20:37 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:20:37 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:20:37 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:20:37 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:20:40 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:20:40 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:20:40 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:20:40 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:20:43 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:20:43 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:20:43 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:20:43 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:20:46 2026
+  Chain 2 completed burn-in on Jun 17 18:20:46 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:20:46 2026
+  Chain 1 completed burn-in on Jun 17 18:20:46 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:20:46 2026
+  Chain 4 completed burn-in on Jun 17 18:20:46 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:20:46 2026
+  Chain 3 completed burn-in on Jun 17 18:20:46 2026
+  Chain 2 saved imputation 2 on Jun 17 18:20:47 2026
+  Chain 1 saved imputation 1 on Jun 17 18:20:47 2026
+  Chain 4 saved imputation 4 on Jun 17 18:20:47 2026
+  Chain 3 saved imputation 3 on Jun 17 18:20:47 2026
+  Chain 2 completed iteration 625 on Jun 17 18:20:47 2026
+  Chain 1 completed iteration 625 on Jun 17 18:20:47 2026
+  Chain 4 completed iteration 625 on Jun 17 18:20:47 2026
+  Chain 3 completed iteration 625 on Jun 17 18:20:47 2026
+  Chain 2 saved imputation 6 on Jun 17 18:20:48 2026
+  Chain 4 saved imputation 8 on Jun 17 18:20:48 2026
+  Chain 1 saved imputation 5 on Jun 17 18:20:48 2026
+  Chain 3 saved imputation 7 on Jun 17 18:20:48 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:20:48 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:20:48 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:20:48 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:20:48 2026
+  Chain 2 saved imputation 10 on Jun 17 18:20:49 2026
+  Chain 4 saved imputation 12 on Jun 17 18:20:49 2026
+  Chain 1 saved imputation 9 on Jun 17 18:20:49 2026
+  Chain 3 saved imputation 11 on Jun 17 18:20:49 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:20:49 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:20:49 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:20:49 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:20:49 2026
+  Chain 2 saved imputation 14 on Jun 17 18:20:50 2026
+  Chain 4 saved imputation 16 on Jun 17 18:20:50 2026
+  Chain 1 saved imputation 13 on Jun 17 18:20:50 2026
+  Chain 3 saved imputation 15 on Jun 17 18:20:50 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:20:50 2026
+  Chain 2 saved imputation 18 on Jun 17 18:20:50 2026
+  Chain 2 finished on Jun 17 18:20:50 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:20:50 2026
+  Chain 4 saved imputation 20 on Jun 17 18:20:50 2026
+  Chain 4 finished on Jun 17 18:20:50 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:20:50 2026
+  Chain 1 saved imputation 17 on Jun 17 18:20:50 2026
+  Chain 1 finished on Jun 17 18:20:50 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:20:50 2026
+  Chain 3 saved imputation 19 on Jun 17 18:20:50 2026
+  Chain 3 finished on Jun 17 18:20:50 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+  NOTE: The following nominal variables have automatically
+        been assigned a reference group.
+
+          'drinkfreq' with reference value '0'
+
+        To change reference group use the following command:
+          NOMINAL: variable_name(reference_value);
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.041            36  
+                          501 to 1000            1.036            42  
+                          751 to 1500            1.018            36  
+                         1001 to 2000            1.027            37  
+                         1251 to 2500            1.015            42  
+                         1501 to 3000            1.009            37  
+                         1751 to 3500            1.006            36  
+                         2001 to 4000            1.007            37  
+                         2251 to 4500            1.005            37  
+                         2501 to 5000            1.008            36  
+                         2751 to 5500            1.005            36  
+                         3001 to 6000            1.005            27  
+                         3251 to 6500            1.004            27  
+                         3501 to 7000            1.002            42  
+                         3751 to 7500            1.004            42  
+                         4001 to 8000            1.004            42  
+                         4251 to 8500            1.005            42  
+                         4501 to 9000            1.004            42  
+                         4751 to 9500            1.002            42  
+                         5001 to 10000           1.002            36  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    age                            parameter          0.507          0.500 
+    college                       imputation          0.502          0.500 
+    agetryalc                     imputation          0.497          0.500 
+    agetryalc                      parameter          0.554          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              1500
+  Nominal Dummy Codes:
+
+                drinkfreq = drinkfreq.1 drinkfreq.2
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                drinkfreq =  9.7       -     -     -     -     M     M     M     M  
+                     male =  0.0       -     -     -     -     -     -     -     -  
+                      age =  0.0       -     -     -     -     -     -     -     -  
+                  college = 27.9       -     M     -     M     -     M     M     -  
+                agetryalc = 32.9       -     M     M     -     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  50.3  16.1  15.1   8.9   6.2   1.8   1.1   0.6
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         10
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       male
+    Incomplete continuous:  agetryalc
+    Incomplete ordinal:     college
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age agetryalc
+
+  MODELS
+    [1]  drinkfreq ~ Intercept agetryalc college age male
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  2663.060
+      WAIC                  2690.789
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  drinkfreq.1                         0.292      0.455      0.000      0.000      1.000      0.000      1.000 
+  drinkfreq.2                         0.104      0.305      0.000      0.000      0.000      0.000      1.000 
+  male                                0.436      0.496      0.000      0.000      1.000      0.000      1.000 
+  age                                29.014     16.156     17.000     24.000     35.000     12.000     85.000 
+  college                             0.385      0.487      0.000      0.000      1.000      0.000      1.000 
+  agetryalc                          16.435      4.092     14.000     16.000     18.043      4.145     47.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  drinkfreq.1, drinkfreq.2           -0.087      0.033     -0.151     -0.022      7.054      0.008   9732.607 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  drinkfreq  
+
+Grand Mean Centered: age agetryalc
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+drinkfreq.1                     
+
+
+Coefficients:                   
+  Intercept                          -1.032      0.105     -1.235     -0.824     96.238      0.000   4221.614 
+  agetryalc                          -0.009      0.019     -0.048      0.027      0.249      0.618   2086.597 
+  college                             0.433      0.144      0.149      0.714      9.029      0.003   2613.271 
+  age                                 0.012      0.004      0.003      0.020      7.602      0.006   4089.563 
+  male                                0.324      0.129      0.070      0.575      6.240      0.012   5438.841 
+
+Odds Ratio:                     
+  Intercept                           0.356      0.038      0.291      0.439        ---        ---   4265.488 
+  agetryalc                           0.991      0.019      0.954      1.027        ---        ---   2091.092 
+  college                             1.543      0.226      1.161      2.042        ---        ---   2639.837 
+  age                                 1.012      0.004      1.003      1.020        ---        ---   4087.581 
+  male                                1.383      0.180      1.072      1.777        ---        ---   5448.770 
+
+Proportion Variance Explained   
+  by Coefficients                     0.009      0.004      0.003      0.017        ---        ---   3576.111 
+  by Residual Variation               0.991      0.004      0.983      0.997        ---        ---   3576.111 
+
+drinkfreq.2                     
+
+
+Coefficients:                   
+  Intercept                          -2.646      0.189     -3.026     -2.290    197.128      0.000   1807.698 
+  agetryalc                          -0.070      0.029     -0.128     -0.015      5.897      0.015   1847.753 
+  college                             0.578      0.206      0.166      0.983      7.883      0.005   2063.207 
+  age                                 0.029      0.006      0.017      0.040     24.668      0.000   2853.798 
+  male                                1.109      0.203      0.722      1.517     29.936      0.000   2349.372 
+
+Odds Ratio:                     
+  Intercept                           0.071      0.014      0.049      0.101        ---        ---   1813.069 
+  agetryalc                           0.932      0.027      0.880      0.985        ---        ---   1847.631 
+  college                             1.783      0.379      1.180      2.673        ---        ---   2075.338 
+  age                                 1.029      0.006      1.018      1.041        ---        ---   2854.179 
+  male                                3.031      0.642      2.058      4.558        ---        ---   2339.505 
+
+Proportion Variance Explained   
+  by Coefficients                     0.042      0.011      0.024      0.066        ---        ---   2256.930 
+  by Residual Variation               0.958      0.011      0.934      0.976        ---        ---   2256.930 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: male       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.171      0.034     -0.239     -0.105     25.304      0.000   3614.949 
+
+Level 1:                                                                                                      
+  age                                 0.002      0.002     -0.002      0.007      0.937      0.333   2869.190 
+  college                            -0.058      0.047     -0.151      0.032      1.573      0.210   1305.890 
+  agetryalc                          -0.076      0.012     -0.100     -0.053     41.298      0.000   1599.504 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           29.013      0.410     28.228     29.830   5012.236      0.000   1588.502 
+
+Level 1:                                                                                                      
+  male                                0.520      0.519     -0.515      1.529      0.994      0.319   4081.159 
+  college                             0.045      0.578     -1.093      1.154      0.006      0.938   1639.778 
+  agetryalc                           1.575      0.119      1.340      1.803    175.028      0.000   2653.263 
+  Residual Var.                     220.883      8.808    204.857    239.106        ---        ---   4260.945 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  college    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.294      0.042     -0.375     -0.212     49.981      0.000    930.596 
+
+Level 1:                                                                                                      
+  male                               -0.059      0.046     -0.149      0.033      1.572      0.210   1285.172 
+  age                                 0.000      0.003     -0.005      0.005      0.008      0.930   1468.622 
+  agetryalc                          -0.008      0.012     -0.031      0.015      0.500      0.480   1689.251 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  agetryalc  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           16.435      0.131     16.187     16.695  15716.583      0.000    802.545 
+
+Level 1:                                                                                                      
+  male                               -0.995      0.142     -1.272     -0.716     49.087      0.000   1704.121 
+  age                                 0.093      0.007      0.078      0.108    157.649      0.000   1983.934 
+  college                            -0.107      0.151     -0.404      0.192      0.499      0.480   1793.947 
+  Residual Var.                      13.118      0.624     11.956     14.409        ---        ---   2473.996 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+

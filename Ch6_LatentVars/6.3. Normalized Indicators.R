@@ -1,4 +1,4 @@
-# LATENT VARIABLE MEDIATION MODEL
+# LATENT VARIABLE MEDIATION MODEL W NONNORMAL INDICATORS
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -23,9 +23,10 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 inflamm <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# LATENT VARIABLE REGRESSION MODEL ----
+# TRANSFORMED INDICATORS ----
 #------------------------------------------------------------------------------#
 
+# yeo-johnson normalized indicators
 mod1 <- rblimp(
   data = inflamm,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
@@ -35,10 +36,10 @@ mod1 <- rblimp(
     structural: 					                       # model block label
     inflammation ~ els@a1 female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
-    dpdd ~ inflammation@b1 els female age;       # regression model
+    yjt(dpdd - 6) ~ inflammation@b1 els female age;  # regression model with yjt transform
 	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;',     # measurement model
-	parameters = 'indirect = a1 * b1',	           # indirect effect 
+    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn);', # measurement model with yjt transform
+  parameters = 'indirect = a1 * b1;  ',          # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000                		               # analysis iterations
@@ -49,57 +50,115 @@ standardized(mod1)                               # print standardized estimates 
 posterior_plot(mod1)                             # plot parameter distributions
 posterior_plot(mod1, 'indirect')                 # plot indirect effect
 
-#------------------------------------------------------------------------------#
-# MANUALLY-SPECIFIED MULTIVARIATE PREDICTOR MODEL ----
-#------------------------------------------------------------------------------#
-
+# log transformed indicators
 mod2 <- rblimp(
   data = inflamm,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
-  center = 'age',                                # center predictors 
+  center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
     inflammation ~ els@a1 female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
-    dpdd ~ inflammation@b1 els female age;       # regression model
+    ln(dpdd) ~ inflammation@b1 els female age;   # regression model with log transform
 	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;       # measurement model
-    predictors:                                  # model block label
-    els female age ~~ els female age;',          # multivariate predictor model
-  parameters = 'indirect = a1 * b1',	           # indirect effect 
+	  ln(crp + 5) ~ inflammation;                  # measurement model with log transform
+	  ln(il6 + 5) ~ inflammation;                  # measurement model with log transform
+	  tnf ~ inflammation;                          # measurement model with normal indicator
+	  ln(ifn + 5) ~ inflammation;',                # measurement model with log transform
+  parameters = 'indirect = a1 * b1',             # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
-  iter = 10000)                		               # analysis iterations
+  iter = 10000,                		               # analysis iterations
+)
 
 output(mod2)                                     # print output
+standardized(mod2)                               # print standardized estimates in one table
+posterior_plot(mod2)                             # plot parameter distributions
+posterior_plot(mod2, 'indirect')                 # plot indirect effect
+
+#------------------------------------------------------------------------------#
+# NORMALIZED LATENT ----
+#------------------------------------------------------------------------------#
+
+modnl <- rblimp(
+  data = inflamm,             		               # R data frame
+  ordinal = 'female els',    			               # binary and ordinal variables
+  latent = 'inflammation',	       	             # define latent variable  
+  center = 'age',                                # center predictors
+  model = '
+    structural: 					                       # model block label
+    yjt(inflammation) ~ els@a1 female age;       # latent variable regression with yjt latent
+    dpdd ~ inflammation@b1 els female age;       # regression model
+	  measurement:          			                 # model block label
+    inflammation –> crp il6 tnf ifn;',           # measurement model
+  parameters = 'indirect = a1 * b1',             # indirect effect 
+  seed = 90291,               		               # random number seed
+  burn = 100000,               		               # warm-up iterations
+  iter = 100000,                		               # analysis iterations
+  nimps = 20                                     # save 20 imputed data sets
+)
+
+output(modnl)                                     # print output
+standardized(modnl)                               # print standardized estimates in one table
+distribution_plot(modnl)                          # plot observed and imputed distributions
+residuals_plot(modnl)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
+# yeo-johnson normalized indicators
 mod3 <- rblimp(
   data = inflamm,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
-  center = 'age',                                # center predictors 
+  center = 'age',                                # center predictors
+  model = '
+    structural: 					                       # model block label
+    inflammation ~ els@a1 female age;            # latent variable regression
+    inflammation@1;        			                 # fix latent variance at 1
+    yjt(dpdd - 6) ~ inflammation@b1 els female age;   # regression model with yjt transform
+	  measurement:          			                 # model block label
+    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn);', # measurement model with yjt transform
+  parameters = 'indirect = a1 * b1;  ',          # indirect effect 
+  seed = 90291,               		               # random number seed
+  burn = 10000,               		               # warm-up iterations
+  iter = 10000,                		               # analysis iterations
+  nimps = 20                                     # save 20 imputed data sets
+)
+
+output(mod3)                                     # print output
+distribution_plot(mod3)                          # plot observed and imputed distributions
+residuals_plot(mod3)                             # plot residuals
+
+# log transformed indicators
+mod4 <- rblimp(
+  data = inflamm,             		               # R data frame
+  ordinal = 'female els',    			               # binary and ordinal variables
+  latent = 'inflammation',	       	             # define latent variable  
+  center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
     inflammation ~ els@a1 female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
     dpdd ~ inflammation@b1 els female age;       # regression model
 	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;',     # measurement model
-  parameters = 'indirect = a1 * b1',	           # indirect effect 
+	  ln(crp + 5) ~ inflammation;                  # measurement model with log transform
+	  ln(il6 + 5) ~ inflammation;                  # measurement model with log transform
+	  tnf ~ inflammation;                          # measurement model with normal indicator
+	  ln(ifn + 5) ~ inflammation;',                # measurement model with log transform
+  parameters = 'indirect = a1 * b1',             # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000,                		               # analysis iterations
-  nimps = 20)                                    # save 20 imputed data sets
+  nimps = 20                                    # save 20 imputed data sets
+)
 
-output(mod3)                                     # print output
-distribution_plot(mod3)                          # plot observed and imputed distributions
-residuals_plot(mod3)                             # plot residuals
-
+output(mod4)                                     # print output
+distribution_plot(mod4)                          # plot observed and imputed distributions
+residuals_plot(mod4)                             # plot residuals
+   
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
 #------------------------------------------------------------------------------#
@@ -149,7 +208,7 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 6.4: RESIDUAL DISTRIBUTIONS ----
+# FIGURE 6.5: YJT RESIDUAL DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(mod3, observed_color = "grey60", imputed_color = "grey40",
@@ -158,7 +217,7 @@ rp <- residuals_plot(mod3, point_color = "grey40", curve_color = "black",
                      point_size = 0.35, point_alpha = 0.25,
                      font_size = 18, line_width = 0.6, label_family = "Minion Pro")
 
-fig6_4 <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) /
+fig6_5 <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) /
   (dp$il6.residual | (rp$il6.inflammation + labs(y = "Std. Residual"))) /
   (dp$tnf.residual | (rp$tnf.inflammation + labs(y = "Std. Residual"))) /
   (dp$ifn.residual | (rp$ifn.inflammation + labs(y = "Std. Residual"))) +
@@ -168,6 +227,4 @@ fig6_4 <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) 
   labs(title = NULL) &
   theme(plot.tag.location = "margin")
 
-save_fig(fig6_4, "Figure 6.4", width = 8.5, height = 11)
-
-
+save_fig(fig6_5, "Figure 6.5", width = 8.5, height = 11)

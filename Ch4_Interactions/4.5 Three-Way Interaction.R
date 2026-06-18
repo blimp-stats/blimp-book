@@ -91,18 +91,22 @@ residuals_plot(mod3)                             # plot residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
+library(lemon)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -118,6 +122,18 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot$labels$x <- .upcase_vars(plot$labels$x)
   plot$labels$y <- .upcase_vars(plot$labels$y)
   plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
 }
 
 #------------------------------------------------------------------------------#
@@ -138,25 +154,18 @@ fig4_7 <- (dp$orgcon / dp$workbeh) +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 4.7.pdf",
-  plot     = fig4_7,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig4_7, "Figure 4.7", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 4.8: SIMPLE INTERACTIONS ----
 #------------------------------------------------------------------------------#
 
-emostab_lab <- ggplot2::as_labeller(function(x) sub("^([a-z0-9]+)", "\\U\\1", x, perl = TRUE))
+emostab_lab <- as_labeller(function(x) sub("^([a-z0-9]+)", "\\U\\1", x, perl = TRUE))
 
 fig4_8 <- simple_plot(workbeh ~ orgcon | consci + emostab, mod1) +
-  lemon::facet_rep_grid(emostab ~ ., repeat.tick.labels = FALSE, labeller = emostab_lab)
+  facet_rep_grid(emostab ~ ., repeat.tick.labels = FALSE, labeller = emostab_lab)
 
 # --- linetype by consci on the line layers; drop the ribbons ---
 for (i in which(vapply(fig4_8$layers, function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
@@ -170,33 +179,26 @@ fig4_8$layers <- fig4_8$layers[
 
 # --- B&W styling (single faceted plot, so '+') ---
 fig4_8 <- fig4_8 +
-  ggplot2::scale_linetype_manual(
+  scale_linetype_manual(
     values = c("dashed", "solid", "dotted"),       # consci: -1 SD / Mean / +1 SD
     name   = "CONSCI",
     labels = c("-1 SD", "Mean", "+1 SD")
   ) +
-  ggplot2::scale_colour_manual(values = rep("black", 3)) +
-  ggplot2::guides(colour = "none", fill = "none") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
+  scale_colour_manual(values = rep("black", 3)) +
+  guides(colour = "none", fill = "none") +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
   caps_axes +
-  ggplot2::theme(
-    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
-    plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
-    panel.grid.major = ggplot2::element_blank(),
-    panel.grid.minor = ggplot2::element_blank(),
-    panel.border     = ggplot2::element_blank(),                                  # no box
-    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),  # L on every panel
-    strip.background = ggplot2::element_blank(),
-    strip.text = ggplot2::element_text(face = "plain"),
+  theme(
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background  = element_rect(fill = "white", colour = NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border     = element_blank(),                                  # no box
+    axis.line        = element_line(colour = "black", linewidth = 0.5),  # L on every panel
+    strip.background = element_blank(),
+    strip.text = element_text(face = "plain"),
     legend.position  = "bottom"
   )
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 4.8.pdf",
-  plot     = fig4_8,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig4_8, "Figure 4.8", width = 8.5, height = 11)

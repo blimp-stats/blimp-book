@@ -26,15 +26,13 @@ inflamm <- read.csv(data_url)
 # LATENT VARIABLE REGRESSION MODEL ----
 #------------------------------------------------------------------------------#
 
-# factor mean fixed at 0 and first loading fixed to 1
+# fixed-factor scaling
 mod1 <- rblimp(
   data = inflamm,                                # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  latent = 'inflamlat',                          # define latent variables
-  center = 'age',                                # center predictors
+  latent = 'inflammation',                       # define latent variables
   model = '
-    inflamlat -> inflam_crp inflam_il6 inflam_tnf inflam_ifn; # measurement model with loading = 1
-    els female age inflamlat ~~ els female age inflamlat;',  # correlations among predictors
+    inflammation@1; 
+    inflammation -> crp@load1 il6 tnf ifn;',     # measurement model with estimated loadings
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -42,17 +40,16 @@ mod1 <- rblimp(
 # print output
 output(mod1)                                     # print output
 standardized(mod1)                               # print standardized estimates in one table
+posterior_plot(mod1)                             # plot parameter distributions
 
-# factor mean and variance fixed at 0 and 1
+# fixed-marker scaling
 mod2 <- rblimp(
   data = inflamm,                                # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  latent = 'inflamlat',                          # define latent variables
-  center = 'age',                                # center predictors
+  latent = 'inflammation',                       # define latent variables
   model = '
-    inflamlat@1;                                 # fix latent variable variance to 1
-    inflamlat -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn; # measurement model with free loadings
-    els female age inflamlat ~~ els female age inflamlat;',  # correlations among predictors
+    inflammation ~ intercept;                    # estimate latent mean
+    inflammation -> crp il6 tnf ifn;             # measurement model with first loading = 1
+    crp ~ intercept@0',                          # fix measurement intercept to 0
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -60,21 +57,19 @@ mod2 <- rblimp(
 # print output
 output(mod2)                                     # print output
 standardized(mod2)                               # print standardized estimates in one table
+posterior_plot(mod2)                             # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# factor mean and variance fixed at 0 and 1
+# fixed-factor scaling
 mod3 <- rblimp(
   data = inflamm,                                # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  latent = 'inflamlat',                          # define latent variables
-  center = 'age',                                # center predictors
+  latent = 'inflammation',                       # define latent variables
   model = '
-    inflamlat@1;                                 # fix latent variable variance to 1
-    inflamlat -> inflam_crp@lo1 inflam_il6 inflam_tnf inflam_ifn; # measurement model with free loadings
-    els female age inflamlat ~~ els female age inflamlat;',  # correlations among predictors
+    inflammation@1; 
+    inflammation -> crp@load1 il6 tnf ifn;',     # measurement model with estimated loadings
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -85,45 +80,96 @@ standardized(mod3)                               # print standardized estimates 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
 
-# factor mean and variance fixed at 0 and 1
-mod4 <- rblimp(
-  data = inflamm,                                # R data frame
-  ordinal = 'els female',                        # binary and ordinal variables
-  latent = 'inflamlat',                          # define latent variables
-  center = 'age',                                # center predictors
-  model = '
-    inflamlat@1;                                 # fix latent variable variance to 1
-    inflamlat -> yjt(inflam_crp)@lo1 yjt(inflam_il6) inflam_tnf yjt(inflam_ifn); # measurement model with free loadings
-    els female age inflamlat ~~ els female age inflamlat;',  # correlations among predictors
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000,                                  # analysis iterations
-  nimps = 20)                                    # save 20 imputed data sets
 
-output(mod4)                                     # print output
-standardized(mod4)                               # print standardized estimates in one table
-distribution_plot(mod4)                          # plot observed and imputed distributions
-residuals_plot(mod4)                             # plot residuals
+# dp <- distribution_plot(mod3) 
+# rp <- residuals_plot(mod3)
+# 
+# pdf("~/desktop/distributions_mod3.pdf", width = 8, height = 6)   # one plot per page
+# for (d in dp) print(d)
+# dev.off()
+# 
+# pdf("~/desktop/residuals_mod3.pdf", width = 8, height = 6)   # one plot per page
+# for (p in rp) print(p)
+# dev.off()
+# 
+# dp <- distribution_plot(mod4) 
+# rp <- residuals_plot(mod4)
+# 
+# pdf("~/desktop/distributions_mod4.pdf", width = 8, height = 6)   # one plot per page
+# for (d in dp) print(d)
+# dev.off()
+# 
+# pdf("~/desktop/residuals_mod4.pdf", width = 8, height = 6)   # one plot per page
+# for (p in rp) print(p)
+# dev.off()
+
+#------------------------------------------------------------------------------#
+# BOOK FIGURE THEME ----
+#------------------------------------------------------------------------------#
+
+library(patchwork)
+library(ggplot2)
+
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
+
+# uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
+.upcase_vars <- function(s) {
+  if (!is.character(s) || length(s) != 1) return(s)
+  toks <- strsplit(s, " ", fixed = TRUE)[[1]]
+  is_var <- grepl("[a-z]", toks) & !grepl("[A-Z]", toks)   # has lowercase, no uppercase
+  toks[is_var] <- toupper(toks[is_var])
+  paste(toks, collapse = " ")
+}
+
+caps_axes <- structure(list(), class = "caps_axes")
+ggplot_add.caps_axes <- function(object, plot, ...) {
+  plot$labels$x <- .upcase_vars(plot$labels$x)
+  plot$labels$y <- .upcase_vars(plot$labels$y)
+  plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height, 
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = ragg::agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
+}
+
+#------------------------------------------------------------------------------#
+# FIGURE 6.2: LATENT DISTRIBUTION ----
+#------------------------------------------------------------------------------#
+
+dp <- distribution_plot(
+  mod3,
+  observed_color = "grey60",
+  imputed_color  = "grey40",
+  density_color  = "black",
+  font_size      = 18,
+  line_width     = 0.5
+)
+
+fig6_2 <- dp$inflammation.latent +
+  plot_layout(guides = "collect") +
+  book_theme &
+  caps_axes &
+  labs(title = NULL)
+
+save_fig(fig6_2, "Figure 6.2", width = 11, height = 8.5)
 
 
-dp <- distribution_plot(mod3) 
-rp <- residuals_plot(mod3)
-
-pdf("~/desktop/distributions_mod3.pdf", width = 8, height = 6)   # one plot per page
-for (d in dp) print(d)
-dev.off()
-
-pdf("~/desktop/residuals_mod3.pdf", width = 8, height = 6)   # one plot per page
-for (p in rp) print(p)
-dev.off()
-
-dp <- distribution_plot(mod4) 
-rp <- residuals_plot(mod4)
-
-pdf("~/desktop/distributions_mod4.pdf", width = 8, height = 6)   # one plot per page
-for (d in dp) print(d)
-dev.off()
-
-pdf("~/desktop/residuals_mod4.pdf", width = 8, height = 6)   # one plot per page
-for (p in rp) print(p)
-dev.off()

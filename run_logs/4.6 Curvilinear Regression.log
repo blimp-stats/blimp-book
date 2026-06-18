@@ -1,0 +1,672 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:26:12 2026
+  Chain 3 burn-in started on Jun 17 18:26:12 2026
+  Chain 4 burn-in started on Jun 17 18:26:12 2026
+  Chain 2 burn-in started on Jun 17 18:26:12 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:26:12 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:26:12 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:26:12 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:26:12 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:26:13 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:26:13 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:26:13 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:26:13 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:26:13 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:26:13 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:26:13 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:26:13 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:26:13 2026
+  Chain 1 completed burn-in on Jun 17 18:26:13 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:26:13 2026
+  Chain 2 completed burn-in on Jun 17 18:26:13 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:26:13 2026
+  Chain 4 completed burn-in on Jun 17 18:26:13 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:26:13 2026
+  Chain 3 completed burn-in on Jun 17 18:26:13 2026
+  Chain 1 completed iteration 625 on Jun 17 18:26:13 2026
+  Chain 2 completed iteration 625 on Jun 17 18:26:13 2026
+  Chain 4 completed iteration 625 on Jun 17 18:26:13 2026
+  Chain 3 completed iteration 625 on Jun 17 18:26:13 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:26:14 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:26:14 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:26:14 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:26:14 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:26:14 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:26:14 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:26:14 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:26:14 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:26:14 2026
+  Chain 2 finished on Jun 17 18:26:14 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:26:14 2026
+  Chain 1 finished on Jun 17 18:26:14 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:26:14 2026
+  Chain 4 finished on Jun 17 18:26:14 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:26:14 2026
+  Chain 3 finished on Jun 17 18:26:14 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.032            33  
+                          501 to 1000            1.037            33  
+                          751 to 1500            1.033            33  
+                         1001 to 2000            1.021            33  
+                         1251 to 2500            1.010            28  
+                         1501 to 3000            1.008            33  
+                         1751 to 3500            1.006            33  
+                         2001 to 4000            1.004            28  
+                         2251 to 4500            1.006            28  
+                         2501 to 5000            1.006            28  
+                         2751 to 5500            1.002            28  
+                         3001 to 6000            1.004            33  
+                         3251 to 6500            1.005            28  
+                         3501 to 7000            1.005            28  
+                         3751 to 7500            1.005            33  
+                         4001 to 8000            1.003            33  
+                         4251 to 8500            1.002            33  
+                         4501 to 9000            1.002            28  
+                         4751 to 9500            1.002            28  
+                         5001 to 10000           1.002            28  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    frlunch                       imputation          0.492          0.500 
+    anxiety                       imputation          0.491          0.500 
+    anxiety                        parameter          0.570          0.500 
+    mathpre                        parameter          0.423          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              250
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6
+                          miss % --------------------------------------
+                 mathpost = 16.8       -     M     -     -     M     M  
+                     male =  0.0       -     -     -     -     -     -  
+                  frlunch =  5.2       -     -     -     M     -     M  
+                  anxiety =  8.8       -     -     M     -     M     -  
+                  mathpre =  0.0       -     -     -     -     -     -  
+                                 --------------------------------------
+                                 %  72.0  14.0   6.8   4.4   2.0   0.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         7
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    mathpre
+    Complete ordinal:       male
+    Incomplete continuous:  anxiety
+    Incomplete ordinal:     frlunch
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    anxiety mathpre
+
+  MODELS
+    [1]  mathpost ~ Intercept anxiety mathpre frlunch male anxiety^2
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1718.766
+      WAIC                  1735.797
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  mathpost                           56.705      9.294     50.871     56.977     63.035     29.332     85.045 
+  male                                0.492      0.501      0.000      0.000      1.000      0.000      1.000 
+  frlunch                             0.398      0.490      0.000      0.000      1.000      0.000      1.000 
+  anxiety                            18.067      7.587     13.001     17.022     22.003     -0.733     46.000 
+  mathpre                            50.096      8.659     45.000     50.000     56.000     26.000     76.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  mathpost   
+
+Grand Mean Centered: anxiety mathpre
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      52.574      5.383     43.290     64.409        ---        ---   6826.803 
+
+Coefficients:                   
+  Intercept                          60.987      0.943     59.116     62.842   4182.796      0.000   3961.287 
+  anxiety                            -0.256      0.085     -0.421     -0.089      9.066      0.003   4293.472 
+  mathpre                             0.371      0.065      0.243      0.498     32.471      0.000   6724.853 
+  frlunch                            -3.644      1.062     -5.739     -1.572     11.871      0.001   6450.854 
+  male                               -4.045      1.021     -6.064     -2.058     15.677      0.000   7122.439 
+  anxiety^2                          -0.015      0.006     -0.026     -0.003      5.684      0.017   3754.822 
+
+Standard Deviations:            
+  Residual SD                         7.251      0.368      6.579      8.026        ---        ---   6820.633 
+
+Standardized Coefficients:      
+  anxiety                            -0.207      0.067     -0.334     -0.072      9.385      0.002   3987.386 
+  mathpre                             0.341      0.056      0.226      0.447     36.302      0.000   6746.057 
+  frlunch                            -0.190      0.054     -0.293     -0.082     12.505      0.000   6554.909 
+  male                               -0.215      0.053     -0.317     -0.111     16.662      0.000   7035.541 
+  anxiety^2                          -0.163      0.067     -0.290     -0.029      5.957      0.015   3855.058 
+
+Proportion Variance Explained   
+  by Coefficients                     0.408      0.048      0.308      0.498        ---        ---   5923.200 
+  by Residual Variation               0.592      0.048      0.502      0.692        ---        ---   5923.200 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: male       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.027      0.084     -0.190      0.143      0.090      0.764   3369.011 
+
+Level 1:                                                                                                      
+  frlunch                             0.245      0.097      0.053      0.438      6.356      0.012   2405.390 
+  anxiety                            -0.030      0.013     -0.057     -0.005      5.321      0.021   3028.263 
+  mathpre                            -0.005      0.011     -0.026      0.016      0.231      0.630   3943.954 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  frlunch    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.273      0.087     -0.445     -0.106      9.969      0.002   3359.849 
+
+Level 1:                                                                                                      
+  male                                0.247      0.097      0.058      0.435      6.488      0.011   1953.267 
+  anxiety                             0.007      0.013     -0.019      0.033      0.237      0.626   2701.493 
+  mathpre                            -0.011      0.011     -0.033      0.011      0.998      0.318   3364.563 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  anxiety    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           18.086      0.498     17.102     19.023   1318.618      0.000   1062.261 
+
+Level 1:                                                                                                      
+  male                               -1.279      0.536     -2.331     -0.240      5.737      0.017   4524.044 
+  frlunch                             0.272      0.568     -0.844      1.369      0.225      0.635   3672.985 
+  mathpre                            -0.409      0.053     -0.512     -0.305     60.020      0.000   5393.406 
+  Residual Var.                      42.829      4.133     35.596     51.763        ---        ---   6425.550 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: mathpre    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           50.095      0.555     49.028     51.212   8148.102      0.000   1094.961 
+
+Level 1:                                                                                                      
+  male                               -0.285      0.623     -1.514      0.947      0.213      0.644   5989.084 
+  frlunch                            -0.634      0.639     -1.859      0.652      0.984      0.321   4665.801 
+  anxiety                            -0.547      0.069     -0.681     -0.411     63.071      0.000   7641.895 
+  Residual Var.                      57.588      5.369     48.070     69.358        ---        ---   7222.816 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:26:19 2026
+  Chain 2 burn-in started on Jun 17 18:26:19 2026
+  Chain 4 burn-in started on Jun 17 18:26:19 2026
+  Chain 3 burn-in started on Jun 17 18:26:19 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:26:19 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:26:19 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:26:19 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:26:19 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:26:19 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:26:19 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:26:19 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:26:19 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:26:20 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:26:20 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:26:20 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:26:20 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:26:20 2026
+  Chain 1 completed burn-in on Jun 17 18:26:20 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:26:20 2026
+  Chain 4 completed burn-in on Jun 17 18:26:20 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:26:20 2026
+  Chain 3 completed burn-in on Jun 17 18:26:20 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:26:20 2026
+  Chain 2 completed burn-in on Jun 17 18:26:20 2026
+  Chain 1 saved imputation 1 on Jun 17 18:26:20 2026
+  Chain 3 saved imputation 3 on Jun 17 18:26:20 2026
+  Chain 4 saved imputation 4 on Jun 17 18:26:20 2026
+  Chain 2 saved imputation 2 on Jun 17 18:26:20 2026
+  Chain 1 completed iteration 625 on Jun 17 18:26:20 2026
+  Chain 3 completed iteration 625 on Jun 17 18:26:20 2026
+  Chain 4 completed iteration 625 on Jun 17 18:26:20 2026
+  Chain 2 completed iteration 625 on Jun 17 18:26:20 2026
+  Chain 1 saved imputation 5 on Jun 17 18:26:20 2026
+  Chain 3 saved imputation 7 on Jun 17 18:26:20 2026
+  Chain 4 saved imputation 8 on Jun 17 18:26:20 2026
+  Chain 2 saved imputation 6 on Jun 17 18:26:20 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:26:20 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:26:20 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:26:20 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:26:20 2026
+  Chain 1 saved imputation 9 on Jun 17 18:26:20 2026
+  Chain 4 saved imputation 12 on Jun 17 18:26:20 2026
+  Chain 3 saved imputation 11 on Jun 17 18:26:20 2026
+  Chain 2 saved imputation 10 on Jun 17 18:26:20 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:26:20 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:26:20 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:26:20 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:26:20 2026
+  Chain 1 saved imputation 13 on Jun 17 18:26:20 2026
+  Chain 4 saved imputation 16 on Jun 17 18:26:20 2026
+  Chain 3 saved imputation 15 on Jun 17 18:26:20 2026
+  Chain 2 saved imputation 14 on Jun 17 18:26:20 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:26:20 2026
+  Chain 1 saved imputation 17 on Jun 17 18:26:20 2026
+  Chain 1 finished on Jun 17 18:26:20 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:26:20 2026
+  Chain 4 saved imputation 20 on Jun 17 18:26:20 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:26:20 2026
+  Chain 3 saved imputation 19 on Jun 17 18:26:20 2026
+  Chain 4 finished on Jun 17 18:26:20 2026
+  Chain 3 finished on Jun 17 18:26:20 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:26:20 2026
+  Chain 2 saved imputation 18 on Jun 17 18:26:20 2026
+  Chain 2 finished on Jun 17 18:26:20 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.032            33  
+                          501 to 1000            1.037            33  
+                          751 to 1500            1.033            33  
+                         1001 to 2000            1.021            33  
+                         1251 to 2500            1.010            28  
+                         1501 to 3000            1.008            33  
+                         1751 to 3500            1.006            33  
+                         2001 to 4000            1.004            28  
+                         2251 to 4500            1.006            28  
+                         2501 to 5000            1.006            28  
+                         2751 to 5500            1.002            28  
+                         3001 to 6000            1.004            33  
+                         3251 to 6500            1.005            28  
+                         3501 to 7000            1.005            28  
+                         3751 to 7500            1.005            33  
+                         4001 to 8000            1.003            33  
+                         4251 to 8500            1.002            33  
+                         4501 to 9000            1.002            28  
+                         4751 to 9500            1.002            28  
+                         5001 to 10000           1.002            28  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    frlunch                       imputation          0.492          0.500 
+    anxiety                       imputation          0.491          0.500 
+    anxiety                        parameter          0.570          0.500 
+    mathpre                        parameter          0.423          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              250
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6
+                          miss % --------------------------------------
+                 mathpost = 16.8       -     M     -     -     M     M  
+                     male =  0.0       -     -     -     -     -     -  
+                  frlunch =  5.2       -     -     -     M     -     M  
+                  anxiety =  8.8       -     -     M     -     M     -  
+                  mathpre =  0.0       -     -     -     -     -     -  
+                                 --------------------------------------
+                                 %  72.0  14.0   6.8   4.4   2.0   0.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         7
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    mathpre
+    Complete ordinal:       male
+    Incomplete continuous:  anxiety
+    Incomplete ordinal:     frlunch
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    anxiety mathpre
+
+  MODELS
+    [1]  mathpost ~ Intercept anxiety mathpre frlunch male anxiety^2
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1718.766
+      WAIC                  1735.797
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  mathpost                           56.705      9.294     50.871     56.977     63.035     29.332     85.045 
+  male                                0.492      0.501      0.000      0.000      1.000      0.000      1.000 
+  frlunch                             0.398      0.490      0.000      0.000      1.000      0.000      1.000 
+  anxiety                            18.067      7.587     13.001     17.022     22.003     -0.733     46.000 
+  mathpre                            50.096      8.659     45.000     50.000     56.000     26.000     76.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  mathpost   
+
+Grand Mean Centered: anxiety mathpre
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      52.574      5.383     43.290     64.409        ---        ---   6826.803 
+
+Coefficients:                   
+  Intercept                          60.987      0.943     59.116     62.842   4182.796      0.000   3961.287 
+  anxiety                            -0.256      0.085     -0.421     -0.089      9.066      0.003   4293.472 
+  mathpre                             0.371      0.065      0.243      0.498     32.471      0.000   6724.853 
+  frlunch                            -3.644      1.062     -5.739     -1.572     11.871      0.001   6450.854 
+  male                               -4.045      1.021     -6.064     -2.058     15.677      0.000   7122.439 
+  anxiety^2                          -0.015      0.006     -0.026     -0.003      5.684      0.017   3754.822 
+
+Standard Deviations:            
+  Residual SD                         7.251      0.368      6.579      8.026        ---        ---   6820.633 
+
+Standardized Coefficients:      
+  anxiety                            -0.207      0.067     -0.334     -0.072      9.385      0.002   3987.386 
+  mathpre                             0.341      0.056      0.226      0.447     36.302      0.000   6746.057 
+  frlunch                            -0.190      0.054     -0.293     -0.082     12.505      0.000   6554.909 
+  male                               -0.215      0.053     -0.317     -0.111     16.662      0.000   7035.541 
+  anxiety^2                          -0.163      0.067     -0.290     -0.029      5.957      0.015   3855.058 
+
+Proportion Variance Explained   
+  by Coefficients                     0.408      0.048      0.308      0.498        ---        ---   5923.200 
+  by Residual Variation               0.592      0.048      0.502      0.692        ---        ---   5923.200 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: male       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.027      0.084     -0.190      0.143      0.090      0.764   3369.011 
+
+Level 1:                                                                                                      
+  frlunch                             0.245      0.097      0.053      0.438      6.356      0.012   2405.390 
+  anxiety                            -0.030      0.013     -0.057     -0.005      5.321      0.021   3028.263 
+  mathpre                            -0.005      0.011     -0.026      0.016      0.231      0.630   3943.954 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  frlunch    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.273      0.087     -0.445     -0.106      9.969      0.002   3359.849 
+
+Level 1:                                                                                                      
+  male                                0.247      0.097      0.058      0.435      6.488      0.011   1953.267 
+  anxiety                             0.007      0.013     -0.019      0.033      0.237      0.626   2701.493 
+  mathpre                            -0.011      0.011     -0.033      0.011      0.998      0.318   3364.563 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  anxiety    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           18.086      0.498     17.102     19.023   1318.618      0.000   1062.261 
+
+Level 1:                                                                                                      
+  male                               -1.279      0.536     -2.331     -0.240      5.737      0.017   4524.044 
+  frlunch                             0.272      0.568     -0.844      1.369      0.225      0.635   3672.985 
+  mathpre                            -0.409      0.053     -0.512     -0.305     60.020      0.000   5393.406 
+  Residual Var.                      42.829      4.133     35.596     51.763        ---        ---   6425.550 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: mathpre    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           50.095      0.555     49.028     51.212   8148.102      0.000   1094.961 
+
+Level 1:                                                                                                      
+  male                               -0.285      0.623     -1.514      0.947      0.213      0.644   5989.084 
+  frlunch                            -0.634      0.639     -1.859      0.652      0.984      0.321   4665.801 
+  anxiety                            -0.547      0.069     -0.681     -0.411     63.071      0.000   7641.895 
+  Residual Var.                      57.588      5.369     48.070     69.358        ---        ---   7222.816 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+

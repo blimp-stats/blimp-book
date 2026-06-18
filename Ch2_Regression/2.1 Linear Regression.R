@@ -105,18 +105,21 @@ residuals_plot(mod5)                             # plot residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -132,6 +135,18 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot$labels$x <- .upcase_vars(plot$labels$x)
   plot$labels$y <- .upcase_vars(plot$labels$y)
   plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
 }
 
 #------------------------------------------------------------------------------#
@@ -152,45 +167,36 @@ mod_1chain <- rblimp(
 output(mod_1chain)
 
 tp <- trace_plot(mod_1chain, 3)
-chain_mean <- mean(ggplot2::layer_data(tp)$y)   # full series
+chain_mean <- mean(layer_data(tp)$y)   # full series
 
 fig2_2 <- tp +
-  ggplot2::geom_hline(yintercept = chain_mean,
+  geom_hline(yintercept = chain_mean,
                       linetype  = "dashed",
                       color     = "grey40") +
-  ggplot2::xlim(0, 100) +
-  ggplot2::scale_color_manual(values = "black") +
-  ggplot2::ylab("Slope Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 20, base_family = "Minion Pro") +
+  xlim(0, 100) +
+  scale_color_manual(values = "black") +
+  ylab("Slope Parameter") +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
-  ggplot2::theme(
-    text            = ggplot2::element_text(size = 20),
-    axis.title      = ggplot2::element_text(size = 20),
-    axis.text       = ggplot2::element_text(size = 20),
+  theme(
+    text            = element_text(size = 20),
+    axis.title      = element_text(size = 20),
+    axis.text       = element_text(size = 20),
     legend.position = "none"
   )
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.2.pdf",
-  plot     = fig2_2,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_2, "Figure 2.2", width = 11, height = 8.5)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.5: POSTERIOR PLOTS ----
 #------------------------------------------------------------------------------#
 panel_format <- list(
-  # ggplot2::scale_fill_manual(values = "grey80"),
-  ggplot2::scale_color_manual(values = "black"),
-  ggplot2::labs(title = NULL, subtitle = NULL),
-  ggplot2::theme_classic(base_size = 18, base_family = "Minion Pro"),
+  # scale_fill_manual(values = "grey80"),
+  scale_color_manual(values = "black"),
+  labs(title = NULL, subtitle = NULL),
   book_theme,
-  ggplot2::scale_fill_manual(values = NA),
-  ggplot2::theme(legend.position = "none")
+  scale_fill_manual(values = NA),
+  theme(legend.position = "none")
 )
 
 fig2_5a <- posterior_plot(mod5, 3,  line_width = 0.5) + panel_format
@@ -199,30 +205,22 @@ fig2_5b <- posterior_plot(mod5, 12, line_width = 0.5) + panel_format
 fig2_5 <- (fig2_5a / fig2_5b) +
   plot_annotation(tag_levels = "A") &
   book_theme &
-  ggplot2::labs(title = NULL) &
-  ggplot2::theme(legend.position = "none")
+  labs(title = NULL) &
+  theme(legend.position = "none")
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.5.pdf",
-  plot     = fig2_5,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_5, "Figure 2.5", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.6: TRACE PLOTS ----
 #------------------------------------------------------------------------------#
 
 fig2_6a <- trace_plot(mod1, 3) +
-  ggplot2::xlim(9500, 10000) +
-  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
-  ggplot2::ylab("Slope Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 18, base_family = "Minion Pro") +
+  xlim(9500, 10000) +
+  scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
+  ylab("Slope Parameter") +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
-  ggplot2::theme(legend.position = "none")
+  theme(legend.position = "none")
 
 # different example that doesn't converge
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/convergence%20problem%20data.csv'
@@ -240,28 +238,20 @@ failure <- rblimp(
 output(failure)
 
 fig2_6b <- trace_plot(failure, 63) +
-  ggplot2::xlim(9500, 10000) +
-  ggplot2::scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
-  ggplot2::ylab("Intercept Parameter") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
-  ggplot2::theme_classic(base_size = 18, base_family = "Minion Pro") +
+  xlim(9500, 10000) +
+  scale_color_manual(values = c("black", "grey30", "grey55", "grey80")) +
+  ylab("Intercept Parameter") +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
-  ggplot2::theme(legend.position = "none")
+  theme(legend.position = "none")
 
 fig2_6 <- (fig2_6a / fig2_6b) +
   plot_layout(guides = "collect") +
   plot_annotation(tag_levels = "A") &
   book_theme &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.6.pdf",
-  plot     = fig2_6,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_6, "Figure 2.6", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.7: DISTRIBUTIONS ----
@@ -281,16 +271,9 @@ fig2_7 <- (dp$dpdd / dp$inflam) +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.7.pdf",
-  plot     = fig2_7,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_7, "Figure 2.7", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.8: RESIDUAL DISTRIBUTION + STANDARDIZED RESIDUAL INDEX ----
@@ -312,23 +295,17 @@ rp <- residuals_plot(
   curve_color  = "black",
   font_size    = 18,
   line_width   = 0.6,
-  label_family = "Minion Pro"
+  label_family = "Minion Pro",
+  point_size = 0.4, point_alpha = 0.3
 )
 
 fig2_8 <- dp$dpdd.residual / rp$dpdd.index +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.8.pdf",
-  plot     = fig2_8,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_8, "Figure 2.8", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.9: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
@@ -340,23 +317,17 @@ rp <- residuals_plot(
   curve_color  = "black",
   font_size    = 18,
   line_width   = 0.6,
-  label_family = "Minion Pro"
+  label_family = "Minion Pro",
+  point_size = 0.4, point_alpha = 0.3
 )
 
 fig2_9 <- rp$dpdd.predicted / rp$dpdd.inflam / rp$dpdd.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.9.pdf",
-  plot     = fig2_9,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_9, "Figure 2.9", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 2.10: COOK'S D AND LEVERAGE ----
@@ -375,13 +346,6 @@ fig2_10 <- rp$dpdd.leverage / rp$dpdd.cooks +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 2.10.pdf",
-  plot     = fig2_10,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig2_10, "Figure 2.10", width = 11, height = 8.5)

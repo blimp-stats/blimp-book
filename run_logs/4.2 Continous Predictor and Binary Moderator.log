@@ -1,0 +1,657 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:24:38 2026
+  Chain 2 burn-in started on Jun 17 18:24:38 2026
+  Chain 3 burn-in started on Jun 17 18:24:38 2026
+  Chain 4 burn-in started on Jun 17 18:24:38 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:24:38 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:24:38 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:24:38 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:24:38 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:24:39 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:24:39 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:24:39 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:24:39 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:24:39 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:24:39 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:24:39 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:24:39 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:24:39 2026
+  Chain 1 completed burn-in on Jun 17 18:24:39 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:24:39 2026
+  Chain 4 completed burn-in on Jun 17 18:24:39 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:24:39 2026
+  Chain 3 completed burn-in on Jun 17 18:24:39 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:24:39 2026
+  Chain 2 completed burn-in on Jun 17 18:24:39 2026
+  Chain 1 completed iteration 625 on Jun 17 18:24:39 2026
+  Chain 4 completed iteration 625 on Jun 17 18:24:39 2026
+  Chain 3 completed iteration 625 on Jun 17 18:24:39 2026
+  Chain 2 completed iteration 625 on Jun 17 18:24:39 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:24:39 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:24:39 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:24:39 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:24:39 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:24:39 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:24:39 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:24:39 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:24:39 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:24:39 2026
+  Chain 1 finished on Jun 17 18:24:39 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:24:39 2026
+  Chain 4 finished on Jun 17 18:24:39 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:24:39 2026
+  Chain 3 finished on Jun 17 18:24:39 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:24:39 2026
+  Chain 2 finished on Jun 17 18:24:39 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.031            24  
+                          501 to 1000            1.047            24  
+                          751 to 1500            1.009            24  
+                         1001 to 2000            1.010            20  
+                         1251 to 2500            1.005            20  
+                         1501 to 3000            1.008            24  
+                         1751 to 3500            1.007            24  
+                         2001 to 4000            1.011            24  
+                         2251 to 4500            1.005            24  
+                         2501 to 5000            1.004            24  
+                         2751 to 5500            1.002            24  
+                         3001 to 6000            1.003            24  
+                         3251 to 6500            1.003            24  
+                         3501 to 7000            1.004            24  
+                         3751 to 7500            1.003            24  
+                         4001 to 8000            1.003            24  
+                         4251 to 8500            1.003            24  
+                         4501 to 9000            1.005            24  
+                         4751 to 9500            1.003            24  
+                         5001 to 10000           1.002            24  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    esl                           imputation          0.502          0.500 
+    lprobhi                       imputation          0.486          0.500 
+    read1                         imputation          0.491          0.500 
+    read1                          parameter          0.521          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              138
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                    read9 = 17.4       -     M     -     -     -     M     -     M  
+                      esl =  5.1       -     -     -     M     -     M     M     -  
+                  lprobhi =  2.2       -     -     -     -     M     -     -     -  
+                    read1 =  6.5       -     -     M     -     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  71.7  15.2   5.1   2.9   2.2   1.4   0.7   0.7
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       10
+
+  PREDICTORS
+    Incomplete continuous:  read1
+    Incomplete ordinal:     esl lprobhi
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    read1
+
+  MODELS
+    [1]  read9 ~ Intercept read1 lprobhi esl read1*lprobhi
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1008.181
+      WAIC                  1021.902
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  read9                              88.500     14.665     80.914     88.819     97.421     40.942    124.596 
+  esl                                 0.480      0.501      0.000      0.015      1.000      0.000      1.000 
+  lprobhi                             0.421      0.495      0.000      0.000      1.000      0.000      1.000 
+  read1                              86.650     19.826     74.096     85.945     99.463     36.977    153.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  read9      
+
+Grand Mean Centered: read1
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      78.259     11.358     59.904    104.011        ---        ---   4570.744 
+
+Coefficients:                   
+  Intercept                          93.475      1.525     90.503     96.486   3757.322      0.000   1431.357 
+  read1                               0.462      0.058      0.351      0.575     64.279      0.000   6364.376 
+  lprobhi                            -3.254      2.013     -7.203      0.735      2.603      0.107   2769.025 
+  esl                                -7.734      1.916    -11.566     -3.980     16.263      0.000   4581.728 
+  read1*lprobhi                       0.264      0.090      0.090      0.442      8.621      0.003   4727.318 
+
+Standard Deviations:            
+  Residual SD                         8.846      0.632      7.740     10.199        ---        ---   4562.551 
+
+Standardized Coefficients:      
+  read1                               0.618      0.069      0.475      0.746     80.578      0.000   5677.716 
+  lprobhi                            -0.109      0.067     -0.238      0.024      2.632      0.105   2751.250 
+  esl                                -0.261      0.062     -0.382     -0.136     17.472      0.000   4396.326 
+  read1*lprobhi                       0.233      0.076      0.082      0.375      9.327      0.002   5267.258 
+
+Proportion Variance Explained   
+  by Coefficients                     0.645      0.047      0.542      0.724        ---        ---   4640.810 
+  by Residual Variation               0.355      0.047      0.276      0.458        ---        ---   4640.810 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  read1 | lprobhi @ 0                                                                                         
+    Intercept                        93.475      1.525     90.503     96.486   3757.322      0.000   1431.357 
+    Slope                             0.462      0.058      0.351      0.575     64.279      0.000   6364.376 
+                                                                                                              
+  read1 | lprobhi @ 1                                                                                         
+    Intercept                        90.220      2.396     85.552     94.994   1418.329      0.000   1287.093 
+    Slope                             0.726      0.070      0.590      0.866    108.755      0.000   4132.205 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  esl        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.058      0.120     -0.293      0.173      0.243      0.622   2364.801 
+
+Level 1:                                                                                                      
+  lprobhi                             0.292      0.133      0.033      0.549      4.803      0.028   2130.933 
+  read1                               0.016      0.006      0.004      0.028      6.639      0.010   2726.999 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  lprobhi    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.215      0.115     -0.439      0.012      3.452      0.063   3955.456 
+
+Level 1:                                                                                                      
+  esl                                 0.293      0.132      0.030      0.550      4.903      0.027   1974.159 
+  read1                              -0.004      0.006     -0.016      0.008      0.460      0.497   2965.397 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  read1      
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           86.552      1.779     83.102     89.898   2367.733      0.000    623.812 
+
+Level 1:                                                                                                      
+  esl                                 5.509      1.993      1.519      9.322      7.569      0.006   5159.538 
+  lprobhi                            -1.491      2.141     -5.601      2.729      0.468      0.494   4317.424 
+  Residual Var.                     357.623     48.797    275.083    466.205        ---        ---   5673.511 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:24:43 2026
+  Chain 2 burn-in started on Jun 17 18:24:43 2026
+  Chain 3 burn-in started on Jun 17 18:24:43 2026
+  Chain 4 burn-in started on Jun 17 18:24:43 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:24:43 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:24:43 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:24:43 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:24:43 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:24:44 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:24:44 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:24:44 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:24:44 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:24:44 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:24:44 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:24:44 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:24:44 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:24:44 2026
+  Chain 4 completed burn-in on Jun 17 18:24:44 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:24:44 2026
+  Chain 1 completed burn-in on Jun 17 18:24:44 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:24:44 2026
+  Chain 3 completed burn-in on Jun 17 18:24:44 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:24:44 2026
+  Chain 2 completed burn-in on Jun 17 18:24:44 2026
+  Chain 4 saved imputation 4 on Jun 17 18:24:44 2026
+  Chain 1 saved imputation 1 on Jun 17 18:24:44 2026
+  Chain 3 saved imputation 3 on Jun 17 18:24:44 2026
+  Chain 2 saved imputation 2 on Jun 17 18:24:44 2026
+  Chain 4 completed iteration 625 on Jun 17 18:24:44 2026
+  Chain 1 completed iteration 625 on Jun 17 18:24:44 2026
+  Chain 3 completed iteration 625 on Jun 17 18:24:44 2026
+  Chain 2 completed iteration 625 on Jun 17 18:24:44 2026
+  Chain 4 saved imputation 8 on Jun 17 18:24:44 2026
+  Chain 1 saved imputation 5 on Jun 17 18:24:44 2026
+  Chain 3 saved imputation 7 on Jun 17 18:24:44 2026
+  Chain 2 saved imputation 6 on Jun 17 18:24:44 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:24:44 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:24:44 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:24:44 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:24:44 2026
+  Chain 4 saved imputation 12 on Jun 17 18:24:44 2026
+  Chain 3 saved imputation 11 on Jun 17 18:24:44 2026
+  Chain 1 saved imputation 9 on Jun 17 18:24:44 2026
+  Chain 2 saved imputation 10 on Jun 17 18:24:44 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:24:44 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:24:44 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:24:44 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:24:44 2026
+  Chain 4 saved imputation 16 on Jun 17 18:24:44 2026
+  Chain 3 saved imputation 15 on Jun 17 18:24:44 2026
+  Chain 1 saved imputation 13 on Jun 17 18:24:44 2026
+  Chain 2 saved imputation 14 on Jun 17 18:24:44 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:24:44 2026
+  Chain 4 saved imputation 20 on Jun 17 18:24:44 2026
+  Chain 4 finished on Jun 17 18:24:44 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:24:44 2026
+  Chain 3 saved imputation 19 on Jun 17 18:24:44 2026
+  Chain 3 finished on Jun 17 18:24:44 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:24:44 2026
+  Chain 1 saved imputation 17 on Jun 17 18:24:44 2026
+  Chain 1 finished on Jun 17 18:24:44 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:24:44 2026
+  Chain 2 saved imputation 18 on Jun 17 18:24:44 2026
+  Chain 2 finished on Jun 17 18:24:44 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.031            24  
+                          501 to 1000            1.047            24  
+                          751 to 1500            1.009            24  
+                         1001 to 2000            1.010            20  
+                         1251 to 2500            1.005            20  
+                         1501 to 3000            1.008            24  
+                         1751 to 3500            1.007            24  
+                         2001 to 4000            1.011            24  
+                         2251 to 4500            1.005            24  
+                         2501 to 5000            1.004            24  
+                         2751 to 5500            1.002            24  
+                         3001 to 6000            1.003            24  
+                         3251 to 6500            1.003            24  
+                         3501 to 7000            1.004            24  
+                         3751 to 7500            1.003            24  
+                         4001 to 8000            1.003            24  
+                         4251 to 8500            1.003            24  
+                         4501 to 9000            1.005            24  
+                         4751 to 9500            1.003            24  
+                         5001 to 10000           1.002            24  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    esl                           imputation          0.502          0.500 
+    lprobhi                       imputation          0.486          0.500 
+    read1                         imputation          0.491          0.500 
+    read1                          parameter          0.521          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              138
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                    read9 = 17.4       -     M     -     -     -     M     -     M  
+                      esl =  5.1       -     -     -     M     -     M     M     -  
+                  lprobhi =  2.2       -     -     -     -     M     -     -     -  
+                    read1 =  6.5       -     -     M     -     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  71.7  15.2   5.1   2.9   2.2   1.4   0.7   0.7
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       10
+
+  PREDICTORS
+    Incomplete continuous:  read1
+    Incomplete ordinal:     esl lprobhi
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    read1
+
+  MODELS
+    [1]  read9 ~ Intercept read1 lprobhi esl read1*lprobhi
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1008.181
+      WAIC                  1021.902
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  read9                              88.500     14.665     80.914     88.819     97.421     40.942    124.596 
+  esl                                 0.480      0.501      0.000      0.015      1.000      0.000      1.000 
+  lprobhi                             0.421      0.495      0.000      0.000      1.000      0.000      1.000 
+  read1                              86.650     19.826     74.096     85.945     99.463     36.977    153.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  read9      
+
+Grand Mean Centered: read1
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      78.259     11.358     59.904    104.011        ---        ---   4570.744 
+
+Coefficients:                   
+  Intercept                          93.475      1.525     90.503     96.486   3757.322      0.000   1431.357 
+  read1                               0.462      0.058      0.351      0.575     64.279      0.000   6364.376 
+  lprobhi                            -3.254      2.013     -7.203      0.735      2.603      0.107   2769.025 
+  esl                                -7.734      1.916    -11.566     -3.980     16.263      0.000   4581.728 
+  read1*lprobhi                       0.264      0.090      0.090      0.442      8.621      0.003   4727.318 
+
+Standard Deviations:            
+  Residual SD                         8.846      0.632      7.740     10.199        ---        ---   4562.551 
+
+Standardized Coefficients:      
+  read1                               0.618      0.069      0.475      0.746     80.578      0.000   5677.716 
+  lprobhi                            -0.109      0.067     -0.238      0.024      2.632      0.105   2751.250 
+  esl                                -0.261      0.062     -0.382     -0.136     17.472      0.000   4396.326 
+  read1*lprobhi                       0.233      0.076      0.082      0.375      9.327      0.002   5267.258 
+
+Proportion Variance Explained   
+  by Coefficients                     0.645      0.047      0.542      0.724        ---        ---   4640.810 
+  by Residual Variation               0.355      0.047      0.276      0.458        ---        ---   4640.810 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  read1 | lprobhi @ 0                                                                                         
+    Intercept                        93.475      1.525     90.503     96.486   3757.322      0.000   1431.357 
+    Slope                             0.462      0.058      0.351      0.575     64.279      0.000   6364.376 
+                                                                                                              
+  read1 | lprobhi @ 1                                                                                         
+    Intercept                        90.220      2.396     85.552     94.994   1418.329      0.000   1287.093 
+    Slope                             0.726      0.070      0.590      0.866    108.755      0.000   4132.205 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  esl        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.058      0.120     -0.293      0.173      0.243      0.622   2364.801 
+
+Level 1:                                                                                                      
+  lprobhi                             0.292      0.133      0.033      0.549      4.803      0.028   2130.933 
+  read1                               0.016      0.006      0.004      0.028      6.639      0.010   2726.999 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  lprobhi    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.215      0.115     -0.439      0.012      3.452      0.063   3955.456 
+
+Level 1:                                                                                                      
+  esl                                 0.293      0.132      0.030      0.550      4.903      0.027   1974.159 
+  read1                              -0.004      0.006     -0.016      0.008      0.460      0.497   2965.397 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  read1      
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           86.552      1.779     83.102     89.898   2367.733      0.000    623.812 
+
+Level 1:                                                                                                      
+  esl                                 5.509      1.993      1.519      9.322      7.569      0.006   5159.538 
+  lprobhi                            -1.491      2.141     -5.601      2.729      0.468      0.494   4317.424 
+  Residual Var.                     357.623     48.797    275.083    466.205        ---        ---   5673.511 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.3.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.3.png

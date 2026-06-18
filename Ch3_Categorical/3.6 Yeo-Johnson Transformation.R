@@ -47,16 +47,15 @@ residuals_plot(mod0)                             # plot residuals
 
 mod1 <- rblimp(
   data = inflammation,                           # R data frame
-  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
   ordinal = 'els female',                        # binary and ordinal variables
   center = 'inflam age',                         # center predictors
-  model = 'yjt(dpddcent) ~ inflam els female age', # regression model w yeo-johnson transform
+  model = 'yjt(dpdd - 6) ~ inflam els female age', # regression model w yeo-johnson transform
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-posterior_plot(mod1, 'dpddcent')                 # plot parameter distributions
+posterior_plot(mod1, 'dpdd')                 # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -64,10 +63,9 @@ posterior_plot(mod1, 'dpddcent')                 # plot parameter distributions
 
 mod2 <- rblimp(
   data = inflammation,                           # R data frame
-  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
   ordinal = 'els female',                        # binary and ordinal variables
   center = 'inflam age',                         # center predictors
-  model = 'yjt(dpddcent) ~ inflam els female age', # regression model w yeo-johnson transform
+  model = 'yjt(dpdd - 6) ~ inflam els female age', # regression model w yeo-johnson transform
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -77,25 +75,24 @@ output(mod2)               		                   # print output
 
 distribution_plot(mod2)                          # plot observed and imputed distributions
 residuals_plot(mod2)                             # plot residuals
-
+names(mod2)
 #------------------------------------------------------------------------------#
 # LINEAR REGRESSION WITH YEO-JOHNSON TRANSFORMED PREDICTOR ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
   data = inflammation,                           # R data frame
-  transform = 'dpddcent = dpdd - median(dpdd)',  # compute new centered dv
   ordinal = 'els female',                        # binary and ordinal variables
   center = 'inflam age',                         # center predictors
   model = '
-    yjt(dpddcent) ~ inflam els female age;       # outcome w yeo-johnson transform
+    yjt(dpdd - 6) ~ inflam els female age;       # outcome w yeo-johnson transform
     yjt(inflam) ~ els female age',               # predictor w yeo-johnson transform
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod3)                                     # print output
-posterior_plot(mod3, 'dpddcent')                 # plot parameter distributions
+posterior_plot(mod3, 'dpdd')                     # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # LINEAR REGRESSION WITH NORMALIZING TRANSFORMATIONS ----
@@ -170,18 +167,21 @@ residuals_plot(mod7)                             # plot residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -199,9 +199,20 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot
 }
 
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
+}
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.12: DISTRIBUTIONS ----
+# FIGURE 3.11: DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -213,23 +224,16 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig3_12 <- dp$dpddcent.yjt / dp$dpddcent +
+fig3_11 <- dp$dpdd.yjt / dp$dpdd +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.12.pdf",
-  plot     = fig3_12,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig3_11, "Figure 3.11", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
-# FIGURE 3.13: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
+# FIGURE 3.12: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
 #------------------------------------------------------------------------------#
 
 rp <- residuals_plot(
@@ -238,23 +242,17 @@ rp <- residuals_plot(
   curve_color  = "black",
   font_size    = 18,
   line_width   = 0.6,
-  label_family = "Minion Pro"
+  label_family = "Minion Pro",
+  point_size = 0.4, point_alpha = 0.3
 )
 
-fig3_13 <- rp$dpddcent.index / rp$dpddcent.inflam / rp$dpddcent.age +
+fig3_12 <- rp$dpdd.index / rp$dpdd.inflam / rp$dpdd.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.13.pdf",
-  plot     = fig3_13,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig3_12, "Figure 3.12", width = 8.5, height = 11)
 
 
 
@@ -262,32 +260,3 @@ ggplot2::ggsave(
 
 
 
-
-
-#------------------------------------------------------------------------------#
-# FIGURE 2.8: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
-#------------------------------------------------------------------------------#
-
-rp <- residuals_plot(
-  mod2,
-  point_color  = "grey40",
-  curve_color  = "black",
-  font_size    = 18,
-  line_width   = 0.6,
-  label_family = "Minion Pro"
-)
-
-fig3_10 <- rp$dpdd.index / rp$dpdd.inflam / rp$dpdd.age +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  caps_axes &
-  ggplot2::labs(title = NULL)
-
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.10.pdf",
-  plot     = fig3_10,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)

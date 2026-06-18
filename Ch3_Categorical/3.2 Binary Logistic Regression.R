@@ -113,18 +113,21 @@ residuals_plot(mod4)                             # plot binned residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -140,6 +143,18 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot$labels$x <- .upcase_vars(plot$labels$x)
   plot$labels$y <- .upcase_vars(plot$labels$y)
   plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
 }
 
 #------------------------------------------------------------------------------#
@@ -160,16 +175,9 @@ fig3_5 <- dp$agetryalc +
   plot_annotation() &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.5.pdf",
-  plot     = fig3_5,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig3_5, "Figure 3.5", width = 11, height = 8.5)
 
 #------------------------------------------------------------------------------#
 # FIGURE 3.6: PREDICTED PROBABILITIES ----
@@ -190,24 +198,17 @@ rp <- residuals_plot(
   curve_color  = "black",
   font_size    = 18,
   line_width   = 0.6,
-  label_family = "Minion Pro"
+  label_family = "Minion Pro",
 )
 
 fig3_6 <- dp$drinker.1.probability / rp$drinker.college.probability +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL) &
-  ggplot2::scale_color_manual(values = rep("black", 7))
+  labs(title = NULL) &
+  scale_color_manual(values = rep("black", 7))
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.6.pdf",
-  plot     = fig3_6,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig3_6, "Figure 3.6", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
 # FIGURE 3.7: RESIDUAL VS. PREDICTED + RESIDUAL VS. PREDICTORS ----
@@ -226,13 +227,6 @@ fig3_7 <- rp$drinker.1.binned / rp$drinker.1.agetryalc / rp$drinker.1.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
-  ggplot2::labs(title = NULL)
+  labs(title = NULL)
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 3.7.pdf",
-  plot     = fig3_7,
-  width    = 8.5,
-  height   = 11,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig3_7, "Figure 3.7", width = 8.5, height = 11)

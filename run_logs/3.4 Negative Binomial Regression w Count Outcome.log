@@ -1,0 +1,661 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Jun 17 18:21:00 2026
+  Chain 4 burn-in started on Jun 17 18:21:00 2026
+  Chain 1 burn-in started on Jun 17 18:21:00 2026
+  Chain 3 burn-in started on Jun 17 18:21:00 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:21:09 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:21:09 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:21:09 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:21:09 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:21:17 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:21:17 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:21:17 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:21:17 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:21:25 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:21:25 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:21:25 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:21:25 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:21:34 2026
+  Chain 4 completed burn-in on Jun 17 18:21:34 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:21:34 2026
+  Chain 3 completed burn-in on Jun 17 18:21:34 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:21:34 2026
+  Chain 2 completed burn-in on Jun 17 18:21:34 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:21:34 2026
+  Chain 1 completed burn-in on Jun 17 18:21:34 2026
+  Chain 4 completed iteration 625 on Jun 17 18:21:36 2026
+  Chain 3 completed iteration 625 on Jun 17 18:21:36 2026
+  Chain 2 completed iteration 625 on Jun 17 18:21:36 2026
+  Chain 1 completed iteration 625 on Jun 17 18:21:36 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:21:38 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:21:38 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:21:38 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:21:38 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:21:40 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:21:40 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:21:40 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:21:40 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:21:42 2026
+  Chain 4 finished on Jun 17 18:21:42 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:21:42 2026
+  Chain 3 finished on Jun 17 18:21:42 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:21:42 2026
+  Chain 2 finished on Jun 17 18:21:42 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:21:42 2026
+  Chain 1 finished on Jun 17 18:21:42 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.219             1  
+                          501 to 1000            1.118             1  
+                          751 to 1500            1.034             1  
+                         1001 to 2000            1.044             1  
+                         1251 to 2500            1.045             1  
+                         1501 to 3000            1.052             1  
+                         1751 to 3500            1.040             1  
+                         2001 to 4000            1.033             1  
+                         2251 to 4500            1.044             1  
+                         2501 to 5000            1.024             1  
+                         2751 to 5500            1.016             1  
+                         3001 to 6000            1.016             1  
+                         3251 to 6500            1.020             1  
+                         3501 to 7000            1.012             1  
+                         3751 to 7500            1.011             1  
+                         4001 to 8000            1.010             1  
+                         4251 to 8500            1.007             1  
+                         4501 to 9000            1.010             1  
+                         4751 to 9500            1.014             1  
+                         5001 to 10000           1.014             1  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    els                           imputation          0.514          0.500 
+    age                            parameter          0.513          0.500 
+    inflam                        imputation          0.514          0.500 
+    inflam                         parameter          0.475          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                      hdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         5
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age inflam
+
+  MODELS
+    [1]  hdd ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  -107.918
+      WAIC                  -107.911
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  hdd                                 2.093      1.948      0.993      1.912      3.000      0.000      8.577 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.019      2.845     -1.906     -0.453      1.622     -5.825     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  hdd        
+
+Grand Mean Centered: age inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Dispersion Parameter                0.423      0.087      0.275      0.613        ---        ---    279.388 
+
+Coefficients:                   
+  Intercept                           0.618      0.090      0.439      0.792     47.232      0.000   7090.039 
+  inflam                              0.054      0.020      0.014      0.093      7.049      0.008   7627.869 
+  els                                 0.080      0.127     -0.172      0.324      0.373      0.541   6959.540 
+  female                              0.198      0.124     -0.047      0.442      2.565      0.109   7254.209 
+  age                                 0.009      0.011     -0.012      0.031      0.716      0.397   6726.636 
+
+Exponentiated Coefficients:     
+  Intercept                           1.854      0.167      1.551      2.209        ---        ---   7091.310 
+  inflam                              1.055      0.021      1.014      1.097        ---        ---   7629.466 
+  els                                 1.083      0.138      0.842      1.382        ---        ---   6999.555 
+  female                              1.219      0.154      0.954      1.556        ---        ---   7225.700 
+  age                                 1.009      0.011      0.988      1.032        ---        ---   6726.862 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.356      0.076     -0.507     -0.211     22.050      0.000   4024.776 
+
+Level 1:                                                                                                      
+  els                                 0.046      0.092     -0.138      0.223      0.235      0.628   2639.762 
+  age                                -0.028      0.014     -0.055     -0.001      4.138      0.042   3973.908 
+  inflam                              0.014      0.027     -0.039      0.068      0.277      0.598   3990.707 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.292      0.080     -0.450     -0.138     13.491      0.000   3249.508 
+
+Level 1:                                                                                                      
+  female                              0.046      0.094     -0.141      0.227      0.229      0.632   2413.598 
+  age                                -0.038      0.014     -0.066     -0.011      7.336      0.007   3164.513 
+  inflam                              0.045      0.027     -0.010      0.097      2.580      0.108   3524.196 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.627      0.333     44.945     46.287  18806.858      0.000   2125.661 
+
+Level 1:                                                                                                      
+  female                             -0.826      0.408     -1.619     -0.014      4.076      0.043   6382.251 
+  els                                -1.114      0.402     -1.904     -0.318      7.689      0.006   4924.639 
+  inflam                              0.182      0.121     -0.051      0.421      2.300      0.129   7022.877 
+  Residual Var.                      29.817      2.571     25.185     35.272        ---        ---   8745.565 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.050      0.173     -0.288      0.388      0.078      0.780   2074.636 
+
+Level 1:                                                                                                      
+  female                              0.111      0.216     -0.313      0.535      0.263      0.608   5036.706 
+  els                                 0.346      0.216     -0.090      0.762      2.537      0.111   4672.560 
+  age                                 0.049      0.032     -0.014      0.112      2.298      0.130   6313.432 
+  Residual Var.                       7.925      0.684      6.726      9.398        ---        ---   7990.079 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Jun 17 18:21:47 2026
+  Chain 3 burn-in started on Jun 17 18:21:47 2026
+  Chain 4 burn-in started on Jun 17 18:21:47 2026
+  Chain 1 burn-in started on Jun 17 18:21:47 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:21:56 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:21:56 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:21:56 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:21:56 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:22:05 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:22:05 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:22:05 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:22:05 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:22:13 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:22:13 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:22:15 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:22:15 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:22:22 2026
+  Chain 4 completed burn-in on Jun 17 18:22:22 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:22:22 2026
+  Chain 3 completed burn-in on Jun 17 18:22:22 2026
+  Chain 4 saved imputation 4 on Jun 17 18:22:24 2026
+  Chain 3 saved imputation 3 on Jun 17 18:22:24 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:22:24 2026
+  Chain 1 completed burn-in on Jun 17 18:22:24 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:22:24 2026
+  Chain 2 completed burn-in on Jun 17 18:22:24 2026
+  Chain 4 completed iteration 625 on Jun 17 18:22:24 2026
+  Chain 3 completed iteration 625 on Jun 17 18:22:24 2026
+  Chain 4 saved imputation 8 on Jun 17 18:22:26 2026
+  Chain 3 saved imputation 7 on Jun 17 18:22:26 2026
+  Chain 1 saved imputation 1 on Jun 17 18:22:26 2026
+  Chain 2 saved imputation 2 on Jun 17 18:22:26 2026
+  Chain 1 completed iteration 625 on Jun 17 18:22:26 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:22:26 2026
+  Chain 2 completed iteration 625 on Jun 17 18:22:26 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:22:26 2026
+  Chain 4 saved imputation 12 on Jun 17 18:22:27 2026
+  Chain 3 saved imputation 11 on Jun 17 18:22:27 2026
+  Chain 1 saved imputation 5 on Jun 17 18:22:28 2026
+  Chain 2 saved imputation 6 on Jun 17 18:22:28 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:22:29 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:22:29 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:22:29 2026
+  Chain 4 saved imputation 16 on Jun 17 18:22:29 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:22:29 2026
+  Chain 3 saved imputation 15 on Jun 17 18:22:29 2026
+  Chain 1 saved imputation 9 on Jun 17 18:22:30 2026
+  Chain 2 saved imputation 10 on Jun 17 18:22:30 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:22:31 2026
+  Chain 4 saved imputation 20 on Jun 17 18:22:31 2026
+  Chain 4 finished on Jun 17 18:22:31 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:22:31 2026
+  Chain 3 saved imputation 19 on Jun 17 18:22:31 2026
+  Chain 3 finished on Jun 17 18:22:31 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:22:32 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:22:32 2026
+  Chain 1 saved imputation 13 on Jun 17 18:22:32 2026
+  Chain 2 saved imputation 14 on Jun 17 18:22:32 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:22:34 2026
+  Chain 1 saved imputation 17 on Jun 17 18:22:34 2026
+  Chain 1 finished on Jun 17 18:22:34 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:22:34 2026
+  Chain 2 saved imputation 18 on Jun 17 18:22:34 2026
+  Chain 2 finished on Jun 17 18:22:34 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.150             1  
+                          501 to 1000            1.064             1  
+                          751 to 1500            1.041             1  
+                         1001 to 2000            1.036             1  
+                         1251 to 2500            1.053             1  
+                         1501 to 3000            1.023             1  
+                         1751 to 3500            1.037             1  
+                         2001 to 4000            1.026             1  
+                         2251 to 4500            1.021             1  
+                         2501 to 5000            1.018             1  
+                         2751 to 5500            1.020             1  
+                         3001 to 6000            1.010             1  
+                         3251 to 6500            1.008             1  
+                         3501 to 7000            1.004             1  
+                         3751 to 7500            1.005             1  
+                         4001 to 8000            1.006             1  
+                         4251 to 8500            1.007             1  
+                         4501 to 9000            1.006             1  
+                         4751 to 9500            1.007             1  
+                         5001 to 10000           1.008             1  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    female                         parameter          0.431          0.500 
+    els                           imputation          0.522          0.500 
+    els                            parameter          0.505          0.500 
+    age                            parameter          0.502          0.500 
+    inflam                        imputation          0.495          0.500 
+    inflam                         parameter          0.496          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                      hdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         5
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    female els age inflam
+
+  MODELS
+    [1]  hdd ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  -107.892
+      WAIC                  -107.885
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  hdd                                 2.094      1.949      0.992      1.917      3.000      0.000      8.602 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.019      2.845     -1.907     -0.453      1.623     -5.826     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  hdd        
+
+Grand Mean Centered: age els female inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Dispersion Parameter                0.423      0.087      0.269      0.608        ---        ---    280.561 
+
+Coefficients:                   
+  Intercept                           0.721      0.061      0.603      0.843    138.899      0.000   7590.854 
+  inflam                              0.054      0.020      0.015      0.093      7.105      0.008   6473.419 
+  els                                 0.079      0.126     -0.168      0.329      0.398      0.528   6938.853 
+  female                              0.202      0.125     -0.037      0.447      2.627      0.105   7278.958 
+  age                                 0.009      0.011     -0.012      0.031      0.705      0.401   6111.925 
+
+Exponentiated Coefficients:     
+  Intercept                           2.057      0.126      1.827      2.322        ---        ---   7533.468 
+  inflam                              1.055      0.021      1.015      1.098        ---        ---   6486.995 
+  els                                 1.082      0.138      0.845      1.390        ---        ---   7006.618 
+  female                              1.224      0.154      0.963      1.564        ---        ---   7278.265 
+  age                                 1.009      0.011      0.988      1.032        ---        ---   6112.233 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.347      0.074     -0.496     -0.204     22.134      0.000   1046.553 
+
+Level 1:                                                                                                      
+  els                                 0.042      0.094     -0.139      0.229      0.211      0.646   2479.044 
+  age                                -0.028      0.014     -0.056     -0.001      4.126      0.042   3867.797 
+  inflam                              0.015      0.028     -0.041      0.070      0.267      0.605   3835.026 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.287      0.078     -0.442     -0.144     13.928      0.000   1020.979 
+
+Level 1:                                                                                                      
+  female                              0.043      0.094     -0.139      0.227      0.213      0.644   2242.415 
+  age                                -0.038      0.014     -0.065     -0.010      7.384      0.007   3606.535 
+  inflam                              0.043      0.027     -0.011      0.097      2.486      0.115   3371.293 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.611      0.329     44.960     46.247  19156.705      0.000   1887.020 
+
+Level 1:                                                                                                      
+  female                             -0.830      0.407     -1.630     -0.042      4.166      0.041   5968.892 
+  els                                -1.120      0.401     -1.891     -0.309      7.717      0.005   5786.121 
+  inflam                              0.180      0.122     -0.056      0.422      2.220      0.136   7321.062 
+  Residual Var.                      29.729      2.569     25.141     35.159        ---        ---   8318.602 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.053      0.173     -0.281      0.395      0.101      0.751   1827.055 
+
+Level 1:                                                                                                      
+  female                              0.115      0.217     -0.320      0.528      0.275      0.600   5072.925 
+  els                                 0.339      0.214     -0.086      0.758      2.524      0.112   4282.979 
+  age                                 0.049      0.032     -0.012      0.110      2.339      0.126   6972.278 
+  Residual Var.                       7.924      0.690      6.726      9.434        ---        ---   7388.369 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 3.8.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 3.8.png

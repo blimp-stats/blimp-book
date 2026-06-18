@@ -90,18 +90,21 @@ residuals_plot(mod3)                             # plot residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -117,6 +120,18 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot$labels$x <- .upcase_vars(plot$labels$x)
   plot$labels$y <- .upcase_vars(plot$labels$y)
   plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
 }
 
 #------------------------------------------------------------------------------#
@@ -141,30 +156,23 @@ for (i in which(vapply(fig4_5$layers,
 }
 
 fig4_5 <- fig4_5 +
-  ggplot2::scale_colour_manual(values = c("black", "black"), guide = "none") +
-  ggplot2::scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
-  ggplot2::scale_linetype_manual(
+  scale_colour_manual(values = c("black", "black"), guide = "none") +
+  scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
+  scale_linetype_manual(
     values = c("solid", "dashed"),           # @0 solid, @1 dashed
     name   = "Sex",
     labels = c("Males", "Females")   # set to your moderator's coding
   ) +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
   caps_axes +
-  ggplot2::theme(
-    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
-    plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
-    panel.grid.major = ggplot2::element_blank(),
-    panel.grid.minor = ggplot2::element_blank(),
-    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),
+  theme(
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background  = element_rect(fill = "white", colour = NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line        = element_line(colour = "black", linewidth = 0.5),
     legend.position  = "bottom"
   )
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 4.5.pdf",
-  plot     = fig4_5,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig4_5, "Figure 4.5", width = 11, height = 8.5)

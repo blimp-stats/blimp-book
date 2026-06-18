@@ -1,4 +1,4 @@
-# LATENT VARIABLE MEDIATION MODEL
+# LATENT VARIABLE MEDIATION MODEL W NONNORMAL INDICATORS
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -23,7 +23,7 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 inflamm <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# LATENT VARIABLE REGRESSION MODEL ----
+# NORMALIZED INDICATORS ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
@@ -37,68 +37,49 @@ mod1 <- rblimp(
     inflammation@1;        			                 # fix latent variance at 1
     dpdd ~ inflammation@b1 els female age;       # regression model
 	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;',     # measurement model
-	parameters = 'indirect = a1 * b1',	           # indirect effect 
+    inflammation –> crp@load1 il6 tnf ifn;
+    inflammation^2 –> crp il6 ifn',              # measurement model with squared loadings
+  parameters = '
+    indirect = a1 * b1;                          # indirect effect 
+    load1 ~ truncate(0,Inf)',                    # positive prior for the first loading	                  
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
-  iter = 10000                		               # analysis iterations
-)
+  iter = 10000)                		               # analysis iterations
 
 output(mod1)                                     # print output
 standardized(mod1)                               # print standardized estimates in one table
-posterior_plot(mod1)                             # plot parameter distributions
-posterior_plot(mod1, 'indirect')                 # plot indirect effect
+distribution_plot(mod1)                          # plot observed and imputed distributions
+residuals_plot(mod1)                             # plot residuals
 
 #------------------------------------------------------------------------------#
-# MANUALLY-SPECIFIED MULTIVARIATE PREDICTOR MODEL ----
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
   data = inflamm,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
-  center = 'age',                                # center predictors 
+  center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
     inflammation ~ els@a1 female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
     dpdd ~ inflammation@b1 els female age;       # regression model
 	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;       # measurement model
-    predictors:                                  # model block label
-    els female age ~~ els female age;',          # multivariate predictor model
-  parameters = 'indirect = a1 * b1',	           # indirect effect 
-  seed = 90291,               		               # random number seed
-  burn = 10000,               		               # warm-up iterations
-  iter = 10000)                		               # analysis iterations
-
-output(mod2)                                     # print output
-
-#------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#------------------------------------------------------------------------------#
-
-mod3 <- rblimp(
-  data = inflamm,             		               # R data frame
-  ordinal = 'female els',    			               # binary and ordinal variables
-  latent = 'inflammation',	       	             # define latent variable  
-  center = 'age',                                # center predictors 
-  model = '
-    structural: 					                       # model block label
-    inflammation ~ els@a1 female age;            # latent variable regression
-    inflammation@1;        			                 # fix latent variance at 1
-    dpdd ~ inflammation@b1 els female age;       # regression model
-	  measurement:          			                 # model block label
-    inflammation –> crp@load1 il6 tnf ifn;',     # measurement model
-  parameters = 'indirect = a1 * b1',	           # indirect effect 
+    inflammation –> crp@load1 il6 tnf ifn;
+    inflammation^2 –> crp il6 ifn',              # measurement model with squared loadings
+  parameters = '
+    indirect = a1 * b1;                          # indirect effect 
+    load1 ~ truncate(0,Inf)',                    # positive prior for the first loading	                  
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000,                		               # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
-output(mod3)                                     # print output
-distribution_plot(mod3)                          # plot observed and imputed distributions
-residuals_plot(mod3)                             # plot residuals
+output(mod2)                                     # print output
+standardized(mod2)                               # print standardized estimates in one table
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -149,16 +130,16 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 6.4: RESIDUAL DISTRIBUTIONS ----
+# FIGURE 6.X: QUADRATIC RESIDUAL DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
-dp <- distribution_plot(mod3, observed_color = "grey60", imputed_color = "grey40",
+dp <- distribution_plot(mod2, observed_color = "grey60", imputed_color = "grey40",
                         density_color = "black", font_size = 18, line_width = 0.5)
-rp <- residuals_plot(mod3, point_color = "grey40", curve_color = "black",
+rp <- residuals_plot(mod2, point_color = "grey40", curve_color = "black",
                      point_size = 0.35, point_alpha = 0.25,
                      font_size = 18, line_width = 0.6, label_family = "Minion Pro")
 
-fig6_4 <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) /
+fig6_sqlo <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) /
   (dp$il6.residual | (rp$il6.inflammation + labs(y = "Std. Residual"))) /
   (dp$tnf.residual | (rp$tnf.inflammation + labs(y = "Std. Residual"))) /
   (dp$ifn.residual | (rp$ifn.inflammation + labs(y = "Std. Residual"))) +
@@ -168,6 +149,4 @@ fig6_4 <- (dp$crp.residual | (rp$crp.inflammation + labs(y = "Std. Residual"))) 
   labs(title = NULL) &
   theme(plot.tag.location = "margin")
 
-save_fig(fig6_4, "Figure 6.4", width = 8.5, height = 11)
-
-
+# save_fig(fig6_sqlo, "Figure 6.X", width = 8.5, height = 11)

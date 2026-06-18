@@ -30,37 +30,37 @@ reading <- read.csv(data_url)
 mod1 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
   model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
-  simple = 'read1 | lproblev',                  # conditional effects by group
-  waldtest = 'read9 ~ read1 lproblev esl',      # wald test of interaction
+  simple = 'read1 | lproblev',                   # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev esl',       # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lproblev, mod1)     # plot conditional effects
+simple_plot(read9 ~ read1 | lproblev, mod1)      # plot conditional effects
 
 # explicit specification
 mod2 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
   model = '
     read9 ~ read1 lproblev.1 lproblev.2 
       read1*lproblev.1@b4 read1*lproblev.2@b5 esl', # product term
-  simple = 'read1 | lproblev.1',                # conditional effects by group
-  waldtest = 'b4 - b5 = 0',                      # wald test of interaction
+  simple = 'read1 | lproblev.1',                 # conditional effects by group
+  waldtest = 'b4:b5 = 0',                        # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
 posterior_plot(mod2, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lproblev, mod2)     # plot conditional effects
+simple_plot(read9 ~ read1 | lproblev, mod2)      # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -69,11 +69,11 @@ simple_plot(read9 ~ read1 | lproblev, mod2)     # plot conditional effects
 mod3 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  nominal = 'lproblev',                         # nominal variables (auto dummy coded)
+  nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
   model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
-  simple = 'read1 | lproblev',                  # conditional effects by group
-  waldtest = 'read9 ~ read1 lproblev esl',      # wald test of interaction
+  simple = 'read1 | lproblev',                   # conditional effects by group
+  waldtest = 'read9 ~ read1 lproblev esl',       # wald test of interaction
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -88,18 +88,21 @@ residuals_plot(mod3)                             # plot residuals
 #------------------------------------------------------------------------------#
 
 library(patchwork)
+library(ggplot2)
+library(ragg)
 
-book_theme <- ggplot2::theme(
-  text              = ggplot2::element_text(family = "Minion Pro", size = 18),
-  axis.text         = ggplot2::element_text(color = "black", size = 18),
-  axis.line         = ggplot2::element_line(color = "black", linewidth = 0.5, lineend = "square"),
-  axis.ticks        = ggplot2::element_line(color = "black", linewidth = 0.5),
-  axis.ticks.length = grid::unit(4, "pt"),
-  legend.text       = ggplot2::element_text(size = 18),
-  legend.title      = ggplot2::element_text(size = 18),
-  plot.tag          = ggplot2::element_text(face = "bold", size = 22),
-  legend.position   = "bottom"
-)
+book_theme <- theme_classic(base_size = 18, base_family = "Minion Pro") +
+  theme(
+    text              = element_text(family = "Minion Pro", size = 18),
+    axis.text         = element_text(color = "black", size = 18),
+    axis.line         = element_line(color = "black", linewidth = 0.5, lineend = "square"),
+    axis.ticks        = element_line(color = "black", linewidth = 0.5),
+    axis.ticks.length = unit(4, "pt"),
+    legend.text       = element_text(size = 18),
+    legend.title      = element_text(size = 18),
+    plot.tag          = element_text(face = "bold", size = 22),
+    legend.position   = "bottom"
+  )
 
 # uppercase only all-lowercase word tokens (variable names); leave "Centered", "~", etc.
 .upcase_vars <- function(s) {
@@ -115,6 +118,18 @@ ggplot_add.caps_axes <- function(object, plot, ...) {
   plot$labels$x <- .upcase_vars(plot$labels$x)
   plot$labels$y <- .upcase_vars(plot$labels$y)
   plot
+}
+
+save_fig <- function(plot, name, width = 8.5, height = 11,
+                     dir = fig_dir, dpi = 600) {
+  pdf_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".pdf"))
+  png_path <- file.path('/Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures', paste0(name, ".png"))
+  ggsave(pdf_path, plot, width = width, height = height,
+         units = "in", device = cairo_pdf)
+  ggsave(png_path, plot, width = width, height = height,
+         units = "in", dpi = dpi, device = agg_png)
+  message("Wrote:\n  ", pdf_path, "\n  ", png_path)   # confirms exact paths
+  invisible(c(pdf_path, png_path))
 }
 
 #------------------------------------------------------------------------------#
@@ -137,30 +152,23 @@ fig4_4$layers <- fig4_4$layers[
 ]
 
 fig4_4 <- fig4_4 +
-  ggplot2::scale_linetype_manual(
+  scale_linetype_manual(
     values = c("solid", "dashed", "dotted"),
     name   = "Learning problems",
     labels = c("Low", "High", "Medium")   # <- ORDER IS NOT low/med/high; see note
   ) +
-  ggplot2::scale_colour_manual(values = rep("black", 3)) +
-  ggplot2::guides(colour = "none", fill = "none") +
-  ggplot2::labs(title = NULL, subtitle = NULL) +
+  scale_colour_manual(values = rep("black", 3)) +
+  guides(colour = "none", fill = "none") +
+  labs(title = NULL, subtitle = NULL) +
   book_theme +
   caps_axes +
-  ggplot2::theme(
-    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
-    plot.background  = ggplot2::element_rect(fill = "white", colour = NA),
-    panel.grid.major = ggplot2::element_blank(),
-    panel.grid.minor = ggplot2::element_blank(),
-    axis.line        = ggplot2::element_line(colour = "black", linewidth = 0.5),
+  theme(
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background  = element_rect(fill = "white", colour = NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line        = element_line(colour = "black", linewidth = 0.5),
     legend.position  = "bottom"
   )
 
-ggplot2::ggsave(
-  filename = "~/desktop/Figure 4.4.pdf",
-  plot     = fig4_4,
-  width    = 11,
-  height   = 8.5,
-  units    = "in",
-  device   = cairo_pdf
-)
+save_fig(fig4_4, "Figure 4.4", width = 11, height = 8.5)

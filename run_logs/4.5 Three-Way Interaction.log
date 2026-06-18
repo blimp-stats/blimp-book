@@ -1,0 +1,1101 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:25:32 2026
+  Chain 2 burn-in started on Jun 17 18:25:32 2026
+  Chain 4 burn-in started on Jun 17 18:25:32 2026
+  Chain 3 burn-in started on Jun 17 18:25:32 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:25:33 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:25:33 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:25:33 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:25:33 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:25:34 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:25:34 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:25:34 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:25:34 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:25:35 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:25:35 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:25:35 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:25:35 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:25:36 2026
+  Chain 3 completed burn-in on Jun 17 18:25:36 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:25:36 2026
+  Chain 2 completed burn-in on Jun 17 18:25:36 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:25:36 2026
+  Chain 1 completed burn-in on Jun 17 18:25:36 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:25:36 2026
+  Chain 4 completed burn-in on Jun 17 18:25:36 2026
+  Chain 3 completed iteration 625 on Jun 17 18:25:37 2026
+  Chain 2 completed iteration 625 on Jun 17 18:25:37 2026
+  Chain 1 completed iteration 625 on Jun 17 18:25:37 2026
+  Chain 4 completed iteration 625 on Jun 17 18:25:37 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:25:37 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:25:37 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:25:37 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:25:37 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:25:38 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:25:38 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:25:38 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:25:38 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:25:38 2026
+  Chain 3 finished on Jun 17 18:25:38 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:25:38 2026
+  Chain 2 finished on Jun 17 18:25:38 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:25:38 2026
+  Chain 1 finished on Jun 17 18:25:38 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:25:38 2026
+  Chain 4 finished on Jun 17 18:25:38 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.039            28  
+                          501 to 1000            1.011            28  
+                          751 to 1500            1.013            24  
+                         1001 to 2000            1.011            20  
+                         1251 to 2500            1.009            28  
+                         1501 to 3000            1.004            20  
+                         1751 to 3500            1.006            24  
+                         2001 to 4000            1.004            28  
+                         2251 to 4500            1.004            24  
+                         2501 to 5000            1.003            24  
+                         2751 to 5500            1.004            24  
+                         3001 to 6000            1.004            28  
+                         3251 to 6500            1.005            28  
+                         3501 to 7000            1.004            28  
+                         3751 to 7500            1.003            28  
+                         4001 to 8000            1.003            28  
+                         4251 to 8500            1.004            28  
+                         4501 to 9000            1.006            28  
+                         4751 to 9500            1.006            28  
+                         5001 to 10000           1.003            28  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    consci                        imputation          0.497          0.500 
+    consci                         parameter          0.510          0.500 
+    emostab                        parameter          0.553          0.500 
+    orgcon                        imputation          0.502          0.500 
+    orgcon                         parameter          0.523          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              932
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                  workbeh = 30.6       -     M     -     M     -     M     -     M  
+                   consci =  3.0       -     -     -     -     M     M     M     M  
+                  emostab =  0.0       -     -     -     -     -     -     -     -  
+                   orgcon = 16.3       -     -     M     M     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  56.4  25.0  10.7   4.8   1.6   0.6   0.6   0.1
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         9
+    Predictor Models:       12
+
+  PREDICTORS
+    Complete continuous:    emostab
+    Incomplete continuous:  consci orgcon
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    consci emostab orgcon
+
+  MODELS
+    [1]  workbeh ~ Intercept orgcon consci emostab orgcon*consci orgcon*emostab 
+                 consci*emostab orgcon*consci*emostab
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1570.421
+      WAIC                  1689.501
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  workbeh                             1.645      0.630      1.170      1.500      2.000     -0.078      5.000 
+  consci                              3.853      0.886      3.328      4.000      4.500      0.998      5.667 
+  emostab                             3.221      0.965      2.500      3.330      4.000      1.000      5.000 
+  orgcon                              2.770      0.935      2.002      2.670      3.478      0.356      5.492 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  workbeh    
+
+Grand Mean Centered: consci emostab orgcon
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.278      0.016      0.249      0.312        ---        ---   3922.156 
+
+Coefficients:                   
+  Intercept                           1.640      0.024      1.595      1.687   4833.289      0.000   2951.751 
+  orgcon                              0.304      0.024      0.257      0.352    154.892      0.000   3349.487 
+  consci                             -0.133      0.026     -0.184     -0.082     26.389      0.000   3851.602 
+  emostab                            -0.016      0.023     -0.061      0.029      0.503      0.478   4620.552 
+  orgcon*consci                      -0.137      0.031     -0.197     -0.075     19.761      0.000   2591.836 
+  orgcon*emostab                      0.043      0.024     -0.004      0.090      3.210      0.073   3691.125 
+  consci*emostab                     -0.046      0.026     -0.098      0.007      2.958      0.085   3812.492 
+  orgcon*consci*emostab              -0.073      0.030     -0.132     -0.013      5.729      0.017   2748.735 
+
+Standard Deviations:            
+  Residual SD                         0.527      0.015      0.499      0.559        ---        ---   3921.208 
+
+Standardized Coefficients:      
+  orgcon                              0.449      0.032      0.385      0.509    197.661      0.000   3007.581 
+  consci                             -0.186      0.036     -0.254     -0.115     27.444      0.000   3807.263 
+  emostab                            -0.025      0.035     -0.094      0.043      0.504      0.478   4627.516 
+  orgcon*consci                      -0.171      0.037     -0.241     -0.094     20.886      0.000   2673.798 
+  orgcon*emostab                      0.063      0.035     -0.006      0.132      3.225      0.073   3657.714 
+  consci*emostab                     -0.063      0.036     -0.134      0.010      2.973      0.085   3816.921 
+  orgcon*consci*emostab              -0.093      0.039     -0.169     -0.017      5.707      0.017   2693.799 
+
+Proportion Variance Explained   
+  by Coefficients                     0.307      0.030      0.246      0.364        ---        ---   3355.355 
+  by Residual Variation               0.693      0.030      0.636      0.754        ---        ---   3355.355 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  orgcon | consci @ +1 SD                                                                                     
+         emostab @ +1 SD                                                                                      
+    Intercept                         1.468      0.043      1.383      1.550   1182.411      0.000   4104.961 
+    Slope                             0.161      0.050      0.063      0.258     10.527      0.001   3011.302 
+                                                                                                              
+  orgcon | consci @ +1 SD                                                                                     
+         emostab @ 0                                                                                          
+    Intercept                         1.522      0.031      1.460      1.583   2361.943      0.000   4292.862 
+    Slope                             0.182      0.036      0.112      0.253     25.591      0.000   2997.238 
+                                                                                                              
+  orgcon | consci @ +1 SD                                                                                     
+         emostab @ -1 SD                                                                                      
+    Intercept                         1.577      0.046      1.488      1.668   1165.697      0.000   4626.962 
+    Slope                             0.203      0.051      0.104      0.300     16.156      0.000   3612.034 
+                                                                                                              
+  orgcon | consci @ 0                                                                                         
+         emostab @ +1 SD                                                                                      
+    Intercept                         1.625      0.033      1.559      1.690   2388.516      0.000   2930.702 
+    Slope                             0.345      0.034      0.280      0.413    104.738      0.000   3583.738 
+                                                                                                              
+  orgcon | consci @ 0                                                                                         
+         emostab @ 0                                                                                          
+    Intercept                         1.640      0.024      1.595      1.687   4833.289      0.000   2951.751 
+    Slope                             0.304      0.024      0.257      0.352    154.892      0.000   3349.487 
+                                                                                                              
+  orgcon | consci @ 0                                                                                         
+         emostab @ -1 SD                                                                                      
+    Intercept                         1.656      0.032      1.595      1.718   2736.462      0.000   4453.465 
+    Slope                             0.263      0.034      0.197      0.328     61.387      0.000   3469.256 
+                                                                                                              
+  orgcon | consci @ -1 SD                                                                                     
+         emostab @ +1 SD                                                                                      
+    Intercept                         1.782      0.052      1.682      1.883   1190.480      0.000   2784.198 
+    Slope                             0.530      0.051      0.431      0.630    109.112      0.000   3360.210 
+                                                                                                              
+  orgcon | consci @ -1 SD                                                                                     
+         emostab @ 0                                                                                          
+    Intercept                         1.758      0.035      1.692      1.828   2548.658      0.000   2879.221 
+    Slope                             0.427      0.038      0.352      0.501    127.401      0.000   2818.196 
+                                                                                                              
+  orgcon | consci @ -1 SD                                                                                     
+         emostab @ -1 SD                                                                                      
+    Intercept                         1.736      0.043      1.652      1.819   1647.494      0.000   3996.303 
+    Slope                             0.323      0.052      0.218      0.425     37.813      0.000   2395.134 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  consci     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            3.852      0.030      3.792      3.910  16480.426      0.000   1807.984 
+
+Level 1:                                                                                                      
+  emostab                             0.124      0.030      0.065      0.184     17.011      0.000   8779.651 
+  orgcon                             -0.092      0.033     -0.158     -0.028      7.665      0.006   5649.930 
+  Residual Var.                       0.762      0.036      0.696      0.839        ---        ---   8638.525 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: emostab    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            3.221      0.032      3.157      3.287   9869.449      0.000   1886.914 
+
+Level 1:                                                                                                      
+  consci                              0.149      0.036      0.077      0.220     16.767      0.000   9505.210 
+  orgcon                             -0.064      0.037     -0.135      0.009      3.015      0.083   5301.994 
+  Residual Var.                       0.911      0.042      0.832      0.997        ---        ---   9355.477 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  orgcon     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            2.770      0.032      2.709      2.835   7512.679      0.000   1328.524 
+
+Level 1:                                                                                                      
+  consci                             -0.104      0.038     -0.179     -0.031      7.510      0.006   4430.571 
+  emostab                            -0.060      0.035     -0.128      0.008      2.997      0.083   3976.528 
+  Residual Var.                       0.862      0.044      0.782      0.956        ---        ---   4328.827 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:25:44 2026
+  Chain 2 burn-in started on Jun 17 18:25:44 2026
+  Chain 4 burn-in started on Jun 17 18:25:44 2026
+  Chain 3 burn-in started on Jun 17 18:25:44 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:25:45 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:25:45 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:25:45 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:25:45 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:25:46 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:25:46 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:25:46 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:25:46 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:25:47 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:25:47 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:25:47 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:25:47 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:25:48 2026
+  Chain 1 completed burn-in on Jun 17 18:25:48 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:25:48 2026
+  Chain 3 completed burn-in on Jun 17 18:25:48 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:25:48 2026
+  Chain 2 completed burn-in on Jun 17 18:25:48 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:25:48 2026
+  Chain 4 completed burn-in on Jun 17 18:25:48 2026
+  Chain 1 completed iteration 625 on Jun 17 18:25:49 2026
+  Chain 3 completed iteration 625 on Jun 17 18:25:49 2026
+  Chain 2 completed iteration 625 on Jun 17 18:25:49 2026
+  Chain 4 completed iteration 625 on Jun 17 18:25:49 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:25:49 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:25:49 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:25:49 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:25:49 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:25:49 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:25:49 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:25:49 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:25:49 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:25:50 2026
+  Chain 1 finished on Jun 17 18:25:50 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:25:50 2026
+  Chain 3 finished on Jun 17 18:25:50 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:25:50 2026
+  Chain 2 finished on Jun 17 18:25:50 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:25:50 2026
+  Chain 4 finished on Jun 17 18:25:50 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.023            32  
+                          501 to 1000            1.014            35  
+                          751 to 1500            1.017            35  
+                         1001 to 2000            1.012            35  
+                         1251 to 2500            1.006            23  
+                         1501 to 3000            1.003            35  
+                         1751 to 3500            1.004            31  
+                         2001 to 4000            1.004            32  
+                         2251 to 4500            1.003            35  
+                         2501 to 5000            1.004            32  
+                         2751 to 5500            1.005            35  
+                         3001 to 6000            1.002            32  
+                         3251 to 6500            1.002            35  
+                         3501 to 7000            1.004            35  
+                         3751 to 7500            1.003            35  
+                         4001 to 8000            1.002            35  
+                         4251 to 8500            1.003            35  
+                         4501 to 9000            1.002            35  
+                         4751 to 9500            1.001            35  
+                         5001 to 10000           1.002            35  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    consci                        imputation          0.501          0.500 
+    consci                         parameter          0.556          0.500 
+    orgcon                        imputation          0.500          0.500 
+    orgcon                         parameter          0.482          0.500 
+    emostab                        parameter          0.512          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              932
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                  emostab =  0.0       -     -     -     -     -     -     -     -  
+                  workbeh = 30.6       -     M     -     M     -     -     M     M  
+                   consci =  3.0       -     -     -     -     M     M     M     M  
+                   orgcon = 16.3       -     -     M     M     -     M     -     M  
+                                 --------------------------------------------------
+                                 %  56.4  25.0  10.7   4.8   1.6   0.6   0.6   0.1
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         13
+    Generated Parameters:   3
+    Predictor Models:       8
+
+  PREDICTORS
+    Incomplete continuous:  consci orgcon
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    consci orgcon emostab
+
+  MODELS
+    [1]  emostab ~ Intercept orgcon consci
+    [2]  workbeh ~ Intercept orgcon consci emostab orgcon*consci@b4 orgcon*emostab 
+                 consci*emostab orgcon*consci*emostab@b7
+
+  GENERATED PARAMETERS
+    [1]  sd_emostab = sqrt(emostab.totalvar)
+    [2]  int_hi_emostab = b4+b7*sd_emostab
+    [3]  int_lo_emostab = b4-b7*sd_emostab
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using DEBUG command gives access to advanced internal options.
+  
+           - Enabling compact (narrower) parameter table output.
+  
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  4132.879
+      WAIC                  4251.121
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables        Mean  StdDev    25%    50%    75%     Min    Max
+              ---------------------------------------------------
+
+  emostab       3.221   0.965  2.500  3.330  4.000   1.000  5.000
+  workbeh       1.646   0.630  1.170  1.500  2.000  -0.072  5.001
+  consci        3.853   0.886  3.328  4.000  4.500   0.998  5.673
+  orgcon        2.770   0.935  2.002  2.670  3.478   0.351  5.467
+
+              ---------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations         Estimate  StdDev    2.5%  97.5%   ChiSq  PValue   N_Eff
+                   ---------------------------------------------------------
+
+  emostab, workbeh     -0.002   0.046  -0.093  0.090   0.000   0.984  9216.5
+
+                   ---------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  emostab    
+
+Grand Mean Centered: consci orgcon
+
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+Variances:                      
+  Residual Var.                      0.913   0.043   0.835   1.003     ---     ---   9952.8
+
+Coefficients:                   
+  Intercept                          3.221   0.032   3.159   3.284 10227.9   0.000   8724.3
+  orgcon                            -0.064   0.037  -0.138   0.009   3.019   0.082   4314.6
+  consci                             0.149   0.036   0.077   0.220  16.966   0.000   8382.8
+
+Standard Deviations:            
+  Residual SD                        0.956   0.022   0.914   1.001     ---     ---   9951.3
+
+Standardized Coefficients:      
+  orgcon                            -0.061   0.035  -0.132   0.008   3.037   0.081   4279.5
+  consci                             0.136   0.032   0.071   0.199  17.520   0.000   8294.3
+
+Proportion Variance Explained   
+  by Coefficients                    0.025   0.010   0.009   0.049     ---     ---   7362.1
+  by Residual Variation              0.975   0.010   0.951   0.991     ---     ---   7362.1
+
+                                -----------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh    
+
+Grand Mean Centered: consci emostab orgcon
+
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+Variances:                      
+  Residual Var.                      0.278   0.016   0.248   0.313     ---     ---   3774.5
+
+Coefficients:                   
+  Intercept                          1.640   0.024   1.594   1.687 4718.73   0.000   2687.0
+  orgcon                             0.305   0.025   0.255   0.352 153.573   0.000   3002.8
+  consci                            -0.133   0.026  -0.185  -0.083  26.842   0.000   3956.5
+  emostab                           -0.015   0.023  -0.059   0.031   0.409   0.523   4367.1
+  orgcon*consci                     -0.138   0.031  -0.199  -0.078  20.106   0.000   2516.8
+  orgcon*emostab                     0.043   0.024  -0.005   0.089   3.221   0.073   3892.0
+  consci*emostab                    -0.045   0.026  -0.096   0.005   2.999   0.083   4039.1
+  orgcon*consci*emostab             -0.074   0.030  -0.133  -0.014   5.946   0.015   3023.1
+
+Standard Deviations:            
+  Residual SD                        0.527   0.016   0.498   0.560     ---     ---   3763.4
+
+Standardized Coefficients:      
+  orgcon                             0.449   0.032   0.383   0.510 191.273   0.000   2678.4
+  consci                            -0.186   0.035  -0.255  -0.116  27.975   0.000   3878.3
+  emostab                           -0.023   0.035  -0.090   0.047   0.409   0.522   4368.8
+  orgcon*consci                     -0.171   0.037  -0.243  -0.099  21.369   0.000   2625.9
+  orgcon*emostab                     0.063   0.035  -0.007   0.132   3.229   0.072   3826.5
+  consci*emostab                    -0.063   0.036  -0.131   0.007   3.013   0.083   4041.3
+  orgcon*consci*emostab             -0.094   0.039  -0.170  -0.018   5.939   0.015   2912.7
+
+Proportion Variance Explained   
+  by Coefficients                    0.307   0.030   0.247   0.365     ---     ---   3073.0
+  by Residual Variation              0.693   0.030   0.635   0.753     ---     ---   3073.0
+
+                                -----------------------------------------------------------
+
+
+
+Conditional Effects               Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+  orgcon | consci @ +1 SD                                                                  
+         emostab @ +1 SD                                                                   
+    Intercept                        1.470   0.042   1.387   1.551 1239.96   0.000   4102.0
+    Slope                            0.160   0.050   0.062   0.255  10.390   0.001   2553.0
+                                                                                           
+  orgcon | consci @ +1 SD                                                                  
+         emostab @ 0                                                                       
+    Intercept                        1.522   0.031   1.461   1.583 2365.73   0.000   4306.1
+    Slope                            0.182   0.036   0.111   0.251  25.560   0.000   2883.5
+                                                                                           
+  orgcon | consci @ +1 SD                                                                  
+         emostab @ -1 SD                                                                   
+    Intercept                        1.575   0.046   1.485   1.666 1155.05   0.000   4965.6
+    Slope                            0.205   0.050   0.106   0.302  16.514   0.000   3953.1
+                                                                                           
+  orgcon | consci @ 0                                                                      
+         emostab @ +1 SD                                                                   
+    Intercept                        1.626   0.034   1.559   1.692 2303.79   0.000   2696.3
+    Slope                            0.346   0.034   0.278   0.411 103.756   0.000   3210.5
+                                                                                           
+  orgcon | consci @ 0                                                                      
+         emostab @ 0                                                                       
+    Intercept                        1.640   0.024   1.594   1.687 4718.73   0.000   2687.0
+    Slope                            0.305   0.025   0.255   0.352 153.573   0.000   3002.8
+                                                                                           
+  orgcon | consci @ 0                                                                      
+         emostab @ -1 SD                                                                   
+    Intercept                        1.654   0.031   1.594   1.716 2772.37   0.000   4340.5
+    Slope                            0.263   0.033   0.197   0.329  62.608   0.000   3541.1
+                                                                                           
+  orgcon | consci @ -1 SD                                                                  
+         emostab @ +1 SD                                                                   
+    Intercept                        1.783   0.052   1.680   1.885 1156.30   0.000   2657.4
+    Slope                            0.530   0.051   0.433   0.631 109.753   0.000   3426.5
+                                                                                           
+  orgcon | consci @ -1 SD                                                                  
+         emostab @ 0                                                                       
+    Intercept                        1.758   0.035   1.690   1.828 2544.42   0.000   2635.7
+    Slope                            0.427   0.038   0.353   0.501 128.505   0.000   2685.9
+                                                                                           
+  orgcon | consci @ -1 SD                                                                  
+         emostab @ -1 SD                                                                   
+    Intercept                        1.734   0.042   1.653   1.815 1739.02   0.000   3776.8
+    Slope                            0.323   0.052   0.220   0.424  38.430   0.000   2495.4
+                                                                                           
+                                -----------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+
+GENERATED PARAMETERS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+
+  sd_emostab                         0.969   0.023   0.926   1.015 1821.87   0.000   9976.1
+  int_hi_emostab                    -0.210   0.041  -0.292  -0.130  25.695   0.000   2601.4
+  int_lo_emostab                    -0.066   0.044  -0.153   0.018   2.287   0.130   2706.5
+
+                                -----------------------------------------------------------
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  consci     
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+
+Grand Mean                           3.853   0.029   3.796   3.910 17133.1   0.000   1726.0
+
+Level 1:                                                                                   
+  orgcon                            -0.103   0.034  -0.169  -0.036   9.021   0.003   4620.2
+  Residual Var.                      0.776   0.036   0.708   0.850     ---     ---   9094.7
+                                                                                           
+                                -----------------------------------------------------------
+
+
+
+Missing predictor:  orgcon     
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+
+Grand Mean                           2.770   0.033   2.708   2.838 7004.68   0.000   1326.3
+
+Level 1:                                                                                   
+  consci                            -0.114   0.037  -0.189  -0.042   9.410   0.002   4746.1
+  Residual Var.                      0.864   0.044   0.785   0.956     ---     ---   4716.6
+                                                                                           
+                                -----------------------------------------------------------
+
+
+
+Means Model:        emostab    
+
+    NOTE: This model is used to estimate the grand mean and latent group means needed 
+          to center outcome variables that appear as predictors in other models.
+
+Parameters                        Estimate  StdDev    2.5%   97.5%   ChiSq  PValue    N_Eff
+                                -----------------------------------------------------------
+
+Grand Mean                           3.221   0.031   3.160   3.282 10583.4   0.000   1975.4
+
+Level 1:                                                                                   
+  Residual Var.                      0.931   0.043   0.851   1.021     ---     ---  10014.0
+                                                                                           
+                                -----------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Jun 17 18:25:56 2026
+  Chain 2 burn-in started on Jun 17 18:25:56 2026
+  Chain 4 burn-in started on Jun 17 18:25:56 2026
+  Chain 3 burn-in started on Jun 17 18:25:56 2026
+  Chain 2 burn-in iteration 2500 completed on Jun 17 18:25:57 2026
+  Chain 1 burn-in iteration 2500 completed on Jun 17 18:25:57 2026
+  Chain 3 burn-in iteration 2500 completed on Jun 17 18:25:57 2026
+  Chain 4 burn-in iteration 2500 completed on Jun 17 18:25:57 2026
+  Chain 1 burn-in iteration 5000 completed on Jun 17 18:25:58 2026
+  Chain 2 burn-in iteration 5000 completed on Jun 17 18:25:58 2026
+  Chain 3 burn-in iteration 5000 completed on Jun 17 18:25:58 2026
+  Chain 4 burn-in iteration 5000 completed on Jun 17 18:25:58 2026
+  Chain 2 burn-in iteration 7500 completed on Jun 17 18:25:59 2026
+  Chain 1 burn-in iteration 7500 completed on Jun 17 18:25:59 2026
+  Chain 3 burn-in iteration 7500 completed on Jun 17 18:25:59 2026
+  Chain 4 burn-in iteration 7500 completed on Jun 17 18:25:59 2026
+  Chain 2 burn-in iteration 10000 completed on Jun 17 18:25:59 2026
+  Chain 2 completed burn-in on Jun 17 18:25:59 2026
+  Chain 1 burn-in iteration 10000 completed on Jun 17 18:25:59 2026
+  Chain 1 completed burn-in on Jun 17 18:25:59 2026
+  Chain 3 burn-in iteration 10000 completed on Jun 17 18:25:59 2026
+  Chain 3 completed burn-in on Jun 17 18:25:59 2026
+  Chain 4 burn-in iteration 10000 completed on Jun 17 18:26:00 2026
+  Chain 4 completed burn-in on Jun 17 18:26:00 2026
+  Chain 2 saved imputation 2 on Jun 17 18:26:00 2026
+  Chain 1 saved imputation 1 on Jun 17 18:26:00 2026
+  Chain 3 saved imputation 3 on Jun 17 18:26:00 2026
+  Chain 4 saved imputation 4 on Jun 17 18:26:00 2026
+  Chain 2 completed iteration 625 on Jun 17 18:26:00 2026
+  Chain 1 completed iteration 625 on Jun 17 18:26:00 2026
+  Chain 3 completed iteration 625 on Jun 17 18:26:00 2026
+  Chain 4 completed iteration 625 on Jun 17 18:26:00 2026
+  Chain 2 saved imputation 6 on Jun 17 18:26:00 2026
+  Chain 1 saved imputation 5 on Jun 17 18:26:00 2026
+  Chain 3 saved imputation 7 on Jun 17 18:26:00 2026
+  Chain 4 saved imputation 8 on Jun 17 18:26:00 2026
+  Chain 2 completed iteration 1250 on Jun 17 18:26:00 2026
+  Chain 1 completed iteration 1250 on Jun 17 18:26:00 2026
+  Chain 3 completed iteration 1250 on Jun 17 18:26:00 2026
+  Chain 4 completed iteration 1250 on Jun 17 18:26:00 2026
+  Chain 2 saved imputation 10 on Jun 17 18:26:00 2026
+  Chain 1 saved imputation 9 on Jun 17 18:26:00 2026
+  Chain 3 saved imputation 11 on Jun 17 18:26:00 2026
+  Chain 4 saved imputation 12 on Jun 17 18:26:00 2026
+  Chain 2 completed iteration 1875 on Jun 17 18:26:01 2026
+  Chain 1 completed iteration 1875 on Jun 17 18:26:01 2026
+  Chain 3 completed iteration 1875 on Jun 17 18:26:01 2026
+  Chain 4 completed iteration 1875 on Jun 17 18:26:01 2026
+  Chain 2 saved imputation 14 on Jun 17 18:26:01 2026
+  Chain 1 saved imputation 13 on Jun 17 18:26:01 2026
+  Chain 3 saved imputation 15 on Jun 17 18:26:01 2026
+  Chain 4 saved imputation 16 on Jun 17 18:26:01 2026
+  Chain 2 completed iteration 2500 on Jun 17 18:26:01 2026
+  Chain 2 saved imputation 18 on Jun 17 18:26:01 2026
+  Chain 2 finished on Jun 17 18:26:01 2026
+  Chain 1 completed iteration 2500 on Jun 17 18:26:01 2026
+  Chain 1 saved imputation 17 on Jun 17 18:26:01 2026
+  Chain 1 finished on Jun 17 18:26:01 2026
+  Chain 3 completed iteration 2500 on Jun 17 18:26:01 2026
+  Chain 3 saved imputation 19 on Jun 17 18:26:01 2026
+  Chain 3 finished on Jun 17 18:26:01 2026
+  Chain 4 completed iteration 2500 on Jun 17 18:26:01 2026
+  Chain 4 saved imputation 20 on Jun 17 18:26:01 2026
+  Chain 4 finished on Jun 17 18:26:01 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                              4.0.5-nightly15
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.039            28  
+                          501 to 1000            1.011            28  
+                          751 to 1500            1.013            24  
+                         1001 to 2000            1.011            20  
+                         1251 to 2500            1.009            28  
+                         1501 to 3000            1.004            20  
+                         1751 to 3500            1.006            24  
+                         2001 to 4000            1.004            28  
+                         2251 to 4500            1.004            24  
+                         2501 to 5000            1.003            24  
+                         2751 to 5500            1.004            24  
+                         3001 to 6000            1.004            28  
+                         3251 to 6500            1.005            28  
+                         3501 to 7000            1.004            28  
+                         3751 to 7500            1.003            28  
+                         4001 to 8000            1.003            28  
+                         4251 to 8500            1.004            28  
+                         4501 to 9000            1.006            28  
+                         4751 to 9500            1.006            28  
+                         5001 to 10000           1.003            28  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    consci                        imputation          0.497          0.500 
+    consci                         parameter          0.510          0.500 
+    emostab                        parameter          0.553          0.500 
+    orgcon                        imputation          0.502          0.500 
+    orgcon                         parameter          0.523          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              932
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8
+                          miss % --------------------------------------------------
+                  workbeh = 30.6       -     M     -     M     -     M     -     M  
+                   consci =  3.0       -     -     -     -     M     M     M     M  
+                  emostab =  0.0       -     -     -     -     -     -     -     -  
+                   orgcon = 16.3       -     -     M     M     -     -     M     M  
+                                 --------------------------------------------------
+                                 %  56.4  25.0  10.7   4.8   1.6   0.6   0.6   0.1
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         9
+    Predictor Models:       12
+
+  PREDICTORS
+    Complete continuous:    emostab
+    Incomplete continuous:  consci orgcon
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    consci emostab orgcon
+
+  MODELS
+    [1]  workbeh ~ Intercept orgcon consci emostab orgcon*consci orgcon*emostab 
+                 consci*emostab orgcon*consci*emostab
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  1570.421
+      WAIC                  1689.501
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  workbeh                             1.645      0.630      1.170      1.500      2.000     -0.078      5.000 
+  consci                              3.853      0.886      3.328      4.000      4.500      0.998      5.667 
+  emostab                             3.221      0.965      2.500      3.330      4.000      1.000      5.000 
+  orgcon                              2.770      0.935      2.002      2.670      3.478      0.356      5.492 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  workbeh    
+
+Grand Mean Centered: consci emostab orgcon
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.278      0.016      0.249      0.312        ---        ---   3922.156 
+
+Coefficients:                   
+  Intercept                           1.640      0.024      1.595      1.687   4833.289      0.000   2951.751 
+  orgcon                              0.304      0.024      0.257      0.352    154.892      0.000   3349.487 
+  consci                             -0.133      0.026     -0.184     -0.082     26.389      0.000   3851.602 
+  emostab                            -0.016      0.023     -0.061      0.029      0.503      0.478   4620.552 
+  orgcon*consci                      -0.137      0.031     -0.197     -0.075     19.761      0.000   2591.836 
+  orgcon*emostab                      0.043      0.024     -0.004      0.090      3.210      0.073   3691.125 
+  consci*emostab                     -0.046      0.026     -0.098      0.007      2.958      0.085   3812.492 
+  orgcon*consci*emostab              -0.073      0.030     -0.132     -0.013      5.729      0.017   2748.735 
+
+Standard Deviations:            
+  Residual SD                         0.527      0.015      0.499      0.559        ---        ---   3921.208 
+
+Standardized Coefficients:      
+  orgcon                              0.449      0.032      0.385      0.509    197.661      0.000   3007.581 
+  consci                             -0.186      0.036     -0.254     -0.115     27.444      0.000   3807.263 
+  emostab                            -0.025      0.035     -0.094      0.043      0.504      0.478   4627.516 
+  orgcon*consci                      -0.171      0.037     -0.241     -0.094     20.886      0.000   2673.798 
+  orgcon*emostab                      0.063      0.035     -0.006      0.132      3.225      0.073   3657.714 
+  consci*emostab                     -0.063      0.036     -0.134      0.010      2.973      0.085   3816.921 
+  orgcon*consci*emostab              -0.093      0.039     -0.169     -0.017      5.707      0.017   2693.799 
+
+Proportion Variance Explained   
+  by Coefficients                     0.307      0.030      0.246      0.364        ---        ---   3355.355 
+  by Residual Variation               0.693      0.030      0.636      0.754        ---        ---   3355.355 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  consci     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            3.852      0.030      3.792      3.910  16480.426      0.000   1807.984 
+
+Level 1:                                                                                                      
+  emostab                             0.124      0.030      0.065      0.184     17.011      0.000   8779.651 
+  orgcon                             -0.092      0.033     -0.158     -0.028      7.665      0.006   5649.930 
+  Residual Var.                       0.762      0.036      0.696      0.839        ---        ---   8638.525 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: emostab    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            3.221      0.032      3.157      3.287   9869.449      0.000   1886.914 
+
+Level 1:                                                                                                      
+  consci                              0.149      0.036      0.077      0.220     16.767      0.000   9505.210 
+  orgcon                             -0.064      0.037     -0.135      0.009      3.015      0.083   5301.994 
+  Residual Var.                       0.911      0.042      0.832      0.997        ---        ---   9355.477 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  orgcon     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            2.770      0.032      2.709      2.835   7512.679      0.000   1328.524 
+
+Level 1:                                                                                                      
+  consci                             -0.104      0.038     -0.179     -0.031      7.510      0.006   4430.571 
+  emostab                            -0.060      0.035     -0.128      0.008      2.997      0.083   3976.528 
+  Residual Var.                       0.862      0.044      0.782      0.956        ---        ---   4328.827 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.7.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.7.png
+Warning message:
+In facet_rep_grid(emostab ~ ., repeat.tick.labels = FALSE, labeller = emostab_lab) :
+  `facet_rep_wrap` and `facet_rep_lab` have been soft-deprecated. A replacement can be found in ggh4x::facet_wrap2.
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.8.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 4.8.png
