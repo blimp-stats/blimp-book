@@ -38,7 +38,7 @@ mod1 <- rblimp(
     inflammation@1;        			                 # fix latent variance at 1
     yjt(dpdd - 6) ~ inflammation@b1 els female age;  # regression model with yjt transform
 	  measurement:          			                 # model block label
-    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn);', # measurement model with yjt transform
+    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn); DEBUG: compact_output', # measurement model with yjt transform
   parameters = 'indirect = a1 * b1;  ',          # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
@@ -46,7 +46,7 @@ mod1 <- rblimp(
 )
 
 output(mod1)                                     # print output
-standardized(mod1)                               # print standardized estimates in one table
+round(standardized(mod1),3)                               # print standardized estimates in one table
 posterior_plot(mod1)                             # plot parameter distributions
 posterior_plot(mod1, 'indirect')                 # plot indirect effect
 

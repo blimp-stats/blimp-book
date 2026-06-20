@@ -1,4 +1,4 @@
-# CURVILINEAR REGRESSION
+# REGRESSION WITH THREE-WAY INTERACTION 
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
