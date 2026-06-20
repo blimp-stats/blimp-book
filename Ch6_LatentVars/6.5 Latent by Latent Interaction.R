@@ -1,4 +1,4 @@
-# REGRESSION WITH THREE-WAY INTERACTION 
+# LATENT VARIABLE BY LATENT VARIABLE INTERACTION
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')

@@ -1,4 +1,4 @@
-# REGRESSION WITH THREE-WAY INTERACTION 
+# LATENT VARIABLE REGRESSION WITH ORDINAL INDICATORS
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
