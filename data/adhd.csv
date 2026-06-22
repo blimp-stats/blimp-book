@@ -1,4 +1,4 @@
-id,alphaEEG,study,age,male,adhd,attent1,attent2,attent3,attent4,attent5,attent6,attent7,attent8,attent9
+id,alphaeeg,study,age,male,adhd,attent1,attent2,attent3,attent4,attent5,attent6,attent7,attent8,attent9
 1,0.696051113,1,NA,NA,NA,3,5,5,4,5,5,5,5,5
 2,NA,1,NA,NA,NA,1,1,2,1,1,2,1,1,1
 3,-6.670269358,1,NA,NA,NA,5,5,5,5,5,5,5,4,5
