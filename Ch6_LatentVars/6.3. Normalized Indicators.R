@@ -34,12 +34,11 @@ mod1 <- rblimp(
   center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
-    inflammation ~ els@a1 female age;            # latent variable regression
+    inflammation ~ els female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
-    yjt(dpdd - 6) ~ inflammation@b1 els female age;  # regression model with yjt transform
+    yjt(dpdd - 6) ~ inflammation els female age;  # regression model with yjt transform
 	  measurement:          			                 # model block label
-    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn); DEBUG: compact_output', # measurement model with yjt transform
-  parameters = 'indirect = a1 * b1;  ',          # indirect effect 
+    inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn);', # measurement model with yjt transform
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000                		               # analysis iterations
@@ -48,7 +47,6 @@ mod1 <- rblimp(
 output(mod1)                                     # print output
 round(standardized(mod1),3)                               # print standardized estimates in one table
 posterior_plot(mod1)                             # plot parameter distributions
-posterior_plot(mod1, 'indirect')                 # plot indirect effect
 
 # log transformed indicators
 mod2 <- rblimp(
@@ -58,15 +56,14 @@ mod2 <- rblimp(
   center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
-    inflammation ~ els@a1 female age;            # latent variable regression
+    inflammation ~ els female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
-    ln(dpdd) ~ inflammation@b1 els female age;   # regression model with log transform
+    ln(dpdd) ~ inflammation els female age;   # regression model with log transform
 	  measurement:          			                 # model block label
 	  ln(crp + 5) ~ inflammation;                  # measurement model with log transform
 	  ln(il6 + 5) ~ inflammation;                  # measurement model with log transform
 	  tnf ~ inflammation;                          # measurement model with normal indicator
 	  ln(ifn + 5) ~ inflammation;',                # measurement model with log transform
-  parameters = 'indirect = a1 * b1',             # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000,                		               # analysis iterations
@@ -75,34 +72,6 @@ mod2 <- rblimp(
 output(mod2)                                     # print output
 standardized(mod2)                               # print standardized estimates in one table
 posterior_plot(mod2)                             # plot parameter distributions
-posterior_plot(mod2, 'indirect')                 # plot indirect effect
-
-#------------------------------------------------------------------------------#
-# NORMALIZED LATENT ----
-#------------------------------------------------------------------------------#
-
-modnl <- rblimp(
-  data = inflamm,             		               # R data frame
-  ordinal = 'female els',    			               # binary and ordinal variables
-  latent = 'inflammation',	       	             # define latent variable  
-  center = 'age',                                # center predictors
-  model = '
-    structural: 					                       # model block label
-    yjt(inflammation) ~ els@a1 female age;       # latent variable regression with yjt latent
-    dpdd ~ inflammation@b1 els female age;       # regression model
-	  measurement:          			                 # model block label
-    inflammation –> crp il6 tnf ifn;',           # measurement model
-  parameters = 'indirect = a1 * b1',             # indirect effect 
-  seed = 90291,               		               # random number seed
-  burn = 100000,               		               # warm-up iterations
-  iter = 100000,                		               # analysis iterations
-  nimps = 20                                     # save 20 imputed data sets
-)
-
-output(modnl)                                     # print output
-standardized(modnl)                               # print standardized estimates in one table
-distribution_plot(modnl)                          # plot observed and imputed distributions
-residuals_plot(modnl)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -116,12 +85,11 @@ mod3 <- rblimp(
   center = 'age',                                # center predictors
   model = '
     structural: 					                       # model block label
-    inflammation ~ els@a1 female age;            # latent variable regression
+    inflammation ~ els female age;            # latent variable regression
     inflammation@1;        			                 # fix latent variance at 1
-    yjt(dpdd - 6) ~ inflammation@b1 els female age;   # regression model with yjt transform
+    yjt(dpdd - 6) ~ inflammation els female age;   # regression model with yjt transform
 	  measurement:          			                 # model block label
     inflammation –> yjt(crp)@load1 yjt(il6) tnf yjt(ifn);', # measurement model with yjt transform
-  parameters = 'indirect = a1 * b1;  ',          # indirect effect 
   seed = 90291,               		               # random number seed
   burn = 10000,               		               # warm-up iterations
   iter = 10000,                		               # analysis iterations
