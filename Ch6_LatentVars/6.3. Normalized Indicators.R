@@ -28,7 +28,7 @@ inflamm <- read.csv(data_url)
 
 # yeo-johnson normalized indicators
 mod1 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors
@@ -50,7 +50,7 @@ posterior_plot(mod1)                             # plot parameter distributions
 
 # log transformed indicators
 mod2 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors
@@ -79,7 +79,7 @@ posterior_plot(mod2)                             # plot parameter distributions
 
 # yeo-johnson normalized indicators
 mod3 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors
@@ -102,7 +102,7 @@ residuals_plot(mod3)                             # plot residuals
 
 # log transformed indicators
 mod4 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors
