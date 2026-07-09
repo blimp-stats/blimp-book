@@ -20,7 +20,7 @@ set_blimp('/applications/blimp/blimp-nightly')
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
 
 # create data frame from github data
-inflamm <- read.csv(data_url)
+inflammation <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # LATENT VARIABLE REGRESSION MODEL ----
@@ -28,7 +28,7 @@ inflamm <- read.csv(data_url)
 
 # fixed-factor scaling
 mod1 <- rblimp(
-  data = inflamm,                                # R data frame
+  data = inflammation,                                # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
     inflammation@1; 
@@ -44,7 +44,7 @@ posterior_plot(mod1)                             # plot parameter distributions
 
 # fixed-marker scaling
 mod2 <- rblimp(
-  data = inflamm,                                # R data frame
+  data = inflammation,                                # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
     inflammation ~ intercept;                    # estimate latent mean
@@ -65,7 +65,7 @@ posterior_plot(mod2)                             # plot parameter distributions
 
 # fixed-factor scaling
 mod3 <- rblimp(
-  data = inflamm,                                # R data frame
+  data = inflammation,                                # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
     inflammation@1; 
@@ -79,29 +79,6 @@ output(mod3)                                     # print output
 standardized(mod3)                               # print standardized estimates in one table
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
-
-
-# dp <- distribution_plot(mod3) 
-# rp <- residuals_plot(mod3)
-# 
-# pdf("~/desktop/distributions_mod3.pdf", width = 8, height = 6)   # one plot per page
-# for (d in dp) print(d)
-# dev.off()
-# 
-# pdf("~/desktop/residuals_mod3.pdf", width = 8, height = 6)   # one plot per page
-# for (p in rp) print(p)
-# dev.off()
-# 
-# dp <- distribution_plot(mod4) 
-# rp <- residuals_plot(mod4)
-# 
-# pdf("~/desktop/distributions_mod4.pdf", width = 8, height = 6)   # one plot per page
-# for (d in dp) print(d)
-# dev.off()
-# 
-# pdf("~/desktop/residuals_mod4.pdf", width = 8, height = 6)   # one plot per page
-# for (p in rp) print(p)
-# dev.off()
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

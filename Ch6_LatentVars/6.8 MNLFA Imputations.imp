@@ -1,0 +1,27 @@
+DATA: ../data/adhd.csv;       				# data with names in first row
+# VARIABLES: id alphaeeg study age 		# commented out variable list
+# male adhd attent1:attent9;			# names are in the csv data
+MISSING: NA;           				# missing value code
+ORDINAL: study male adhd attent1:attent9;  	# binary and ordinal variables
+LATENT: attention;  					# define latent variable
+CENTER: alphaeeg age;  				# define latent variable
+MODEL:
+  structural: 						# model block label
+  attention ~ alphaeeg alphaeeg^2 age age^2 study male adhd;  # structural
+  var(attention) ~ 1@0 alphaeeg age study male adhd;  # log variance model
+  measurement: 					# model block label
+  attention –> attent1@load1 attent2:attent9; # measurement model
+  attent2 ~~ attent8;  				# correlated residual
+  attent7 ~~ attent9;  				# correlated residual
+  study -> attent1; 					# intercept moderation
+  adhd -> attent1; 					# intercept moderation
+  age -> attent2 attent3 attent8; 		# intercept moderation
+  study*attention study -> 
+    attent2 attent3 attent7:attent9; 		# loading moderation
+  age*attention male*attention age male -> attent7;  # loading moderation  
+SEED: 90291;                  			# random number seed
+BURN: 100000;                  			# warm-up iterations
+ITER: 100000;                  			# analysis iterations
+NIMPS: 20; 						# save 20 data sets
+OPTIONS: savelatent saveVariableNames;				# save options
+SAVE: stacked = ../Ch6_LatentVars/imps.csv;				# stacked imputation file

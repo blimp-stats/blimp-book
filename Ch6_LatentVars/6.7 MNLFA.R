@@ -1,12 +1,14 @@
-# MODERATED NONLINEAR FACTOR ANALYSIS (MNLFA)
+# MODERATED NON-LINEAR FACTOR ANALYSIS
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
 set_blimp('/applications/blimp/blimp-nightly')
 
@@ -21,118 +23,150 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 adhd <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# FIT MODEL WITH MODERATED FACTOR MEAN AND VARIANCE ----
+# CFA ----
 #------------------------------------------------------------------------------#
 
-# factor mean and conditional variance fixed at 0 and 1
-model1 <- rblimp(
+# one-factor cfa
+mod1 <- rblimp(
   data = adhd,
-  ordinal = 'male adhd study swan1:swan9',
-  latent = 'attent',
-  # fixed = 'study',
-  center = 'alphaEEG age', 
+  ordinal = 'attent1:attent9',
+  latent = 'attention',
+  model = '
+    attention@1;
+    attention -> attent1@load1 attent2:attent9;',
+  seed = 90291,
+  burn = 20000,
+  iter = 20000)
+
+# print output
+output(mod1)
+standardized(mod1)
+
+# cfa with correlated residuals
+mod2 <- rblimp(
+  data = adhd,
+  ordinal = 'attent1:attent9',
+  latent = 'attention',
+  model = '
+    attention@1;
+    attention -> attent1@load1 attent2:attent9;
+    attent2 ~~ attent8;
+    attent7 ~~ attent9;',
+  seed = 90291,
+  burn = 20000,
+  iter = 20000)
+
+# print output
+output(mod2)
+standardized(mod2)
+
+#------------------------------------------------------------------------------#
+# MODERATORS PREDICTING FACTOR MEAN AND VARIANCE ----
+#------------------------------------------------------------------------------#
+
+mod3 <- rblimp(
+  data = adhd,
+  ordinal = 'study male adhd attent1:attent9',
+  latent = 'attention',
+  center = 'alphaeeg age',
   model = '
     structural:
-    attent <- alphaEEG alphaEEG^2 age age^2 male adhd study;
-    var(attent) <- 1@0 alphaEEG alphaEEG^2 age age^2 male adhd study;
+    attention ~ alphaeeg alphaeeg^2 age age^2 study male adhd;
+    var(attention) ~ 1@0 alphaeeg age study male adhd;
     measurement:
-    attent -> swan1@lo1 swan2:swan9;
-    swan2 ~~ swan8;
-    swan7 ~~ swan9;
-    predictors:
-    yjt(age-10) ~ intercept;
-    yjt(alphaEEG) ~ intercept;
-    alphaEEG age male adhd study ~~ alphaEEG age male adhd study;
-    ',
+    attention -> attent1@load1 attent2:attent9;
+    attent2 ~~ attent8;
+    attent7 ~~ attent9;',
   seed = 90291,
   burn = 50000,
-  iter = 50000,
-  nimps = 20)
+  iter = 50000)
 
 # print output
-output(model1)
+output(mod3)
+standardized(mod3)
 
 #------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+# MODERATORS PREDICTING MEASUREMENT MODEL PARAMETERS ----
 #------------------------------------------------------------------------------#
 
-# plot distributions and residuals
-residuals <- paste0(c('attent','alphaEEG.yjt','age.yjt','male','adhd','study'),'.residual')
-univariate_plot(vars = c('attent.latent', residuals), model = model1)
-
-# plot imputed vs. observed values
-imputation_plot(model1)
-
-# plot standardized residuals vs. predicted values
-bivariate_plot(attent.residual ~ attent.predicted, standardize = 'y', model = model1)
-
-# plot standardized residuals vs. predictors
-bivariate_plot(x_vars = c('alphaEEG','age','male','adhd','study'), y_vars = 'attent.residual', model = model1, standardize = 'y')
-
-#------------------------------------------------------------------------------#
-# FIT MODEL WITH MODERATED MEASUREMENT INTERCEPTS AND LOADINGS ----
-#------------------------------------------------------------------------------#
-
-# factor mean and conditional variance fixed at 0 and 1
-model2 <- rblimp(
+mod4 <- rblimp(
   data = adhd,
-  ordinal = 'male adhd study swan1:swan9',
-  latent = 'attent',
-  # fixed = 'study',
-  center = 'alphaEEG age', 
+  ordinal = 'study male adhd attent1:attent9',
+  latent = 'attention',
+  center = 'alphaeeg age',
   model = '
     structural:
-    attent <- alphaEEG alphaEEG^2 age age^2 male adhd study;
-    var(attent) <- 1@0 alphaEEG alphaEEG^2 age age^2 male adhd study;
-    invariant:
-    attent -> swan4@lo4 swan5 swan6 swan9;
-    noninvariant:
-    attent alphaEEG alphaEEG^2 age age^2 male adhd study 
-    attent*alphaEEG attent*age attent*male attent*adhd attent*study -> swan1@lo1 swan2 swan3 swan7 swan8;
-    correlations:
-    swan2 ~~ swan8;
-    swan7 ~~ swan9;
-    predictors:
-    yjt(age-10) ~ intercept;
-    yjt(alphaEEG) ~ intercept;
-    alphaEEG age male adhd study ~~ alphaEEG age male adhd study;
-    ',
+    attention ~ alphaeeg alphaeeg^2 age age^2 study male adhd;
+    var(attention) ~ 1@0 alphaeeg age study male adhd;
+    measurement:
+    attention -> attent1@load1 attent2:attent9;
+    attent2 ~~ attent8;
+    attent7 ~~ attent9;
+    # moderation effects    
+    age study male adhd -> attent1:attent3 attent5 attent7:attent9;
+    age*attention study*attention male*attention adhd*attention -> attent1:attent3 attent5 attent7:attent9;DEBUG: compact_output',
   seed = 90291,
-  burn = 70000,
-  iter = 70000,
-  nimps = 20)
+  burn = 100000,
+  iter = 100000)
 
 # print output
-output(model2)
+output(mod4)
+standardized(mod4)
 
 #------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+# TRIMMED LOADINGS ----
 #------------------------------------------------------------------------------#
 
-# plot imputed vs. observed values
-imputation_plot(model2)
+mod5 <- rblimp(
+  data    = adhd,
+  ordinal = 'study male adhd attent1:attent9',
+  latent  = 'attention',
+  center  = 'alphaeeg age',
+  model = '
+  structural: 							
+  attention ~ alphaeeg alphaeeg^2 age age^2 study male adhd; 
+  var(attention) ~ 1@0 alphaeeg age study male adhd;  
+  measurement: 						
+  attention –> attent1@load1 attent2:attent9; 	
+  attent2 ~~ attent8;  					
+  attent7 ~~ attent9;  					
+  age study male adhd -> 
+    attent1:attent3 attent5 attent7:attent9; 	# all intercepts
+  study*attention -> 
+    attent2:attent3 attent7 attent8:attent9; 	  # retained interactions
+  age*attention male*attention -> attent7;', 		# retained interactions
+  seed = 90291, 
+  burn = 100000, 
+  iter = 100000)
 
-# plot distributions and residuals
-residuals <- paste0('swan',1:9,'.residual')
-univariate_plot(vars = residuals, model = model2)
+# print output
+output(mod5)
+summary(mod5@estimates[,7])
+mod5@estimates
 
-# plot standardized residuals vs. predicted values
-bivariate_plot(swan1.residual ~ swan1.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan2.residual ~ swan2.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan3.residual ~ swan3.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan4.residual ~ swan4.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan5.residual ~ swan5.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan6.residual ~ swan6.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan7.residual ~ swan7.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan8.residual ~ swan8.predicted, standardize = 'y', model = model2)
-bivariate_plot(swan9.residual ~ swan9.predicted, standardize = 'y', model = model2)
+#------------------------------------------------------------------------------#
+# TRIMMED LOADINGS AND INTERCEPTS ----
+#------------------------------------------------------------------------------#
 
-# plot standardized residuals vs. predictors
-bivariate_plot(x_vars = c('attent.latent','alphaEEG','age','male','adhd','study'),
-               y_vars = residuals, model = model2, standardize = 'y')
-
-# plot pairs of indicator residuals
-bivariate_plot(vars = residuals, model = model1, poly_degree = 1, standardize = 'both')
-
-
-
+mod6 <- rblimp(
+  data    = adhd,
+  ordinal = 'study male adhd attent1:attent9',
+  latent  = 'attention',
+  center  = 'alphaeeg age',
+  model = '
+    structural:
+    attention ~ alphaeeg alphaeeg^2 age age^2 study male adhd;
+    var(attention) ~ 1@0 alphaeeg age study male adhd;
+    measurement:
+    attention -> attent1@load1 attent2:attent9;
+    attent2 ~~ attent8;
+    attent7 ~~ attent9;
+    # dif
+    study -> attent1;
+    adhd -> attent1;
+    age -> attent2:attent3 attent8;
+    study*attention study -> attent2:attent3 attent7:attent9;
+    age*attention male*attention age male -> attent7;',
+  seed = 90291, 
+  burn = 100000, 
+  iter = 100000)

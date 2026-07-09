@@ -20,14 +20,14 @@ set_blimp('/applications/blimp/blimp-nightly')
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
 
 # create data frame from github data
-inflamm <- read.csv(data_url)
+inflammation <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # LATENT VARIABLE REGRESSION MODEL ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors
@@ -54,7 +54,7 @@ posterior_plot(mod1, 'indirect')                 # plot indirect effect
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors 
@@ -79,7 +79,7 @@ output(mod2)                                     # print output
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = inflamm,             		               # R data frame
+  data = inflammation,             		               # R data frame
   ordinal = 'female els',    			               # binary and ordinal variables
   latent = 'inflammation',	       	             # define latent variable  
   center = 'age',                                # center predictors 

@@ -1,0 +1,858 @@
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                   4.0.4
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                         2501 to 5000            1.189           110  
+                         5001 to 10000           1.151             3  
+                         7501 to 15000           1.042             9  
+                        10001 to 20000           1.071             9  
+                        12501 to 25000           1.024            88  
+                        15001 to 30000           1.031             9  
+                        17501 to 35000           1.027            88  
+                        20001 to 40000           1.043            88  
+                        22501 to 45000           1.042            88  
+                        25001 to 50000           1.035            88  
+                        27501 to 55000           1.027            88  
+                        30001 to 60000           1.029            88  
+                        32501 to 65000           1.019            88  
+                        35001 to 70000           1.031             9  
+                        37501 to 75000           1.037             9  
+                        40001 to 80000           1.024             9  
+                        42501 to 85000           1.011             9  
+                        45001 to 90000           1.007             9  
+                        47501 to 95000           1.016             9  
+                        50001 to 100000          1.014             9  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    var(attention)                 parameter          0.519          0.500 
+    var(attention)                 parameter          0.507          0.500 
+    var(attention)                 parameter          0.497          0.500 
+    var(attention)                 parameter          0.498          0.500 
+    var(attention)                 parameter          0.532          0.500 
+    adhd                          imputation          0.508          0.500 
+    age                           imputation          0.505          0.500 
+    attent1                        threshold          0.383          0.350 
+    attent2                        threshold          0.390          0.350 
+    attent3                        threshold          0.380          0.350 
+    attent4                        threshold          0.349          0.350 
+    attent5                        threshold          0.359          0.350 
+    attent6                        threshold          0.390          0.350 
+    attent7                        threshold          0.360          0.350 
+    attent8                        threshold          0.341          0.350 
+    attent9                        threshold          0.356          0.350 
+    alphaeeg                      imputation          0.500          0.500 
+    alphaeeg                       parameter          0.470          0.500 
+    male                          imputation          0.499          0.500 
+    age                            parameter          0.443          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              939
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                    study =  0.0       -     -     -     -     -     -     -     -     -     -  
+                      age =  6.4       -     -     M     M     -     -     -     -     -     -  
+                     adhd =  6.6       -     -     M     M     -     -     -     -     -     -  
+                  attent1 =  0.6       -     -     -     -     -     -     -     -     -     -  
+                  attent2 =  1.0       -     -     -     -     -     -     -     -     -     M  
+                  attent3 =  0.3       -     -     -     -     -     -     -     -     -     -  
+                  attent4 =  0.5       -     -     -     -     -     -     -     -     -     -  
+                  attent5 =  0.5       -     -     -     -     -     -     -     -     -     -  
+                  attent6 =  1.6       -     -     -     -     -     M     -     -     -     -  
+                  attent7 =  1.2       -     -     -     -     -     -     -     M     -     -  
+                  attent8 =  2.1       -     -     -     -     M     -     M     -     -     -  
+                  attent9 =  1.2       -     -     -     -     -     -     -     -     M     -  
+                 alphaeeg = 38.1       -     M     M     -     -     -     M     -     -     M  
+                     male =  6.5       -     -     M     M     -     -     -     -     -     -  
+                                 --------------------------------------------------------------
+                                 %  55.1  32.7   3.4   2.4   1.1   0.6   0.4   0.3   0.3   0.2
+
+  NOTE: Suppressing printing of 27 missing data patterns.
+        These patterns consist of 3.4% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         82
+    Predictor Models:       7
+
+  PREDICTORS
+    Incomplete continuous:  alphaeeg
+    Incomplete ordinal:     male
+
+  FACTORS
+    Level-1:                attention
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    alphaeeg age
+
+  MODELS
+
+   structural:
+    [1]  attention ~ alphaeeg age study male adhd alphaeeg^2 age^2
+    [2]  var(attention) ~ alphaeeg age study male adhd
+
+   measurement:
+    [3]  adhd ~ Intercept
+    [4]  age ~ Intercept
+    [5]  attent1 ~ Intercept attention@load1 study adhd
+    [6]  attent2 ~ Intercept attention age study study*attention
+    [7]  attent3 ~ Intercept attention age study study*attention
+    [8]  attent4 ~ Intercept attention
+    [9]  attent5 ~ Intercept attention
+   [10]  attent6 ~ Intercept attention
+   [11]  attent7 ~ Intercept attention study age male study*attention age*attention 
+                 male*attention
+   [12]  attent8 ~ Intercept attention age study study*attention
+   [13]  attent9 ~ Intercept attention study study*attention
+   [14]  study ~ Intercept
+   [15]  attent2 <-> attent8
+   [16]  attent7 <-> attent9
+
+
+WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  39430.253
+      WAIC                  41967.420
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 100000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  attention                          -1.178      1.630     -2.320     -1.339     -0.147     -6.160      5.089 
+  adhd                                0.771      0.421      1.000      1.000      1.000      0.000      1.000 
+  age                                10.135      2.933      7.978      9.788     12.072      2.936     18.601 
+  attent1                             2.724      1.233      2.000      3.000      4.000      1.000      5.000 
+  attent2                             2.859      1.302      2.000      3.000      4.000      1.000      5.000 
+  attent3                             3.168      1.320      2.000      3.000      4.000      1.000      5.000 
+  attent4                             2.710      1.371      2.000      2.235      4.000      1.000      5.000 
+  attent5                             2.732      1.360      2.000      3.000      4.000      1.000      5.000 
+  attent6                             3.039      1.374      2.000      3.000      4.000      1.000      5.000 
+  attent7                             3.110      1.380      2.000      3.000      4.000      1.000      5.000 
+  attent8                             2.744      1.366      2.000      3.000      4.000      1.000      5.000 
+  attent9                             3.130      1.344      2.000      3.000      4.000      1.000      5.000 
+  study                               0.554      0.497      0.000      1.000      1.000      0.000      1.000 
+  alphaeeg                           -0.978      2.022     -2.179     -0.788      0.358     -8.452      6.946 
+  male                                0.645      0.479      0.000      1.000      1.000      0.000      1.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 100000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  attention, adhd                    -0.038      0.045     -0.126      0.049      0.739      0.390   7345.038 
+  attention, age                      0.032      0.046     -0.058      0.122      0.483      0.487  75900.283 
+  attention, attent1                 -0.001      0.046     -0.091      0.090      0.000      0.986  98789.715 
+  attention, attent2                 -0.009      0.045     -0.097      0.079      0.039      0.842  86377.395 
+  attention, attent3                  0.010      0.045     -0.078      0.099      0.052      0.820  90937.694 
+  attention, attent4                 -0.022      0.045     -0.110      0.067      0.228      0.633  90099.326 
+  attention, attent5                  0.005      0.045     -0.084      0.093      0.013      0.910  91180.928 
+  attention, attent6                  0.017      0.045     -0.071      0.104      0.138      0.710  84974.935 
+  attention, attent7                  0.007      0.045     -0.081      0.096      0.028      0.868  82354.648 
+  attention, attent8                 -0.017      0.045     -0.105      0.071      0.147      0.701  90167.330 
+  attention, attent9                  0.016      0.045     -0.072      0.104      0.131      0.718  79896.249 
+  attention, study                    0.008      0.046     -0.082      0.099      0.034      0.853  24968.370 
+  adhd, age                          -0.040      0.041     -0.120      0.040      0.962      0.327  90935.069 
+  adhd, attent1                      -0.001      0.046     -0.092      0.090      0.000      0.986  97094.036 
+  adhd, attent2                      -0.017      0.044     -0.103      0.070      0.141      0.707  71242.579 
+  adhd, attent3                       0.005      0.044     -0.081      0.091      0.011      0.915  73989.529 
+  adhd, attent4                      -0.040      0.044     -0.126      0.047      0.804      0.370  61630.613 
+  adhd, attent5                       0.007      0.044     -0.079      0.094      0.025      0.874  69384.963 
+  adhd, attent6                       0.024      0.044     -0.062      0.110      0.304      0.582  74240.043 
+  adhd, attent7                       0.013      0.044     -0.074      0.100      0.089      0.765  74189.713 
+  adhd, attent8                      -0.024      0.044     -0.110      0.062      0.299      0.584  71733.895 
+  adhd, attent9                       0.025      0.044     -0.061      0.111      0.325      0.569  75356.107 
+  adhd, study                         0.031      0.043     -0.052      0.115      0.540      0.463  92601.285 
+  age, attent1                        0.010      0.038     -0.065      0.085      0.071      0.790  57813.937 
+  age, attent2                       -0.000      0.046     -0.090      0.090      0.000      0.998  95263.693 
+  age, attent3                       -0.000      0.046     -0.091      0.090      0.000      0.996  1.003e+05 
+  age, attent4                        0.026      0.041     -0.053      0.105      0.414      0.520  57634.011 
+  age, attent5                       -0.013      0.040     -0.092      0.066      0.108      0.743  54768.377 
+  age, attent6                       -0.013      0.039     -0.089      0.064      0.105      0.746  55524.391 
+  age, attent7                       -0.005      0.046     -0.094      0.084      0.013      0.911  99066.247 
+  age, attent8                       -0.000      0.046     -0.091      0.090      0.000      0.997  95517.364 
+  age, attent9                       -0.018      0.040     -0.096      0.060      0.210      0.647  53576.849 
+  age, study                          0.012      0.039     -0.065      0.089      0.096      0.757  89987.173 
+  attent1, attent2                    0.089      0.040      0.010      0.166      4.889      0.027  32431.449 
+  attent1, attent3                   -0.013      0.041     -0.092      0.067      0.102      0.749  41733.907 
+  attent1, attent4                   -0.007      0.042     -0.088      0.074      0.028      0.867  35105.340 
+  attent1, attent5                    0.014      0.041     -0.067      0.096      0.121      0.728  28808.117 
+  attent1, attent6                    0.032      0.041     -0.049      0.111      0.599      0.439  40757.058 
+  attent1, attent7                   -0.052      0.041     -0.132      0.028      1.605      0.205  41724.031 
+  attent1, attent8                   -0.027      0.041     -0.106      0.053      0.430      0.512  43141.334 
+  attent1, attent9                   -0.021      0.041     -0.101      0.059      0.269      0.604  41053.268 
+  attent1, study                     -0.001      0.046     -0.092      0.091      0.000      0.988  99953.664 
+  attent2, attent3                    0.091      0.041      0.010      0.170      4.947      0.026  29357.228 
+  attent2, attent4                   -0.035      0.042     -0.116      0.047      0.689      0.406  30564.400 
+  attent2, attent5                   -0.062      0.042     -0.143      0.020      2.167      0.141  26747.820 
+  attent2, attent6                    0.024      0.041     -0.057      0.105      0.345      0.557  32803.395 
+  attent2, attent7                   -0.089      0.041     -0.169     -0.007      4.640      0.031  35600.266 
+  attent2, attent9                   -0.016      0.041     -0.096      0.065      0.147      0.702  29041.714 
+  attent2, study                     -0.001      0.046     -0.091      0.090      0.000      0.984  98154.363 
+  attent3, attent4                    0.007      0.042     -0.075      0.089      0.029      0.864  34818.273 
+  attent3, attent5                   -0.074      0.041     -0.154      0.008      3.165      0.075  32019.327 
+  attent3, attent6                   -0.032      0.041     -0.111      0.049      0.589      0.443  36910.599 
+  attent3, attent7                   -0.058      0.041     -0.138      0.023      1.949      0.163  39466.931 
+  attent3, attent8                    0.042      0.041     -0.038      0.121      1.049      0.306  34935.000 
+  attent3, attent9                    0.044      0.041     -0.036      0.123      1.155      0.282  41093.790 
+  attent3, study                     -0.000      0.047     -0.091      0.091      0.000      0.993  99085.141 
+  attent4, attent5                    0.034      0.043     -0.050      0.118      0.631      0.427  16709.637 
+  attent4, attent6                    0.001      0.042     -0.082      0.083      0.000      0.990  29887.836 
+  attent4, attent7                    0.038      0.042     -0.046      0.119      0.786      0.375  23313.148 
+  attent4, attent8                   -0.049      0.042     -0.130      0.032      1.402      0.236  29989.936 
+  attent4, attent9                    0.001      0.042     -0.082      0.082      0.000      0.995  22791.197 
+  attent4, study                     -0.019      0.043     -0.104      0.065      0.199      0.656  59321.601 
+  attent5, attent6                    0.005      0.042     -0.077      0.087      0.015      0.903  28622.046 
+  attent5, attent7                    0.098      0.042      0.015      0.179      5.477      0.019  21174.990 
+  attent5, attent8                   -0.058      0.042     -0.139      0.024      1.928      0.165  33522.459 
+  attent5, attent9                    0.015      0.042     -0.067      0.098      0.135      0.713  19257.363 
+  attent5, study                     -0.007      0.043     -0.092      0.077      0.029      0.866  57804.680 
+  attent6, attent7                   -0.010      0.041     -0.091      0.072      0.054      0.816  34382.236 
+  attent6, attent8                    0.069      0.041     -0.011      0.149      2.848      0.091  37406.392 
+  attent6, attent9                   -0.067      0.041     -0.146      0.014      2.614      0.106  36370.169 
+  attent6, study                      0.028      0.042     -0.055      0.111      0.457      0.499  60148.956 
+  attent7, attent8                   -0.032      0.042     -0.113      0.049      0.606      0.436  40030.554 
+  attent7, study                     -0.001      0.046     -0.091      0.089      0.000      0.989  94798.689 
+  attent8, attent9                    0.017      0.041     -0.063      0.097      0.178      0.673  33047.653 
+  attent8, study                     -0.001      0.046     -0.092      0.090      0.001      0.981  97078.818 
+  attent9, study                     -0.001      0.046     -0.091      0.090      0.000      0.988  95353.907 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 100000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   attention  
+
+Grand Mean Centered: age alphaeeg
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Q25% Residual Var.                  0.850      0.147      0.605      1.176        ---        ---    348.243 
+  Q50% Residual Var.                  2.191      0.493      1.377      3.297        ---        ---    333.422 
+  Mean Residual Var.                  1.977      0.351      1.400      2.791        ---        ---    299.389 
+  Q75% Residual Var.                  2.750      0.596      1.762      4.132        ---        ---    309.084 
+
+Coefficients:                   
+  alphaeeg                            0.002      0.027     -0.051      0.056      0.008      0.931  18962.400 
+  age                                -0.035      0.019     -0.073      0.001      3.472      0.062  14351.520 
+  study                               0.171      0.110     -0.033      0.397      2.510      0.113   3186.054 
+  male                               -0.161      0.101     -0.364      0.033      2.602      0.107   1191.375 
+  adhd                               -1.723      0.176     -2.089     -1.396     96.364      0.000    282.516 
+  alphaeeg^2                          0.017      0.007      0.003      0.032      5.451      0.020   5242.227 
+  age^2                               0.009      0.006     -0.002      0.020      2.551      0.110   7217.335 
+
+Standardized Coefficients:      
+  alphaeeg                            0.003      0.034     -0.063      0.069      0.007      0.931  19059.113 
+  age                                -0.064      0.034     -0.132      0.003      3.573      0.059  21697.721 
+  study                               0.053      0.033     -0.010      0.117      2.666      0.103   6922.881 
+  male                               -0.048      0.030     -0.109      0.010      2.612      0.106   1744.896 
+  adhd                               -0.452      0.026     -0.501     -0.401    313.673      0.000   1269.910 
+  alphaeeg^2                          0.072      0.030      0.012      0.130      5.622      0.018   4808.290 
+  age^2                               0.062      0.039     -0.014      0.138      2.586      0.108   5785.137 
+
+Proportion Variance Explained   
+  by Coefficients                     0.231      0.024      0.185      0.279        ---        ---   1653.395 
+  by Residual Variation               0.769      0.024      0.721      0.815        ---        ---   1653.395 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  var(attention)
+
+Grand Mean Centered: age alphaeeg
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Coefficients:                   
+  alphaeeg                            0.011      0.045     -0.075      0.099      0.061      0.805   2521.543 
+  age                                 0.005      0.022     -0.038      0.048      0.049      0.825   4616.636 
+  study                               1.132      0.132      0.871      1.387     73.372      0.000    879.251 
+  male                               -0.340      0.134     -0.603     -0.079      6.450      0.011    740.909 
+  adhd                                0.121      0.146     -0.163      0.406      0.694      0.405    533.266 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  adhd       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           0.740      0.047      0.649      0.832    252.671      0.000  28133.650 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        nan 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        nan 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       8.627      0.418      7.862      9.498        ---        ---  67391.310 
+
+Coefficients:                   
+  Intercept                          10.135      0.100      9.939     10.329  10372.701      0.000  66246.583 
+
+Standard Deviations:            
+  Residual SD                         2.937      0.071      2.804      3.082        ---        ---  67467.898 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        nan 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        nan 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.941      0.156      2.644      3.255    354.072      0.000   1079.082 
+  attention                           0.773      0.079      0.635      0.948     97.051      0.000    328.262 
+  study                              -0.407      0.081     -0.566     -0.250     25.335      0.000  15796.201 
+  adhd                               -0.327      0.112     -0.546     -0.106      8.488      0.004  22019.194 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.391      0.075      1.250      1.542        ---        ---   1785.152 
+  Tau 3                               2.599      0.099      2.408      2.801        ---        ---   1274.109 
+  Tau 4                               3.625      0.123      3.388      3.874        ---        ---   1217.257 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.753      0.021      0.709      0.793   1236.011      0.000   4435.612 
+  study                              -0.121      0.024     -0.168     -0.075     26.282      0.000  21456.325 
+  adhd                               -0.082      0.028     -0.138     -0.027      8.460      0.004  21279.184 
+
+Proportion Variance Explained   
+  by Coefficients                     0.641      0.020      0.599      0.679        ---        ---   2090.331 
+  by Residual Variation               0.359      0.020      0.321      0.401        ---        ---   2090.331 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent2    
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           3.175      0.173      2.856      3.529    339.541      0.000    703.142 
+  attention                           0.858      0.095      0.695      1.064     83.477      0.000    397.532 
+  age                                 0.068      0.015      0.039      0.097     21.256      0.000  18346.639 
+  study                              -0.494      0.126     -0.738     -0.242     15.210      0.000   3698.550 
+  study*attention                     0.171      0.073      0.034      0.321      5.617      0.018   2714.608 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.395      0.079      1.246      1.557        ---        ---   1142.133 
+  Tau 3                               2.673      0.107      2.472      2.889        ---        ---    867.054 
+  Tau 4                               3.817      0.132      3.571      4.087        ---        ---    793.749 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.724      0.046      0.636      0.815    252.242      0.000   7981.058 
+  age                                 0.103      0.022      0.060      0.146     21.858      0.000  22252.680 
+  study                              -0.127      0.032     -0.190     -0.062     15.299      0.000   4065.384 
+  study*attention                     0.136      0.054      0.028      0.239      6.241      0.012   9071.563 
+
+Proportion Variance Explained   
+  by Coefficients                     0.731      0.017      0.697      0.763        ---        ---   1155.822 
+  by Residual Variation               0.269      0.017      0.237      0.303        ---        ---   1155.822 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent3    
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.731      0.147      2.453      3.027    346.525      0.000    772.294 
+  attention                           0.637      0.076      0.503      0.803     70.336      0.000    481.502 
+  age                                 0.081      0.015      0.053      0.110     31.036      0.000  14793.946 
+  study                               0.386      0.131      0.137      0.653      8.777      0.003   3025.509 
+  study*attention                     0.314      0.076      0.177      0.473     17.578      0.000   1227.154 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.257      0.077      1.111      1.412        ---        ---   1190.163 
+  Tau 3                               2.285      0.095      2.104      2.476        ---        ---    910.749 
+  Tau 4                               3.233      0.112      3.016      3.456        ---        ---    944.132 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.583      0.046      0.493      0.674    158.628      0.000  11739.040 
+  age                                 0.134      0.023      0.088      0.180     32.558      0.000  23257.626 
+  study                               0.108      0.036      0.039      0.180      9.167      0.002   2977.574 
+  study*attention                     0.270      0.055      0.161      0.374     24.247      0.000   9376.038 
+
+Proportion Variance Explained   
+  by Coefficients                     0.684      0.021      0.641      0.723        ---        ---   1809.071 
+  by Residual Variation               0.316      0.021      0.277      0.359        ---        ---   1809.071 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           3.069      0.197      2.699      3.475    242.763      0.000    590.246 
+  attention                           1.208      0.116      1.006      1.458    109.713      0.000    317.248 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.527      0.088      1.361      1.708        ---        ---   1245.700 
+  Tau 3                               2.826      0.124      2.589      3.077        ---        ---    880.854 
+  Tau 4                               3.792      0.151      3.506      4.105        ---        ---    857.157 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.891      0.008      0.873      0.907  11059.464      0.000   1148.275 
+
+Proportion Variance Explained   
+  by Coefficients                     0.794      0.015      0.763      0.822        ---        ---   1147.070 
+  by Residual Variation               0.206      0.015      0.178      0.237        ---        ---   1147.070 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent5    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           3.087      0.201      2.716      3.507    236.984      0.000    532.591 
+  attention                           1.195      0.118      0.998      1.453    104.399      0.000    303.996 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.500      0.088      1.335      1.682        ---        ---   1143.979 
+  Tau 3                               2.793      0.125      2.556      3.047        ---        ---    844.384 
+  Tau 4                               3.849      0.156      3.557      4.167        ---        ---    800.663 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.889      0.009      0.871      0.905  10105.484      0.000   1025.803 
+
+Proportion Variance Explained   
+  by Coefficients                     0.791      0.016      0.758      0.820        ---        ---   1025.230 
+  by Residual Variation               0.209      0.016      0.180      0.242        ---        ---   1025.230 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent6    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.940      0.158      2.637      3.254    347.406      0.000    757.155 
+  attention                           0.932      0.091      0.776      1.133    106.510      0.000    312.973 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.333      0.076      1.186      1.484        ---        ---   1329.608 
+  Tau 3                               2.321      0.097      2.134      2.511        ---        ---   1057.682 
+  Tau 4                               3.231      0.116      3.006      3.457        ---        ---   1027.933 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.835      0.012      0.810      0.856   5016.195      0.000   1789.249 
+
+Proportion Variance Explained   
+  by Coefficients                     0.697      0.020      0.656      0.733        ---        ---   1786.860 
+  by Residual Variation               0.303      0.020      0.267      0.344        ---        ---   1786.860 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent7    
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.742      0.177      2.408      3.101    240.979      0.000   1444.854 
+  attention                           0.789      0.098      0.615      1.000     65.093      0.000    582.303 
+  study                               0.565      0.139      0.299      0.846     16.553      0.000   3963.265 
+  age                                 0.055      0.024      0.009      0.103      5.430      0.020   4668.909 
+  male                                0.258      0.134      0.002      0.527      3.742      0.053   5964.709 
+  study*attention                     0.146      0.079     -0.002      0.308      3.547      0.060   2349.063 
+  age*attention                       0.037      0.013      0.012      0.064      7.699      0.006   2710.958 
+  male*attention                      0.209      0.077      0.065      0.368      7.525      0.006   2373.926 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.331      0.077      1.184      1.483        ---        ---   1487.199 
+  Tau 3                               2.367      0.097      2.182      2.563        ---        ---   1118.625 
+  Tau 4                               3.373      0.117      3.151      3.609        ---        ---   1061.527 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.650      0.060      0.534      0.769    118.105      0.000   8418.704 
+  study                               0.142      0.034      0.077      0.209     17.843      0.000   4257.207 
+  age                                 0.082      0.035      0.014      0.150      5.591      0.018   4896.347 
+  male                                0.062      0.032      0.000      0.127      3.764      0.052   5961.647 
+  study*attention                     0.113      0.057     -0.001      0.222      3.905      0.048   5973.592 
+  age*attention                       0.110      0.037      0.036      0.182      8.623      0.003   5272.282 
+  male*attention                      0.143      0.049      0.045      0.238      8.405      0.004   6798.599 
+
+Proportion Variance Explained   
+  by Coefficients                     0.744      0.018      0.706      0.777        ---        ---   1494.886 
+  by Residual Variation               0.256      0.018      0.223      0.294        ---        ---   1494.886 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent8    
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.549      0.154      2.261      2.864    276.135      0.000    922.223 
+  attention                           0.778      0.089      0.624      0.969     78.211      0.000    441.714 
+  age                                 0.065      0.015      0.036      0.093     19.766      0.000  19795.921 
+  study                              -0.289      0.126     -0.529     -0.036      5.191      0.023   3840.224 
+  study*attention                     0.206      0.075      0.068      0.362      7.807      0.005   2196.312 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.208      0.071      1.072      1.353        ---        ---   1829.160 
+  Tau 3                               2.176      0.091      2.001      2.360        ---        ---   1335.255 
+  Tau 4                               3.309      0.117      3.084      3.542        ---        ---   1182.016 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.685      0.048      0.592      0.779    205.193      0.000   9608.535 
+  age                                 0.102      0.023      0.058      0.147     20.171      0.000  22035.786 
+  study                              -0.078      0.034     -0.142     -0.010      5.190      0.023   3953.312 
+  study*attention                     0.170      0.056      0.058      0.279      9.114      0.003   9778.813 
+
+Proportion Variance Explained   
+  by Coefficients                     0.707      0.018      0.669      0.742        ---        ---   2001.995 
+  by Residual Variation               0.293      0.018      0.258      0.331        ---        ---   2001.995 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  attent9    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           2.992      0.168      2.680      3.340    317.767      0.000    823.315 
+  attention                           0.883      0.098      0.711      1.095     82.858      0.000    383.325 
+  study                               0.304      0.136      0.046      0.580      5.061      0.024   4515.026 
+  study*attention                     0.188      0.078      0.042      0.350      5.914      0.015   2351.250 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 2                               1.144      0.076      0.999      1.297        ---        ---   1516.436 
+  Tau 3                               2.391      0.101      2.202      2.598        ---        ---   1013.922 
+  Tau 4                               3.425      0.121      3.198      3.671        ---        ---    957.460 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Standardized Coefficients:      
+  attention                           0.735      0.046      0.645      0.827    250.225      0.000   8815.467 
+  study                               0.078      0.034      0.012      0.145      5.219      0.022   4695.154 
+  study*attention                     0.147      0.056      0.034      0.255      6.788      0.009   7858.342 
+
+Proportion Variance Explained   
+  by Coefficients                     0.738      0.018      0.701      0.773        ---        ---   1213.751 
+  by Residual Variation               0.262      0.018      0.227      0.299        ---        ---   1213.751 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  study      
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Coefficients:                   
+  Intercept                           0.135      0.041      0.055      0.215     10.846      0.001  47110.267 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        nan 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        nan 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        nan 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: attent2 attent8
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(attent2,attent8)                0.232      0.044      0.143      0.315     27.670      0.000  13562.317 
+
+Correlations:                   
+  Cor(attent2,attent8)                0.232      0.044      0.143      0.315     27.670      0.000  13562.317 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: attent7 attent9
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(attent7,attent9)                0.286      0.044      0.197      0.367     42.441      0.000  13001.849 
+
+Correlations:                   
+  Cor(attent7,attent9)                0.286      0.044      0.197      0.367     42.441      0.000  13001.849 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 100000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Missing predictor:  alphaeeg   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.978      0.083     -1.140     -0.814    138.070      0.000   8985.428 
+
+Level 1:                                                                                                      
+  male                                0.327      0.104      0.120      0.529      9.765      0.002  15011.629 
+  Residual Var.                       3.970      0.236      3.541      4.466        ---        ---  20947.911 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  male       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.377      0.044      0.291      0.464     73.713      0.000  30377.909 
+
+Level 1:                                                                                                      
+  alphaeeg                            0.082      0.027      0.029      0.135      9.252      0.002  13719.515 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Means Model:        age        
+
+    NOTE: This model is used to estimate the grand mean and latent group means needed 
+          to center outcome variables that appear as predictors in other models.
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           10.135      0.099      9.944     10.329  10509.749      0.000  16719.388 
+
+Level 1:                                                                                                      
+  Residual Var.                       8.593      0.412      7.832      9.453        ---        ---  73962.891 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+VARIABLE ORDER IN IMPUTED DATA:
+
+   stacked = '../Ch6_LatentVars/imps.csv'
+
+     imp# id alphaeeg study age male adhd attent1 attent2 attent3 attent4 attent5
+     attent6 attent7 attent8 attent9 attention.latent adhd.latent attent1.latent
+     attent2.latent attent3.latent attent4.latent attent5.latent attent6.latent attent7.latent
+     attent8.latent attent9.latent study.latent male.latent
+
