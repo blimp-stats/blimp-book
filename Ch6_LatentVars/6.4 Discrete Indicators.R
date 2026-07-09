@@ -127,7 +127,7 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 6.6: DISTRIBUTIONS ----
+# FIGURE 6.7: DISTRIBUTIONS ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -139,20 +139,20 @@ dp <- distribution_plot(
   line_width     = 0.5
 )
 
-fig6_6A <- dp$consci1
-fig6_6B <- dp$consci1.latent +
+fig6_7A <- dp$consci1
+fig6_7B <- dp$consci1.latent +
   geom_vline(xintercept = 0, linewidth = 0.5, linetype = 'dashed') +
   geom_vline(xintercept = .69, linewidth = 0.5, linetype = 'dashed') +
   geom_vline(xintercept = 1.32, linewidth = 0.5, linetype = 'dashed') +
   geom_vline(xintercept = 2.28, linewidth = 0.5, linetype = 'dashed')
 
-fig6_6 <- (fig6_6A / fig6_6B) +
+fig6_7 <- (fig6_7A / fig6_7B) +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
   labs(title = NULL) &
   theme(legend.position = "none")
 
-save_fig(fig6_6, "Figure 6.6", width = 8.5, height = 11)
+save_fig(fig6_7, "Figure 6.7", width = 8.5, height = 11)
 
 

@@ -130,30 +130,30 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 6.7 ----
+# FIGURE 6.8 ----
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig6_7A <- simple_plot(wrkbehave ~ orgconstr | conscient, mod1) 
-fig6_7B <- jn_plot(wrkbehave ~ orgconstr | conscient, mod1)
+fig6_8A <- simple_plot(wrkbehave ~ orgconstr | conscient, mod1) 
+fig6_8B <- jn_plot(wrkbehave ~ orgconstr | conscient, mod1)
 
 # grey the non-significant region (NAMED values, so it maps correctly even when
 # only one significance level is present in range)
-fig6_7B <- fig6_7B +
+fig6_8B <- fig6_8B +
   scale_fill_manual(values = c(`TRUE` = NA, `FALSE` = "grey80")) +  # TRUE=sig (no fill); FALSE=non-sig (grey)
   labs(subtitle = "Shaded area represents 0 within 95% interval\nBound: 1.5")
 
 # linetype by moderator level (line layers only), black lines, drop CI ribbons
-for (i in which(vapply(fig6_7A$layers,
+for (i in which(vapply(fig6_8A$layers,
                        function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
-  q <- fig6_7A$layers[[i]]$mapping[["colour"]]
-  if (is.null(q)) q <- fig6_7A$mapping[["colour"]]
-  fig6_7A$layers[[i]]$mapping[["linetype"]] <- q
+  q <- fig6_8A$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig6_8A$mapping[["colour"]]
+  fig6_8A$layers[[i]]$mapping[["linetype"]] <- q
 }
-fig6_7A$layers <- fig6_7A$layers[
-  !vapply(fig6_7A$layers, function(l) inherits(l$geom, "GeomRibbon"), logical(1))
+fig6_8A$layers <- fig6_8A$layers[
+  !vapply(fig6_8A$layers, function(l) inherits(l$geom, "GeomRibbon"), logical(1))
 ]
-fig6_7A <- fig6_7A +
+fig6_8A <- fig6_8A +
   scale_linetype_manual(
     values = c("dashed", "solid", "dotted"),               # middle = solid
     name   = "Latent Conscientiousness",
@@ -164,7 +164,7 @@ fig6_7A <- fig6_7A +
   labs(subtitle = NULL)                           # drop "Centered variables: ..."
 
 # force white panels + no grid on every subplot
-fig6_7 <- (fig6_7A / fig6_7B) +
+fig6_8 <- (fig6_8A / fig6_8B) +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &                                              # <- apply uppercase axis names
@@ -177,4 +177,4 @@ fig6_7 <- (fig6_7A / fig6_7B) +
     axis.line        = element_line(colour = "black", linewidth = 0.5)
   )
 
-save_fig(fig6_7, "Figure 6.7", width = 8.5, height = 11)
+save_fig(fig6_8, "Figure 6.8", width = 8.5, height = 11)

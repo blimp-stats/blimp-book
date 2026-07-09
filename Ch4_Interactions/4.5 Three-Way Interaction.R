@@ -53,7 +53,7 @@ mod2 <- rblimp(
     workbeh ~ orgcon consci emostab
       orgcon*consci@b4 orgcon*emostab consci*emostab
       orgcon*consci*emostab@b7;                  # focal model
-    emostab ~ orgcon consci; DEBUG: compact_output',   		             # predictor model
+    emostab ~ orgcon consci;',   		             # predictor model
   parameters = '
     sd_emostab = sqrt(emostab.totalvar);	       # moderator std. dev.
     int_hi_emostab = b4 + b7*sd_emostab;	       # simple interaction
