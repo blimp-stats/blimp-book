@@ -1,174 +1,50 @@
-# MEDIATION WITH DISCRETE OUTCOMES ----
+# MEDIATION WITH BINARY OUTCOME USING CONDITIONAL ESTIMATOR
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcohol.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/worksat.csv'
 
 # create data frame from github data
-alcohol <- read.csv(data_url)
+worksat <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
-# FIT MODEL WITH BINARY OUTCOME AND CONDITIONAL INDIRECT EFFECTS ----
-#-----------#------------------------------------------------------------------------------#--------------------------------------------------------#
+# BINARY OUTCOME AND TOTAL NATURAL INDIRECT EFFECT ----
+#------------------------------------------------------------------------------#
 
-# binary logistic model for outcome
-model1 <- rblimp(
-  data = alcoholuse,
-  nominal = 'college male drinker', 
-  center  = 'college age',
-  # fixed = 'male age',
+mod1 <- rblimp(
+  data = worksat,
+  ordinal = 'turnover male suprelqual',
+  center  = 'male',
   model = '
-    apath:
-    alcage ~ intercept@m_icept male@a college age;
-    bpath:
-    drinker ~ intercept@y_icept alcage@b male@tau college age',
+    jobsat ~ intercept@a0 suprelqual@a1 male;
+    jobsat@resvar_m;
+    turnover ~ intercept@b0 jobsat@b1 suprelqual@b2 male;',
   parameters = '
-    ind_female = a * ( b * exp( y_icept + b*(m_icept + a*0) + tau*0 ) ) /
-      ( 1 + exp( y_icept + b*(m_icept + a*0) + tau*0 ) )^2;
-    ind_male   = a * ( b * exp( y_icept + b*(m_icept + a*1) + tau*1 ) ) /
-      ( 1 + exp( y_icept + b*(m_icept + a*1) + tau*1 ) )^2;
-    ind_diff = ind_male - ind_female;',
+    sd_lat = sqrt(b1^2 * resvar_m + 1);
+    p_obs = phi((b0 + b1*(a0 + a1*1) + b2*1) / sd_lat);
+    p_cfact = phi((b0 + b1*(a0 + a1*0) + b2*1) / sd_lat);
+    tnie    = p_obs - p_cfact;',
   seed = 90291,
   burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  iter = 10000)
 
-# print output
-output(model1)
-
-# plot parameter distributions
-posterior_plot(model1)
-
-# plot distribution of indirect effects
-posterior_plot(model1, 'ind_male')
-posterior_plot(model1, 'ind_female')
-posterior_plot(model1, 'ind_diff')
+output(mod1)
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
-
-# plot imputed vs. observed values
-imputation_plot(model1)
-
-# plot distributions and residuals
-univariate_plot(vars = c('drinker.1.probability','drinker.1.residual'), model1)
-
-# plot individual-level predicted probabilities
-bivariate_plot(y_vars = 'drinker.1.probability', 
-               x_vars = c('alcage','college','age','male'),
-               discrete_x = c('college','male'),
-               model = model1)
-
-# plot standardized residuals vs. numeric predictors
-bivariate_plot(y_vars = 'drinker.1.residual', 
-               x_vars = c('alcage','college','age','male'),
-               discrete_x = c('college','male'),
-               standardize = 'y',
-               model = model1)
-
-#------------------------------------------------------------------------------#
-# FIT MODEL WITH A COUNT OUTCOME AND CONDITIONAL INDIRECT EFFECTS ----
-#------------------------------------------------------------------------------#
-
-# negative binomial model for outcome
-model2 <- rblimp(
-  data = alcoholuse,
-  nominal = 'college male',
-  count = 'alcdays',
-  center = 'college age',
-  # fixed = 'male age',
-  model = '
-      apath:
-      alcage ~ intercept@m_icept male@a college age;
-      bpath:
-      alcdays ~ intercept@y_icept alcage@b male@tau college age',
-  parameters = '
-      ind_female = a * (b*exp(y_icept + b*m_icept + tau*0)); 
-      ind_male = a * (b*exp(y_icept + b*(m_icept + a*1) + tau*1));
-      ind_diff = ind_female - ind_male;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# print output
-output(model2)
-
-# plot parameter distributions
-posterior_plot(model2)
-
-# plot distribution of indirect effects
-posterior_plot(model2, 'ind_male')
-posterior_plot(model2, 'ind_female')
-posterior_plot(model2, 'ind_diff')
-
-#------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#------------------------------------------------------------------------------#
-
-
-
-#------------------------------------------------------------------------------#
-# FIT MODEL WITH BINARY OUTCOME AND CAUSALLY-DEFINED INDIRECT EFFECTS ----
-#------------------------------------------------------------------------------#
-
-# binary probit (latent response) model for outcome
-model3 <- rblimp(
-  data = alcoholuse,
-  nominal = 'college male', 
-  ordinal = 'drinker',
-  center  = 'college age',
-  # fixed = 'male age',
-  model = '
-    apath:
-    alcage ~ intercept@m_icept male@a college age;
-    alcage ~~ alcage@m_resvar;
-    bpath:
-    drinker ~ intercept@y_icept alcage@b male@tau college age',
-  parameters = '
-    denom = sqrt(b^2*m_resvar + 1);
-    p_x0 = phi( ( y_icept + b*(m_icept + a*0) + tau*0 ) / denom );
-    p_x1 = phi( ( y_icept + b*(m_icept + a*1) + tau*1 ) / denom );
-    nie = phi( ( y_icept + b*(m_icept + a*1) + tau*1 ) / denom )
-      - phi( ( y_icept + b*(m_icept + a*0) + tau*1 ) / denom );
-    nde = phi( ( y_icept + b*(m_icept + a*0) + tau*1 ) / denom )
-      - phi( ( y_icept + b*(m_icept + a*0) + tau*0 ) / denom );
-    te  = p_x1 - p_x0;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# print output
-output(model3)
-
-# plot parameter distributions
-posterior_plot(model3)
-
-# plot distribution of indirect effects
-posterior_plot(model3, 'nie')
-posterior_plot(model3, 'nde')
-posterior_plot(model3, 'te')
-
-#------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#------------------------------------------------------------------------------#
-
-
-
-
-
-
