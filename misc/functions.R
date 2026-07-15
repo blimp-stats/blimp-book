@@ -863,11 +863,11 @@ print.distribution_plot <- function(x, ...) {
     yjt         = "Yeo-Johnson Transformed"
   )
   parts <- strsplit(var, ".", fixed = TRUE)[[1]]
-  if (length(parts) < 2) return(toupper(var))
+  if (length(parts) < 2) return(var)
   suffix <- parts[length(parts)]
-  if (!suffix %in% names(suffix_map)) return(toupper(var))
+  if (!suffix %in% names(suffix_map)) return(var)
   base <- paste(parts[-length(parts)], collapse = ".")
-  paste(toupper(base), suffix_map[[suffix]])
+  paste(base, suffix_map[[suffix]])
 }
 
 
@@ -1083,6 +1083,10 @@ print.distribution_plot <- function(x, ...) {
 #'   and threshold annotations. Default `""` (graphics device default).
 #'   Set to a family name (e.g., `"Minion Pro"`) to match a custom
 #'   theme applied via `&` in patchwork.
+#' @param few_values_warn Integer. For a predictor modeled as continuous, warn
+#'   when it has this many or fewer distinct values (a likely sign it should
+#'   have been declared ORDINAL or NOMINAL). The plot itself is left unchanged.
+#'   Default `5`; set to `0` to disable the check.
 #' @param verbose Logical. If `TRUE`, prints informational messages.
 #'   Default `FALSE`.
 #'
@@ -1128,6 +1132,7 @@ residuals_plot <- function(
     index_thresholds = c(-3, 3),
     max_labels       = 10,
     label_family     = "",
+    few_values_warn  = 5,
     verbose          = FALSE
     # coral #F8766D olive #A3A500 mint #00BF7D blue #00B0F6 megenta #E76BF3
 ) {
@@ -1143,8 +1148,11 @@ residuals_plot <- function(
     stop("`model@imputations` must be a non-empty list.")
   }
   
-  # Average imputations and detect what to plot
+  # Average imputations and detect what to plot. Residual diagnostics are
+  # computed within each imputation and pooled (imp_list); avg_data is retained
+  # for structural detection and for the nominal/count (binned/Pearson) panels.
   avg_data        <- .residuals_plot_average(model)
+  imp_list        <- lapply(model@imputations, as.data.frame)
   dv_bases        <- .residuals_plot_detect_dvs(avg_data, vars, verbose)
   predictors_list <- .residuals_plot_predictors(model, dv_bases)
   discrete_vars   <- .get_discrete_vars(model)
@@ -1160,8 +1168,9 @@ residuals_plot <- function(
     point_alpha  = point_alpha,
     point_size   = point_size,
     line_width   = line_width,
-    max_labels   = max_labels,
-    label_family = label_family
+    max_labels      = max_labels,
+    label_family    = label_family,
+    few_values_warn = few_values_warn
   )
   
   plots <- list()
@@ -1175,7 +1184,7 @@ residuals_plot <- function(
     if (outcome$type %in% c("nominal", "ordinal") &&
         !outcome$parent %in% overlay_done) {
       for (pred in predictors_list[[dv]]) {
-        if (!pred %in% names(avg_data)) {
+        if (is.na(.resolve_predictor_col(avg_data, pred))) {
           if (verbose) message("Skipping predictor not found in data: ", pred)
           next
         }
@@ -1201,18 +1210,18 @@ residuals_plot <- function(
       
       # Pearson residual index plot
       plots[[paste0(outcome$parent, ".index")]] <-
-        .pearson_residuals_index(avg_data, outcome$parent, alpha,
+        .pearson_residuals_index(imp_list, outcome$parent, alpha,
                                  index_thresholds, style)
       
       # Pearson residual vs. each predictor
       for (pred in predictors_list[[dv]]) {
-        if (!pred %in% names(avg_data)) {
+        if (is.na(.resolve_predictor_col(imp_list[[1]], pred))) {
           if (verbose) message("Skipping predictor not found in data: ", pred)
           next
         }
         plots[[paste0(outcome$parent, ".", pred)]] <-
           .pearson_residuals_vs_predictor(
-            avg_data, outcome$parent, pred, alpha,
+            imp_list, outcome$parent, pred, alpha,
             pred %in% discrete_vars, style
           )
       }
@@ -1227,7 +1236,7 @@ residuals_plot <- function(
     # meaningful binary analogue and is intentionally omitted.
     if (outcome$type == "nominal") {
       # Calibration plot: binned residuals vs. predicted probability
-      bp <- .binned_residuals(avg_data, outcome$parent, outcome$category, style)
+      bp <- .binned_residuals(imp_list, outcome$parent, outcome$category, style)
       if (!is.null(bp)) {
         plots[[paste0(dv, ".binned")]] <- bp
       } else if (verbose) {
@@ -1237,12 +1246,12 @@ residuals_plot <- function(
       
       # Binned residuals vs. each predictor (one plot per predictor)
       for (pred in predictors_list[[dv]]) {
-        if (!pred %in% names(avg_data)) {
+        if (is.na(.resolve_predictor_col(imp_list[[1]], pred))) {
           if (verbose) message("Skipping predictor not found in data: ", pred)
           next
         }
         bvp <- .binned_residuals_vs_predictor(
-          avg_data, outcome$parent, outcome$category, pred,
+          imp_list, outcome$parent, outcome$category, pred,
           pred %in% discrete_vars, style
         )
         if (!is.null(bvp)) {
@@ -1253,29 +1262,29 @@ residuals_plot <- function(
     }
     
     # Continuous and ORDINAL outcomes: linear-style diagnostic suite.
-    # Residual vs. predicted
+    # Residual vs. predicted (pooled across imputations)
     plots[[paste0(dv, ".predicted")]] <-
-      .residuals_vs_predicted(avg_data, dv, style)
+      .residuals_vs_predicted(imp_list, dv, style)
     
-    # Residual vs. each predictor
+    # Residual vs. each predictor (pooled across imputations)
     for (pred in predictors_list[[dv]]) {
-      if (!pred %in% names(avg_data)) {
+      if (is.na(.resolve_predictor_col(avg_data, pred))) {
         if (verbose) message("Skipping predictor not found in data: ", pred)
         next
       }
       plots[[paste0(dv, ".", pred)]] <-
-        .residuals_vs_predictor(avg_data, dv, pred,
+        .residuals_vs_predictor(imp_list, dv, pred,
                                 pred %in% discrete_vars,
                                 index_thresholds, style)
     }
     
-    # Standardized residual index
+    # Standardized residual index (all imputations shown per case)
     plots[[paste0(dv, ".index")]] <-
-      .residuals_index(avg_data, dv, index_thresholds, style)
+      .residuals_index(imp_list, dv, index_thresholds, style)
     
-    # Leverage and Cook's distance
+    # Leverage and Cook's distance (per imputation, averaged per case)
     diag <- .residuals_lm_diagnostics(
-      avg_data, dv, predictors_list[[dv]], nominal_vars, verbose
+      imp_list, dv, predictors_list[[dv]], nominal_vars, verbose
     )
     if (!is.null(diag)) {
       plots[[paste0(dv, ".leverage")]] <- .residuals_leverage(diag, dv, style)
@@ -1419,6 +1428,14 @@ print.residuals_plot <- function(x, ...) {
   
   if (!length(mb)) return(result)
   
+  # Strip inline comments (Blimp uses `#` to end of line) before tokenizing,
+  # in case the stored syntax retains them. Split to physical lines first so
+  # the strip respects line boundaries whether `mb` is one multi-line string
+  # or a vector of lines.
+  mb <- unlist(strsplit(paste(mb, collapse = "\n"), "\n", fixed = TRUE),
+               use.names = FALSE)
+  mb <- sub("#.*$", "", mb)
+  
   # Derive each base's parent name. For continuous and ORDINAL bases the
   # parent is the base itself; for NOMINAL-indexed bases like "drinker.1"
   # the parent is the part before the trailing ".<k>". A MODEL line with
@@ -1437,23 +1454,60 @@ print.residuals_plot <- function(x, ...) {
   chunks <- unlist(strsplit(paste(mb, collapse = " "), ";", fixed = TRUE),
                    use.names = FALSE)
   chunks <- gsub("\\s+", " ", trimws(chunks))
+  # Normalize Unicode dashes (figure/en/em dash, horizontal bar, minus sign)
+  # to ASCII "-" so the loading arrow is recognized even when an editor has
+  # auto-converted "->" to "–>". Blimp accepts these variants; this lets
+  # the parser match them too.
+  chunks <- gsub("[\u2012\u2013\u2014\u2015\u2212]", "-", chunks)
   chunks <- chunks[nzchar(chunks)]
   
   for (ch in chunks) {
+    # Factor / loading syntax: `<predictor(s)> -> <outcome(s)>`. Blimp regresses
+    # each RHS outcome on the LHS predictor(s) -- the measurement-model analogue
+    # of `outcome ~ predictor` with the sides reversed. A latent factor `f` is
+    # stored in the averaged data as `f.latent`; `.resolve_predictor_col` maps
+    # the bare name to that column at lookup time. Because Blimp imputes the
+    # factor, leverage and Cook's D are well defined against the `.latent`
+    # score just as they are for any observed predictor.
+    if (grepl("->", ch, fixed = TRUE)) {
+      sides <- strsplit(ch, "->", fixed = TRUE)[[1]]
+      if (length(sides) != 2) next
+      
+      lhs_toks <- strsplit(trimws(sides[1]), "\\s+")[[1]]
+      lhs_toks <- sub("@.+$", "", lhs_toks)                # strip @label
+      lhs_toks <- lhs_toks[!grepl(":$", lhs_toks)]         # drop block labels e.g. "measurement:"
+      lhs_toks <- lhs_toks[nzchar(lhs_toks) & !grepl("\\*", lhs_toks)]
+      lhs_toks <- unique(lhs_toks)
+      
+      out_toks <- strsplit(trimws(sides[2]), "\\s+")[[1]]
+      out_toks <- sub("@.+$", "", out_toks)                # strip @label
+      out_toks <- out_toks[nzchar(out_toks)]
+      
+      for (out in out_toks) {
+        out <- sub("^yjt\\((.*)\\)$", "\\1", out)
+        matched_bases <- dv_bases[base_parents == out]
+        for (base in matched_bases) {
+          result[[base]] <- unique(c(result[[base]], lhs_toks))
+        }
+      }
+      next
+    }
+    
     if (!grepl("~", ch, fixed = TRUE)) next
     parts <- strsplit(ch, "~", fixed = TRUE)[[1]]
     if (length(parts) != 2) next
     
-    # DV: last token of LHS (strips block labels like "focal.model:")
-    dv_raw    <- trimws(parts[1])
-    dv_tokens <- strsplit(dv_raw, "\\s+")[[1]]
-    dv        <- sub(":$", "", dv_tokens[length(dv_tokens)])
-    
-    # Strip yjt(...) wrapper. A model line "yjt(dpddcent) ~ inflam ..." fits
-    # the regression on the Yeo-Johnson-transformed scale but still produces
-    # dpddcent.residual / dpddcent.predicted columns. The DV detected from
-    # those columns is "dpddcent", so we unwrap yjt() here to make the match.
-    dv <- sub("^yjt\\((.*)\\)$", "\\1", dv)
+    # DV: extract the variable name from the LHS. Drop a block-label prefix
+    # (e.g. "focal.model:"), unwrap a yjt(...) transform wrapper, then take the
+    # first identifier and ignore any in-formula centering/arithmetic. Blimp
+    # names the model-implied columns after that variable and drops the
+    # arithmetic, so "yjt(dpdd - 6) ~ ..." produces dpdd.residual /
+    # dpdd.predicted, and the DV here must reduce to "dpdd" to match them.
+    dv_raw <- trimws(parts[1])
+    dv_raw <- sub("^\\s*[A-Za-z0-9._]+:\\s*", "", dv_raw)    # drop "block:" label
+    dv_raw <- sub("^yjt\\((.*)\\)$", "\\1", trimws(dv_raw))  # unwrap yjt(...)
+    dv     <- regmatches(dv_raw, regexpr("[A-Za-z][A-Za-z0-9._]*", dv_raw))
+    if (!length(dv) || !nzchar(dv)) next
     
     # Match the model-line DV against every base whose parent equals dv.
     # This covers continuous/ORDINAL (dv matches its own base) and NOMINAL
@@ -1478,17 +1532,106 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: residuals vs. predicted plot =======================================
+# Internal: multiple-imputation pooling helpers ================================
+#
+# Residual diagnostics are computed WITHIN each imputed data set and pooled,
+# rather than computed once on @average_imp. Averaging the residual and the
+# imputed latent first induces a spurious residual-predictor association (a
+# linear tilt and exaggerated curvature); estimating within each imputation and
+# pooling removes it. Points are stacked across imputations (honest imputation
+# uncertainty); smoother curves are fit per imputation and averaged (Rubin
+# point-estimate order); leverage/Cook's D are computed per imputation and
+# averaged per case.
 
 #' @keywords internal
-.residuals_vs_predicted <- function(data, dv, style) {
-  df <- data.frame(
-    predicted = data[[paste0(dv, ".predicted")]],
-    residual  = data[[paste0(dv, ".residual")]]
-  )
-  df <- df[is.finite(df$predicted) & is.finite(df$residual), ]
+.pooled_sigma <- function(imp_list, dv) {
+  resid_col <- paste0(dv, ".residual")
+  var_col   <- paste0("var.", dv, ".predicted")
+  n         <- nrow(imp_list[[1]])
+  if (var_col %in% names(imp_list[[1]])) {
+    rowMeans(vapply(imp_list, function(d) sqrt(exp(d[[var_col]])), numeric(n)))
+  } else {
+    s <- mean(vapply(imp_list,
+                     function(d) stats::sd(d[[resid_col]], na.rm = TRUE),
+                     numeric(1)), na.rm = TRUE)
+    rep(s, n)
+  }
+}
+
+# Effective point alpha for a stacked cloud of M imputations. Reduces alpha so
+# the dense centre does not fully saturate, but only gently (cube root of M) so
+# sparse extreme points stay visible. Tunable via style$point_alpha.
+#' @keywords internal
+.pooled_alpha <- function(point_alpha, M) point_alpha / max(M, 1)^(1 / 3)
+
+# Stacked per-imputation (x, residual/sigma) points. `xfun` extracts the x
+# column from one imputation; `sigma` is the pooled per-observation SD (pass a
+# vector of 1s for raw residuals).
+#' @keywords internal
+.pooled_xy <- function(imp_list, dv, xfun, sigma) {
+  rc  <- paste0(dv, ".residual")
+  pts <- do.call(rbind, lapply(imp_list, function(d)
+    data.frame(x = xfun(d), y = d[[rc]] / sigma)))
+  pts[is.finite(pts$x) & is.finite(pts$y), ]
+}
+
+# Fit-then-pool loess: fit within each imputation, predict on a common trimmed
+# grid, average the curves. No confidence band (stacked draws are not
+# independent, and the function shows no bands anyway).
+#' @keywords internal
+.pooled_loess_curve <- function(imp_list, dv, xfun, sigma, span = 0.75,
+                                n_grid = 200) {
+  rc   <- paste0(dv, ".residual")
+  allx <- unlist(lapply(imp_list, xfun), use.names = FALSE)
+  rng  <- stats::quantile(allx, c(0.01, 0.99), na.rm = TRUE)
+  grid <- seq(rng[1], rng[2], length.out = n_grid)
+  preds <- vapply(imp_list, function(d) {
+    df <- data.frame(x = xfun(d), y = d[[rc]] / sigma)
+    df <- df[is.finite(df$x) & is.finite(df$y), ]
+    if (nrow(df) < 10 || length(unique(df$x)) < 4) {
+      return(rep(NA_real_, length(grid)))
+    }
+    fit <- tryCatch(stats::loess(y ~ x, df, span = span), error = function(e) NULL)
+    if (is.null(fit)) return(rep(NA_real_, length(grid)))
+    suppressWarnings(stats::predict(fit, newdata = data.frame(x = grid)))
+  }, numeric(length(grid)))
+  data.frame(x = grid, y = rowMeans(preds, na.rm = TRUE))
+}
+
+# Fit-then-pool loess from a list of per-imputation (x, y) data frames whose x
+# and y are already computed (e.g. probability-scale binned residuals or Pearson
+# residuals, where there is no single ".residual" column to divide). Fits within
+# each imputation, predicts on a common trimmed grid, averages the curves.
+#' @keywords internal
+.pooled_loess_xy <- function(xy_list, span = 0.75, n_grid = 200) {
+  allx <- unlist(lapply(xy_list, function(d) d$x), use.names = FALSE)
+  allx <- allx[is.finite(allx)]
+  if (length(allx) < 2) return(data.frame(x = numeric(0), y = numeric(0)))
+  rng  <- stats::quantile(allx, c(0.01, 0.99), na.rm = TRUE)
+  grid <- seq(rng[1], rng[2], length.out = n_grid)
+  preds <- vapply(xy_list, function(d) {
+    d <- d[is.finite(d$x) & is.finite(d$y), ]
+    if (nrow(d) < 10 || length(unique(d$x)) < 4) return(rep(NA_real_, length(grid)))
+    fit <- tryCatch(stats::loess(y ~ x, d, span = span), error = function(e) NULL)
+    if (is.null(fit)) return(rep(NA_real_, length(grid)))
+    suppressWarnings(stats::predict(fit, newdata = data.frame(x = grid)))
+  }, numeric(length(grid)))
+  data.frame(x = grid, y = rowMeans(preds, na.rm = TRUE))
+}
+
+
+
+# Internal: residuals vs. predicted plot (pooled) ==============================
+
+#' @keywords internal
+.residuals_vs_predicted <- function(imp_list, dv, style) {
+  n     <- nrow(imp_list[[1]])
+  xfun  <- function(d) d[[paste0(dv, ".predicted")]]
+  pts   <- .pooled_xy(imp_list, dv, xfun, sigma = rep(1, n))
+  curve <- .pooled_loess_curve(imp_list, dv, xfun, sigma = rep(1, n))
+  a     <- .pooled_alpha(style$point_alpha, length(imp_list))
   
-  ggplot2::ggplot(df, ggplot2::aes(x = predicted, y = residual)) +
+  ggplot2::ggplot(pts, ggplot2::aes(x = x, y = y)) +
     ggplot2::geom_hline(
       yintercept = 0,
       color      = "grey50",
@@ -1496,12 +1639,18 @@ print.residuals_plot <- function(x, ...) {
     ) +
     ggplot2::geom_point(
       color = style$point_color,
-      alpha = style$point_alpha,
+      alpha = a,
       size  = style$point_size
     ) +
-    .residuals_smoother(style) +
+    ggplot2::geom_line(
+      data      = curve,
+      ggplot2::aes(x = x, y = y),
+      color     = style$curve_color,
+      linewidth = style$line_width,
+      na.rm     = TRUE
+    ) +
     ggplot2::labs(
-      title = sprintf("Residual vs. Predicted: %s", toupper(dv)),
+      title = sprintf("Residual vs. Predicted: %s", dv),
       x     = "Predicted",
       y     = "Raw Residual"
     ) +
@@ -1522,18 +1671,32 @@ print.residuals_plot <- function(x, ...) {
 # should collapse to a flat band.
 
 #' @keywords internal
-.residuals_vs_predictor <- function(data, dv, predictor, is_discrete,
+.residuals_vs_predictor <- function(imp_list, dv, predictor, is_discrete,
                                     index_thresholds, style) {
-  resid   <- data[[paste0(dv, ".residual")]]
-  sigma_i <- .casewise_sigma(data, dv)
+  pcol <- .resolve_predictor_col(imp_list[[1]], predictor)
+  if (is.na(pcol)) return(NULL)
+  sigma <- .pooled_sigma(imp_list, dv)
+  xfun  <- function(d) d[[pcol]]
+  df    <- .pooled_xy(imp_list, dv, xfun, sigma)        # stacked across imputations
+  a     <- .pooled_alpha(style$point_alpha, length(imp_list))
   
-  df <- data.frame(
-    x        = data[[predictor]],
-    residual = resid / sigma_i
-  )
-  df <- df[is.finite(df$x) & is.finite(df$residual), ]
+  # A predictor modeled as continuous but with few distinct values is likely a
+  # categorical variable not declared ORDINAL/NOMINAL. Two thresholds apply:
+  # `few_values_warn` (distinct values at or below which we warn about possible
+  # miscoding; 0 disables), and a fixed count (10) at or below which we render
+  # the panel as discrete (category means) instead of fitting a loess, since a
+  # loess is unstable or uninformative over so few x-values.
+  nux      <- length(unique(imp_list[[1]][[pcol]]))
+  few_vals <- nux <= 10L
+  if (!is_discrete && style$few_values_warn > 0 && nux <= style$few_values_warn) {
+    warning(sprintf(
+      paste0("Predictor '%s' is modeled as continuous but has only %d distinct ",
+             "value(s). If it is categorical, declare it as ORDINAL or NOMINAL ",
+             "in the model and re-fit. (The plot displays category means.)"),
+      predictor, nux), call. = FALSE)
+  }
   
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = residual)) +
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
     ggplot2::geom_hline(
       yintercept = 0,
       color      = "grey50",
@@ -1549,11 +1712,11 @@ print.residuals_plot <- function(x, ...) {
     )
   }
   
-  if (is_discrete) {
+  if (is_discrete || few_vals) {
     p <- p +
       ggplot2::geom_point(
         color = style$point_color,
-        alpha = style$point_alpha,
+        alpha = a,
         size  = style$point_size
       ) +
       ggplot2::stat_summary(
@@ -1566,20 +1729,27 @@ print.residuals_plot <- function(x, ...) {
       ) +
       ggplot2::scale_x_continuous(breaks = .integer_breaks)
   } else {
+    curve <- .pooled_loess_curve(imp_list, dv, xfun, sigma)
     p <- p +
       ggplot2::geom_point(
         color = style$point_color,
-        alpha = style$point_alpha,
+        alpha = a,
         size  = style$point_size
       ) +
-      .residuals_smoother(style)
+      ggplot2::geom_line(
+        data      = curve,
+        ggplot2::aes(x = x, y = y),
+        color     = style$curve_color,
+        linewidth = style$line_width,
+        na.rm     = TRUE
+      )
   }
   
   p +
     ggplot2::labs(
       title = sprintf("Standardized Residual vs. Predictor: %s ~ %s",
-                      toupper(dv), toupper(predictor)),
-      x     = toupper(predictor),
+                      dv, predictor),
+      x     = predictor,
       y     = "Standardized Residual"
     ) +
     .residuals_plot_theme(style$font_size)
@@ -1587,73 +1757,72 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: probability-scale binned residuals plot ============================
+# Internal: probability-scale binned residuals plot (pooled) ===================
 #
 # Implements Gelman and Hill's (2007) binned-residuals diagnostic for a
-# NOMINAL outcome category:
+# NOMINAL outcome category, computed within each imputed data set and pooled:
 #
-#   1. Compute raw residuals on the probability scale,
+#   1. Within each imputation, compute raw residuals on the probability scale,
 #         r_i = I(Y_i = k) - p_hat_i,
-#      where p_hat_i is the predicted P(Y_i = k) (read from the
-#      "<parent>.<k>.probability" column) and I() is the category
-#      indicator on the observed parent variable.
-#   2. Sort cases by predicted probability and divide into
-#      n_bins = floor(sqrt(n)) equal-sized bins.
-#   3. For each bin, compute the mean predicted probability, the mean
-#      raw residual, and a +-2 * SD/sqrt(n_bin) envelope (G&H default).
-#   4. Plot bin means against bin midpoints with the envelope and a
-#      reference line at y = 0.
+#      where p_hat_i is the predicted P(Y_i = k) (read from that imputation's
+#      "<parent>.<k>.probability" column) and I() is the category indicator on
+#      that imputation's parent variable (modal/observed code).
+#   2. Fix bin edges once from the pooled predicted probabilities (quantiles, so
+#      bins are comparable across imputations), assign each imputation's cases to
+#      those bins, and compute each imputation's bin-mean predicted probability
+#      and bin-mean residual.
+#   3. Average the bin means across imputations (point estimate; no error bands).
+#   4. Overlay a fit-then-pool loess: fit on each imputation's case-level cloud,
+#      predict on a common grid, average the curves. Reference line at y = 0.
 #
-# The parent column comes from `model@average_imp`, which holds modal
-# imputation for multicategoricals and the observed code for binary
-# variables. The category-indicator comparison is therefore exact.
-#
-# Returns NULL when there are too few cases (< 16) for a meaningful binned
-# plot, or when the parent / probability columns are missing.
+# Residuals stay on the raw probability metric (no standardization). Returns NULL
+# when there are too few cases (< 16) or the parent / probability columns are
+# missing.
 
 #' @keywords internal
-.binned_residuals <- function(data, parent, category, style) {
+.binned_residuals <- function(imp_list, parent, category, style) {
   pred_col <- paste0(parent, ".", category, ".probability")
-  if (!pred_col %in% names(data))         return(NULL)
-  if (!parent   %in% names(data))         return(NULL)
+  if (!pred_col %in% names(imp_list[[1]])) return(NULL)
+  if (!parent   %in% names(imp_list[[1]])) return(NULL)
   
-  pred       <- data[[pred_col]]
-  observed_k <- as.numeric(data[[parent]] == category)
+  # Per-imputation case-level (predicted probability, probability-scale residual)
+  xy_list <- lapply(imp_list, function(d) {
+    p  <- d[[pred_col]]
+    ok <- as.numeric(d[[parent]] == category)
+    z  <- data.frame(x = p, y = ok - p)
+    z[is.finite(z$x) & is.finite(z$y), ]
+  })
   
-  keep       <- is.finite(pred) & is.finite(observed_k)
-  pred       <- pred[keep]
-  observed_k <- observed_k[keep]
+  n_keep <- nrow(xy_list[[1]])
+  if (n_keep < 16) return(NULL)
   
-  n <- length(pred)
-  if (n < 16) return(NULL)
+  # Fixed bin edges from the pooled predicted probabilities so the bins line up
+  # across imputations; average the per-imputation bin means at stable x.
+  allp   <- unlist(lapply(xy_list, function(d) d$x), use.names = FALSE)
+  n_bins <- max(1L, floor(sqrt(n_keep)))
+  edges  <- unique(stats::quantile(allp, probs = seq(0, 1, length.out = n_bins + 1),
+                                   na.rm = TRUE))
+  if (length(edges) < 3) return(NULL)
   
-  n_bins <- floor(sqrt(n))
+  per_imp <- lapply(xy_list, function(d) {
+    b  <- cut(d$x, breaks = edges, include.lowest = TRUE, labels = FALSE)
+    pm <- tapply(d$x, b, mean)
+    rm <- tapply(d$y, b, mean)
+    data.frame(bin = as.integer(names(pm)),
+               pred_mean = as.numeric(pm), resid_mean = as.numeric(rm))
+  })
+  allbins <- do.call(rbind, per_imp)
+  bin_summary <- do.call(rbind, lapply(split(allbins, allbins$bin), function(z)
+    data.frame(pred_mean  = mean(z$pred_mean,  na.rm = TRUE),
+               resid_mean = mean(z$resid_mean, na.rm = TRUE))))
   
-  # Sort cases by predicted probability and assign equal-sized bins
-  ord         <- order(pred)
-  bin_id      <- integer(n)
-  bin_id[ord] <- ceiling((seq_len(n) / n) * n_bins)
-  
-  raw_resid <- observed_k - pred
-  
-  # Per-bin summaries: one bin mean per bin, plotted at the bin's mean
-  # predicted probability. No error bands -- consistent with the
-  # linear-regression diagnostics in residuals_vs_predicted, which
-  # also operate on single averaged imputations and therefore do not
-  # report sampling-uncertainty overlays.
-  bin_df <- data.frame(bin = bin_id, pred = pred, resid = raw_resid)
-  bin_summary <- do.call(rbind, lapply(split(bin_df, bin_df$bin), function(d) {
-    data.frame(
-      pred_mean  = mean(d$pred),
-      resid_mean = mean(d$resid),
-      n_bin      = nrow(d)
-    )
-  }))
+  # Fit-then-pool loess on the case-level cloud (probability scale)
+  curve <- .pooled_loess_xy(xy_list)
   
   # Title: include category index when parent is multi-category (or always,
   # for consistency with how nominal columns are named)
-  title_dv <- if (is.na(category)) toupper(parent) else
-    sprintf("%s.%d", toupper(parent), as.integer(category))
+  title_dv <- if (is.na(category)) parent else
+    sprintf("%s.%d", parent, as.integer(category))
   
   ggplot2::ggplot(bin_summary, ggplot2::aes(x = pred_mean, y = resid_mean)) +
     ggplot2::geom_hline(
@@ -1666,7 +1835,13 @@ print.residuals_plot <- function(x, ...) {
       alpha = style$point_alpha,
       size  = style$point_size * 1.5
     ) +
-    .residuals_smoother(style) +
+    ggplot2::geom_line(
+      data      = curve,
+      ggplot2::aes(x = x, y = y),
+      color     = style$curve_color,
+      linewidth = style$line_width,
+      na.rm     = TRUE
+    ) +
     ggplot2::labs(
       title = sprintf("Binned Residual vs. Predicted: %s", title_dv),
       x     = "Mean Predicted Probability",
@@ -1677,73 +1852,60 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: binned residuals vs. each predictor ================================
+# Internal: binned residuals vs. each predictor (pooled) =======================
 #
-# Probability-scale analogue of .residuals_vs_predictor for NOMINAL outcomes.
-# For each predictor, residuals r_i = I(Y_i = k) - p_hat_i are binned by
-# the predictor value rather than by the predicted probability, and bin
-# means are plotted against bin midpoints with a +-2 * SD/sqrt(n_bin)
-# envelope.
+# Probability-scale analogue of .residuals_vs_predictor for NOMINAL outcomes,
+# computed within each imputation and pooled. For each predictor, residuals
+# r_i = I(Y_i = k) - p_hat_i are formed within each imputation and binned by the
+# predictor value.
 #
-# Continuous predictors are sorted and divided into floor(sqrt(n))
-# equal-sized bins; the envelope is drawn as connected upper/lower lines
-# around y = 0, matching the calibration plot style. Discrete predictors
-# (declared ORDINAL, NOMINAL, or COUNT) get one bin per observed level
-# and use error bars around each level's mean residual instead of the
-# zero-centered envelope; the visual question is the same ("is this
-# level's mean residual within sampling noise of zero?") but the
-# convention for categorical x-axes is the cleaner display.
+# Continuous predictors: fixed bin edges from the pooled predictor (quantiles,
+# floor(sqrt(n)) bins) keep bins comparable across imputations; each imputation's
+# bin means are averaged (point estimate), and a fit-then-pool loess is overlaid
+# (fit per imputation on the case-level cloud, curves averaged). Discrete
+# predictors (declared ORDINAL, NOMINAL, or COUNT) get one mean residual per
+# observed level, averaged across imputations. No error bands; residuals stay on
+# the raw probability metric.
 #
-# Systematic curvature against a continuous predictor (or a sloped pattern
-# across levels of a discrete one) indicates that the predictor is being
-# modeled with the wrong functional form -- e.g., a quadratic term should
-# be added, or the variable should enter on a transformed scale.
+# Systematic curvature against a continuous predictor (or a sloped pattern across
+# levels of a discrete one) indicates that the predictor is being modeled with
+# the wrong functional form -- e.g., a quadratic term should be added, or the
+# variable should enter on a transformed scale.
 #
-# Returns NULL when there are too few cases (< 16) for a meaningful binned
-# plot, or when any required column is missing.
+# Returns NULL when there are too few cases (< 16) for a meaningful binned plot,
+# or when any required column is missing.
 
 #' @keywords internal
-.binned_residuals_vs_predictor <- function(data, parent, category, predictor,
+.binned_residuals_vs_predictor <- function(imp_list, parent, category, predictor,
                                            is_discrete, style) {
   pred_col <- paste0(parent, ".", category, ".probability")
-  if (!pred_col %in% names(data))         return(NULL)
-  if (!parent   %in% names(data))         return(NULL)
-  if (!predictor %in% names(data))        return(NULL)
+  pcol     <- .resolve_predictor_col(imp_list[[1]], predictor)
+  if (!pred_col %in% names(imp_list[[1]])) return(NULL)
+  if (!parent   %in% names(imp_list[[1]])) return(NULL)
+  if (is.na(pcol))                         return(NULL)
   
-  pred       <- data[[pred_col]]
-  observed_k <- as.numeric(data[[parent]] == category)
-  x_vals     <- data[[predictor]]
+  # Per-imputation case-level (predictor, probability-scale residual)
+  xy_list <- lapply(imp_list, function(d) {
+    p  <- d[[pred_col]]
+    ok <- as.numeric(d[[parent]] == category)
+    z  <- data.frame(x = d[[pcol]], y = ok - p)
+    z[is.finite(z$x) & is.finite(z$y), ]
+  })
   
-  keep       <- is.finite(pred) & is.finite(observed_k) & is.finite(x_vals)
-  pred       <- pred[keep]
-  observed_k <- observed_k[keep]
-  x_vals     <- x_vals[keep]
-  
-  n <- length(x_vals)
-  if (n < 16) return(NULL)
-  
-  raw_resid <- observed_k - pred
-  title_dv  <- sprintf("%s.%d", toupper(parent), as.integer(category))
+  n_keep   <- nrow(xy_list[[1]])
+  if (n_keep < 16) return(NULL)
+  title_dv <- sprintf("%s.%d", parent, as.integer(category))
   
   if (is_discrete) {
-    # One mean residual per observed level (no error bands; the
-    # single-averaged-imputations source does not support inferential
-    # overlays, matching the linear-regression diagnostics in Section 2.7).
-    levels_vec <- sort(unique(x_vals))
-    if (length(levels_vec) < 2) return(NULL)
-    
-    rows <- lapply(levels_vec, function(lev) {
-      cases <- x_vals == lev
-      if (sum(cases) < 2) return(NULL)
-      data.frame(
-        x_mean     = lev,
-        resid_mean = mean(raw_resid[cases]),
-        n_bin      = sum(cases)
-      )
+    # One mean residual per observed level, averaged across imputations.
+    per_imp <- lapply(xy_list, function(d) {
+      rm <- tapply(d$y, d$x, mean)
+      data.frame(x_mean = as.numeric(names(rm)), resid_mean = as.numeric(rm))
     })
-    rows <- rows[!vapply(rows, is.null, logical(1))]
-    if (length(rows) < 2) return(NULL)
-    bin_summary <- do.call(rbind, rows)
+    alll <- do.call(rbind, per_imp)
+    bin_summary <- do.call(rbind, lapply(split(alll, alll$x_mean), function(z)
+      data.frame(x_mean = z$x_mean[1], resid_mean = mean(z$resid_mean, na.rm = TRUE))))
+    if (nrow(bin_summary) < 2) return(NULL)
     
     p <- ggplot2::ggplot(bin_summary,
                          ggplot2::aes(x = x_mean, y = resid_mean)) +
@@ -1760,21 +1922,26 @@ print.residuals_plot <- function(x, ...) {
       ggplot2::scale_x_continuous(breaks = .integer_breaks)
     
   } else {
-    # Continuous predictor: bin by predictor value into floor(sqrt(n)) bins.
-    # Same no-error-band rule as the discrete branch above.
-    n_bins      <- floor(sqrt(n))
-    ord         <- order(x_vals)
-    bin_id      <- integer(n)
-    bin_id[ord] <- ceiling((seq_len(n) / n) * n_bins)
+    # Continuous predictor: fixed bins on the pooled predictor, averaged
+    # per-imputation bin means; fit-then-pool loess on the case-level cloud.
+    allx   <- unlist(lapply(xy_list, function(d) d$x), use.names = FALSE)
+    n_bins <- max(1L, floor(sqrt(n_keep)))
+    edges  <- unique(stats::quantile(allx, probs = seq(0, 1, length.out = n_bins + 1),
+                                     na.rm = TRUE))
+    if (length(edges) < 3) return(NULL)
     
-    bin_df <- data.frame(bin = bin_id, x = x_vals, resid = raw_resid)
-    bin_summary <- do.call(rbind, lapply(split(bin_df, bin_df$bin), function(d) {
-      data.frame(
-        x_mean     = mean(d$x),
-        resid_mean = mean(d$resid),
-        n_bin      = nrow(d)
-      )
-    }))
+    per_imp <- lapply(xy_list, function(d) {
+      b  <- cut(d$x, breaks = edges, include.lowest = TRUE, labels = FALSE)
+      xm <- tapply(d$x, b, mean)
+      rm <- tapply(d$y, b, mean)
+      data.frame(bin = as.integer(names(xm)),
+                 x_mean = as.numeric(xm), resid_mean = as.numeric(rm))
+    })
+    allbins <- do.call(rbind, per_imp)
+    bin_summary <- do.call(rbind, lapply(split(allbins, allbins$bin), function(z)
+      data.frame(x_mean     = mean(z$x_mean,     na.rm = TRUE),
+                 resid_mean = mean(z$resid_mean, na.rm = TRUE))))
+    curve <- .pooled_loess_xy(xy_list)
     
     p <- ggplot2::ggplot(bin_summary,
                          ggplot2::aes(x = x_mean, y = resid_mean)) +
@@ -1788,13 +1955,19 @@ print.residuals_plot <- function(x, ...) {
         alpha = style$point_alpha,
         size  = style$point_size * 1.5
       ) +
-      .residuals_smoother(style)
+      ggplot2::geom_line(
+        data      = curve,
+        ggplot2::aes(x = x, y = y),
+        color     = style$curve_color,
+        linewidth = style$line_width,
+        na.rm     = TRUE
+      )
   }
   
   p +
     ggplot2::labs(
-      title = sprintf("Binned Residual vs. Predictor: %s ~ %s", title_dv, toupper(predictor)),
-      x     = toupper(predictor),
+      title = sprintf("Binned Residual vs. Predictor: %s ~ %s", title_dv, predictor),
+      x     = predictor,
       y     = "Mean Residual"
     ) +
     .residuals_plot_theme(style$font_size)
@@ -1827,7 +2000,8 @@ print.residuals_plot <- function(x, ...) {
 #' @keywords internal
 .predicted_probability_vs_predictor <- function(data, parent, predictor,
                                                 is_discrete, style) {
-  if (!predictor %in% names(data)) return(NULL)
+  pcol <- .resolve_predictor_col(data, predictor)
+  if (is.na(pcol)) return(NULL)
   
   # Detect <parent>.<k>.probability columns
   prob_rx   <- paste0("^", parent, "\\.([0-9]+)\\.probability$")
@@ -1842,7 +2016,7 @@ print.residuals_plot <- function(x, ...) {
   K         <- length(prob_cols)
   
   # Build long-format data: one row per case per category
-  x_vals  <- data[[predictor]]
+  x_vals  <- data[[pcol]]
   long_df <- do.call(rbind, lapply(seq_len(K), function(i) {
     df <- data.frame(
       x        = x_vals,
@@ -1864,7 +2038,7 @@ print.residuals_plot <- function(x, ...) {
   linetype_values <- c("solid", "dashed", "dotted", "dotdash",
                        "longdash", "twodash", "1F")[seq_len(K)]
   
-  title_dv <- toupper(parent)
+  title_dv <- parent
   
   if (is_discrete) {
     # Discrete predictor: case-level scatter at each integer x position
@@ -1914,8 +2088,8 @@ print.residuals_plot <- function(x, ...) {
     ggplot2::scale_linetype_manual(values = linetype_values) +
     ggplot2::labs(
       title    = sprintf("Predicted Probability vs. Predictor: %s ~ %s",
-                         title_dv, toupper(predictor)),
-      x        = toupper(predictor),
+                         title_dv, predictor),
+      x        = predictor,
       y        = "Predicted Probability",
       color    = paste(title_dv, "Category"),
       shape    = paste(title_dv, "Category"),
@@ -1964,20 +2138,21 @@ print.residuals_plot <- function(x, ...) {
 # absolute threshold get row-number labels.
 
 #' @keywords internal
-.residuals_index <- function(data, dv, index_thresholds, style) {
-  resid   <- data[[paste0(dv, ".residual")]]
-  sigma_i <- .casewise_sigma(data, dv)
+.residuals_index <- function(imp_list, dv, index_thresholds, style) {
+  n     <- nrow(imp_list[[1]])
+  sigma <- .pooled_sigma(imp_list, dv)
+  rc    <- paste0(dv, ".residual")
   
-  keep    <- is.finite(resid) & is.finite(sigma_i) & sigma_i > 0
-  resid   <- resid[keep]
-  sigma_i <- sigma_i[keep]
+  # All M standardized residuals per case (vertical strips), not averaged
+  df <- do.call(rbind, lapply(imp_list, function(d)
+    data.frame(case = seq_len(n), z = d[[rc]] / sigma)))
+  df <- df[is.finite(df$z), ]
   
-  if (length(resid) < 2) {
+  if (nrow(df) < 2) {
     stop("Cannot standardize residuals: fewer than 2 finite values for ", dv)
   }
   
-  z  <- resid / sigma_i
-  df <- data.frame(case = seq_along(z), z = z)
+  a <- .pooled_alpha(style$point_alpha, length(imp_list))
   
   p <- ggplot2::ggplot(df, ggplot2::aes(x = case, y = z)) +
     ggplot2::geom_hline(
@@ -1998,14 +2173,16 @@ print.residuals_plot <- function(x, ...) {
   p <- p +
     ggplot2::geom_point(
       color = style$point_color,
-      alpha = style$point_alpha,
+      alpha = a,
       size  = style$point_size
     )
   
-  # Label cases beyond the largest threshold (two-sided)
+  # Label cases whose per-case MEAN |z| exceeds the largest threshold
   label_threshold <- if (length(index_thresholds)) max(abs(index_thresholds)) else NA
   if (!is.na(label_threshold)) {
-    p <- .add_outlier_labels(p, df, "z", label_threshold, style, two_sided = TRUE)
+    cm   <- tapply(df$z, df$case, mean)
+    dlab <- data.frame(case = as.integer(names(cm)), z = as.numeric(cm))
+    p <- .add_outlier_labels(p, dlab, "z", label_threshold, style, two_sided = TRUE)
   }
   
   # Integer y-axis breaks across the data range, unioned with thresholds
@@ -2016,7 +2193,7 @@ print.residuals_plot <- function(x, ...) {
   p +
     ggplot2::scale_y_continuous(breaks = y_breaks) +
     ggplot2::labs(
-      title = sprintf("Standardized Residual Index: %s", toupper(dv)),
+      title = sprintf("Standardized Residual Index: %s", dv),
       x     = "Record Number",
       y     = "Standardized Residual"
     ) +
@@ -2025,27 +2202,41 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: Pearson residual index plot (COUNT outcomes) =======================
+# Internal: Pearson residual index plot (COUNT outcomes, pooled) ===============
 #
 # Mirrors .residuals_index, but the y-axis is the Pearson residual computed
-# from Blimp's predicted mean count and the model's NB variance-dispersion
-# parameter alpha (stored in @estimates as "<dv> Variance Dispersion
-# Parameter"). Under the (mu, alpha) NB parameterization, Var(Y) = mu +
-# alpha * mu^2, and the Pearson residual is
+# within each imputation from that imputation's predicted mean count and the
+# model's NB variance-dispersion parameter alpha (stored in @estimates as
+# "<dv> Variance Dispersion Parameter", a single pooled estimate reused across
+# imputations). Under the (mu, alpha) NB parameterization, Var(Y) = mu +
+# alpha * mu^2, so the person-specific SD is sqrt(mu_i + alpha * mu_i^2). mu_i
+# varies by case and by imputation; the SD is pooled per case as the average of
+# the per-imputation SDs (point estimate, no between term), and
 #
-#   z_i = (y_i - mu_hat_i) / sqrt(mu_hat_i + alpha_hat * mu_hat_i^2).
+#   z_i^(t) = (y_i^(t) - mu_hat_i^(t)) / sbar_i.
 #
+# All M standardized residuals are shown per case (vertical strips); cases whose
+# per-case mean |z| exceeds the largest absolute threshold get row-number labels.
 # Recommended diagnostic in Gelman and Hill (2006, Section 6.2, Figure 6.1b).
-# Reference lines at +/- index_thresholds; cases with |z| beyond the largest
-# absolute threshold get row-number labels.
 
 #' @keywords internal
-.pearson_residuals_index <- function(data, dv, alpha, index_thresholds, style) {
-  y     <- data[[dv]]
-  mu    <- data[[paste0(dv, ".predicted")]]
-  z     <- (y - mu) / sqrt(mu + alpha * mu^2)
-  z     <- z[is.finite(z)]
-  df    <- data.frame(case = seq_along(z), z = z)
+.pearson_residuals_index <- function(imp_list, dv, alpha, index_thresholds, style) {
+  n  <- nrow(imp_list[[1]])
+  pc <- paste0(dv, ".predicted")
+  if (!pc %in% names(imp_list[[1]]) || !dv %in% names(imp_list[[1]])) {
+    stop("Cannot build Pearson index: missing `", dv, "` or `", pc, "`.")
+  }
+  
+  # Pooled person-specific Pearson SD: average per-imputation sqrt(mu + alpha*mu^2)
+  sbar <- rowMeans(vapply(imp_list, function(d) {
+    mu <- d[[pc]]; sqrt(mu + alpha * mu^2)
+  }, numeric(n)))
+  
+  # All M standardized Pearson residuals per case (vertical strips), not averaged
+  df <- do.call(rbind, lapply(imp_list, function(d)
+    data.frame(case = seq_len(n), z = (d[[dv]] - d[[pc]]) / sbar)))
+  df <- df[is.finite(df$z), ]
+  a  <- .pooled_alpha(style$point_alpha, length(imp_list))
   
   p <- ggplot2::ggplot(df, ggplot2::aes(x = case, y = z)) +
     ggplot2::geom_hline(
@@ -2066,14 +2257,16 @@ print.residuals_plot <- function(x, ...) {
   p <- p +
     ggplot2::geom_point(
       color = style$point_color,
-      alpha = style$point_alpha,
+      alpha = a,
       size  = style$point_size
     )
   
-  # Label cases beyond the largest threshold (two-sided)
+  # Label cases whose per-case MEAN |z| exceeds the largest threshold
   label_threshold <- if (length(index_thresholds)) max(abs(index_thresholds)) else NA
   if (!is.na(label_threshold)) {
-    p <- .add_outlier_labels(p, df, "z", label_threshold, style, two_sided = TRUE)
+    cm   <- tapply(df$z, df$case, mean)
+    dlab <- data.frame(case = as.integer(names(cm)), z = as.numeric(cm))
+    p <- .add_outlier_labels(p, dlab, "z", label_threshold, style, two_sided = TRUE)
   }
   
   # Integer y-axis breaks across the data range, unioned with thresholds
@@ -2084,7 +2277,7 @@ print.residuals_plot <- function(x, ...) {
   p +
     ggplot2::scale_y_continuous(breaks = y_breaks) +
     ggplot2::labs(
-      title = sprintf("Standardized Pearson Residual Index: %s", toupper(dv)),
+      title = sprintf("Standardized Pearson Residual Index: %s", dv),
       x     = "Record Number",
       y     = "Standardized Pearson Residual"
     ) +
@@ -2093,27 +2286,38 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: Pearson residual vs. predictor (COUNT outcomes) ====================
+# Internal: Pearson residual vs. predictor (COUNT outcomes, pooled) ============
 #
-# Mirrors .residuals_vs_predictor, but plots Pearson residuals (formula above)
-# against each predictor. Continuous predictors get scatter plus a loess
-# smoother; discrete predictors get stacked points with a curve-colored mean
-# diamond at each integer level. Recommended diagnostic in Gelman and Hill
-# (2006, Section 6.2).
+# Mirrors .residuals_vs_predictor, but plots Pearson residuals against each
+# predictor. The residual is formed within each imputation using that
+# imputation's predicted mean count and standardized by the pooled
+# person-specific NB SD sbar_i = mean_t sqrt(mu_i^(t) + alpha * mu_i^(t)^2).
+# All M (x, z) points are stacked. Continuous predictors get a fit-then-pool
+# loess (fit per imputation, curves averaged); discrete predictors get a
+# curve-colored mean diamond at each integer level (pooled across imputations).
+# Recommended diagnostic in Gelman and Hill (2006, Section 6.2).
 
 #' @keywords internal
-.pearson_residuals_vs_predictor <- function(data, dv, predictor, alpha,
+.pearson_residuals_vs_predictor <- function(imp_list, dv, predictor, alpha,
                                             is_discrete, style) {
-  y  <- data[[dv]]
-  mu <- data[[paste0(dv, ".predicted")]]
-  z  <- (y - mu) / sqrt(mu + alpha * mu^2)
-  df <- data.frame(
-    x = data[[predictor]],
-    z = z
-  )
-  df <- df[is.finite(df$x) & is.finite(df$z), ]
+  pcol <- .resolve_predictor_col(imp_list[[1]], predictor)
+  if (is.na(pcol)) return(NULL)
+  n  <- nrow(imp_list[[1]])
+  pc <- paste0(dv, ".predicted")
   
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = z)) +
+  # Pooled person-specific Pearson SD (point estimate, no between term)
+  sbar <- rowMeans(vapply(imp_list, function(d) {
+    mu <- d[[pc]]; sqrt(mu + alpha * mu^2)
+  }, numeric(n)))
+  
+  # Stacked (predictor, Pearson z) across imputations
+  xy_list <- lapply(imp_list, function(d)
+    data.frame(x = d[[pcol]], y = (d[[dv]] - d[[pc]]) / sbar))
+  df <- do.call(rbind, xy_list)
+  df <- df[is.finite(df$x) & is.finite(df$y), ]
+  a  <- .pooled_alpha(style$point_alpha, length(imp_list))
+  
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = x, y = y)) +
     ggplot2::geom_hline(
       yintercept = 0,
       color      = "grey50",
@@ -2124,7 +2328,7 @@ print.residuals_plot <- function(x, ...) {
     p <- p +
       ggplot2::geom_point(
         color = style$point_color,
-        alpha = style$point_alpha,
+        alpha = a,
         size  = style$point_size
       ) +
       ggplot2::stat_summary(
@@ -2137,23 +2341,49 @@ print.residuals_plot <- function(x, ...) {
       ) +
       ggplot2::scale_x_continuous(breaks = .integer_breaks)
   } else {
+    curve <- .pooled_loess_xy(xy_list)
     p <- p +
       ggplot2::geom_point(
         color = style$point_color,
-        alpha = style$point_alpha,
+        alpha = a,
         size  = style$point_size
       ) +
-      .residuals_smoother(style)
+      ggplot2::geom_line(
+        data      = curve,
+        ggplot2::aes(x = x, y = y),
+        color     = style$curve_color,
+        linewidth = style$line_width,
+        na.rm     = TRUE
+      )
   }
   
   p +
     ggplot2::labs(
       title = sprintf("Standardized Pearson Residual vs. Predictor: %s ~ %s",
-                      toupper(dv), toupper(predictor)),
-      x     = toupper(predictor),
+                      dv, predictor),
+      x     = predictor,
       y     = "Standardized Pearson Residual"
     ) +
     .residuals_plot_theme(style$font_size)
+}
+
+
+
+# Internal: resolve a predictor name to its data column ========================
+#
+# A predictor referenced in the MODEL block may be stored in the averaged data
+# under its bare name (observed and ordinal/nominal/count predictors) or, for a
+# latent factor, under `<name>.latent`. Blimp imputes latent variables, so the
+# `.latent` column holds a real per-case score that behaves like any other
+# continuous predictor for residual-vs-predictor, leverage, and Cook's D.
+# Returns the resolved column name, or NA_character_ if neither form is present.
+
+#' @keywords internal
+.resolve_predictor_col <- function(data, pred) {
+  if (pred %in% names(data)) return(pred)
+  latent <- paste0(pred, ".latent")
+  if (latent %in% names(data)) return(latent)
+  NA_character_
 }
 
 
@@ -2173,8 +2403,9 @@ print.residuals_plot <- function(x, ...) {
   cols <- list(intercept = rep(1, nrow(data)))
   
   for (pred in predictors) {
-    if (!pred %in% names(data)) next
-    x <- data[[pred]]
+    col <- .resolve_predictor_col(data, pred)
+    if (is.na(col)) next
+    x <- data[[col]]
     
     is_nominal_multi <- pred %in% nominal_vars &&
       length(unique(round(x[is.finite(x)]))) > 2
@@ -2208,44 +2439,48 @@ print.residuals_plot <- function(x, ...) {
 # with sigma2 = sum(e^2) / (n - p) computed from the averaged residuals.
 
 #' @keywords internal
-.residuals_lm_diagnostics <- function(data, dv, predictors, nominal_vars, verbose) {
-  X <- .build_design_matrix(data, predictors, nominal_vars)
-  e <- data[[paste0(dv, ".residual")]]
+.residuals_lm_diagnostics <- function(imp_list, dv, predictors, nominal_vars, verbose) {
+  n   <- nrow(imp_list[[1]])
+  M   <- length(imp_list)
+  rc  <- paste0(dv, ".residual")
+  lev <- matrix(NA_real_, n, M)
+  ck  <- matrix(NA_real_, n, M)
+  p_used <- NA_integer_
   
-  keep <- stats::complete.cases(X) & is.finite(e)
-  X    <- X[keep, , drop = FALSE]
-  e    <- e[keep]
-  n    <- length(e)
-  p    <- ncol(X)
+  # Compute leverage and Cook's D within each imputation, then average per case.
+  for (t in seq_len(M)) {
+    d  <- imp_list[[t]]
+    X  <- .build_design_matrix(d, predictors, nominal_vars)
+    e  <- d[[rc]]
+    keep <- stats::complete.cases(X) & is.finite(e)
+    Xk <- X[keep, , drop = FALSE]
+    ek <- e[keep]
+    nn <- length(ek)
+    p  <- ncol(Xk)
+    if (nn <= p) next
+    XtX_inv <- tryCatch(solve(crossprod(Xk)), error = function(err) NULL)
+    if (is.null(XtX_inv)) next
+    h  <- rowSums((Xk %*% XtX_inv) * Xk)
+    s2 <- sum(ek^2) / (nn - p)
+    lev[keep, t] <- h
+    ck[keep, t]  <- (ek^2 / (p * s2)) * (h / (1 - h)^2)
+    p_used <- p
+  }
   
-  if (n <= p) {
+  if (is.na(p_used)) {
     if (verbose) {
       message("Skipping leverage/Cook's D for `", dv,
-              "`: not enough complete cases relative to parameters.")
+              "`: singular design or too few complete cases in every imputation.")
     }
     return(NULL)
   }
   
-  XtX_inv <- tryCatch(solve(crossprod(X)), error = function(err) NULL)
-  if (is.null(XtX_inv)) {
-    if (verbose) {
-      message("Skipping leverage/Cook's D for `", dv,
-              "`: design matrix is singular.")
-    }
-    return(NULL)
-  }
-  
-  h      <- rowSums((X %*% XtX_inv) * X)
-  sigma2 <- sum(e^2) / (n - p)
-  D      <- (e^2 / (p * sigma2)) * (h / (1 - h)^2)
-  
-  # Restore full-length vectors with NA for filtered-out rows
-  full_h <- rep(NA_real_, length(data[[paste0(dv, ".residual")]]))
-  full_D <- full_h
-  full_h[keep] <- h
-  full_D[keep] <- D
-  
-  list(leverage = full_h, cooks = full_D, p = p, n = n)
+  # Pool per case (rows that were never estimable stay NA -> dropped downstream)
+  list(
+    leverage = rowMeans(lev, na.rm = TRUE),
+    cooks    = rowMeans(ck,  na.rm = TRUE),
+    p = p_used, n = n
+  )
 }
 
 
@@ -2267,10 +2502,10 @@ print.residuals_plot <- function(x, ...) {
     ) +
     ggplot2::annotate(
       "text",
-      x      = 0,
+      x      = -Inf,
       y      = cuts,
       label  = c("2p/n", "3p/n"),
-      hjust  = 1,
+      hjust  = -0.1,
       vjust  = -0.3,
       color  = "black",
       size   = style$font_size / 2.85,
@@ -2287,7 +2522,7 @@ print.residuals_plot <- function(x, ...) {
   
   p +
     ggplot2::labs(
-      title = sprintf("Leverage: %s", toupper(dv)),
+      title = sprintf("Leverage: %s", dv),
       x     = "Record Number",
       y     = "Leverage"
     ) +
@@ -2313,10 +2548,10 @@ print.residuals_plot <- function(x, ...) {
     ) +
     ggplot2::annotate(
       "text",
-      x      = 0,
+      x      = -Inf,
       y      = cut,
       label  = "4/n",
-      hjust  = 1,
+      hjust  = -0.1,
       vjust  = -0.3,
       color  = "black",
       size   = style$font_size / 2.85,
@@ -2333,7 +2568,7 @@ print.residuals_plot <- function(x, ...) {
   
   p +
     ggplot2::labs(
-      title = sprintf("Cook's Distance: %s", toupper(dv)),
+      title = sprintf("Cook's Distance: %s", dv),
       x     = "Record Number",
       y     = "Cook's D"
     ) +
