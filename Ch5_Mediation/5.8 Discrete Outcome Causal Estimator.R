@@ -47,6 +47,33 @@ output(mod1)
 posterior_plot(mod1, 'tnie')
 
 #------------------------------------------------------------------------------#
+# EXTENSION: CONTINUOUS EXPLANATORY VARIABLE ----
+#------------------------------------------------------------------------------#
+
+mod2 <- rblimp(
+  data = worksat,
+  ordinal = 'turnover male',
+  center  = 'male lmx',
+  model = '
+    mediation:
+    jobsat ~ intercept@a0 lmx@a1 male;
+    jobsat@resvar_m;
+    turnover ~ intercept@b0 jobsat@b1 lmx@b2 male;
+    predictor:
+    lmx ~ male; DEBUG: compact_output',
+  parameters = '
+    sd_lmx = sqrt(lmx.totalvar);
+    sd_lat = sqrt(b1^2 * resvar_m + 1);
+    p_obs   = phi((b0 + b2*sd_lmx + b1*(a0 + a1*sd_lmx)) / sd_lat); 
+    p_cfact = phi((b0 + b2*sd_lmx + b1*(a0 + a1*0)) / sd_lat); 
+    tnie    = p_obs - p_cfact;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(mod2)
+
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
