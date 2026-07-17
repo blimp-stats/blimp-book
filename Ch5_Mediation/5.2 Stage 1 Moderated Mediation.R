@@ -26,7 +26,7 @@ discrimination <- read.csv(data_url)
 # STAGE 1 MODERATION OF A PATH ----
 #------------------------------------------------------------------------------#
 
-# conditional mediated effects computed using parameters command
+# conditional indirect effects computed using PARAMETERS command
 mod1 <- rblimp(
   data = discrimination,            # R data frame
   ordinal = 'female',          			# binary and ordinal variables
@@ -53,15 +53,15 @@ posterior_plot(mod1, 'indirect15') 		# plot conditional indirect
 posterior_plot(mod1, 'indirect16') 		# plot conditional indirect
 posterior_plot(mod1, 'indirect17') 		# plot conditional indirect
 
-# conditional mediated effects computed using the simple command
+# conditional indirect effects computed using the SIMPLE command
 mod2 <- rblimp(
   data = discrimination,            # R data frame
   ordinal = 'female',          			# binary and ordinal variables
   transform = 'age16 = age - 16',  # centered age variable
   model = ' # label slope parameters
     victim ~ discrim@a1 age16 discrim*age16@a3 female; # a path
-    internalize ~ victim@b1 discrim age16 female;', # b path
-    simple = '(a1 + a3*age16)*b1 | age16 @ quartile',  # conditional indirect effects
+    internalize ~ victim@b1 discrim age16 female; DEBUG: compact_output', # b path
+  simple = '(a1 + a3*age16)*b1 | age16 @ quartile',  # conditional indirect effects
   parameters = 'index_mod = a3*b1',  # index of moderated mediation
   seed = 90291,
   burn = 10000,
@@ -70,14 +70,35 @@ mod2 <- rblimp(
 # print output
 output(mod2)
 
-# plot conditional effects
-# simple_plot(victim ~ discrim | age16, mod2)
+#------------------------------------------------------------------------------#
+# EXTENSION: MODERATION OF DIRECT EFFECT ----
+#------------------------------------------------------------------------------#
+
+mod4 <- rblimp(
+  data = discrimination,            # R data frame
+  ordinal = 'female',          			# binary and ordinal variables
+  transform = 'age16 = age - 16',  # centered age variable
+  model = ' # label slope parameters
+    victim ~ discrim@a1 age16 discrim*age16@a3 female; # a path
+    internalize ~ victim@b1 discrim age16 female victim*age16;', # b path
+  simple = 'discrim | age16 @ quartile', # conditional effects
+  parameters = '
+    index_mod = a3*b1;                 # index of moderated mediation
+    indirect14 = (a1 - 2*a3)*b1;    # conditional indirect effect
+    indirect15 = (a1 - 1*a3)*b1;    # conditional indirect effect
+    indirect16 = (a1 + 0*a3)*b1;  # conditional indirect effects
+    indirect17 = (a1 + 1*a3)*b1',  # conditional indirect effects
+  seed = 90291,               			# random number seed
+  burn = 10000,               			# warm-up iterations
+  iter = 10000)                			# analysis iterations
+
+output(mod4)               		      # print output
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-mod3 <- rblimp(
+mod5 <- rblimp(
   data = discrimination,            # R data frame
   ordinal = 'female',          			# binary and ordinal variables
   transform = 'age16 = age - 16',  # centered age variable
@@ -96,8 +117,8 @@ mod3 <- rblimp(
   iter = 10000,                			# analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
-distribution_plot(mod3)                          # plot observed and imputed distributions
-residuals_plot(mod3)                             # plot residuals
+distribution_plot(mod5)                          # plot observed and imputed distributions
+residuals_plot(mod5)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

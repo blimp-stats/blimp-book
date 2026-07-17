@@ -36,10 +36,10 @@ mod1 <- rblimp(
   parameters = '
     p0 = phi(b0 + b1*(a0 + a1*0) + b2*0);
     p1 = phi(b0 + b1*(a0 + a1*1) + b2*1);
-    w0 = normal_pdf(b0 + b1*(a0 + a1*0) + b2*0);
-    w1 = normal_pdf(b0 + b1*(a0 + a1*1) + b2*1);
-    indirect0 = a1 * b1 * w0;    # conditional indirect effect at x = 0
-    indirect1 = a1 * b1 * w1;',  # conditional indirect effect at x = 1
+    rate0 = normal_pdf(b0 + b1*(a0 + a1*0) + b2*0);
+    rate1 = normal_pdf(b0 + b1*(a0 + a1*1) + b2*1);
+    indirect0 = a1 * b1 * rate0;    # conditional indirect effect at x = 0
+    indirect1 = a1 * b1 * rate1;',  # conditional indirect effect at x = 1
   seed = 90291,
   burn = 10000,
   iter = 10000)
@@ -57,10 +57,7 @@ mod2 <- rblimp(
   model = '
     jobsat ~ intercept@a0 lmx@a1 male;
     turnover ~ intercept@b0 jobsat@b1 lmx@b2 male; DEBUG: compact_output',
-  simple = '
-    phi(b0 + b1*(a0 + a1*lmx) + b2*lmx) | lmx @ quartiles;
-    normal_pdf(b0 + b1*(a0 + a1*lmx) + b2*lmx) | lmx @ quartiles;
-    a1 * b1 * normal_pdf(b0 + b1*(a0 + a1*lmx) + b2*lmx) | lmx @ quartiles;',
+  simple = 'a1 * b1 * normal_pdf(b0 + b1*(a0 + a1*lmx) + b2*lmx) | lmx @ quartiles;',
   seed = 90291,
   burn = 10000,
   iter = 10000)

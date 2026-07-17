@@ -161,15 +161,15 @@ panel_format <- list(
   scale_y_continuous(breaks = NULL)
 )
 
-fig5_7a <- posterior_plot(mod1, 'indirect_vic', line_width = 0.5) + panel_format +
-  labs(x = "Indirect Effect (Victimization)") +
-  scale_x_continuous(breaks = seq(0, 0.3, 0.1)) +
-  coord_cartesian(xlim = c(0, 0.30))
+fig5_7a <- posterior_plot(mod2, 'ind_std_vic', line_width = 0.5) + panel_format +
+  labs(x = "Standardized Indirect Effect (Victimization)") +
+  scale_x_continuous(breaks = seq(0, 0.15, 0.05)) +
+  coord_cartesian(xlim = c(0, 0.15))
 
-fig5_7b <- posterior_plot(mod1, 'indirect_fam', line_width = 0.5) + panel_format +
-  labs(x = "Indirect Effect (Familism)") +
-  scale_x_continuous(breaks = seq(.1, 0.40, 0.1)) +
-  coord_cartesian(xlim = c(.1, 0.4))
+fig5_7b <- posterior_plot(mod2, 'ind_std_fam', line_width = 0.5) + panel_format +
+  labs(x = "Standardized Indirect Effect (Familism)") +
+  scale_x_continuous(breaks = seq(0, 0.15, 0.05)) +
+  coord_cartesian(xlim = c(0, 0.15))
 
 fig5_7 <- (fig5_7a / fig5_7b) +
   plot_annotation(tag_levels = "A") &

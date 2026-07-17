@@ -26,7 +26,7 @@ discrimination <- read.csv(data_url)
 # STAGE 1 MODERATION OF B PATH ----
 #------------------------------------------------------------------------------#
 
-# conditional mediated effects computed using parameters command
+# conditional indirect effects computed using PARAMETERS command
 mod1 <- rblimp(
   data = discrimination,             		# R data frame
   ordinal = 'female',          			# binary and ordinal variables
@@ -52,7 +52,7 @@ posterior_plot(mod1, 'indirect15') 		# plot conditional indirect
 posterior_plot(mod1, 'indirect16') 		# plot conditional indirect
 posterior_plot(mod1, 'indirect17') 		# plot conditional indirect
 
-# conditional mediated effects computed using the simple command
+# conditional indirect effects computed using the SIMPLE command
 mod2 <- rblimp(
   data = discrimination,             		# R data frame
   ordinal = 'female',          			# binary and ordinal variables
@@ -70,10 +70,35 @@ mod2 <- rblimp(
 output(mod2)               		      # print output
 
 #------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+# EXTENSION: MODERATION OF DIRECT EFFECT ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
+  data = discrimination,             		# R data frame
+  ordinal = 'female',          			# binary and ordinal variables
+  transform = 'age16 = age – 16',  		# centered age variable
+  model = '  						# label slope parameters
+    victim ~ discrim@a1 age16 female;  		# a path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female victim*age16;',  # bpath 
+  simple = 'victim | age16 @ quartile', 	# conditional effects
+  parameters = '
+    index_mod = a1*b4; 				# index of mediated moderation
+    indirect14 = a1*(b1 - 2*b4); 		# conditional indirect effect
+    indirect15 = a1*(b1 - 1*b4); 		# conditional indirect effect
+    indirect16 = a1*(b1 + 0*b4); 		# conditional indirect effect
+    indirect17 = a1*(b1 + 1*b4);', 		# conditional indirect effect
+  seed = 90291,               			# random number seed
+  burn = 10000,               			# warm-up iterations
+  iter = 10000                			# analysis iterations
+)
+
+output(mod3)               		      # print output
+
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
+mod4 <- rblimp(
   data = discrimination,             		# R data frame
   ordinal = 'female',          			# binary and ordinal variables
   transform = 'age16 = age – 16',  		# centered age variable
@@ -92,8 +117,8 @@ mod3 <- rblimp(
   iter = 10000,                			# analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
-distribution_plot(mod3)                          # plot observed and imputed distributions
-residuals_plot(mod3)                             # plot residuals
+distribution_plot(mod4)                          # plot observed and imputed distributions
+residuals_plot(mod4)                             # plot residuals
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
