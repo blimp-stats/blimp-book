@@ -1,26 +1,26 @@
-# BRIAN NOTES ----
-# any way to get names in imputations more easily without [[]]?
-
 # RANDOM INTERCEPT REGRESSION
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
 #------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/problemsolving2level.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/mathprobsolve.csv'
 
 # create data frame from github data
-probsolve <- read.csv(data_url)
+mathprobsolve <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # FIT EMPTY MODEL FOR LEVEL-1 VARIABLES ----
@@ -28,7 +28,7 @@ probsolve <- read.csv(data_url)
 
 # empty multivariate model for icc's
 model1 <- rblimp(
-  data = probsolve,
+  data = mathprobsolve,
   clusterid = 'school',
   ordinal = 'frlunch',
   model = 'intercept -> probsolvpost probsolvpre stanmath frlunch',
@@ -45,7 +45,7 @@ output(model1)
 
 # mixed model specification
 model2 <- rblimp(
-    data = probsolve,
+    data = mathprobsolve,
     clusterid = 'school',
     nominal = 'condition frlunch',
     # fixed = 'probsolve1 condition',
@@ -56,6 +56,23 @@ model2 <- rblimp(
     burn = 10000,
     iter = 10000,
     nimps = 20)
+
+# print output
+output(model2)
+
+# mixed model specification
+model2 <- rblimp(
+  data = mathprobsolve,
+  clusterid = 'school',
+  nominal = 'condition frlunch',
+  # fixed = 'probsolve1 condition',
+  center = 'groupmean = probsolvpre stanmath frlunch',
+  model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
+  parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)
 
 # print output
 output(model2)
@@ -87,7 +104,7 @@ bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'),
 
 # random intercept as level-2 latent variable
 model3 <- rblimp(
-  data = probsolve,
+  data = mathprobsolve,
   clusterid = 'school',
   nominal = 'condition frlunch',
   latent = 'school = ranicept',
