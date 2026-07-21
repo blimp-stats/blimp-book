@@ -30,8 +30,8 @@ mathprobsolve <- read.csv(data_url)
 model1 <- rblimp(
   data = mathprobsolve,
   clusterid = 'school',
-  ordinal = 'frlunch',
-  model = 'intercept -> probsolvpost probsolvpre stanmath frlunch',
+  ordinal = 'hispanic',
+  model = 'intercept -> probsolve stanmath hispanic',
   seed = 90291,
   burn = 10000,
   iter = 10000)
@@ -44,21 +44,19 @@ output(model1)
 #------------------------------------------------------------------------------#
 
 # mixed model specification
-model2 <- rblimp(
+mod <- rblimp(
     data = mathprobsolve,
     clusterid = 'school',
-    nominal = 'condition frlunch',
+    ordinal = 'condition frlunch hispanic male',
     # fixed = 'probsolve1 condition',
-    center = 'groupmean = probsolvpre stanmath frlunch',
-    model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
-    parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
+    center = 'groupmean = stanmath hispanic',
+    model = 'probsolve ~ intercept stanmath hispanic stanmath.mean hispanic.mean condition', 
     seed = 90291,
     burn = 10000,
-    iter = 10000,
-    nimps = 20)
+    iter = 10000)
 
 # print output
-output(model2)
+output(mod)
 
 # mixed model specification
 model2 <- rblimp(
@@ -66,9 +64,9 @@ model2 <- rblimp(
   clusterid = 'school',
   nominal = 'condition frlunch',
   # fixed = 'probsolve1 condition',
-  center = 'groupmean = probsolvpre stanmath frlunch',
-  model = 'probsolvpost ~ intercept@mu0 probsolvpre stanmath frlunch probsolvpre.mean stanmath.mean frlunch.mean condition@diff', 
-  parameters = 'd = diff / sqrt(probsolvpost.totalvar);',
+  center = 'groupmean = psolvepre stanmath frlunch',
+  model = 'psolvepst ~ intercept@mu0 psolvepre stanmath frlunch psolvepre.mean stanmath.mean frlunch.mean condition@diff', 
+  parameters = 'd = diff / sqrt(psolvepst.totalvar);',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -78,7 +76,7 @@ model2 <- rblimp(
 output(model2)
 
 # plot parameter distributions
-posterior_plot(model2,'probsolvpost')
+posterior_plot(model2,'psolvepst')
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -88,15 +86,15 @@ posterior_plot(model2,'probsolvpost')
 imputation_plot(model2)
 
 # plot distributions and residuals
-univariate_plot(vars = c('probsolvpost.school','probsolvpost.residual'), model2)
+univariate_plot(vars = c('psolvepst.school','psolvepst.residual'), model2)
 
 # plot standardized level-2 residuals vs. level-2 predictors
-bivariate_plot(x_vars = c('probsolvpre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
-               y_vars = 'probsolvpost.school', standardize = 'y', model = model2)
+bivariate_plot(x_vars = c('psolvepre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
+               y_vars = 'psolvepst.school', standardize = 'y', model = model2)
 
 # plot standardized level-1 residuals vs. level-1 predictors
-bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'), 
-               y_vars = 'probsolvpost.residual', standardize = 'y', model = model2)
+bivariate_plot(x_vars = c('psolvepre','stanmath','frlunch'), 
+               y_vars = 'psolvepst.residual', standardize = 'y', model = model2)
 
 #------------------------------------------------------------------------------#
 # FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
@@ -109,11 +107,11 @@ model3 <- rblimp(
   nominal = 'condition frlunch',
   latent = 'school = ranicept',
   # fixed = 'probsolve1 condition',
-  center = 'groupmean = probsolvpre stanmath frlunch',
+  center = 'groupmean = psolvepre stanmath frlunch',
   model = '
-    ranicept ~ intercept probsolvpre.mean stanmath.mean frlunch.mean condition@diff;
-    probsolvpost ~ intercept@ranicept probsolvpre stanmath frlunch;',
-  parameters = 'd = diff / sqrt(probsolvpost.totalvar + ranicept.totalvar);',
+    ranicept ~ intercept psolvepre.mean stanmath.mean frlunch.mean condition@diff;
+    psolvepst ~ intercept@ranicept psolvepre stanmath frlunch;',
+  parameters = 'd = diff / sqrt(psolvepst.totalvar + ranicept.totalvar);',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -123,7 +121,7 @@ model3 <- rblimp(
 output(model3)
 
 # plot parameter distributions
-posterior_plot(model3,'probsolvpost')
+posterior_plot(model3,'psolvepst')
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -133,12 +131,12 @@ posterior_plot(model3,'probsolvpost')
 imputation_plot(model3)
 
 # plot distributions and residuals
-univariate_plot(vars = c('ranicept.residual','probsolvpost.residual'), model3)
+univariate_plot(vars = c('ranicept.residual','psolvepst.residual'), model3)
 
 # plot standardized level-2 residuals vs. level-2 predictors
-bivariate_plot(x_vars = c('probsolvpre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
+bivariate_plot(x_vars = c('psolvepre.mean.school','stanmath.mean.school','frlunch.1.mean.school','condition'), 
                y_vars = 'ranicept.residual', standardize = 'y', model = model3)
 
 # plot standardized level-1 residuals vs. level-1 predictors
-bivariate_plot(x_vars = c('probsolvpre','stanmath','frlunch'), 
-               y_vars = 'probsolvpost.residual', standardize = 'y', model = model2)
+bivariate_plot(x_vars = c('psolvepre','stanmath','frlunch'), 
+               y_vars = 'psolvepst.residual', standardize = 'y', model = model2)
