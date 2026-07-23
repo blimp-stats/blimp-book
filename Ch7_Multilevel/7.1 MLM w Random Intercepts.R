@@ -22,6 +22,8 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 mathprobsolve <- read.csv(data_url)
 
+
+
 #------------------------------------------------------------------------------#
 # FIT EMPTY MODEL FOR LEVEL-1 VARIABLES ----
 #------------------------------------------------------------------------------#
@@ -47,10 +49,10 @@ output(model1)
 mod <- rblimp(
     data = mathprobsolve,
     clusterid = 'school',
-    ordinal = 'condition frlunch hispanic male',
+    ordinal = 'condition frlunch hispanic',
     # fixed = 'probsolve1 condition',
     center = 'groupmean = stanmath hispanic',
-    model = 'probsolve ~ intercept stanmath hispanic stanmath.mean hispanic.mean condition', 
+    model = 'probsolve ~ intercept stanmath frlunch stanmath.mean frlunch.mean condition', 
     seed = 90291,
     burn = 10000,
     iter = 10000)
