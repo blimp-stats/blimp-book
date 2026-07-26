@@ -169,31 +169,45 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig7_7 <- simple_plot(severity ~ visit | drug, mod1)
+fig7_7a <-
+  ggplot(medtrial, aes(x = visit, y = severity,
+                       linetype = factor(drug), group = drug)) +
+  stat_summary(fun = mean, geom = "line",  na.rm = TRUE, color = "black") +
+  stat_summary(fun = mean, geom = "point", na.rm = TRUE, color = "black", size = 2.5) +
+  scale_linetype_manual(values = c("dashed", "solid"),
+                        labels = c("Placebo", "Medication"),
+                        name   = "Drug") +
+  labs(x = "visit", y = "severity") +
+  coord_cartesian(ylim = c(3, 7)) +
+  book_theme +
+  caps_axes
+
+fig7_7b <- simple_plot(severity ~ visit | drug, mod1)
 
 
 # linetype by moderator level on the line layers only
-for (i in which(vapply(fig7_7$layers,
+for (i in which(vapply(fig7_7b$layers,
                        function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
-  q <- fig7_7$layers[[i]]$mapping[["colour"]]
-  if (is.null(q)) q <- fig7_7$mapping[["colour"]]
-  fig7_7$layers[[i]]$mapping[["linetype"]] <- q
+  q <- fig7_7b$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig7_7b$mapping[["colour"]]
+  fig7_7b$layers[[i]]$mapping[["linetype"]] <- q
 }
 
 # make the two CI ribbons a bit more visible
-for (i in which(vapply(fig7_7$layers,
+for (i in which(vapply(fig7_7b$layers,
                        function(l) inherits(l$geom, "GeomRibbon"), logical(1)))) {
-  fig7_7$layers[[i]]$aes_params$alpha <- 0.35
+  fig7_7b$layers[[i]]$aes_params$alpha <- 0.35
 }
 
-fig7_7 <- fig7_7 +
+fig7_7b <- fig7_7b +
   scale_colour_manual(values = c("black", "black"), guide = "none") +
-  scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
+  scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +
   scale_linetype_manual(
-    values = c("solid", "dashed"),           # @0 solid, @1 dashed
-    name   = "Visit",
-    labels = c("Placebo", "Drug")   # set to your moderator's coding
+    values = c("dashed", "solid"),
+    name   = "Drug",                       # <- match A exactly
+    labels = c("Placebo", "Medication")    # <- match A exactly
   ) +
+  coord_cartesian(ylim = c(3, 7)) +        # <- same limits as A
   labs(title = NULL, subtitle = NULL) +
   book_theme +
   caps_axes +
@@ -206,4 +220,13 @@ fig7_7 <- fig7_7 +
     legend.position  = "bottom"
   )
 
-save_fig(fig7_7, "Figure 7.7", width = 11, height = 8.5)
+
+fig7_7 <-
+  (fig7_7a / fig7_7b) +
+  plot_layout(guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  caps_axes &
+  labs(title = NULL)
+
+save_fig(fig7_7, "Figure 7.7", width = 8.5, height = 11)
