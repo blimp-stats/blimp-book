@@ -17,30 +17,47 @@ set_blimp('/applications/blimp/blimp-nightly')
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/trial_stacked.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/medtrial.csv'
 
 # create data frame from github data
-trial <- read.csv(data_url)
+medtrial <- read.csv(data_url)
+
+summary(medtrial)
 
 #------------------------------------------------------------------------------#
 # PLOT MEANS ----
 #------------------------------------------------------------------------------#
 
-ggplot(trial, aes(x = visit, y = severity)) +
+ggplot(medtrial, aes(x = visit, y = severity)) +
   stat_summary(fun = mean, geom = "line",  na.rm = TRUE) +
   stat_summary(fun = mean, geom = "point", na.rm = TRUE)
+
+#------------------------------------------------------------------------------#
+# INTRACLASS CORRELATION ----
+#------------------------------------------------------------------------------#
+
+mod0 <- rblimp(
+  data = medtrial,
+  clusterid = 'person',
+  model = 'severity ~ intercept',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+# print output
+output(mod0)
 
 #------------------------------------------------------------------------------#
 # LINEAR GROWTH MODEL ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = trial,
+  data = medtrial,
   clusterid = 'person',
-  model = 'severity ~ intercept visit | visit;',
+  model = 'severity ~ intercept visit | visit; DEBUG: compact_output',
   seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  burn = 25000,
+  iter = 25000)
 
 # print output
 output(mod1)
@@ -48,37 +65,72 @@ output(mod1)
 # plot parameter distributions
 posterior_plot(mod1)
 
-
-
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
+mod2 <- rblimp(
+  data = medtrial,
+  clusterid = 'person',
+  model = 'severity ~ intercept visit | visit',
+  seed = 90291,
+  burn = 25000,
+  iter = 25000,
+  nimps = 20)
 
+distribution_plot(mod2)
+residuals_plot(mod2)
 
+#------------------------------------------------------------------------------#
+# QUADRATIC GROWTH MODEL ----
+#------------------------------------------------------------------------------#
 
+# fixed quadratic effect
+mod3 <- rblimp(
+  data = medtrial,
+  clusterid = 'person',
+  model = 'severity ~ intercept visit visit^2 | visit; DEBUG: compact_output',
+  seed = 90291,
+  burn = 25000,
+  iter = 25000)
+
+# print output
+output(mod3)
+
+# random quadratic effect
+mod4 <- rblimp(
+  data = medtrial,
+  clusterid = 'person',
+  model = 'severity ~ intercept visit visit^2 | visit visit^2',
+  seed = 90291,
+  burn = 30000,
+  iter = 30000)
+
+# print output
+output(mod4)
 
 #------------------------------------------------------------------------------#
 # LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
 #------------------------------------------------------------------------------#
 
-modelx <- rblimp(
-  data = trial,
+mod3 <- rblimp(
+  data = medtrial,
   clusterid = 'person',
-  latent = 'person = icept linear',
+  latent = 'person = b0j b1j',
   model = '
     level2:
-    intercept -> icept linear;
-    icept ~~ linear;
+    b0j ~ intercept;
+    b1j ~ intercept;
+    b0j ~~ b1j;
     level1:
-    severity ~ intercept@icept visit@linear;',
+    severity ~ intercept@b0j visit@b1j;',
   seed = 90291,
   burn = 20000,
   iter = 20000,
   nimps = 20)
 
 # print output
-output(modelx)
+output(mod3)
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -133,25 +185,32 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 # FIGURE 7.5: MEANS ----
 #------------------------------------------------------------------------------#
 
-fig7_5 <- ggplot(trial, aes(x = visit, y = severity)) +
+fig7_5 <- ggplot(medtrial, aes(x = visit, y = severity)) +
   stat_summary(fun = mean, geom = "line",  na.rm = TRUE, color = "black") +
   stat_summary(fun = mean, geom = "point", na.rm = TRUE, color = "black", size = 2.5) +
-  labs(x = "visit", y = "severity") +
-  coord_cartesian(ylim = c(3, 7)) +
-  book_theme +
-  caps_axes
-
-
-fig7_5 <- ggplot(trial,
-                 aes(x = visit, y = severity, linetype = factor(drug), group = drug)) +
-  stat_summary(fun = mean, geom = "line",  na.rm = TRUE, color = "black") +
-  stat_summary(fun = mean, geom = "point", na.rm = TRUE, color = "black", size = 2.5) +
-  scale_linetype_manual(name   = "Drug",
-                        values = c("solid", "dashed"),
-                        labels = c("Placebo", "Drug")) +
   labs(x = "visit", y = "severity") +
   coord_cartesian(ylim = c(3, 7)) +
   book_theme +
   caps_axes
 
 save_fig(fig7_5, "Figure 7.5", width = 11, height = 8.5)
+
+#------------------------------------------------------------------------------#
+# FIGURE 7.6: RESIDUAL PLOT ----
+#------------------------------------------------------------------------------#
+
+rp <- residuals_plot(
+  mod2,
+  point_color  = "grey50",
+  curve_color  = "black",
+  font_size    = 18,
+  line_width   = 0.6,
+  label_family = "Minion Pro"
+)
+
+fig7_6 <- rp$severity.visit +
+  book_theme &
+  caps_axes &
+  labs(title = NULL)
+
+save_fig(fig7_6, "Figure 7.6", width = 11, height = 8.5)
