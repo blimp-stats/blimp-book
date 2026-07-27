@@ -23,6 +23,21 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 worksat <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
+# ESTIMATE INTRACLASS CORRELATIONS ----
+#------------------------------------------------------------------------------#
+
+mod0 <- rblimp(
+  data = worksat,
+  clusterid = 'team',
+  ordinal = 'turnover male',
+  model = '{ turnover lmx male } ~ intercept',
+  seed = 90291,
+  burn = 20000,
+  iter = 20000)
+
+output(mod0)
+
+#------------------------------------------------------------------------------#
 # FIT LOGISTIC MODEL WITH COMBINED MODEL SPECIFICATION ----
 #------------------------------------------------------------------------------#
 
@@ -30,12 +45,13 @@ worksat <- read.csv(data_url)
 mod1 <- rblimp(
   data = worksat,
   clusterid = 'team',
-  nominal = 'turnover male',
-  center = 'groupmean = lmx; grandmean = lmx.mean climate male',
-  model = 'turnover ~ lmx male lmx.mean climate | lmx',
+  ordinal = 'male',
+  nominal = 'turnover',
+  center = 'groupmean = lmx; grandmean = lmx.mean climate',
+  model = 'turnover ~ lmx male lmx.mean climate; DEBUG: compact_output',
   seed = 90291,
-  burn = 20000,
-  iter = 20000)
+  burn = 10000,
+  iter = 10000)
 
 # print output
 output(mod1)
