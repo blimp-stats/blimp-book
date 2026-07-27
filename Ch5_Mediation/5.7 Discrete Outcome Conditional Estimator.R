@@ -28,11 +28,11 @@ worksat <- read.csv(data_url)
 
 mod1 <- rblimp(
   data = worksat,
-  ordinal = 'turnover male suprelqual',
+  ordinal = 'turnover male relqual',
   center  = 'male',
   model = '
-    jobsat ~ intercept@a0 suprelqual@a1 male;
-    turnover ~ intercept@b0 jobsat@b1 suprelqual@b2 male; DEBUG: compact_output',
+    jobsat ~ intercept@a0 relqual@a1 male;
+    turnover ~ intercept@b0 jobsat@b1 relqual@b2 male; DEBUG: compact_output',
   parameters = '
     p0 = phi(b0 + b1*(a0 + a1*0) + b2*0);
     p1 = phi(b0 + b1*(a0 + a1*1) + b2*1);
@@ -70,11 +70,11 @@ output(mod2)
 
 mod3 <- rblimp(
   data = worksat,
-  ordinal = 'turnover male suprelqual jobsat',
+  ordinal = 'turnover male relqual jobsat',
   center  = 'male',
   model = '
-    jobsat ~ intercept@a0 suprelqual@a1 male;
-    turnover ~ intercept@b0 jobsat.latent@b1 suprelqual@b2 male; DEBUG: compact_output',
+    jobsat ~ intercept@a0 relqual@a1 male;
+    turnover ~ intercept@b0 jobsat.latent@b1 relqual@b2 male; DEBUG: compact_output',
   parameters = '
     p0 = phi(b0 + b1*(a0 + a1*0) + b2*0);
     p1 = phi(b0 + b1*(a0 + a1*1) + b2*1);

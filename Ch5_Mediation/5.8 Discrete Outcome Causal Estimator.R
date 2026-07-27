@@ -28,12 +28,12 @@ worksat <- read.csv(data_url)
 
 mod1 <- rblimp(
   data = worksat,
-  ordinal = 'turnover male suprelqual',
+  ordinal = 'turnover male relqual',
   center  = 'male',
   model = '
-    jobsat ~ intercept@a0 suprelqual@a1 male;
+    jobsat ~ intercept@a0 relqual@a1 male;
     jobsat@resvar_m;
-    turnover ~ intercept@b0 jobsat@b1 suprelqual@b2 male;',
+    turnover ~ intercept@b0 jobsat@b1 relqual@b2 male;',
   parameters = '
     sd_lat = sqrt(b1^2 * resvar_m + 1);
     p_obs = phi((b0 + b1*(a0 + a1*1) + b2*1) / sd_lat);
@@ -60,7 +60,7 @@ mod2 <- rblimp(
     jobsat@resvar_m;
     turnover ~ intercept@b0 jobsat@b1 lmx@b2 male;
     predictor:
-    lmx ~ male; DEBUG: compact_output',
+    lmx ~ male;',
   parameters = '
     sd_lmx = sqrt(lmx.totalvar);
     sd_lat = sqrt(b1^2 * resvar_m + 1);
@@ -141,12 +141,12 @@ panel_format <- list(
 
 mod3 <- rblimp(
   data = worksat,
-  ordinal = 'turnover male suprelqual',
+  ordinal = 'turnover male relqual',
   center  = 'male',
   model = '
-    jobsat ~ intercept@a0 suprelqual@a1 male;
+    jobsat ~ intercept@a0 relqual@a1 male;
     jobsat@resvar_m;
-    turnover ~ intercept@b0 jobsat@b1 suprelqual@b2 male;',
+    turnover ~ intercept@b0 jobsat@b1 relqual@b2 male;',
   parameters = '
     sd_lat = sqrt(b1^2 * resvar_m + 1);
     p_obs = phi((b0 + b1*(a0 + a1*1) + b2*1) / sd_lat);
