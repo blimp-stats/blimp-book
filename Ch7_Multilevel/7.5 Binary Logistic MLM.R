@@ -32,8 +32,8 @@ mod0 <- rblimp(
   ordinal = 'turnover male',
   model = '{ turnover lmx male } ~ intercept',
   seed = 90291,
-  burn = 20000,
-  iter = 20000)
+  burn = 10000,
+  iter = 10000)
 
 output(mod0)
 
@@ -41,7 +41,6 @@ output(mod0)
 # FIT LOGISTIC MODEL WITH COMBINED MODEL SPECIFICATION ----
 #------------------------------------------------------------------------------#
 
-# logtistic regression with random intercepts
 mod1 <- rblimp(
   data = worksat,
   clusterid = 'team',
@@ -50,16 +49,33 @@ mod1 <- rblimp(
   center = 'groupmean = lmx; grandmean = lmx.mean climate',
   model = 'turnover ~ lmx male lmx.mean climate; DEBUG: compact_output',
   seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  burn = 25000,
+  iter = 25000)
 
 # print output
 output(mod1)
 
 # plot parameter distributions
-posterior_plot(model1,'turnover')
+posterior_plot(mod1,'turnover')
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
+
+mod2 <- rblimp(
+  data = worksat,
+  clusterid = 'team',
+  ordinal = 'male',
+  nominal = 'turnover',
+  center = 'groupmean = lmx; grandmean = lmx.mean climate',
+  model = 'turnover ~ lmx male lmx.mean climate',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000,
+  nimps = 20)                                    # save 20 imputed data sets
+
+output(mod2)                                     # print output
+
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot binned residuals
 
