@@ -1,11 +1,16 @@
-# MULTILEVEL MODEL WITH RANDOM SLOPES
+# MULTILEVEL LATENT VARIABLE MODEL WITH RANDOM SLOPES
 
 # plotting functions
-source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
+#------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
+#------------------------------------------------------------------------------#
 
+library(ggplot2)
 library(rblimp)
+set_blimp('/applications/blimp/blimp-nightly')
 
 #------------------------------------------------------------------------------#
 # READ DATA ----
@@ -22,82 +27,47 @@ diary <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
-model1 <- rblimp(
+mod0 <- rblimp(
   data = diary,
   clusterid = 'person',
-  ordinal = 'pain',
-  model = 'intercept -> posaff pain',
+  model = '{ posaff pain } ~ intercept',
   seed = 90291,
   burn = 10000,
   iter = 10000)
 
 # print output
-output(model1)
+output(mod0)
 
 #------------------------------------------------------------------------------#
-# FIT MODEL WITH COMBINED MODEL SPECIFICATION ----
+# MULTILEVEL LATENT VARIABLE SPECIFICATION ----
 #------------------------------------------------------------------------------#
 
-# random slope model
-model2 <- rblimp(
-  data = diary,
-  ordinal = 'female',
-  clusterid = 'person',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
-  model = 'posaff ~ pain pain.mean stress female | pain',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-# print output
-output(model2)
-
-# plot parameter distributions
-posterior_plot(model2,'posaff')
-
-#------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
-#------------------------------------------------------------------------------#
-
-# plot imputed vs. observed values
-imputation_plot(model2)
-
-# plot distributions and residuals
-univariate_plot(vars = c('posaff.person','posaff_on_pain.person','posaff.residual'), model2)
-
-# plot standardized level-2 residuals vs. level-2 predictors
-bivariate_plot(x_vars = c('pain.mean.person','stress','female'), 
-               y_vars = c('posaff.person','posaff_on_pain.person'), standardize = 'y', model = model2)
-
-# plot standardized level-1 residuals vs. level-1 predictors
-bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model2)
-
-#------------------------------------------------------------------------------#
-# FIT MODEL WITH LATENT VARIABLE SPECIFICATION ----
-#------------------------------------------------------------------------------#
-
-# random slope model
-model3 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  nominal = 'female',
-  latent = 'person = ranicept ranslope;',
-  center = 'groupmean = pain; grandmean = pain.mean stress female',
+mod1 <- rblimp(
+  data = diary,             			# R data frame
+  clusterid = 'person',          		# cluster-level identifier
+  latent = 'person = b0j b1j',          	# define latent variables
+  center = '
+    groupmean = pain;				# center at latent group means
+    grandmean = pain.mean;',  			# center at grand means
   model = '
-    level2:
-    ranicept ~ intercept stress pain.mean female;
-    ranslope ~ intercept;
-    ranicept ~~ ranslope;
-    level1:
-    posaff ~ intercept@ranicept pain@ranslope;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+    level2: 						# model block label
+    b0j ~ intercept pain.mean; 			# level-2 random intercept
+    b1j ~ intercept; 				# level-2 random slope
+    b0j ~~ b1j;  					# random effect correlation
+    level1: 						# model block label
+    posaff ~ intercept@b0j pain@b1j; DEBUG: compact_output', 	# level-2 model  
+  parameters = '
+    var_total = posaff.totalvar + b0j.totalvar;
+    rsq_l2coeff = b0j.coefvar / var_total;
+    rsq_l1coeff = posaff.coefvar / var_total;
+    rsq_l2resid = b0j.residvar / var_total;
+    rsq_l1resid = posaff.residvar / var_total;',
+  seed = 90291,               			# random number seed
+  burn = 10000,               			# warm-up iterations
+  iter = 10000                			# analysis iterations
+)
 
-# print output
-output(model3)
+output(mod1)               		      # print output
 
 # plot parameter distributions
 posterior_plot(model3,'posaff')
@@ -106,15 +76,34 @@ posterior_plot(model3,'posaff')
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-# plot imputed vs. observed values
-imputation_plot(model3)
+mod2 <- rblimp(
+  data = diary,             			# R data frame
+  clusterid = 'person',          		# cluster-level identifier
+  latent = 'person = b0j b1j',          	# define latent variables
+  center = '
+    groupmean = pain;				# center at latent group means
+    grandmean = pain.mean;',  			# center at grand means
+  model = '
+    level2: 						# model block label
+    b0j ~ intercept pain.mean; 			# level-2 random intercept
+    b1j ~ intercept; 				# level-2 random slope
+    b0j ~~ b1j;  					# random effect correlation
+    level1: 						# model block label
+    posaff ~ intercept@b0j pain@b1j; DEBUG: compact_output', 	# level-2 model  
+  parameters = '
+    var_total = posaff.totalvar + b0j.totalvar;
+    rsq_l2coeff = b0j.coefvar / var_total;
+    rsq_l1coeff = posaff.coefvar / var_total;
+    rsq_l2u0 = b0j.residvar / var_total;
+    rsq_l1e = posaff.residvar / var_total;',
+  seed = 90291,               			# random number seed
+  burn = 10000,               			# warm-up iterations
+  iter = 10000,                			# analysis iterations
+  nimps = 20
+)
 
-# plot distributions and residuals
-univariate_plot(vars = c('ranicept.latent','ranicept.residual','ranslope.latent','ranslope.residual','posaff.residual'), model3)
+output(mod2)               		      # print output
 
-# plot standardized level-2 residuals vs. level-2 predictors
-bivariate_plot(x_vars = c('pain.mean.person','stress','female'), 
-               y_vars = c('ranicept.residual','ranslope.residual'), standardize = 'y', model = model3)
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot binned residuals
 
-# plot standardized level-1 residuals vs. level-1 predictors
-bivariate_plot(posaff.residual ~ pain, standardize = 'y', model = model3)
