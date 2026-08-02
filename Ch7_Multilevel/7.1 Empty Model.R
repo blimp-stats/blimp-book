@@ -31,7 +31,7 @@ model1 <- rblimp(
   data = mathprobsolve,
   clusterid = 'school',
   ordinal = 'hispanic',
-  model = '{ probsolve stanmath hispanic } ~ intercept | intercept',
+  model = 'intercept -> probsolve stanmath hispanic',
   seed = 90291,
   burn = 10000,
   iter = 10000)

@@ -1,4 +1,4 @@
-# MULTILEVEL LATENT VARIABLE MODEL WITH RANDOM SLOPES
+# 1-1-1 MEDIATION 
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -27,120 +27,80 @@ diary <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
-mod0 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  model = '{ posaff pain } ~ intercept',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+# mod0 <- rblimp(
+#   data = diary,
+#   clusterid = 'person',
+#   model = 'intercept -> sleep pain posaff',
+#   seed = 90291,
+#   burn = 10000,
+#   iter = 10000)
 
 # print output
-output(mod0)
+# output(mod0)
 
 #------------------------------------------------------------------------------#
-# MULTILEVEL LATENT VARIABLE SPECIFICATION ----
+# 1-1-1 MODEL (WITHIN ONLY) ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
   data = diary,             			# R data frame
   clusterid = 'person',          		# cluster-level identifier
-  latent = 'person = b0c b1c',          	# define latent variables
-  center = '
-    groupmean = pain;				# center at latent group means
-    grandmean = pain.mean;',  			# center at grand means
+  latent = 'person = a0c a1c b0c b1c b2c',   # define latent variables
+  center = 'groupmean = sleep',      		# center at latent group means       
   model = '
     level2: 						# model block label
-    b0c ~ intercept pain.mean; 			# level-2 random intercept
-    b1c ~ intercept; 				# level-2 random slope
-    b0c ~~ b1c;  					# random effect correlation
+    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c; # latent means
+    a0c b0c  b2c a1c b1c ~~ a0c b0c b2c;  # correlations
+    a1c ~~ b1c@a1b1_cor; 				# random slope correlation
     level1: 						# model block label
-    posaff ~ intercept@b0c pain@b1c; DEBUG: compact_output', 	# level-2 model  
-  parameters = '
-    var_total = posaff.totalvar + b0c.totalvar;
-    rsq_l2coeff = b0c.coefvar / var_total;
-    rsq_l1coeff = posaff.coefvar / var_total;
-    rsq_l2resid = b0c.residvar / var_total;
-    rsq_l1resid = posaff.residvar / var_total;',
+    pain ~ intercept@a0c sleep@a1c; 			# level-1 model
+    posaff ~ intercept@b0c (pain - a0c)@b1c sleep@b2c;
+    DEBUG: compact',  # level-1 model
+  parameters =  '
+    a1b1_cov = a1b1_cor * sqrt(a1c.totalvar * b1c.totalvar);  # covariance
+    indirect = a1_mean * b1_mean + a1b1_cov;',  # compute indirect effect
   seed = 90291,               			# random number seed
   burn = 10000,               			# warm-up iterations
   iter = 10000                			# analysis iterations
 )
 
 output(mod1)               		      # print output
-
-# plot parameter distributions
-posterior_plot(mod1,'posaff')
+posterior_plot(mod1, 'indirect')             # plot indirect effect
 
 #------------------------------------------------------------------------------#
-# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+# 1-1-1 MODEL (WITHIN + BETWEEN) ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
   data = diary,             			# R data frame
   clusterid = 'person',          		# cluster-level identifier
-  latent = 'person = b0c b1c',          	# define latent variables
+  latent = 'person = a0c a1c b0c b1c b2c',   # define latent variables
   center = '
-    groupmean = pain;				# center at latent group means
-    grandmean = pain.mean;',  			# center at grand means
+    groupmean = sleep;
+    grandmean = sleep.mean;',      		# center at latent group means       
   model = '
     level2: 						# model block label
-    b0c ~ intercept pain.mean; 			# level-2 random intercept
-    b1c ~ intercept; 				# level-2 random slope
-    b0c ~~ b1c;  					# random effect correlation
+    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c; # latent means
+    a0c ~ sleep.mean@a2;
+    b0c ~ a0c@b3 sleep.mean;
+    a1c ~~ b1c@a1b1_cor; 				# random slope correlation
     level1: 						# model block label
-    posaff ~ intercept@b0c pain@b1c; DEBUG: compact_output', 	# level-2 model  
-  parameters = '
-    var_total = posaff.totalvar + b0c.totalvar;
-    rsq_l2coeff = b0c.coefvar / var_total;
-    rsq_l1coeff = posaff.coefvar / var_total;
-    rsq_l2resid = b0c.residvar / var_total;
-    rsq_l1resid = posaff.residvar / var_total;',
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000,                			# analysis iterations
-  nimps = 20
-)
-
-
-output(mod2)               		      # print output
-
-distribution_plot(mod2)                          # plot observed and imputed distributions
-residuals_plot(mod2)                             # plot binned residuals
-
-#------------------------------------------------------------------------------#
-# MULTILEVEL LATENT VARIABLE MODEL WITH A CROSS-LEVEL INTERACTION ----
-#------------------------------------------------------------------------------#
-
-mod3 <- rblimp(
-  data = diary,             			# R data frame
-  clusterid = 'person',          		# cluster-level identifier
-  ordinal = 'female',
-  latent = 'person = b0c b1c',          	# define latent variables
-  center = '
-    groupmean = pain;				# center at latent group means
-    grandmean = pain.mean;',  			# center at grand means
-  model = '
-    level2: 						# model block label
-    b0c ~ intercept pain.mean female; 			# level-2 random intercept
-    b1c ~ intercept female; 				# level-2 random slope
-    b0c ~~ b1c;  					# random effect correlation
-    level1: 						# model block label
-    posaff ~ intercept@b0c pain@b1c; 
-    DEBUG: compact_output', 	# level-2 model 
-  simple = 'pain | female',
-  parameters = '
-    var_total = posaff.totalvar + b0c.totalvar;
-    rsq_l2coeff = b0c.coefvar / var_total;
-    rsq_l1coeff = posaff.coefvar / var_total;
-    rsq_l2resid = b0c.residvar / var_total;
-    rsq_l1resid = posaff.residvar / var_total;',
+    pain ~ intercept@a0c sleep@a1c; 			# level-1 model
+    posaff ~ intercept@b0c (pain - a0c)@b1c sleep@b2c;
+    DEBUG: compact;
+  ',  # level-1 model
+  parameters =  '
+    a1b1_cov = a1b1_cor * sqrt(a1c.totalvar * b1c.totalvar);  # covariance
+    indirect_w = a1_mean * b1_mean + a1b1_cov; # compute indirect effect
+    indirect_b = a2 * b3;',  # compute indirect effect
   seed = 90291,               			# random number seed
   burn = 10000,               			# warm-up iterations
   iter = 10000                			# analysis iterations
 )
 
-output(mod3)               		      # print output
+output(mod2)               		      # print output
+posterior_plot(mod2, 'indirect_w')             # plot indirect effect
+posterior_plot(mod2, 'indirect_b')             # plot indirect effect
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
@@ -192,21 +152,32 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 7.9: HETEROGENEITY PLOT ----
+# FIGURE 5.2: POSTERIOR PLOT ----
 #------------------------------------------------------------------------------#
 
-rp <- residuals_plot(
-  mixed,
-  point_color  = "grey40",
-  curve_color  = "black",
-  font_size    = 18,
-  line_width   = 0.6,
-  label_family = "Minion Pro"
+panel_format <- list(
+  scale_color_manual(values = "black"),
+  labs(title = NULL, subtitle = NULL),
+  book_theme,
+  scale_fill_manual(values = NA),
+  theme(legend.position = "none"),
+  scale_y_continuous(breaks = NULL)
 )
 
-fig7_9 <- rp$posaff.cluster_variance +
-  book_theme &
-  caps_axes &
-  labs(title = NULL, x = "Person (Ordered by Residual SD)")
+fig7_11a <- posterior_plot(mod2, 'indirect_w', line_width = 0.5) + panel_format +
+  labs(x = "Indirect Effect (Within-Person)") +
+  scale_x_continuous(breaks = seq(-.01, 0.04, 0.01)) +
+  coord_cartesian(xlim = c(-.01, 0.04))
 
-save_fig(fig7_9, "Figure 7.9", width = 11, height = 8.5)
+fig7_11b <- posterior_plot(mod2, 'indirect_b', line_width = 0.5) + panel_format +
+  labs(x = "Indirect Effect (Between-Person)") +
+  scale_x_continuous(breaks = seq(-.10, 0.10, 0.05)) +
+  coord_cartesian(xlim = c(-.10, 0.10))
+
+fig7_11 <- (fig7_11a / fig7_11b) +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  labs(title = NULL) &
+  theme(legend.position = "none")
+
+save_fig(fig7_11, "Figure 7.11", width = 8.5, height = 11)
