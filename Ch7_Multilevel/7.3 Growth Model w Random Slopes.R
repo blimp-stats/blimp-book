@@ -22,8 +22,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 medtrial <- read.csv(data_url)
 
-summary(medtrial)
-
 #------------------------------------------------------------------------------#
 # PLOT MEANS ----
 #------------------------------------------------------------------------------#
@@ -113,7 +111,7 @@ output(mod4)
 # LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
 #------------------------------------------------------------------------------#
 
-mod3 <- rblimp(
+mod5 <- rblimp(
   data = medtrial,
   clusterid = 'person',
   latent = 'person = b0j b1j',
@@ -130,7 +128,7 @@ mod3 <- rblimp(
   nimps = 20)
 
 # print output
-output(mod3)
+output(mod5)
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

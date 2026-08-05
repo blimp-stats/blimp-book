@@ -39,7 +39,6 @@ mod1 <- rblimp(
   data = medtrial,
   clusterid = 'person',
   ordinal = 'drug male',
-  center = 'grandmean = male',
   model = 'severity ~ visit drug visit*drug male  | visit; DEBUG: compact_output',
   simple = 'visit | drug',
   seed = 90291,
@@ -52,7 +51,7 @@ output(mod1)
 simple_plot(severity ~ visit | drug, mod1)
 
 # model with endpoint mean difference
-mod1 <- rblimp(
+mod2 <- rblimp(
   data = medtrial,
   clusterid = 'person',
   ordinal = 'drug male',
@@ -68,16 +67,16 @@ mod1 <- rblimp(
   iter = 25000)
 
 # print output
-output(mod1)
+output(mod2)
 
 # plot parameter distributions
-posterior_plot(mod1)
+posterior_plot(mod2)
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-mod2 <- rblimp(
+mod3 <- rblimp(
   data = medtrial,
   clusterid = 'person',
   ordinal = 'drug male',
@@ -88,14 +87,14 @@ mod2 <- rblimp(
   iter = 25000,
   nimps = 20)
 
-distribution_plot(mod2)
-residuals_plot(mod2)
+distribution_plot(mod3)
+residuals_plot(mod3)
 
 #------------------------------------------------------------------------------#
 #  LINEAR GROWTH MODEL WITH GROUP-BY-TIME INTERACTION (LATENT SPECIFICATION) ----
 #------------------------------------------------------------------------------#
 
-mod3 <- rblimp(
+mod4 <- rblimp(
   data = medtrial,
   clusterid = 'person',
   ordinal = 'drug male',
@@ -113,7 +112,7 @@ mod3 <- rblimp(
   nimps = 20)
 
 # print output
-output(mod3)
+output(mod4)
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
