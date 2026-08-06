@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----

@@ -27,16 +27,14 @@ diary <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
-# mod0 <- rblimp(
-#   data = diary,
-#   clusterid = 'person',
-#   model = 'intercept -> sleep pain posaff',
-#   seed = 90291,
-#   burn = 10000,
-#   iter = 10000)
-
-# print output
-# output(mod0)
+mod0 <- rblimp(
+  data = diary,
+  clusterid = 'person',
+  model = 'intercept -> sleep pain posaff',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+output(mod0)
 
 #------------------------------------------------------------------------------#
 # 1-1-1 MODEL (WITHIN ONLY) ----
