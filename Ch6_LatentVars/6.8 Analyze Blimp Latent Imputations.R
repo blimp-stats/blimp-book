@@ -1,4 +1,8 @@
-# ANALYZE LATENT IMPUTATIONS
+# ANALYZE MNLFA-GENERATED IMPUTATIONS
+
+# plotting functions
+# source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -28,6 +32,6 @@ mean_alphaeeg <- mean(sapply(implist, function(d) mean(d$alphaeeg)))
 mean_age      <- mean(sapply(implist, function(d) mean(d$age)))
 
 # analysis and pooling with mitml
-est_mi <- with(implist, lm(attention.latent ~ I(alphaeeg - mean_alphaeeg) + I((alphaeeg - mean_alphaeeg)^2) 
+est_mi <- with(implist, lm(attention.latent ~ I(alphaeeg - mean_alphaeeg) + I((alphaeeg - mean_alphaeeg)^2)
                            + I(age - mean_age) + I((age - mean_age)^2) + male))
 testEstimates(est_mi, extra.pars = T, df.com = 939 - 6)

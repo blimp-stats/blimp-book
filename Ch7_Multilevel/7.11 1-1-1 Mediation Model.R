@@ -1,4 +1,4 @@
-# 1-1-1 MEDIATION 
+# 1-1-1 MEDIATION
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
@@ -27,78 +27,128 @@ diary <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 # empty multivariate model for icc's
-mod0 <- rblimp(
-  data = diary,
-  clusterid = 'person',
-  model = 'intercept -> sleep pain posaff',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
-output(mod0)
+# mod0 <- rblimp(
+#   data = diary,
+#   clusterid = 'person',
+#   model = 'intercept -> sleep pain posaff',
+#   seed = 90291,
+#   burn = 10000,
+#   iter = 10000)
+
+# print output
+# output(mod0)
 
 #------------------------------------------------------------------------------#
 # 1-1-1 MODEL (WITHIN ONLY) ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = diary,             			# R data frame
-  clusterid = 'person',          		# cluster-level identifier
-  latent = 'person = a0c a1c b0c b1c b2c',   # define latent variables
-  center = 'groupmean = sleep',      		# center at latent group means       
+  data = diary,                                  # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  latent = 'person = a0c a1c b0c b1c b2c',       # define latent variables
+  center = 'groupmean = sleep',                  # center at latent group means
   model = '
-    level2: 						# model block label
-    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c; # latent means
-    a0c b0c  b2c a1c b1c ~~ a0c b0c b2c;  # correlations
-    a1c ~~ b1c@a1b1_cor; 				# random slope correlation
-    level1: 						# model block label
-    pain ~ intercept@a0c sleep@a1c; 			# level-1 model
+    level2:                                      # model block label
+    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c;  # latent means
+    a0c b0c  b2c a1c b1c ~~ a0c b0c b2c;         # correlations
+    a1c ~~ b1c@a1b1_cor;                         # random slope correlation
+    level1:                                      # model block label
+    pain ~ intercept@a0c sleep@a1c;              # level-1 model
     posaff ~ intercept@b0c (pain - a0c)@b1c sleep@b2c;
-    DEBUG: compact',  # level-1 model
+',                                               # level-1 model
   parameters =  '
     a1b1_cov = a1b1_cor * sqrt(a1c.totalvar * b1c.totalvar);  # covariance
-    indirect = a1_mean * b1_mean + a1b1_cov;',  # compute indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    indirect = a1_mean * b1_mean + a1b1_cov;',   # compute indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod1)               		      # print output
-posterior_plot(mod1, 'indirect')             # plot indirect effect
+output(mod1)                                     # print output
+posterior_plot(mod1, 'indirect')                 # plot indirect effect
 
 #------------------------------------------------------------------------------#
 # 1-1-1 MODEL (WITHIN + BETWEEN) ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = diary,             			# R data frame
-  clusterid = 'person',          		# cluster-level identifier
-  latent = 'person = a0c a1c b0c b1c b2c',   # define latent variables
+  data = diary,                                  # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  latent = 'person = a0c a1c b0c b1c b2c',       # define latent variables
   center = '
     groupmean = sleep;
-    grandmean = sleep.mean;',      		# center at latent group means       
+    grandmean = sleep.mean;',                    # center at latent group means
   model = '
-    level2: 						# model block label
-    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c; # latent means
+    level2:                                      # model block label
+    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c;  # latent means
     a0c ~ sleep.mean@a2;
     b0c ~ a0c@b3 sleep.mean;
-    a1c ~~ b1c@a1b1_cor; 				# random slope correlation
-    level1: 						# model block label
-    pain ~ intercept@a0c sleep@a1c; 			# level-1 model
+    a1c ~~ b1c@a1b1_cor;                         # random slope correlation
+    level1:                                      # model block label
+    pain ~ intercept@a0c sleep@a1c;              # level-1 model
     posaff ~ intercept@b0c (pain - a0c)@b1c sleep@b2c;
-    DEBUG: compact;
-  ',  # level-1 model
+
+  ',                                             # level-1 model
   parameters =  '
     a1b1_cov = a1b1_cor * sqrt(a1c.totalvar * b1c.totalvar);  # covariance
-    indirect_w = a1_mean * b1_mean + a1b1_cov; # compute indirect effect
-    indirect_b = a2 * b3;',  # compute indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    indirect_w = a1_mean * b1_mean + a1b1_cov;   # compute indirect effect
+    indirect_b = a2 * b3;',                      # compute indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod2)               		      # print output
-posterior_plot(mod2, 'indirect_w')             # plot indirect effect
-posterior_plot(mod2, 'indirect_b')             # plot indirect effect
+output(mod2)                                     # print output
+posterior_plot(mod2, 'indirect_w')               # plot indirect effect
+posterior_plot(mod2, 'indirect_b')               # plot indirect effect
+
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
+mod3 <- rblimp(
+  data = diary,                                  # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  latent = 'person = a0c a1c b0c b1c b2c',       # define latent variables
+  center = '
+    groupmean = sleep;
+    grandmean = sleep.mean;',                    # center at latent group means
+  model = '
+    level2:                                      # model block label
+    intercept -> a0c a1c@a1_mean b0c b1c@b1_mean b2c;  # latent means
+    a0c ~ sleep.mean@a2;
+    b0c ~ a0c@b3 sleep.mean;
+    a1c ~~ b1c@a1b1_cor;                         # random slope correlation
+    level1:                                      # model block label
+    pain ~ intercept@a0c sleep@a1c;              # level-1 model
+    posaff ~ intercept@b0c (pain - a0c)@b1c sleep@b2c;
+
+  ',                                             # level-1 model
+  parameters =  '
+    a1b1_cov = a1b1_cor * sqrt(a1c.totalvar * b1c.totalvar);  # covariance
+    indirect_w = a1_mean * b1_mean + a1b1_cov;   # compute indirect effect
+    indirect_b = a2 * b3;',                      # compute indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
+
+output(mod3)                                     # print output
+
+distribution_plot(mod3)                          # plot observed and imputed distributions
+residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.11 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.11 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

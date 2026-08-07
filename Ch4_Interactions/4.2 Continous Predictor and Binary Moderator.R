@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -29,17 +29,17 @@ reading <- read.csv(data_url)
 # add the product term
 mod1 <- rblimp(
   data = reading,                                # R data frame
-  ordinal = 'esl lprobhi',                      # binary and ordinal variables
+  ordinal = 'esl lprobhi',                       # binary and ordinal variables
   center = 'read1',                              # center predictors
   model = 'read9 ~ read1 lprobhi read1*lprobhi esl',  # product term
-  simple = 'read1 | lprobhi',                   # conditional effects by group
+  simple = 'read1 | lprobhi',                    # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'read9')                    # plot parameter distributions
-simple_plot(read9 ~ read1 | lprobhi, mod1)      # plot conditional effects
+simple_plot(read9 ~ read1 | lprobhi, mod1)       # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -47,10 +47,10 @@ simple_plot(read9 ~ read1 | lprobhi, mod1)      # plot conditional effects
 
 mod2 <- rblimp(
   data = reading,                                # R data frame
-  ordinal = 'esl lprobhi',                      # binary and ordinal variables
+  ordinal = 'esl lprobhi',                       # binary and ordinal variables
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lprobhi read1*lprobhi esl', # product term
-  simple = 'read1 | lprobhi',                   # conditional effects by group
+  model = 'read9 ~ read1 lprobhi read1*lprobhi esl',  # product term
+  simple = 'read1 | lprobhi',                    # conditional effects by group
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -60,6 +60,18 @@ output(mod2)                                     # print output
 
 distribution_plot(mod2)                          # plot observed and imputed distributions
 residuals_plot(mod2)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.2 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod2)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.2 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod2)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

@@ -2,7 +2,7 @@
 ---------------------------------------------------------------------------
 
                                    Blimp
-                                   4.0.4
+                                 4.1.0.b9
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -35,14 +35,6 @@ ALGORITHMIC OPTIONS SPECIFIED:
         in categorical models is 'normal( 0.0, 5.0)'
 
   NOTE: For complete list of priors include 'pinfo' in the options.
-
-  NOTE: The following variables have been renamed
-        to be 9 characters or less.
-
-           inflam_crp -> inflam_cr
-           inflam_il6 -> inflam_i6
-           inflam_tnf -> inflam_tn
-           inflam_ifn -> inflam_if
 
 
 BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
@@ -223,9 +215,9 @@ Level 1:
   els                                 0.042      0.092     -0.137      0.222      0.208      0.648   2463.840 
   age                                -0.028      0.014     -0.056     -0.001      4.002      0.045   4113.398 
   inflam                              0.012      0.028     -0.042      0.066      0.198      0.656   3837.821 
-  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
-  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -242,9 +234,9 @@ Level 1:
   female                              0.042      0.092     -0.137      0.222      0.209      0.648   2326.979 
   age                                -0.038      0.014     -0.067     -0.010      7.068      0.008   3555.858 
   inflam                              0.047      0.027     -0.007      0.100      2.946      0.086   3319.176 
-  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        nan 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
-  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        nan 
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -288,6 +280,5 @@ VARIABLE ORDER IN IMPUTED DATA:
 
     avgimp = 'avgimp.dat'
 
-     id female els age inflam_cr inflam_i6 inflam_tn inflam_if inflam dpdd hdd
-    
+     id female els age crp il6 tnf ifn inflam dpdd hdd hvydrink
 

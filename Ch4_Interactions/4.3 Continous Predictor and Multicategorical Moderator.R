@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -32,7 +32,7 @@ mod1 <- rblimp(
   ordinal = 'esl',                               # binary and ordinal variables
   nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
+  model = 'read9 ~ read1 lproblev read1*lproblev esl',  # product term
   simple = 'read1 | lproblev',                   # conditional effects by group
   waldtest = 'read9 ~ read1 lproblev esl',       # wald test of interaction
   seed = 90291,                                  # random number seed
@@ -50,8 +50,8 @@ mod2 <- rblimp(
   nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
   model = '
-    read9 ~ read1 lproblev.1 lproblev.2 
-      read1*lproblev.1@b4 read1*lproblev.2@b5 esl', # product term
+    read9 ~ read1 lproblev.1 lproblev.2
+      read1*lproblev.1@b4 read1*lproblev.2@b5 esl',  # product term
   simple = 'read1 | lproblev.1',                 # conditional effects by group
   waldtest = 'b4:b5 = 0',                        # wald test of interaction
   seed = 90291,                                  # random number seed
@@ -71,7 +71,7 @@ mod3 <- rblimp(
   ordinal = 'esl',                               # binary and ordinal variables
   nominal = 'lproblev',                          # nominal variables (auto dummy coded)
   center = 'read1',                              # center predictors
-  model = 'read9 ~ read1 lproblev read1*lproblev esl', # product term
+  model = 'read9 ~ read1 lproblev read1*lproblev esl',  # product term
   simple = 'read1 | lproblev',                   # conditional effects by group
   waldtest = 'read9 ~ read1 lproblev esl',       # wald test of interaction
   seed = 90291,                                  # random number seed
@@ -82,6 +82,18 @@ mod3 <- rblimp(
 output(mod3)                                     # print output
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.3 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.3 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

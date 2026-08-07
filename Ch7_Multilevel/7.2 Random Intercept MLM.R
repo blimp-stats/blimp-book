@@ -27,64 +27,76 @@ mathprobsolve <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = mathprobsolve,             		# R data frame
-  clusterid = 'school',          		# cluster-level identifier
-  ordinal = 'hispanic intschool',          		# binary and ordinal variables
+  data = mathprobsolve,                          # R data frame
+  clusterid = 'school',                          # cluster-level identifier
+  ordinal = 'hispanic intschool',                # binary and ordinal variables
   center = '
-    groupmean = stanmath hispanic;		# center at latent group means
-    grandmean = stanmath.mean hispanic.mean;',  # center at grand means
+    groupmean = stanmath hispanic;               # center at latent group means
+    grandmean = stanmath.mean hispanic.mean;',   # center at grand means
   model = 'probsolve ~ stanmath hispanic stanmath.mean
-    hispanic.mean intschool | intercept;',	# combined model
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    hispanic.mean intschool | intercept;',       # combined model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod1)
+output(mod1)                                     # print output
 
 #------------------------------------------------------------------------------#
 # HETEROGENEOUS WITHIN-CLUSTER VARIATION MODEL ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = mathprobsolve,             		# R data frame
-  clusterid = 'school',          		# cluster-level identifier
-  ordinal = 'hispanic intschool',          		# binary and ordinal variables
+  data = mathprobsolve,                          # R data frame
+  clusterid = 'school',                          # cluster-level identifier
+  ordinal = 'hispanic intschool',                # binary and ordinal variables
   center = '
-    groupmean = stanmath hispanic;		# center at latent group means
-    grandmean = stanmath.mean hispanic.mean;',  # center at grand means
+    groupmean = stanmath hispanic;               # center at latent group means
+    grandmean = stanmath.mean hispanic.mean;',   # center at grand means
   model = 'probsolve ~ stanmath hispanic stanmath.mean
-    hispanic.mean intschool | intercept; DEBUG: compact_output',	# combined model
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000,                			# analysis iterations
+    hispanic.mean intschool | intercept;',       # combined model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
   options = 'hev'
 )
 
-output(mod2)
+output(mod2)                                     # print output
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = mathprobsolve,             		# R data frame
-  clusterid = 'school',          		# cluster-level identifier
-  ordinal = 'hispanic intschool',          		# binary and ordinal variables
+  data = mathprobsolve,                          # R data frame
+  clusterid = 'school',                          # cluster-level identifier
+  ordinal = 'hispanic intschool',                # binary and ordinal variables
   center = '
-    groupmean = stanmath hispanic;		# center at latent group means
-    grandmean = stanmath.mean hispanic.mean;',  # center at grand means
+    groupmean = stanmath hispanic;               # center at latent group means
+    grandmean = stanmath.mean hispanic.mean;',   # center at grand means
   model = 'probsolve ~ stanmath hispanic stanmath.mean
-    hispanic.mean intschool | intercept;',	# combined model
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000,                			# analysis iterations
+    hispanic.mean intschool | intercept;',       # combined model
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
 
 output(mod3)                                     # print output
 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.2 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.2 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 
 #------------------------------------------------------------------------------#

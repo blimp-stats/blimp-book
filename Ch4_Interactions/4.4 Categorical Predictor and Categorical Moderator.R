@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -48,11 +48,11 @@ mod2 <- rblimp(
   center = 'age',                                # center predictors
   model = 'inflam ~ intercept@b0 els@b1 female@b2 female*els@b3 age',  # product term
   simple = 'els | female',                       # conditional effects by group
-  parameters = '                               
-    mean_sex0els0 = b0;                              # group mean (fem = 0, els = 0)
-    mean_sex0els1 = b0 + b1;                         # group mean (fem = 0, els = 1)
-    mean_sex1els0 = b0 + b2;                         # group mean (fem = 1, els = 0)
-    mean_sex1els1 = b0 + b1 + b2 + b3;',             # group mean (fem = 1, els = 1)
+  parameters = '
+    mean_sex0els0 = b0;                          # group mean (fem = 0, els = 0)
+    mean_sex0els1 = b0 + b1;                     # group mean (fem = 0, els = 1)
+    mean_sex1els0 = b0 + b2;                     # group mean (fem = 1, els = 0)
+    mean_sex1els1 = b0 + b1 + b2 + b3;',         # group mean (fem = 1, els = 1)
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -71,7 +71,7 @@ mod3 <- rblimp(
   center = 'age',                                # center predictors
   model = 'inflam ~ intercept@b0 els@b1 female@b2  female*els@b3 age',  # product term
   simple = 'els | female',                       # conditional effects by group
-  parameters = '                               
+  parameters = '
     mean_f0e0 = b0;                              # group mean (fem = 0, els = 0)
     mean_f0e1 = b0 + b1;                         # group mean (fem = 0, els = 1)
     mean_f1e0 = b0 + b2;                         # group mean (fem = 1, els = 0)
@@ -84,6 +84,18 @@ mod3 <- rblimp(
 output(mod3)                                     # print output
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.4 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.4 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

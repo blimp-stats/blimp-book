@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -48,12 +48,12 @@ mod2 <- rblimp(
   ordinal = 'parsmoke',                          # binary and ordinal variables
   nominal = 'educ',                              # nominal variables (auto dummy coded)
   center = 'age',                                # center predictors
-  model = 'cigsperday ~ intercept@b0 parsmoke@b1 educ.2@b2 educ.3@b3 age', # label dummy codes
+  model = 'cigsperday ~ intercept@b0 parsmoke@b1 educ.2@b2 educ.3@b3 age',  # label dummy codes
   parameters = '
     mean_educ1 = b0 + (.452 * b1);               # group 1 mean
     mean_educ2 = mean_educ1 + b2;                # group 2 mean
     mean_educ3 = mean_educ1 + b3;                # group 3 mean
-    educ2_vs_educ3 = mean_educ3 – mean_educ2;',  # group 3 vs. 2 contrast
+    educ2_vs_educ3 = mean_educ3 - mean_educ2;',  # group 3 vs. 2 contrast
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -79,6 +79,18 @@ output(mod3)                                     # print output
 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/3.1 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/3.1 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # LINEAR REGRESSION WITH A LATENT RESPONSE VARIABLE PREDICTOR ----

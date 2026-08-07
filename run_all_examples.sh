@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 #
-# run_ch2to4.sh
-# Runs every analysis script in Ch2–Ch4, each in its own fresh Rscript
+# run_all_examples.sh
+# Runs every analysis script in Ch2–Ch7, each in its own fresh Rscript
 # process, sequentially and at low priority so RStudio stays usable.
 #
-# Excludes "4.X Interaction w Sum Score.R" by design.
+# Excludes "6.9 Analyze Blimp Latent Imputations.R" by design (it locates
+# imps.csv via rstudioapi, which only works inside RStudio).
 # Each script's console output (and any errors) goes to run_logs/<name>.log.
 #
 # Usage:
-#   cd to the repo, then:   bash run_ch2to4.sh
-#   To keep the Mac awake for a long run:   caffeinate -i bash run_ch2to4.sh
-#   To run in the background:                nohup bash run_ch2to4.sh &>/dev/null &
+#   cd to the repo, then:   bash run_all_examples.sh
+#   To keep the Mac awake for a long run:   caffeinate -i bash run_all_examples.sh
+#   To run in the background:                nohup bash run_all_examples.sh &>/dev/null &
 
 set -u
 
@@ -19,8 +20,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_DIR="$ROOT/run_logs"
 mkdir -p "$LOG_DIR"
 
-DIRS=("Ch2_Regression" "Ch3_Categorical" "Ch4_Interactions")
-EXCLUDE_REGEX='4\.X'                       # skip "4.X Interaction w Sum Score.R"
+DIRS=("Ch2_Regression" "Ch3_Categorical" "Ch4_Interactions"
+      "Ch5_Mediation" "Ch6_LatentVars" "Ch7_Multilevel")
+EXCLUDE_REGEX='6\.9 Analyze Blimp'         # rstudioapi-based; RStudio only
 
 RSCRIPT="$(command -v Rscript || echo /usr/local/bin/Rscript)"
 if [[ ! -x "$RSCRIPT" ]]; then

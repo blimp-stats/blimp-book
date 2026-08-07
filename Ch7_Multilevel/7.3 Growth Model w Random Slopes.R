@@ -35,49 +35,60 @@ ggplot(medtrial, aes(x = visit, y = severity)) +
 #------------------------------------------------------------------------------#
 
 mod0 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
   model = 'severity ~ intercept',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-# print output
-output(mod0)
+output(mod0)                                     # print output
 
 #------------------------------------------------------------------------------#
 # LINEAR GROWTH MODEL ----
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  model = 'severity ~ intercept visit | visit; DEBUG: compact_output',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000)
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  model = 'severity ~ intercept visit | visit;',
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000)                                  # analysis iterations
 
-# print output
-output(mod1)
+output(mod1)                                     # print output
 
-# plot parameter distributions
-posterior_plot(mod1)
+posterior_plot(mod1)                             # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
   model = 'severity ~ intercept visit | visit',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000,
-  nimps = 20)
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-distribution_plot(mod2)
-residuals_plot(mod2)
+output(mod2)                                     # print output
+
+distribution_plot(mod2)                          # plot observed and imputed distributions
+residuals_plot(mod2)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.3 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod2)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.3 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod2)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # QUADRATIC GROWTH MODEL ----
@@ -85,36 +96,34 @@ residuals_plot(mod2)
 
 # fixed quadratic effect
 mod3 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  model = 'severity ~ intercept visit visit^2 | visit; DEBUG: compact_output',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000)
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  model = 'severity ~ intercept visit visit^2 | visit;',
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000)                                  # analysis iterations
 
-# print output
-output(mod3)
+output(mod3)                                     # print output
 
 # random quadratic effect
 mod4 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
   model = 'severity ~ intercept visit visit^2 | visit visit^2',
-  seed = 90291,
-  burn = 30000,
-  iter = 30000)
+  seed = 90291,                                  # random number seed
+  burn = 30000,                                  # warm-up iterations
+  iter = 30000)                                  # analysis iterations
 
-# print output
-output(mod4)
+output(mod4)                                     # print output
 
 #------------------------------------------------------------------------------#
 # LINEAR GROWTH MODEL (LATENT SPECIFICATION) ----
 #------------------------------------------------------------------------------#
 
 mod5 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  latent = 'person = b0j b1j',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  latent = 'person = b0j b1j',                   # define latent variables
   model = '
     level2:
     b0j ~ intercept;
@@ -122,13 +131,12 @@ mod5 <- rblimp(
     b0j ~~ b1j;
     level1:
     severity ~ intercept@b0j visit@b1j;',
-  seed = 90291,
-  burn = 20000,
-  iter = 20000,
-  nimps = 20)
+  seed = 90291,                                  # random number seed
+  burn = 20000,                                  # warm-up iterations
+  iter = 20000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-# print output
-output(mod5)
+output(mod5)                                     # print output
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

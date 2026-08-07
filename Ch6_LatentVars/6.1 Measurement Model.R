@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -28,10 +28,10 @@ inflammation <- read.csv(data_url)
 
 # fixed-factor scaling
 mod1 <- rblimp(
-  data = inflammation,                                # R data frame
+  data = inflammation,                           # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
-    inflammation@1; 
+    inflammation@1;
     inflammation -> crp@load1 il6 tnf ifn;',     # measurement model with estimated loadings
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
@@ -44,7 +44,7 @@ posterior_plot(mod1)                             # plot parameter distributions
 
 # fixed-marker scaling
 mod2 <- rblimp(
-  data = inflammation,                                # R data frame
+  data = inflammation,                           # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
     inflammation ~ intercept;                    # estimate latent mean
@@ -65,10 +65,10 @@ posterior_plot(mod2)                             # plot parameter distributions
 
 # fixed-factor scaling
 mod3 <- rblimp(
-  data = inflammation,                                # R data frame
+  data = inflammation,                           # R data frame
   latent = 'inflammation',                       # define latent variables
   model = '
-    inflammation@1; 
+    inflammation@1;
     inflammation -> crp@load1 il6 tnf ifn;',     # measurement model with estimated loadings
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
@@ -79,6 +79,18 @@ output(mod3)                                     # print output
 standardized(mod3)                               # print standardized estimates in one table
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.1 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.1 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

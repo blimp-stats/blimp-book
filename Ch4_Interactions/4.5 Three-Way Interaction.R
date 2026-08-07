@@ -1,8 +1,8 @@
-# REGRESSION WITH THREE-WAY INTERACTION 
+# REGRESSION WITH THREE-WAY INTERACTION
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -53,10 +53,10 @@ mod2 <- rblimp(
     workbeh ~ orgcon consci emostab
       orgcon*consci@b4 orgcon*emostab consci*emostab
       orgcon*consci*emostab@b7;                  # focal model
-    emostab ~ orgcon consci;',   		             # predictor model
+    emostab ~ orgcon consci;',                   # predictor model
   parameters = '
-    sd_emostab = sqrt(emostab.totalvar);	       # moderator std. dev.
-    int_hi_emostab = b4 + b7*sd_emostab;	       # simple interaction
+    sd_emostab = sqrt(emostab.totalvar);         # moderator std. dev.
+    int_hi_emostab = b4 + b7*sd_emostab;         # simple interaction
     int_lo_emostab = b4 - b7*sd_emostab;',       # simple interaction
   simple = 'orgcon | consci and emostab',        # conditional effects
   seed = 90291,                                  # random number seed
@@ -64,7 +64,7 @@ mod2 <- rblimp(
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
-simple_plot(workbeh ~ orgcon | consci + emostab, mod1)  # plot conditional effects
+simple_plot(workbeh ~ orgcon | consci + emostab, mod2)  # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -80,11 +80,23 @@ mod3 <- rblimp(
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
-  nimps = 20)                                    # save 20 data sets
+  nimps = 20)                                    # save 20 imputed data sets
 
 output(mod3)                                     # print output
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.5 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.5 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

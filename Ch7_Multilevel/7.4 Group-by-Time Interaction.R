@@ -36,69 +36,80 @@ ggplot(medtrial, aes(x = visit, y = severity, color = factor(drug), group = drug
 
 # basic model
 mod1 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  ordinal = 'drug male',
-  model = 'severity ~ visit drug visit*drug male  | visit; DEBUG: compact_output',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  ordinal = 'drug male',                         # binary and ordinal variables
+  model = 'severity ~ visit drug visit*drug male  | visit;',
   simple = 'visit | drug',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000)
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000)                                  # analysis iterations
 
-# print output
-output(mod1)
+output(mod1)                                     # print output
 
-simple_plot(severity ~ visit | drug, mod1)
+simple_plot(severity ~ visit | drug, mod1)       # plot conditional effects
 
 # model with endpoint mean difference
 mod2 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  ordinal = 'drug male',
-  model = 'severity ~ intercept@b0 visit@b1 drug@b2 male@b3 visit*drug@b4 | visit; DEBUG: compact_output',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  ordinal = 'drug male',                         # binary and ordinal variables
+  model = 'severity ~ intercept@b0 visit@b1 drug@b2 male@b3 visit*drug@b4 | visit;',
   simple = 'visit | drug',
   parameters = '
     maleprob = .458;
     drug0 = b0 + b1*3 + b3*maleprob;
     drug1 = (b0 + b2) + (b1 + b4)*3 + b3*maleprob;
     meandiff = drug1 - drug0;',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000)
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000)                                  # analysis iterations
 
-# print output
-output(mod2)
+output(mod2)                                     # print output
 
-# plot parameter distributions
-posterior_plot(mod2)
+posterior_plot(mod2)                             # plot parameter distributions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  ordinal = 'drug male',
-  model = 'severity ~ intercept visit drug visit*drug male  | visit; DEBUG: compact_output',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  ordinal = 'drug male',                         # binary and ordinal variables
+  model = 'severity ~ intercept visit drug visit*drug male  | visit;',
   simple = 'visit | drug',
-  seed = 90291,
-  burn = 25000,
-  iter = 25000,
-  nimps = 20)
+  seed = 90291,                                  # random number seed
+  burn = 25000,                                  # warm-up iterations
+  iter = 25000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-distribution_plot(mod3)
-residuals_plot(mod3)
+output(mod3)                                     # print output
+
+distribution_plot(mod3)                          # plot observed and imputed distributions
+residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.4 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/7.4 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 #  LINEAR GROWTH MODEL WITH GROUP-BY-TIME INTERACTION (LATENT SPECIFICATION) ----
 #------------------------------------------------------------------------------#
 
 mod4 <- rblimp(
-  data = medtrial,
-  clusterid = 'person',
-  ordinal = 'drug male',
-  latent = 'person = b0j b1j',
+  data = medtrial,                               # R data frame
+  clusterid = 'person',                          # cluster-level identifier
+  ordinal = 'drug male',                         # binary and ordinal variables
+  latent = 'person = b0j b1j',                   # define latent variables
   model = '
     level2:
     b0j ~ intercept male drug;
@@ -106,13 +117,12 @@ mod4 <- rblimp(
     b0j ~~ b1j;
     level1:
     severity ~ intercept@b0j visit@b1j;',
-  seed = 90291,
-  burn = 20000,
-  iter = 20000,
-  nimps = 20)
+  seed = 90291,                                  # random number seed
+  burn = 20000,                                  # warm-up iterations
+  iter = 20000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-# print output
-output(mod4)
+output(mod4)                                     # print output
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

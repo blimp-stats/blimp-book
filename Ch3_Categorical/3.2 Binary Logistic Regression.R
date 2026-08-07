@@ -31,7 +31,7 @@ mod1 <- rblimp(
   ordinal = 'college male',                      # binary and ordinal variables
   nominal = 'drinker',                           # nominal variables (auto dummy coded)
   center = 'agetryalc age',                      # center predictors
-  model = 'drinker ~ agetryalc college age male', # regression model
+  model = 'drinker ~ agetryalc college age male',  # regression model
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -48,7 +48,7 @@ mod2 <- rblimp(
   ordinal = 'college male',                      # binary and ordinal variables
   nominal = 'drinker',                           # nominal variables (auto dummy coded)
   center = 'agetryalc age',                      # center predictors
-  model = 'drinker ~ agetryalc college age male', # regression model
+  model = 'drinker ~ agetryalc college age male',  # regression model
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -58,6 +58,18 @@ output(mod2)                                     # print output
 
 distribution_plot(mod2)                          # plot observed and imputed distributions
 residuals_plot(mod2)                             # plot binned residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/3.2 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod2)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/3.2 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod2)                    # plot binned residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # MARGINAL PREDICTED PROBABILITIES ----
@@ -86,11 +98,13 @@ mod3 <- rblimp(
   ordinal = 'college male',                      # binary and ordinal variables
   nominal = 'drinker',                           # nominal variables (auto dummy coded)
   center = 'agetryalc age',                      # center predictors
-  model = 'drinker ~ agetryalc college age age^2 male', # regression with quadratic age
+  model = 'drinker ~ agetryalc college age age^2 male',  # regression with quadratic age
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
+
+output(mod3)                                     # print output
 
 residuals_plot(mod3)                             # plot binned residuals
 
@@ -100,11 +114,13 @@ mod4 <- rblimp(
   ordinal = 'college male',                      # binary and ordinal variables
   nominal = 'drinker',                           # binary outcome (auto dummy coded)
   center = 'agetryalc age',                      # center predictors
-  model = 'drinker ~ agetryalc college age age^2 age^3 male', # regression with cubic age
+  model = 'drinker ~ agetryalc college age age^2 age^3 male',  # regression with cubic age
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
+
+output(mod4)                                     # print output
 
 residuals_plot(mod4)                             # plot binned residuals
 

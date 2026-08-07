@@ -100,6 +100,18 @@ output(mod5)                                     # print output
 distribution_plot(mod5)                          # plot observed and imputed distributions
 residuals_plot(mod5)                             # plot residuals
 
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/2.1 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod5)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/2.1 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod5)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----
 #------------------------------------------------------------------------------#
@@ -254,7 +266,29 @@ fig2_6 <- (fig2_6a / fig2_6b) +
 save_fig(fig2_6, "Figure 2.6", width = 8.5, height = 11)
 
 #------------------------------------------------------------------------------#
-# FIGURE 2.7: RESIDUAL DISTRIBUTION + STANDARDIZED RESIDUAL INDEX ----
+# FIGURE 2.7: DISTRIBUTIONS ----
+#------------------------------------------------------------------------------#
+
+dp <- distribution_plot(
+  mod5,
+  observed_color = "grey60",
+  imputed_color  = "grey40",
+  density_color  = "black",
+  font_size      = 18,
+  line_width     = 0.5
+)
+
+fig2_7 <- (dp$dpdd / dp$inflam) +
+  plot_layout(guides = "collect") +
+  plot_annotation(tag_levels = "A") &
+  book_theme &
+  caps_axes &
+  labs(title = NULL)
+
+save_fig(fig2_7, "Figure 2.7", width = 8.5, height = 11)
+
+#------------------------------------------------------------------------------#
+# FIGURE 2.8: RESIDUAL DISTRIBUTION + STANDARDIZED RESIDUAL INDEX ----
 #------------------------------------------------------------------------------#
 
 dp <- distribution_plot(
@@ -267,29 +301,17 @@ dp <- distribution_plot(
   line_width     = 0.6
 )
 
-fig2_7 <- dp$dpdd.residual / dp$dpdd.residual.qq +
-  plot_annotation(tag_levels = "A") &
-  book_theme &
-  caps_axes &
-  labs(title = NULL)
-
-save_fig(fig2_7, "Figure 2.7", width = 8.5, height = 11)
-
-#------------------------------------------------------------------------------#
-# FIGURE 2.8: DISTRIBUTIONS ----
-#------------------------------------------------------------------------------#
-
-dp <- distribution_plot(
+rp <- residuals_plot(
   mod5,
-  observed_color = "grey60",
-  imputed_color  = "grey40",
-  density_color  = "black",
-  font_size      = 18,
-  line_width     = 0.5
+  point_color  = "grey40",
+  curve_color  = "black",
+  font_size    = 18,
+  line_width   = 0.6,
+  label_family = "Minion Pro",
+  point_size = 0.4, point_alpha = 0.3
 )
 
-fig2_8 <- (dp$dpdd / dp$inflam) +
-  plot_layout(guides = "collect") +
+fig2_8 <- dp$dpdd.residual / rp$dpdd.index +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &

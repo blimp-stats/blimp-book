@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -27,59 +27,71 @@ workbeh <- read.csv(data_url)
 #------------------------------------------------------------------------------#
 
 mod1 <- rblimp(
-  data = workbeh,                                 # R data frame
+  data = workbeh,                                # R data frame
   ordinal = 'workbeh1:workbeh6 orgcon1:orgcon6 consci1:consci6',  # binary and ordinal variables
   latent = 'orgconstr conscient wrkbehave',      # define latent variables
   model = '
-    structural:                                   # model block label
+    structural:                                  # model block label
     wrkbehave ~ orgconstr conscient orgconstr*conscient;  # latent product
-    wrkbehave@1;                                  # fix residual variance to 1
-    predictor:                                    # model block label
+    wrkbehave@1;                                 # fix residual variance to 1
+    predictor:                                   # model block label
     orgconstr ~~ conscient;                      # latent correlation
     orgconstr@1; conscient@1;                    # fix variances to 1
-    measurement:                                  # model block label
+    measurement:                                 # model block label
     wrkbehave -> workbeh1@wload1 workbeh2:workbeh6;  # measurement model with estimated loadings
-    orgconstr -> orgcon1@oload1 orgcon2:orgcon6;  # measurement model with estimated loadings
-    conscient -> consci1@cload1 consci2:consci6;', # measurement model with estimated loadings           
-  simple = 'orgconstr | conscient',               # conditional effects
-  seed = 90291,                                   # random number seed
-  burn = 20000,                                   # warm-up iterations
-  iter = 20000)                                   # analysis iterations
+    orgconstr -> orgcon1@oload1 orgcon2:orgcon6; # measurement model with estimated loadings
+    conscient -> consci1@cload1 consci2:consci6;',  # measurement model with estimated loadings
+  simple = 'orgconstr | conscient',              # conditional effects
+  seed = 90291,                                  # random number seed
+  burn = 20000,                                  # warm-up iterations
+  iter = 20000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-posterior_plot(mod1, 'wrkbehave')                 # plot parameter distributions
-round(standardized(mod1),3)                       # print standardized estimates in one table
-simple_plot(wrkbehave ~ orgconstr | conscient, mod1) # plot conditional effects
-jn_plot(wrkbehave ~ orgconstr | conscient, mod1) # plot conditional effects
+posterior_plot(mod1, 'wrkbehave')                # plot parameter distributions
+round(standardized(mod1),3)                      # print standardized estimates in one table
+simple_plot(wrkbehave ~ orgconstr | conscient, mod1)  # plot conditional effects
+jn_plot(wrkbehave ~ orgconstr | conscient, mod1) # plot johnson-neyman regions
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod2 <- rblimp(
-  data = workbeh,                                 # R data frame
+  data = workbeh,                                # R data frame
   ordinal = 'workbeh1:workbeh6 orgcon1:orgcon6 consci1:consci6',  # binary and ordinal variables
   latent = 'orgconstr conscient wrkbehave',      # define latent variables
   model = '
-    structural:                                   # model block label
+    structural:                                  # model block label
     wrkbehave ~ orgconstr conscient orgconstr*conscient;  # latent product
-    wrkbehave@1;                                  # fix residual variance to 1
-    predictor:                                    # model block label
+    wrkbehave@1;                                 # fix residual variance to 1
+    predictor:                                   # model block label
     orgconstr ~~ conscient;                      # latent correlation
     orgconstr@1; conscient@1;                    # fix variances to 1
-    measurement:                                  # model block label
+    measurement:                                 # model block label
     wrkbehave -> workbeh1@wload1 workbeh2:workbeh6;  # measurement model with estimated loadings
-    orgconstr -> orgcon1@oload1 orgcon2:orgcon6;  # measurement model with estimated loadings
-    conscient -> consci1@cload1 consci2:consci6;; DEBUG: compact_output', # measurement model with estimated loadings           
-  simple = 'orgconstr | conscient',               # conditional effects
-  seed = 90291,                                   # random number seed
-  burn = 20000,                                   # warm-up iterations
-  nimps = 20                                      # save 20 imputed data sets
+    orgconstr -> orgcon1@oload1 orgcon2:orgcon6; # measurement model with estimated loadings
+    conscient -> consci1@cload1 consci2:consci6;;',  # measurement model with estimated loadings
+  simple = 'orgconstr | conscient',              # conditional effects
+  seed = 90291,                                  # random number seed
+  burn = 20000,                                  # warm-up iterations
+  nimps = 20                                     # save 20 imputed data sets
 )
 
 output(mod2)                                     # print output
 distribution_plot(mod2)                          # plot observed and imputed distributions
 residuals_plot(mod2)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.5 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod2)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.5 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod2)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

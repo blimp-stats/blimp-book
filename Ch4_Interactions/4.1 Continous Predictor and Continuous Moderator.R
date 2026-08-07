@@ -2,7 +2,7 @@
 
 # plotting functions
 # source('https://raw.githubusercontent.com/blimp-stats/blimp-book/main/misc/functions.R')
-source("/Users/craig/Documents/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
+source("/Users/craig/Dropbox/Claude/Projects/Blimp Book/rblimp_cleaned_functions.R")
 
 #------------------------------------------------------------------------------#
 # LOAD R PACKAGES ----
@@ -30,8 +30,8 @@ reading <- read.csv(data_url)
 mod1 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob',                     # center predictors
-  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
+  center = 'read1 lrnprob',                      # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl',  # product term
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -47,45 +47,45 @@ posterior_plot(mod1, 'read9')                    # plot parameter distributions
 mod2 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob',                     # center predictors
-  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
-  simple = 'read1 | lrnprob',                   # conditional effects of read1 at SD units
+  center = 'read1 lrnprob',                      # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl',  # product term
+  simple = 'read1 | lrnprob',                    # conditional effects of read1 at SD units
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob, mod2)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob, mod2)          # plot johnson-neyman regions
+simple_plot(read9 ~ read1 | lrnprob, mod2)       # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob, mod2)           # plot johnson-neyman regions
 
 # simple slopes at quantiles
 mod3 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob',                     # center predictors
-  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
-  simple = 'read1 | lrnprob @ quantile',        # conditional effects at 16/50/84% quantiles
+  center = 'read1 lrnprob',                      # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl',  # product term
+  simple = 'read1 | lrnprob @ quantile',         # conditional effects at 16/50/84% quantiles
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod3)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob, mod3)      # plot conditional effects
-jn_plot(read9 ~ read1 | lrnprob, mod3)          # plot johnson-neyman regions
+simple_plot(read9 ~ read1 | lrnprob, mod3)       # plot conditional effects
+jn_plot(read9 ~ read1 | lrnprob, mod3)           # plot johnson-neyman regions
 
 # simple slopes at quartiles
 mod4 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob',                     # center predictors
-  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
-  simple = 'read1 | lrnprob @ quartile',        # conditional effects at quartiles
+  center = 'read1 lrnprob',                      # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl',  # product term
+  simple = 'read1 | lrnprob @ quartile',         # conditional effects at quartiles
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod4)                                     # print output
-simple_plot(read9 ~ read1 | lrnprob, mod4)      # plot conditional effects
+simple_plot(read9 ~ read1 | lrnprob, mod4)       # plot conditional effects
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -94,9 +94,9 @@ simple_plot(read9 ~ read1 | lrnprob, mod4)      # plot conditional effects
 mod5 <- rblimp(
   data = reading,                                # R data frame
   ordinal = 'esl',                               # binary and ordinal variables
-  center = 'read1 lrnprob',                     # center predictors
-  model = 'read9 ~ read1 lrnprob read1*lrnprob esl', # product term
-  simple = 'read1 | lrnprob',                   # conditional effects of read1 at SD units
+  center = 'read1 lrnprob',                      # center predictors
+  model = 'read9 ~ read1 lrnprob read1*lrnprob esl',  # product term
+  simple = 'read1 | lrnprob',                    # conditional effects of read1 at SD units
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
@@ -106,6 +106,18 @@ output(mod5)                                     # print output
 
 distribution_plot(mod5)                          # plot observed and imputed distributions
 residuals_plot(mod5)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.1 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod5)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/4.1 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod5)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

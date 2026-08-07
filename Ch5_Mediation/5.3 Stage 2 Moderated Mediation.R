@@ -28,97 +28,111 @@ discrimination <- read.csv(data_url)
 
 # conditional indirect effects computed using PARAMETERS command
 mod1 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  transform = 'age16 = age – 16',  		# centered age variable
-  model = '  						# label slope parameters
-    victim ~ discrim@a1 age16 female;  		# a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath 
-  simple = 'victim | age16 @ quartile', 	# conditional effects
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  transform = 'age16 = age - 16',                # centered age variable
+  model = '
+    victim ~ discrim@a1 age16 female;            # a path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath
+  simple = 'victim | age16 @ quartile',          # conditional effects
   parameters = '
-    index_mod = a1*b4; 				# index of mediated moderation
-    indirect14 = a1*(b1 - 2*b4); 		# conditional indirect effect
-    indirect15 = a1*(b1 - 1*b4); 		# conditional indirect effect
-    indirect16 = a1*(b1 + 0*b4); 		# conditional indirect effect
-    indirect17 = a1*(b1 + 1*b4);', 		# conditional indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    index_mod = a1*b4;                           # index of mediated moderation
+    indirect14 = a1*(b1 - 2*b4);                 # conditional indirect effect
+    indirect15 = a1*(b1 - 1*b4);                 # conditional indirect effect
+    indirect16 = a1*(b1 + 0*b4);                 # conditional indirect effect
+    indirect17 = a1*(b1 + 1*b4);',               # conditional indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod1)               		      # print output
-posterior_plot(mod1, 'indirect14') 		# plot conditional indirect
-posterior_plot(mod1, 'indirect15') 		# plot conditional indirect
-posterior_plot(mod1, 'indirect16') 		# plot conditional indirect
-posterior_plot(mod1, 'indirect17') 		# plot conditional indirect
+output(mod1)                                     # print output
+posterior_plot(mod1, 'indirect14')               # plot conditional indirect
+posterior_plot(mod1, 'indirect15')               # plot conditional indirect
+posterior_plot(mod1, 'indirect16')               # plot conditional indirect
+posterior_plot(mod1, 'indirect17')               # plot conditional indirect
 
 # conditional indirect effects computed using the SIMPLE command
 mod2 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  transform = 'age16 = age – 16',  		# centered age variable
-  model = '  						# label slope parameters
-    victim ~ discrim@a1 age16 female;  		# a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath 
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  transform = 'age16 = age - 16',                # centered age variable
+  model = '
+    victim ~ discrim@a1 age16 female;            # a path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath
   simple = 'a1*(b1 + age16*b4) | age16 @ quartile',  # conditional indirect effects
-  parameters = 'index_mod = a1*b4;', 				# index of moderated mediation
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+  parameters = 'index_mod = a1*b4;',             # index of moderated mediation
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod2)               		      # print output
+output(mod2)                                     # print output
 
 #------------------------------------------------------------------------------#
 # EXTENSION: MODERATION OF DIRECT EFFECT ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  transform = 'age16 = age – 16',  		# centered age variable
-  model = '  						# label slope parameters
-    victim ~ discrim@a1 age16 female;  		# a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female victim*age16;',  # bpath 
-  simple = 'victim | age16 @ quartile', 	# conditional effects
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  transform = 'age16 = age - 16',                # centered age variable
+  model = '
+    victim ~ discrim@a1 age16 female;            # a path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female victim*age16;',  # bpath
+  simple = 'victim | age16 @ quartile',          # conditional effects
   parameters = '
-    index_mod = a1*b4; 				# index of mediated moderation
-    indirect14 = a1*(b1 - 2*b4); 		# conditional indirect effect
-    indirect15 = a1*(b1 - 1*b4); 		# conditional indirect effect
-    indirect16 = a1*(b1 + 0*b4); 		# conditional indirect effect
-    indirect17 = a1*(b1 + 1*b4);', 		# conditional indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    index_mod = a1*b4;                           # index of mediated moderation
+    indirect14 = a1*(b1 - 2*b4);                 # conditional indirect effect
+    indirect15 = a1*(b1 - 1*b4);                 # conditional indirect effect
+    indirect16 = a1*(b1 + 0*b4);                 # conditional indirect effect
+    indirect17 = a1*(b1 + 1*b4);',               # conditional indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod3)               		      # print output
+output(mod3)                                     # print output
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod4 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  transform = 'age16 = age – 16',  		# centered age variable
-  model = '  						# label slope parameters
-    victim ~ discrim@a1 age16 female;  		# a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath 
-  simple = 'victim | age16 @ quartile', 	# conditional effects
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  transform = 'age16 = age - 16',                # centered age variable
+  model = '
+    victim ~ discrim@a1 age16 female;            # a path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # bpath
+  simple = 'victim | age16 @ quartile',          # conditional effects
   parameters = '
-    index_mod = a1*b4; 				# index of moderated mediation
-    indirect14 = a1*(b1 - 2*b4); 		# conditional indirect effect
-    indirect15 = a1*(b1 - 1*b4); 		# conditional indirect effect
-    indirect16 = a1*(b1 + 0*b4); 		# conditional indirect effect
-    indirect17 = a1*(b1 + 1*b4);', 		# conditional indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000,                			# analysis iterations
+    index_mod = a1*b4;                           # index of moderated mediation
+    indirect14 = a1*(b1 - 2*b4);                 # conditional indirect effect
+    indirect15 = a1*(b1 - 1*b4);                 # conditional indirect effect
+    indirect16 = a1*(b1 + 0*b4);                 # conditional indirect effect
+    indirect17 = a1*(b1 + 1*b4);',               # conditional indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
+
+output(mod4)                                     # print output
 
 distribution_plot(mod4)                          # plot observed and imputed distributions
 residuals_plot(mod4)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.3 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod4)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.3 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod4)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

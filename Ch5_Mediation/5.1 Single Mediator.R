@@ -28,12 +28,12 @@ discrimination <- read.csv(data_url)
 
 # basic model
 mod1 <- rblimp(
-  data = discrimination,  # R data frame
-  ordinal = 'female', # binary and ordinal variables
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
   model = '
-    victim ~ discrim@a1 age female; 		# label slope
-    internalize ~ victim@b1 discrim age female; DEBUG: compact_output',  # label slope
-  parameters = 'indirect = a1 * b1',				     # compute indirect effect
+    victim ~ discrim@a1 age female;              # label slope
+    internalize ~ victim@b1 discrim age female;',  # label slope
+  parameters = 'indirect = a1 * b1',             # compute indirect effect
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
@@ -44,53 +44,67 @@ posterior_plot(mod1, 'indirect')                 # plot distribution of indirect
 
 # add standardized indirect effect
 mod2 <- rblimp(
-  data = discrimination,  # R data frame
-  ordinal = 'female', # binary and ordinal variables
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
   model = '
     apath:                                       # model block label
-    victim ~ discrim@a1 age female; 		         # label slope
+    victim ~ discrim@a1 age female;              # label slope
     bpath:                                       # model block label
     internalize ~ victim@b1 discrim age female;  # label slope
     predictors:                                  # model block label
     discrim ~ age female;',                      # predictor model
   parameters = '
-    indirect = a1 * b1;				                   # compute indirect effect
-    sd_ratio = sqrt(discrim.totalvar / internalize.totalvar);  # sd ratio 
-    indirect_std = indirect * sd_ratio;', 		   # standardized indirect
+    indirect = a1 * b1;                          # compute indirect effect
+    sd_ratio = sqrt(discrim.totalvar / internalize.totalvar);  # sd ratio
+    indirect_std = indirect * sd_ratio;',        # standardized indirect
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations
 
 output(mod2)                                     # print output
-posterior_plot(mod2)                 # plot parameter distributions
-posterior_plot(mod2, 'indirect') # plot distribution of indirect effect
-posterior_plot(mod2, 'indirect_std') # plot distribution of indirect effect
+posterior_plot(mod2)                             # plot parameter distributions
+posterior_plot(mod2, 'indirect')                 # plot distribution of indirect effect
+posterior_plot(mod2, 'indirect_std')             # plot distribution of indirect effect
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = discrimination,  # R data frame
-  ordinal = 'female', # binary and ordinal variables
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
   model = '
     apath:                                       # model block label
-    victim ~ discrim@a1 age female; 		         # label slope
+    victim ~ discrim@a1 age female;              # label slope
     bpath:                                       # model block label
     internalize ~ victim@b1 discrim age female;  # label slope
     predictors:                                  # model block label
-    discrim ~ age female;', # predictor model
+    discrim ~ age female;',                      # predictor model
   parameters = '
-    indirect = a1 * b1;				                   # compute indirect effect
-    sd_ratio = sqrt(discrim.totalvar / internalize.totalvar);  # sd ratio 
-    indirect_std = indirect * sd_ratio;', 		   # standardized indirect
+    indirect = a1 * b1;                          # compute indirect effect
+    sd_ratio = sqrt(discrim.totalvar / internalize.totalvar);  # sd ratio
+    indirect_std = indirect * sd_ratio;',        # standardized indirect
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
-  iter = 10000,           # analysis iterations
+  iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
+
+output(mod3)                                     # print output
 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.1 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.1 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # BOOK FIGURE THEME ----

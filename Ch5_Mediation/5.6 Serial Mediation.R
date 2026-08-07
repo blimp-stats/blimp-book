@@ -28,61 +28,75 @@ discrimination <- read.csv(data_url)
 
 # unstandardized indirect effect
 mod1 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  model = '  						# label slope parameters
-    victim ~ discrim@a1v female age; 		# a path
-    familism ~ victim@a1f discrim female age;  # a path
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  model = '
+    victim ~ discrim@a1v female age;             # a path
+    familism ~ victim@a1f discrim female age;    # a path
     internalize ~ familism@b1 victim discrim age female;',  # b path
-  parameters = 'indirect = a1v * a1f * b1',	# compute indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+  parameters = 'indirect = a1v * a1f * b1',      # compute indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod1)               		      # print output
-posterior_plot(mod1, 'indirect')       	# plot indirect effect
+output(mod1)                                     # print output
+posterior_plot(mod1, 'indirect')                 # plot indirect effect
 
 # add standardized indirect effect
 mod2 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  model = '  						# label slope parameters
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  model = '
     mediation:
-    victim ~ discrim@a1v female age; 		# a path
-    familism ~ victim@a1f discrim female age;  # a path
+    victim ~ discrim@a1v female age;             # a path
+    familism ~ victim@a1f discrim female age;    # a path
     internalize ~ familism@b1 victim discrim age female;
     predictors:
-    discrim ~ age female; DEBUG: compact_output',   				# predictor model
+    discrim ~ age female;',                      # predictor model
   parameters = '
     indirect = a1v * a1f * b1;
     sd_ratio = sqrt(discrim.totalvar / internalize.totalvar);  # sd ratio
-    indirect_std = indirect * sd_ratio;',	# standardized indirect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+    indirect_std = indirect * sd_ratio;',        # standardized indirect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod2)               		      # print output
-posterior_plot(mod2, 'indirect')       	# plot indirect effect
-posterior_plot(mod2, 'indirect_std')       	# plot indirect effect
+output(mod2)                                     # print output
+posterior_plot(mod2, 'indirect')                 # plot indirect effect
+posterior_plot(mod2, 'indirect_std')             # plot indirect effect
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = discrimination,             		# R data frame
-  ordinal = 'female',          			# binary and ordinal variables
-  model = '  						# label slope parameters
-    victim ~ discrim@a1v female age; 		# a path
-    familism ~ victim@a1f discrim female age;  # a path
+  data = discrimination,                         # R data frame
+  ordinal = 'female',                            # binary and ordinal variables
+  model = '
+    victim ~ discrim@a1v female age;             # a path
+    familism ~ victim@a1f discrim female age;    # a path
     internalize ~ familism@b1 victim discrim age female;',  # b path
-  parameters = 'indirect = a1v * a1f * b1',	# compute indirect effect
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000,               			# analysis iterations
+  parameters = 'indirect = a1v * a1f * b1',      # compute indirect effect
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
   nimps = 20)                                    # save 20 imputed data sets
+
+output(mod3)                                     # print output
 
 distribution_plot(mod3)                          # plot observed and imputed distributions
 residuals_plot(mod3)                             # plot residuals
+
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.6 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod3)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/5.6 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod3)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
