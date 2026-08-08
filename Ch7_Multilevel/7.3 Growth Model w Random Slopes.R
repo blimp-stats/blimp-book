@@ -61,6 +61,15 @@ output(mod1)                                     # print output
 posterior_plot(mod1)                             # plot parameter distributions
 
 #------------------------------------------------------------------------------#
+# PLOT TRAJECTORY ----
+#------------------------------------------------------------------------------#
+
+# plot average predicted values across mcmc iterations by time
+ggplot(mod1@average_imp, aes(x = visit, y = severity.predicted)) +
+  stat_summary(fun = mean, geom = "line",  na.rm = TRUE) +
+  stat_summary(fun = mean, geom = "point", na.rm = TRUE)
+
+#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
@@ -191,13 +200,18 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 # FIGURE 7.5: MEANS ----
 #------------------------------------------------------------------------------#
 
-fig7_5 <- ggplot(medtrial, aes(x = visit, y = severity)) +
-  stat_summary(fun = mean, geom = "line",  na.rm = TRUE, color = "black") +
-  stat_summary(fun = mean, geom = "point", na.rm = TRUE, color = "black", size = 2.5) +
+fig7_5 <- ggplot() +
+  # observed means = points connected by a dashed line
+  stat_summary(data = medtrial, aes(visit, severity),
+               fun = mean, geom = "line",  na.rm = TRUE, linetype = "dashed") +
+  stat_summary(data = medtrial, aes(visit, severity),
+               fun = mean, geom = "point", na.rm = TRUE, size = 2.5) +
+  # predicted trajectory = solid line
+  stat_summary(data = mod1@average_imp, aes(visit, severity.predicted),
+               fun = mean, geom = "line",  na.rm = TRUE) +
+  coord_cartesian(ylim = c(3.5, 7.5)) +
   labs(x = "visit", y = "severity") +
-  coord_cartesian(ylim = c(3, 7)) +
-  book_theme +
-  caps_axes
+  book_theme + caps_axes
 
 save_fig(fig7_5, "Figure 7.5", width = 11, height = 8.5)
 

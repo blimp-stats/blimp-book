@@ -69,6 +69,8 @@ output(mod2)                                     # print output
 
 posterior_plot(mod2)                             # plot parameter distributions
 
+simple_plot(severity ~ visit | drug, mod2)       # plot conditional effects
+
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
@@ -185,9 +187,9 @@ fig7_7a <-
   stat_summary(fun = mean, geom = "point", na.rm = TRUE, color = "black", size = 2.5) +
   scale_linetype_manual(values = c("dashed", "solid"),
                         labels = c("Placebo", "Medication"),
-                        name   = "Drug") +
+                        name   = "DRUG") +
   labs(x = "visit", y = "severity") +
-  coord_cartesian(ylim = c(3, 7)) +
+  coord_cartesian(ylim = c(3.5, 7.5)) +
   book_theme +
   caps_axes
 
@@ -213,10 +215,10 @@ fig7_7b <- fig7_7b +
   scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +
   scale_linetype_manual(
     values = c("dashed", "solid"),
-    name   = "Drug",                       # <- match A exactly
+    name   = "DRUG",                       # <- match A exactly
     labels = c("Placebo", "Medication")    # <- match A exactly
   ) +
-  coord_cartesian(ylim = c(3, 7)) +        # <- same limits as A
+  coord_cartesian(ylim = c(3.5, 7.5)) +        # <- same limits as A
   labs(title = NULL, subtitle = NULL) +
   book_theme +
   caps_axes +

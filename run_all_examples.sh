@@ -4,7 +4,7 @@
 # Runs every analysis script in Ch2–Ch7, each in its own fresh Rscript
 # process, sequentially and at low priority so RStudio stays usable.
 #
-# Excludes "6.9 Analyze Blimp Latent Imputations.R" by design (it locates
+# Excludes "6.8 Analyze Blimp Latent Imputations.R" by design (it locates
 # imps.csv via rstudioapi, which only works inside RStudio).
 # Each script's console output (and any errors) goes to run_logs/<name>.log.
 #
@@ -22,7 +22,7 @@ mkdir -p "$LOG_DIR"
 
 DIRS=("Ch2_Regression" "Ch3_Categorical" "Ch4_Interactions"
       "Ch5_Mediation" "Ch6_LatentVars" "Ch7_Multilevel")
-EXCLUDE_REGEX='6\.9 Analyze Blimp'         # rstudioapi-based; RStudio only
+EXCLUDE_REGEX='6\.8 Analyze Blimp'         # rstudioapi-based; RStudio only
 
 RSCRIPT="$(command -v Rscript || echo /usr/local/bin/Rscript)"
 if [[ ! -x "$RSCRIPT" ]]; then

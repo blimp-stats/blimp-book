@@ -62,13 +62,13 @@ distribution_plot(mod1)                          # plot observed and imputed dis
 residuals_plot(mod1)                             # plot residuals
 
 # save distribution plots to pdf
-pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.9 Distribution Plot.pdf", width = 8.5, height = 11)
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.8 Distribution Plot.pdf", width = 8.5, height = 11)
 plots <- distribution_plot(mod1)                 # plot observed and imputed distributions
 for (p in plots) print(p)                        # print plots to pdf
 dev.off()                                        # close pdf file
 
 # save residual plots to pdf
-pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.9 Residuals Plot.pdf", width = 8.5, height = 11)
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.8 Residuals Plot.pdf", width = 8.5, height = 11)
 plots <- residuals_plot(mod1)                    # plot residuals
 for (p in plots) print(p)                        # print plots to pdf
 dev.off()                                        # close pdf file
