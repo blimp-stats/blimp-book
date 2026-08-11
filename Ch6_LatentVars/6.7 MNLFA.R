@@ -33,7 +33,7 @@ mod1 <- rblimp(
   latent = 'attention',                          # define latent variables
   model = '
     attention@1;
-    attention -> attent1@load1 attent2:attent9;',
+    attention -> attent1@load1 attent2:attent9',
   seed = 90291,                                  # random number seed
   burn = 20000,                                  # warm-up iterations
   iter = 20000)                                  # analysis iterations

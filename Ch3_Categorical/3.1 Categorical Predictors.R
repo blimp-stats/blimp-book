@@ -53,7 +53,7 @@ mod2 <- rblimp(
     mean_educ1 = b0 + (.452 * b1);               # group 1 mean
     mean_educ2 = mean_educ1 + b2;                # group 2 mean
     mean_educ3 = mean_educ1 + b3;                # group 3 mean
-    educ2_vs_educ3 = mean_educ3 - mean_educ2;',  # group 3 vs. 2 contrast
+    educ3_vs_educ2 = mean_educ3 - mean_educ2;',  # group 3 vs. 2 contrast
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000)                                  # analysis iterations

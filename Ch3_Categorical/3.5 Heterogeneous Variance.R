@@ -152,7 +152,7 @@ rp <- residuals_plot(
   point_size = 0.4, point_alpha = 0.3
 )
 
-fig3_9 <- rp$dpdd.index / rp$dpdd.inflam / rp$dpdd.age +
+fig3_9 <- rp$dpdd.inflam / rp$dpdd.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
