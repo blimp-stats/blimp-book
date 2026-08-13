@@ -175,13 +175,13 @@ residuals_plot(mod4)                             # plot residuals
 
 # save distribution plots to pdf
 pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.9 Distribution Plot.pdf", width = 8.5, height = 11)
-plots <- distribution_plot(mod5)                 # plot observed and imputed distributions
+plots <- distribution_plot(mod4)                 # plot observed and imputed distributions
 for (p in plots) print(p)                        # print plots to pdf
 dev.off()                                        # close pdf file
 
 # save residual plots to pdf
 pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.9 Residuals Plot.pdf", width = 8.5, height = 11)
-plots <- residuals_plot(mod5)                    # plot residuals
+plots <- residuals_plot(mod4)                    # plot residuals
 for (p in plots) print(p)                        # print plots to pdf
 dev.off()                                        # close pdf file
 
@@ -280,12 +280,12 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 6.11 ----
+# FIGURE 6.10 ----
 #------------------------------------------------------------------------------#
 
 # make the plots
 
-fig6_11a <- ggplot() +
+fig6_10a <- ggplot() +
   # observed means = points connected by a dashed line
   stat_summary(data = plotdat, aes(visit, severity),
                fun = mean, geom = "line",  na.rm = TRUE, linetype = "dashed") +
@@ -298,7 +298,7 @@ fig6_11a <- ggplot() +
   labs(x = "visit", y = "severity") +
   book_theme + caps_axes
 
-fig6_11b <- ggplot(plotdat, aes(x = visit, y = severity,
+fig6_10b <- ggplot(plotdat, aes(x = visit, y = severity,
                                 linetype = factor(drug), group = drug)) +
   # observed means: two different dash patterns
   stat_summary(fun = mean, geom = "line",  na.rm = TRUE, color = "black") +
@@ -312,12 +312,12 @@ fig6_11b <- ggplot(plotdat, aes(x = visit, y = severity,
   coord_cartesian(ylim = c(3.5, 7.5)) +
   book_theme + caps_axes
 
-fig6_11 <-
-  (fig6_11a / fig6_11b) +
+fig6_10 <-
+  (fig6_10a / fig6_10b) +
   plot_layout(guides = "collect") +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
   labs(title = NULL)
 
-save_fig(fig6_11, "Figure 6.11", width = 8.5, height = 11)
+save_fig(fig6_10, "Figure 6.10", width = 8.5, height = 11)
