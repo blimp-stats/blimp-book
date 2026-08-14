@@ -17,7 +17,7 @@ set_blimp('/applications/blimp/blimp-nightly')
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/medtrial.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/medtriallong.csv'
 
 # create data frame from github data
 medtrial <- read.csv(data_url)

@@ -17,17 +17,17 @@ set_blimp('/applications/blimp/blimp-nightly')
 #------------------------------------------------------------------------------#
 
 # github url for raw data
-data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/schiztrial.csv'
+data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/medtrial.csv'
 
 # create data frame from github data
-schiztrial <- read.csv(data_url)
+medtrial <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # PLOT MEANS ----
 #------------------------------------------------------------------------------#
 
 plotdat <- reshape(
-  schiztrial,
+  medtrial,
   varying = c("severity0", "severity1", "severity2", "severity3"),
   v.names = "severity",
   timevar = "visit",
@@ -45,7 +45,7 @@ ggplot(plotdat, aes(x = visit, y = severity)) +
 
 # full specification
 mod1 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:                                  # model block label
@@ -67,7 +67,7 @@ output(mod1)                                     # print output
 
 # simplified specification
 mod2 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -110,7 +110,7 @@ ggplot(plottraj, aes(x = visit, y = severity.predicted)) +
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -152,7 +152,7 @@ ggplot(plottrajtx, aes(x = visit, y = severity.predicted, color = factor(drug), 
 #------------------------------------------------------------------------------#
 
 mod4 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -190,7 +190,7 @@ dev.off()                                        # close pdf file
 #------------------------------------------------------------------------------#
 
 mod5 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline linear quad',               # define latent variables
   model = '
     structural:
@@ -213,7 +213,7 @@ output(mod5)                                     # print output
 #------------------------------------------------------------------------------#
 
 mod6 <- rblimp(
-  data = schiztrial,                             # R data frame
+  data = medtrial,                             # R data frame
   latent = 'baseline growth',               # define latent variables
   model = '
     structural:

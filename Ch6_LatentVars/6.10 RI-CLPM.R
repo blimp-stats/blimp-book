@@ -22,8 +22,6 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 loneliness <- read.csv(data_url)
 
-summarytools::freq(loneliness)
-
 #------------------------------------------------------------------------------#
 # FIT RICLPM MODEL ----
 #------------------------------------------------------------------------------#
@@ -53,9 +51,7 @@ mod1 <- rblimp(
     anxdep1 ~~ lonely1; 				# residual correlation
     anxdep2 ~~ lonely2; 				# residual correlation
     anxdep3 ~~ lonely3; 				# residual correlation
-    anxdep4 ~~ lonely4;
-  DEBUG: compact;
-  ', 				# residual correlation
+    anxdep4 ~~ lonely4;', 				# residual correlation
   waldtest = 'a12 = a13; a13 = a14; a22 = a23; a23 = a24; 
   b12 = b13; b13 = b14; b22 = b23; b23 = b24;',  # test equality of slopes
   seed = 90291,               			# random number seed
@@ -91,14 +87,14 @@ mod2 <- rblimp(
     anxdep1 ~~ lonely1;
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
-    anxdep4 ~~ lonely4; 
-    DEBUG: compact',
-  parameters = 'totvar2 = anxdep2.totalvar',
+    anxdep4 ~~ lonely4;',
   seed = 90291,
   burn = 10000,
   iter = 10000)
 
 output(mod2)
+names(mod2)
+standardized(mod2)
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
@@ -129,8 +125,7 @@ mod3 <- rblimp(
     anxdep1 ~~ lonely1;
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
-    anxdep4 ~~ lonely4; 
-    DEBUG: compact',
+    anxdep4 ~~ lonely4;',
   seed = 90291,
   burn = 10000,
   iter = 10000,
@@ -146,8 +141,9 @@ residuals_plot(mod3)
 # FIT RICLPM MODEL WITH BETWEEN-PERSON PREDICTOR ----
 #------------------------------------------------------------------------------#
 
-model2 <- rblimp(
-  data = lonely,
+# sex predicting between-person stable differences
+mod4 <- rblimp(
+  data = loneliness,
   latent = 'anxdep lonely',
   model = ' 
     anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
@@ -156,60 +152,18 @@ model2 <- rblimp(
     lonely1w = lonely1 - (b01 + lonely);
     lonely2w = lonely2 - (b02 + lonely);
     lonely3w = lonely3 - (b03 + lonely);
-    random_intercepts:
+    between.person:
     female -> anxdep lonely;
     anxdep ~~ lonely;
-    anxdep:
+    within.person: 
     anxdep1 ~ intercept@a01 anxdep@1;
-    anxdep2 ~ intercept@a02 anxdep@1 anxdep1w lonely1w;
-    anxdep3 ~ intercept@a03 anxdep@1 anxdep2w lonely2w;
-    anxdep4 ~ intercept@a04 anxdep@1 anxdep3w lonely3w;
-    lonely:
+    anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
+    anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
+    anxdep4 ~ intercept@a04 anxdep3w@a1 lonely3w@a2 anxdep@1;
     lonely1 ~ intercept@b01 lonely@1;
-    lonely2 ~ intercept@b02 lonely@1 lonely1w anxdep1w;
-    lonely3 ~ intercept@b03 lonely@1 lonely2w anxdep2w;
-    lonely4 ~ intercept@b04 lonely@1 lonely3w anxdep3w;
-    covariances:
-    anxdep1 ~~ lonely1;
-    anxdep2 ~~ lonely2;
-    anxdep3 ~~ lonely3;
-    anxdep4 ~~ lonely4;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
-
-output(model2)
-
-
-
-#------------------------------------------------------------------------------#
-# FIT RICLPM MODEL WITH GROUP-SPECIFIC EFFECTS ----
-#------------------------------------------------------------------------------#
-
-model3 <- rblimp(
-  data = lonely,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
-    anxdep2w = anxdep2 - (a02 + anxdep);
-    anxdep3w = anxdep3 - (a03 + anxdep);
-    lonely1w = lonely1 - (b01 + lonely);
-    lonely2w = lonely2 - (b02 + lonely);
-    lonely3w = lonely3 - (b03 + lonely);
-    random_intercepts:
-    female -> anxdep lonely;
-    anxdep ~~ lonely;
-    anxdep:
-    anxdep1 ~ intercept@a01 anxdep@1;
-    anxdep2 ~ intercept@a02 anxdep@1 anxdep1w lonely1w lonely1w*female;
-    anxdep3 ~ intercept@a03 anxdep@1 anxdep2w lonely2w lonely2w*female;
-    anxdep4 ~ intercept@a04 anxdep@1 anxdep3w lonely3w lonely3w*female;
-    lonely:
-    lonely1 ~ intercept@b01 lonely@1;
-    lonely2 ~ intercept@b02 lonely@1 lonely1w anxdep1w anxdep1w*female;
-    lonely3 ~ intercept@b03 lonely@1 lonely2w anxdep2w anxdep2w*female;
-    lonely4 ~ intercept@b04 lonely@1 lonely3w anxdep3w anxdep3w*female;
+    lonely2 ~ intercept@b02 lonely1w@b1 anxdep1w@b2 lonely@1;
+    lonely3 ~ intercept@b03 lonely2w@b1 anxdep2w@b2 lonely@1;
+    lonely4 ~ intercept@b04 lonely3w@b1 anxdep3w@b2 lonely@1;
     covariances:
     anxdep1 ~~ lonely1;
     anxdep2 ~~ lonely2;
@@ -219,5 +173,75 @@ model3 <- rblimp(
   burn = 10000,
   iter = 10000)
 
-output(model3)
+output(mod4)
+
+# occasion-specific sex differences
+mod5 <- rblimp(
+  data = loneliness,
+  latent = 'anxdep lonely',
+  model = ' 
+    anxdep1w = anxdep1 - (a01 + anxdep + female*a31);  
+    anxdep2w = anxdep2 - (a02 + anxdep + female*a32);
+    anxdep3w = anxdep3 - (a03 + anxdep + female*a33);
+    lonely1w = lonely1 - (b01 + lonely + female*b31);
+    lonely2w = lonely2 - (b02 + lonely + female*b32);
+    lonely3w = lonely3 - (b03 + lonely + female*b33);
+    between.person:
+    anxdep ~~ lonely;
+    within.person: 
+    anxdep1 ~ intercept@a01 anxdep@1 female@a31;
+    anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 female@a32 anxdep@1;
+    anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 female@a33 anxdep@1;
+    anxdep4 ~ intercept@a04 anxdep3w@a1 lonely3w@a2 female@a34 anxdep@1;
+    lonely1 ~ intercept@b01 lonely@1 female@b31;
+    lonely2 ~ intercept@b02 lonely1w@b1 anxdep1w@b2 female@b32 lonely@1;
+    lonely3 ~ intercept@b03 lonely2w@b1 anxdep2w@b2 female@b33 lonely@1;
+    lonely4 ~ intercept@b04 lonely3w@b1 anxdep3w@b2 female@b34 lonely@1;
+    covariances:
+    anxdep1 ~~ lonely1;
+    anxdep2 ~~ lonely2;
+    anxdep3 ~~ lonely3;
+    anxdep4 ~~ lonely4;',
+  waldtest = 'a32 = a33; a33 = a34; b32 = b33; b33 = b34;',  # test equality of slopes
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(mod5)
+
+# sex moderating carryover effects
+mod6 <- rblimp(
+  data = loneliness,
+  latent = 'anxdep lonely',
+  model = ' 
+    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+    anxdep2w = anxdep2 - (a02 + anxdep);
+    anxdep3w = anxdep3 - (a03 + anxdep);
+    lonely1w = lonely1 - (b01 + lonely);
+    lonely2w = lonely2 - (b02 + lonely);
+    lonely3w = lonely3 - (b03 + lonely);
+    between.person:
+    female -> anxdep lonely;
+    anxdep ~~ lonely;
+    within.person: 
+    anxdep1 ~ intercept@a01 anxdep@1;
+    anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep1w*female@a3 anxdep@1;
+    anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep2w*female@a3 anxdep@1;
+    anxdep4 ~ intercept@a04 anxdep3w@a1 lonely3w@a2 anxdep3w*female@a3 anxdep@1;
+    lonely1 ~ intercept@b01 lonely@1;
+    lonely2 ~ intercept@b02 lonely1w@b1 anxdep1w@b2 lonely1w*female@b3 lonely@1;
+    lonely3 ~ intercept@b03 lonely2w@b1 anxdep2w@b2 lonely2w*female@b3 lonely@1;
+    lonely4 ~ intercept@b04 lonely3w@b1 anxdep3w@b2 lonely3w*female@b3 lonely@1;
+    covariances:
+    anxdep1 ~~ lonely1;
+    anxdep2 ~~ lonely2;
+    anxdep3 ~~ lonely3;
+    anxdep4 ~~ lonely4;',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(mod6)
+
+
 
