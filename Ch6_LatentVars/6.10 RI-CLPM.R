@@ -22,6 +22,8 @@ data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/
 # create data frame from github data
 loneliness <- read.csv(data_url)
 
+summarytools::freq(loneliness)
+
 #------------------------------------------------------------------------------#
 # FIT RICLPM MODEL ----
 #------------------------------------------------------------------------------#
@@ -51,7 +53,9 @@ mod1 <- rblimp(
     anxdep1 ~~ lonely1; 				# residual correlation
     anxdep2 ~~ lonely2; 				# residual correlation
     anxdep3 ~~ lonely3; 				# residual correlation
-    anxdep4 ~~ lonely4;', 				# residual correlation
+    anxdep4 ~~ lonely4;
+  DEBUG: compact;
+  ', 				# residual correlation
   waldtest = 'a12 = a13; a13 = a14; a22 = a23; a23 = a24; 
   b12 = b13; b13 = b14; b22 = b23; b23 = b24;',  # test equality of slopes
   seed = 90291,               			# random number seed
@@ -72,14 +76,51 @@ mod2 <- rblimp(
     lonely1w = lonely1 - (b01 + lonely);
     lonely2w = lonely2 - (b02 + lonely);
     lonely3w = lonely3 - (b03 + lonely);
-    random.intercepts:
+    between.person:
     anxdep ~~ lonely;
-    lagged.anxdep:
+    within.person: 
     anxdep1 ~ intercept@a01 anxdep@1;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
     anxdep4 ~ intercept@a04 anxdep3w@a1 lonely3w@a2 anxdep@1;
-    lagged.lonely:
+    lonely1 ~ intercept@b01 lonely@1;
+    lonely2 ~ intercept@b02 lonely1w@b1 anxdep1w@b2 lonely@1;
+    lonely3 ~ intercept@b03 lonely2w@b1 anxdep2w@b2 lonely@1;
+    lonely4 ~ intercept@b04 lonely3w@b1 anxdep3w@b2 lonely@1;
+    covariances:
+    anxdep1 ~~ lonely1;
+    anxdep2 ~~ lonely2;
+    anxdep3 ~~ lonely3;
+    anxdep4 ~~ lonely4; 
+    DEBUG: compact',
+  parameters = 'totvar2 = anxdep2.totalvar',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(mod2)
+
+#------------------------------------------------------------------------------#
+# GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
+#------------------------------------------------------------------------------#
+
+mod3 <- rblimp(
+  data = loneliness,
+  latent = 'anxdep lonely',
+  model = ' 
+    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+    anxdep2w = anxdep2 - (a02 + anxdep);
+    anxdep3w = anxdep3 - (a03 + anxdep);
+    lonely1w = lonely1 - (b01 + lonely);
+    lonely2w = lonely2 - (b02 + lonely);
+    lonely3w = lonely3 - (b03 + lonely);
+    between.person:
+    anxdep ~~ lonely;
+    within.person: 
+    anxdep1 ~ intercept@a01 anxdep@1;
+    anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
+    anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
+    anxdep4 ~ intercept@a04 anxdep3w@a1 lonely3w@a2 anxdep@1;
     lonely1 ~ intercept@b01 lonely@1;
     lonely2 ~ intercept@b02 lonely1w@b1 anxdep1w@b2 lonely@1;
     lonely3 ~ intercept@b03 lonely2w@b1 anxdep2w@b2 lonely@1;
@@ -92,9 +133,13 @@ mod2 <- rblimp(
     DEBUG: compact',
   seed = 90291,
   burn = 10000,
-  iter = 10000)
+  iter = 10000,
+  nimps = 20)
 
-output(mod2)
+output(mod3)
+
+distribution_plot(mod3)
+residuals_plot(mod3)
 
 
 #------------------------------------------------------------------------------#
@@ -135,6 +180,7 @@ model2 <- rblimp(
   nimps = 20)
 
 output(model2)
+
 
 
 #------------------------------------------------------------------------------#
