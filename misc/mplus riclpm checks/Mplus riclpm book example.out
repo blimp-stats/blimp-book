@@ -1,0 +1,899 @@
+Mplus VERSION 9.1 (Mac)
+MUTHEN & MUTHEN
+08/14/2026   5:52 PM
+
+INPUT INSTRUCTIONS
+
+
+  DATA:       FILE = loneliness_mplus.csv;  ! no header row, NA -> -999
+
+  VARIABLE:   NAMES = id female anxdep1-anxdep4 lonely1-lonely4;
+              USEVARIABLES = anxdep1-anxdep4 lonely1-lonely4;
+              MISSING = ALL (999);
+
+  ANALYSIS:   MODEL = NOCOV;  ! zero all default covariances
+
+  MODEL:      ! random intercepts (between components)
+              RIa BY anxdep1-anxdep4@1;
+              RIl BY lonely1-lonely4@1;
+              RIa WITH RIl;
+
+              ! carryover, anxdep (Blimp label a1)
+              anxdep2^ ON anxdep1^ (a1);
+              anxdep3^ ON anxdep2^ (a1);
+              anxdep4^ ON anxdep3^ (a1);
+
+              ! spillover, lonely -> anxdep (Blimp label a2)
+              anxdep2^ ON lonely1^ (a2);
+              anxdep3^ ON lonely2^ (a2);
+              anxdep4^ ON lonely3^ (a2);
+
+              ! carryover, lonely (Blimp label b1)
+              lonely2^ ON lonely1^ (b1);
+              lonely3^ ON lonely2^ (b1);
+              lonely4^ ON lonely3^ (b1);
+
+              ! spillover, anxdep -> lonely (Blimp label b2)
+              lonely2^ ON anxdep1^ (b2);
+              lonely3^ ON anxdep2^ (b2);
+              lonely4^ ON anxdep3^ (b2);
+
+              ! occasion-specific within-person residual covariances
+              anxdep1^ WITH lonely1^;
+              anxdep2^ WITH lonely2^;
+              anxdep3^ WITH lonely3^;
+              anxdep4^ WITH lonely4^;
+
+  OUTPUT:     TECH1 STDYX SAMPSTAT CINTERVAL;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1508
+
+Number of dependent variables                                    8
+Number of independent variables                                  0
+Number of continuous latent variables                           10
+
+Observed dependent variables
+
+  Continuous
+   ANXDEP1     ANXDEP2     ANXDEP3     ANXDEP4     LONELY1     LONELY2
+   LONELY3     LONELY4
+
+Continuous latent variables
+   RIA         RIL         ANXDEP1^    ANXDEP2^    ANXDEP3^    ANXDEP4^
+   LONELY1^    LONELY2^    LONELY3^    LONELY4^
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  loneliness_mplus.csv
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             4
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+ ANXDEP1        1.000
+ ANXDEP2        0.920         0.920
+ ANXDEP3        0.840         0.840         0.840
+ ANXDEP4        0.750         0.750         0.750         0.750
+ LONELY1        1.000         0.920         0.840         0.750         1.000
+ LONELY2        0.920         0.920         0.840         0.750         0.920
+ LONELY3        0.840         0.840         0.840         0.750         0.840
+ LONELY4        0.750         0.750         0.750         0.750         0.750
+
+
+           Covariance Coverage
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+ LONELY2        0.920
+ LONELY3        0.840         0.840
+ LONELY4        0.750         0.750         0.750
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+                1.882         1.976         2.048         2.154         2.205
+
+
+           Means
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+                2.259         2.347         2.356
+
+
+           Covariances
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+ ANXDEP1        0.483
+ ANXDEP2        0.335         0.544
+ ANXDEP3        0.255         0.360         0.556
+ ANXDEP4        0.236         0.312         0.376         0.564
+ LONELY1        0.281         0.243         0.157         0.184         0.533
+ LONELY2        0.223         0.319         0.242         0.252         0.365
+ LONELY3        0.214         0.267         0.341         0.302         0.304
+ LONELY4        0.162         0.222         0.247         0.344         0.262
+
+
+           Covariances
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+ LONELY2        0.544
+ LONELY3        0.390         0.575
+ LONELY4        0.317         0.380         0.603
+
+
+           Correlations
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+ ANXDEP1        1.000
+ ANXDEP2        0.653         1.000
+ ANXDEP3        0.491         0.655         1.000
+ ANXDEP4        0.452         0.564         0.671         1.000
+ LONELY1        0.554         0.451         0.289         0.336         1.000
+ LONELY2        0.435         0.587         0.440         0.456         0.678
+ LONELY3        0.406         0.477         0.603         0.531         0.550
+ LONELY4        0.300         0.388         0.426         0.591         0.462
+
+
+           Correlations
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+ LONELY2        1.000
+ LONELY3        0.698         1.000
+ LONELY4        0.553         0.645         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -8732.370
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     ANXDEP1               1.882       0.640       1.000   17.77%       1.250      1.500      1.750
+            1508.000       0.483       0.084       5.000    0.07%       2.000      2.500
+     ANXDEP2               1.974       0.584       1.000   16.08%       1.250      1.750      2.000
+            1387.000       0.545      -0.054       4.750    0.07%       2.000      2.500
+     ANXDEP3               2.047       0.444       1.000   12.87%       1.250      1.750      2.000
+            1267.000       0.561      -0.460       4.500    0.08%       2.250      2.750
+     ANXDEP4               2.157       0.374       1.000   10.26%       1.500      2.000      2.000
+            1131.000       0.564      -0.241       5.000    0.18%       2.250      2.750
+     LONELY1               2.205       0.260       1.000    8.09%       1.500      2.000      2.250
+            1508.000       0.533      -0.399       4.500    0.27%       2.250      2.750
+     LONELY2               2.259       0.259       1.000    7.64%       1.500      2.000      2.250
+            1387.000       0.543      -0.180       5.000    0.22%       2.500      3.000
+     LONELY3               2.347       0.190       1.000    6.00%       1.750      2.250      2.250
+            1267.000       0.573      -0.359       5.000    0.08%       2.500      3.000
+     LONELY4               2.364       0.288       1.000    6.19%       1.750      2.250      2.250
+            1131.000       0.603      -0.209       5.000    0.18%       2.500      3.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       27
+
+Loglikelihood
+
+          H0 Value                       -8766.031
+          H1 Value                       -8732.370
+
+Information Criteria
+
+          Akaike (AIC)                   17586.063
+          Bayesian (BIC)                 17729.663
+          Sample-Size Adjusted BIC       17643.892
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                             67.323
+          Degrees of Freedom                    17
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.044
+          90 Percent C.I.                    0.034  0.056
+          Probability RMSEA <= .05           0.785
+
+CFI/TLI
+
+          CFI                                0.992
+          TLI                                0.987
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           6184.792
+          Degrees of Freedom                    28
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.027
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RIA      BY
+    ANXDEP1            1.000      0.000    999.000    999.000
+    ANXDEP2            1.000      0.000    999.000    999.000
+    ANXDEP3            1.000      0.000    999.000    999.000
+    ANXDEP4            1.000      0.000    999.000    999.000
+
+ RIL      BY
+    LONELY1            1.000      0.000    999.000    999.000
+    LONELY2            1.000      0.000    999.000    999.000
+    LONELY3            1.000      0.000    999.000    999.000
+    LONELY4            1.000      0.000    999.000    999.000
+
+ ANXDEP2^ ON
+    ANXDEP1^           0.391      0.034     11.513      0.000
+    LONELY1^           0.147      0.031      4.767      0.000
+
+ ANXDEP3^ ON
+    ANXDEP2^           0.391      0.034     11.513      0.000
+    LONELY2^           0.147      0.031      4.767      0.000
+
+ ANXDEP4^ ON
+    ANXDEP3^           0.391      0.034     11.513      0.000
+    LONELY3^           0.147      0.031      4.767      0.000
+
+ LONELY2^ ON
+    LONELY1^           0.371      0.037      9.905      0.000
+    ANXDEP1^           0.099      0.029      3.446      0.001
+
+ LONELY3^ ON
+    LONELY2^           0.371      0.037      9.905      0.000
+    ANXDEP2^           0.099      0.029      3.446      0.001
+
+ LONELY4^ ON
+    LONELY3^           0.371      0.037      9.905      0.000
+    ANXDEP3^           0.099      0.029      3.446      0.001
+
+ RIA      WITH
+    RIL                0.153      0.017      9.117      0.000
+
+ ANXDEP1^ WITH
+    LONELY1^           0.136      0.015      8.940      0.000
+
+ ANXDEP2^ WITH
+    LONELY2^           0.118      0.010     11.554      0.000
+
+ ANXDEP3^ WITH
+    LONELY3^           0.137      0.010     13.611      0.000
+
+ ANXDEP4^ WITH
+    LONELY4^           0.116      0.010     11.178      0.000
+
+ Intercepts
+    ANXDEP1            1.882      0.018    104.550      0.000
+    ANXDEP2            1.976      0.019    102.209      0.000
+    ANXDEP3            2.048      0.021     99.819      0.000
+    ANXDEP4            2.155      0.021    102.373      0.000
+    LONELY1            2.205      0.019    116.739      0.000
+    LONELY2            2.259      0.019    115.996      0.000
+    LONELY3            2.347      0.020    115.380      0.000
+    LONELY4            2.355      0.022    105.494      0.000
+
+ Variances
+    RIA                0.205      0.020     10.457      0.000
+    RIL                0.253      0.020     12.549      0.000
+
+ Residual Variances
+    ANXDEP1^           0.284      0.019     15.131      0.000
+    ANXDEP2^           0.267      0.013     20.608      0.000
+    ANXDEP3^           0.285      0.013     21.589      0.000
+    ANXDEP4^           0.261      0.013     20.704      0.000
+    LONELY1^           0.285      0.019     15.364      0.000
+    LONELY2^           0.242      0.013     18.483      0.000
+    LONELY3^           0.252      0.012     20.428      0.000
+    LONELY4^           0.305      0.015     20.882      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.640E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RIA      BY
+    ANXDEP1            0.647      0.027     23.992      0.000
+    ANXDEP2            0.617      0.028     22.437      0.000
+    ANXDEP3            0.601      0.027     22.105      0.000
+    ANXDEP4            0.610      0.028     21.831      0.000
+
+ RIL      BY
+    LONELY1            0.685      0.023     30.108      0.000
+    LONELY2            0.680      0.025     27.381      0.000
+    LONELY3            0.671      0.024     27.753      0.000
+    LONELY4            0.639      0.023     27.779      0.000
+
+ ANXDEP2^ ON
+    ANXDEP1^           0.361      0.030     11.894      0.000
+    LONELY1^           0.136      0.029      4.667      0.000
+
+ ANXDEP3^ ON
+    ANXDEP2^           0.375      0.034     11.110      0.000
+    LONELY2^           0.133      0.030      4.480      0.000
+
+ ANXDEP4^ ON
+    ANXDEP3^           0.400      0.036     11.242      0.000
+    LONELY3^           0.139      0.031      4.540      0.000
+
+ LONELY2^ ON
+    LONELY1^           0.365      0.034     10.738      0.000
+    ANXDEP1^           0.097      0.029      3.363      0.001
+
+ LONELY3^ ON
+    LONELY2^           0.363      0.039      9.369      0.000
+    ANXDEP2^           0.102      0.031      3.333      0.001
+
+ LONELY4^ ON
+    LONELY3^           0.341      0.037      9.175      0.000
+    ANXDEP3^           0.098      0.029      3.328      0.001
+
+ RIA      WITH
+    RIL                0.675      0.034     19.728      0.000
+
+ ANXDEP1^ WITH
+    LONELY1^           0.476      0.034     13.970      0.000
+
+ ANXDEP2^ WITH
+    LONELY2^           0.462      0.028     16.281      0.000
+
+ ANXDEP3^ WITH
+    LONELY3^           0.510      0.026     19.984      0.000
+
+ ANXDEP4^ WITH
+    LONELY4^           0.412      0.028     14.594      0.000
+
+ Intercepts
+    ANXDEP1            2.692      0.056     48.070      0.000
+    ANXDEP2            2.695      0.051     52.831      0.000
+    ANXDEP3            2.721      0.054     50.158      0.000
+    ANXDEP4            2.907      0.059     49.540      0.000
+    LONELY1            3.006      0.060     49.782      0.000
+    LONELY2            3.055      0.058     52.795      0.000
+    LONELY3            3.134      0.060     52.023      0.000
+    LONELY4            2.996      0.059     50.625      0.000
+
+ Variances
+    RIA                1.000      0.000    999.000    999.000
+    RIL                1.000      0.000    999.000    999.000
+
+ Residual Variances
+    ANXDEP1^           1.000      0.000    999.000    999.000
+    ANXDEP2^           0.804      0.026     31.233      0.000
+    ANXDEP3^           0.789      0.031     25.334      0.000
+    ANXDEP4^           0.757      0.035     21.803      0.000
+    LONELY1^           1.000      0.000    999.000    999.000
+    LONELY2^           0.823      0.027     30.498      0.000
+    LONELY3^           0.819      0.033     24.916      0.000
+    LONELY4^           0.836      0.031     27.010      0.000
+
+
+R-SQUARE
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    ANXDEP1            0.419      0.035     11.996      0.000
+    ANXDEP2            0.381      0.034     11.218      0.000
+    ANXDEP3            0.361      0.033     11.052      0.000
+    ANXDEP4            0.372      0.034     10.915      0.000
+    LONELY1            0.470      0.031     15.054      0.000
+    LONELY2            0.462      0.034     13.691      0.000
+    LONELY3            0.451      0.032     13.877      0.000
+    LONELY4            0.409      0.029     13.890      0.000
+
+     Latent                                         Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    ANXDEP1^           0.000      0.000    999.000    999.000
+    ANXDEP2^           0.196      0.026      7.607      0.000
+    ANXDEP3^           0.211      0.031      6.763      0.000
+    ANXDEP4^           0.243      0.035      7.016      0.000
+    LONELY1^           0.000      0.000    999.000    999.000
+    LONELY2^           0.177      0.027      6.539      0.000
+    LONELY3^           0.181      0.033      5.518      0.000
+    LONELY4^           0.164      0.031      5.306      0.000
+
+
+CONFIDENCE INTERVALS OF MODEL RESULTS
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ RIA      BY
+    ANXDEP1          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    ANXDEP2          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    ANXDEP3          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    ANXDEP4          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ RIL      BY
+    LONELY1          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    LONELY2          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    LONELY3          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    LONELY4          1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ ANXDEP2^ ON
+    ANXDEP1^         0.303       0.324       0.335       0.391       0.447       0.457       0.478
+    LONELY1^         0.068       0.087       0.096       0.147       0.198       0.207       0.226
+
+ ANXDEP3^ ON
+    ANXDEP2^         0.303       0.324       0.335       0.391       0.447       0.457       0.478
+    LONELY2^         0.068       0.087       0.096       0.147       0.198       0.207       0.226
+
+ ANXDEP4^ ON
+    ANXDEP3^         0.303       0.324       0.335       0.391       0.447       0.457       0.478
+    LONELY3^         0.068       0.087       0.096       0.147       0.198       0.207       0.226
+
+ LONELY2^ ON
+    LONELY1^         0.275       0.298       0.309       0.371       0.433       0.444       0.468
+    ANXDEP1^         0.025       0.043       0.052       0.099       0.146       0.155       0.172
+
+ LONELY3^ ON
+    LONELY2^         0.275       0.298       0.309       0.371       0.433       0.444       0.468
+    ANXDEP2^         0.025       0.043       0.052       0.099       0.146       0.155       0.172
+
+ LONELY4^ ON
+    LONELY3^         0.275       0.298       0.309       0.371       0.433       0.444       0.468
+    ANXDEP3^         0.025       0.043       0.052       0.099       0.146       0.155       0.172
+
+ RIA      WITH
+    RIL              0.110       0.120       0.126       0.153       0.181       0.186       0.197
+
+ ANXDEP1^ WITH
+    LONELY1^         0.096       0.106       0.111       0.136       0.160       0.165       0.175
+
+ ANXDEP2^ WITH
+    LONELY2^         0.091       0.098       0.101       0.118       0.134       0.137       0.144
+
+ ANXDEP3^ WITH
+    LONELY3^         0.111       0.117       0.120       0.137       0.153       0.157       0.163
+
+ ANXDEP4^ WITH
+    LONELY4^         0.090       0.096       0.099       0.116       0.133       0.137       0.143
+
+ Intercepts
+    ANXDEP1          1.836       1.847       1.853       1.882       1.912       1.918       1.929
+    ANXDEP2          1.926       1.938       1.944       1.976       2.007       2.013       2.025
+    ANXDEP3          1.995       2.007       2.014       2.048       2.081       2.088       2.100
+    ANXDEP4          2.100       2.113       2.120       2.155       2.189       2.196       2.209
+    LONELY1          2.156       2.168       2.174       2.205       2.236       2.242       2.253
+    LONELY2          2.209       2.221       2.227       2.259       2.291       2.297       2.309
+    LONELY3          2.294       2.307       2.313       2.347       2.380       2.387       2.399
+    LONELY4          2.297       2.311       2.318       2.355       2.391       2.398       2.412
+
+ Variances
+    RIA              0.154       0.166       0.172       0.205       0.237       0.243       0.255
+    RIL              0.201       0.213       0.219       0.253       0.286       0.292       0.304
+
+ Residual Variances
+    ANXDEP1^         0.236       0.247       0.253       0.284       0.315       0.321       0.333
+    ANXDEP2^         0.234       0.242       0.246       0.267       0.289       0.293       0.301
+    ANXDEP3^         0.251       0.259       0.264       0.285       0.307       0.311       0.319
+    ANXDEP4^         0.228       0.236       0.240       0.261       0.282       0.286       0.293
+    LONELY1^         0.237       0.249       0.255       0.285       0.316       0.322       0.333
+    LONELY2^         0.208       0.217       0.221       0.242       0.264       0.268       0.276
+    LONELY3^         0.220       0.228       0.232       0.252       0.272       0.276       0.284
+    LONELY4^         0.268       0.277       0.281       0.305       0.329       0.334       0.343
+
+
+CONFIDENCE INTERVALS OF STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ RIA      BY
+    ANXDEP1          0.577       0.594       0.603       0.647       0.691       0.700       0.716
+    ANXDEP2          0.546       0.563       0.572       0.617       0.662       0.671       0.688
+    ANXDEP3          0.531       0.548       0.556       0.601       0.646       0.654       0.671
+    ANXDEP4          0.538       0.555       0.564       0.610       0.656       0.665       0.682
+
+ RIL      BY
+    LONELY1          0.627       0.641       0.648       0.685       0.723       0.730       0.744
+    LONELY2          0.616       0.631       0.639       0.680       0.721       0.728       0.744
+    LONELY3          0.609       0.624       0.631       0.671       0.711       0.719       0.734
+    LONELY4          0.580       0.594       0.602       0.639       0.677       0.685       0.699
+
+ ANXDEP2^ ON
+    ANXDEP1^         0.283       0.302       0.311       0.361       0.411       0.421       0.440
+    LONELY1^         0.061       0.079       0.088       0.136       0.184       0.193       0.211
+
+ ANXDEP3^ ON
+    ANXDEP2^         0.288       0.309       0.319       0.375       0.430       0.441       0.462
+    LONELY2^         0.056       0.075       0.084       0.133       0.181       0.191       0.209
+
+ ANXDEP4^ ON
+    ANXDEP3^         0.308       0.330       0.342       0.400       0.459       0.470       0.492
+    LONELY3^         0.060       0.079       0.089       0.139       0.189       0.199       0.218
+
+ LONELY2^ ON
+    LONELY1^         0.278       0.299       0.309       0.365       0.421       0.432       0.453
+    ANXDEP1^         0.023       0.040       0.049       0.097       0.144       0.153       0.171
+
+ LONELY3^ ON
+    LONELY2^         0.263       0.287       0.299       0.363       0.426       0.438       0.462
+    ANXDEP2^         0.023       0.042       0.052       0.102       0.153       0.163       0.182
+
+ LONELY4^ ON
+    LONELY3^         0.245       0.268       0.280       0.341       0.402       0.414       0.436
+    ANXDEP3^         0.022       0.040       0.050       0.098       0.147       0.156       0.174
+
+ RIA      WITH
+    RIL              0.587       0.608       0.619       0.675       0.731       0.742       0.763
+
+ ANXDEP1^ WITH
+    LONELY1^         0.388       0.409       0.420       0.476       0.532       0.543       0.564
+
+ ANXDEP2^ WITH
+    LONELY2^         0.389       0.406       0.415       0.462       0.508       0.517       0.535
+
+ ANXDEP3^ WITH
+    LONELY3^         0.444       0.460       0.468       0.510       0.552       0.560       0.576
+
+ ANXDEP4^ WITH
+    LONELY4^         0.340       0.357       0.366       0.412       0.459       0.468       0.485
+
+ Intercepts
+    ANXDEP1          2.548       2.583       2.600       2.692       2.784       2.802       2.837
+    ANXDEP2          2.564       2.595       2.611       2.695       2.779       2.795       2.827
+    ANXDEP3          2.582       2.615       2.632       2.721       2.811       2.828       2.861
+    ANXDEP4          2.756       2.792       2.810       2.907       3.003       3.022       3.058
+    LONELY1          2.851       2.888       2.907       3.006       3.106       3.125       3.162
+    LONELY2          2.906       2.941       2.959       3.055       3.150       3.168       3.204
+    LONELY3          2.979       3.016       3.035       3.134       3.233       3.252       3.290
+    LONELY4          2.843       2.880       2.898       2.996       3.093       3.112       3.148
+
+ Variances
+    RIA              1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    RIL              1.000       1.000       1.000       1.000       1.000       1.000       1.000
+
+ Residual Variances
+    ANXDEP1^         1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    ANXDEP2^         0.738       0.754       0.762       0.804       0.846       0.855       0.870
+    ANXDEP3^         0.709       0.728       0.738       0.789       0.841       0.850       0.870
+    ANXDEP4^         0.667       0.689       0.699       0.757       0.814       0.825       0.846
+    LONELY1^         1.000       1.000       1.000       1.000       1.000       1.000       1.000
+    LONELY2^         0.754       0.771       0.779       0.823       0.868       0.876       0.893
+    LONELY3^         0.734       0.754       0.765       0.819       0.873       0.883       0.903
+    LONELY4^         0.756       0.775       0.785       0.836       0.887       0.896       0.916
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+                  1             2             3             4             5
+
+
+           NU
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+                  6             7             8
+
+
+           LAMBDA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ ANXDEP1            0             0             0             0             0
+ ANXDEP2            0             0             0             0             0
+ ANXDEP3            0             0             0             0             0
+ ANXDEP4            0             0             0             0             0
+ LONELY1            0             0             0             0             0
+ LONELY2            0             0             0             0             0
+ LONELY3            0             0             0             0             0
+ LONELY4            0             0             0             0             0
+
+
+           LAMBDA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ ANXDEP1            0             0             0             0             0
+ ANXDEP2            0             0             0             0             0
+ ANXDEP3            0             0             0             0             0
+ ANXDEP4            0             0             0             0             0
+ LONELY1            0             0             0             0             0
+ LONELY2            0             0             0             0             0
+ LONELY3            0             0             0             0             0
+ LONELY4            0             0             0             0             0
+
+
+           THETA
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+ ANXDEP1            0
+ ANXDEP2            0             0
+ ANXDEP3            0             0             0
+ ANXDEP4            0             0             0             0
+ LONELY1            0             0             0             0             0
+ LONELY2            0             0             0             0             0
+ LONELY3            0             0             0             0             0
+ LONELY4            0             0             0             0             0
+
+
+           THETA
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+ LONELY2            0
+ LONELY3            0             0
+ LONELY4            0             0             0
+
+
+           ALPHA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           ALPHA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+                  0             0             0             0             0
+
+
+           BETA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ RIA                0             0             0             0             0
+ RIL                0             0             0             0             0
+ ANXDEP1^           0             0             0             0             0
+ ANXDEP2^           0             0             9             0             0
+ ANXDEP3^           0             0             0             9             0
+ ANXDEP4^           0             0             0             0             9
+ LONELY1^           0             0             0             0             0
+ LONELY2^           0             0            11             0             0
+ LONELY3^           0             0             0            11             0
+ LONELY4^           0             0             0             0            11
+
+
+           BETA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ RIA                0             0             0             0             0
+ RIL                0             0             0             0             0
+ ANXDEP1^           0             0             0             0             0
+ ANXDEP2^           0            10             0             0             0
+ ANXDEP3^           0             0            10             0             0
+ ANXDEP4^           0             0             0            10             0
+ LONELY1^           0             0             0             0             0
+ LONELY2^           0            12             0             0             0
+ LONELY3^           0             0            12             0             0
+ LONELY4^           0             0             0            12             0
+
+
+           PSI
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ RIA               13
+ RIL               14            15
+ ANXDEP1^           0             0            16
+ ANXDEP2^           0             0             0            17
+ ANXDEP3^           0             0             0             0            18
+ ANXDEP4^           0             0             0             0             0
+ LONELY1^           0             0            20             0             0
+ LONELY2^           0             0             0            22             0
+ LONELY3^           0             0             0             0            24
+ LONELY4^           0             0             0             0             0
+
+
+           PSI
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ ANXDEP4^          19
+ LONELY1^           0            21
+ LONELY2^           0             0            23
+ LONELY3^           0             0             0            25
+ LONELY4^          26             0             0             0            27
+
+
+     STARTING VALUES
+
+
+           NU
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+                1.882         1.974         2.047         2.157         2.205
+
+
+           NU
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+                2.259         2.347         2.364
+
+
+           LAMBDA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ ANXDEP1        1.000         0.000         1.000         0.000         0.000
+ ANXDEP2        1.000         0.000         0.000         1.000         0.000
+ ANXDEP3        1.000         0.000         0.000         0.000         1.000
+ ANXDEP4        1.000         0.000         0.000         0.000         0.000
+ LONELY1        0.000         1.000         0.000         0.000         0.000
+ LONELY2        0.000         1.000         0.000         0.000         0.000
+ LONELY3        0.000         1.000         0.000         0.000         0.000
+ LONELY4        0.000         1.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ ANXDEP1        0.000         0.000         0.000         0.000         0.000
+ ANXDEP2        0.000         0.000         0.000         0.000         0.000
+ ANXDEP3        0.000         0.000         0.000         0.000         0.000
+ ANXDEP4        1.000         0.000         0.000         0.000         0.000
+ LONELY1        0.000         1.000         0.000         0.000         0.000
+ LONELY2        0.000         0.000         1.000         0.000         0.000
+ LONELY3        0.000         0.000         0.000         1.000         0.000
+ LONELY4        0.000         0.000         0.000         0.000         1.000
+
+
+           THETA
+              ANXDEP1       ANXDEP2       ANXDEP3       ANXDEP4       LONELY1
+              ________      ________      ________      ________      ________
+ ANXDEP1        0.000
+ ANXDEP2        0.000         0.000
+ ANXDEP3        0.000         0.000         0.000
+ ANXDEP4        0.000         0.000         0.000         0.000
+ LONELY1        0.000         0.000         0.000         0.000         0.000
+ LONELY2        0.000         0.000         0.000         0.000         0.000
+ LONELY3        0.000         0.000         0.000         0.000         0.000
+ LONELY4        0.000         0.000         0.000         0.000         0.000
+
+
+           THETA
+              LONELY2       LONELY3       LONELY4
+              ________      ________      ________
+ LONELY2        0.000
+ LONELY3        0.000         0.000
+ LONELY4        0.000         0.000         0.000
+
+
+           ALPHA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+                0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ RIA            0.000         0.000         0.000         0.000         0.000
+ RIL            0.000         0.000         0.000         0.000         0.000
+ ANXDEP1^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP2^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP3^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP4^       0.000         0.000         0.000         0.000         0.000
+ LONELY1^       0.000         0.000         0.000         0.000         0.000
+ LONELY2^       0.000         0.000         0.000         0.000         0.000
+ LONELY3^       0.000         0.000         0.000         0.000         0.000
+ LONELY4^       0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ RIA            0.000         0.000         0.000         0.000         0.000
+ RIL            0.000         0.000         0.000         0.000         0.000
+ ANXDEP1^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP2^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP3^       0.000         0.000         0.000         0.000         0.000
+ ANXDEP4^       0.000         0.000         0.000         0.000         0.000
+ LONELY1^       0.000         0.000         0.000         0.000         0.000
+ LONELY2^       0.000         0.000         0.000         0.000         0.000
+ LONELY3^       0.000         0.000         0.000         0.000         0.000
+ LONELY4^       0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              RIA           RIL           ANXDEP1^      ANXDEP2^      ANXDEP3^
+              ________      ________      ________      ________      ________
+ RIA            0.050
+ RIL            0.000         0.050
+ ANXDEP1^       0.000         0.000         0.242
+ ANXDEP2^       0.000         0.000         0.000         0.273
+ ANXDEP3^       0.000         0.000         0.000         0.000         0.280
+ ANXDEP4^       0.000         0.000         0.000         0.000         0.000
+ LONELY1^       0.000         0.000         0.000         0.000         0.000
+ LONELY2^       0.000         0.000         0.000         0.000         0.000
+ LONELY3^       0.000         0.000         0.000         0.000         0.000
+ LONELY4^       0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              ANXDEP4^      LONELY1^      LONELY2^      LONELY3^      LONELY4^
+              ________      ________      ________      ________      ________
+ ANXDEP4^       0.282
+ LONELY1^       0.000         0.266
+ LONELY2^       0.000         0.000         0.271
+ LONELY3^       0.000         0.000         0.000         0.287
+ LONELY4^       0.000         0.000         0.000         0.000         0.301
+
+
+     Beginning Time:  17:52:25
+        Ending Time:  17:52:25
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2026 Muthen & Muthen

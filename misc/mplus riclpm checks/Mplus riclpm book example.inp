@@ -1,0 +1,41 @@
+
+DATA:       FILE = loneliness_mplus.csv;  ! no header row, NA -> -999
+
+VARIABLE:   NAMES = id female anxdep1-anxdep4 lonely1-lonely4;
+            USEVARIABLES = anxdep1-anxdep4 lonely1-lonely4;
+            MISSING = ALL (999);
+
+ANALYSIS:   MODEL = NOCOV;  ! zero all default covariances
+
+MODEL:      ! random intercepts (between components)
+            RIa BY anxdep1-anxdep4@1;
+            RIl BY lonely1-lonely4@1;
+            RIa WITH RIl;
+
+            ! carryover, anxdep (Blimp label a1)
+            anxdep2^ ON anxdep1^ (a1);
+            anxdep3^ ON anxdep2^ (a1);
+            anxdep4^ ON anxdep3^ (a1);
+
+            ! spillover, lonely -> anxdep (Blimp label a2)
+            anxdep2^ ON lonely1^ (a2);
+            anxdep3^ ON lonely2^ (a2);
+            anxdep4^ ON lonely3^ (a2);
+
+            ! carryover, lonely (Blimp label b1)
+            lonely2^ ON lonely1^ (b1);
+            lonely3^ ON lonely2^ (b1);
+            lonely4^ ON lonely3^ (b1);
+
+            ! spillover, anxdep -> lonely (Blimp label b2)
+            lonely2^ ON anxdep1^ (b2);
+            lonely3^ ON anxdep2^ (b2);
+            lonely4^ ON anxdep3^ (b2);
+
+            ! occasion-specific within-person residual covariances
+            anxdep1^ WITH lonely1^;
+            anxdep2^ WITH lonely2^;
+            anxdep3^ WITH lonely3^;
+            anxdep4^ WITH lonely4^;
+
+OUTPUT:     TECH1 STDYX SAMPSTAT CINTERVAL;

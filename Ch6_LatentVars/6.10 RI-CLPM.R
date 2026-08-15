@@ -93,8 +93,35 @@ mod2 <- rblimp(
   iter = 10000)
 
 output(mod2)
-names(mod2)
-standardized(mod2)
+
+# condensed syntax with loops
+mod3 <- rblimp(
+  data = loneliness,
+  latent = 'anxdep lonely',
+  model = ' 
+    { t in 1:3 } : anxdep[t]w = anxdep[t] - (a0[t] + anxdep);
+    { t in 1:3 } : lonely[t]w = lonely[t] - (b0[t] + lonely);
+    between.person:
+    anxdep ~~ lonely;
+    within.person: 
+    anxdep1 ~ intercept@a01 anxdep@1;
+    { t in 2:4 } : anxdep[t] ~ intercept@a0[t] anxdep[t-1]w@a1 lonely[t-1]w@a2 anxdep@1;
+    lonely1 ~ intercept@b01 lonely@1;
+    { t in 2:4 } : lonely[t] ~ intercept@b0[t] lonely[t-1]w@b1 anxdep[t-1]w@b2 lonely@1;
+    covariances:
+    { t in 1:4 } : anxdep[t] ~~ lonely[t];',
+  parameters = '
+    { t in 1:4 } : varw_lonely[t] = lonely[t].totalvar - lonely.totalvar;
+    { t in 1:4 } : varw_anxdep[t] = anxdep[t].totalvar - anxdep.totalvar;
+    { t in 2:4 } : a1stdw_t[t] = a1 * sqrt(varw_anxdep[t-1]) / sqrt(varw_anxdep[t]);
+    { t in 2:4 } : b1stdw_t[t] = b1 * sqrt(varw_lonely[t-1]) / sqrt(varw_lonely[t]);
+    { t in 2:4 } : a2stdw_t[t] = a2 * sqrt(varw_lonely[t-1]) / sqrt(varw_anxdep[t]);
+    { t in 2:4 } : b2stdw_t[t] = b2 * sqrt(varw_anxdep[t-1]) / sqrt(varw_lonely[t]);',
+  seed = 90291,
+  burn = 10000,
+  iter = 10000)
+
+output(mod3)
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
