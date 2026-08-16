@@ -58,7 +58,7 @@ mod2 <- rblimp(
     structural:                                  # model block label
     inflammation ~ els female age;               # latent variable regression
     inflammation@1;                              # fix latent variance at 1
-    ln(dpdd) ~ inflammation els female age;      # regression model with log transform
+    ln(dpdd + 1) ~ inflammation els female age;      # regression model with log transform
    measurement:                                  # model block label
    ln(crp + 5) ~ inflammation;                   # measurement model with log transform
    ln(il6 + 5) ~ inflammation;                   # measurement model with log transform

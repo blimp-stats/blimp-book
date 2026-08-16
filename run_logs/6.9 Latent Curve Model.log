@@ -1,0 +1,2371 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:35:34 2026
+  Chain 3 burn-in started on Aug 15 19:35:34 2026
+  Chain 4 burn-in started on Aug 15 19:35:34 2026
+  Chain 2 burn-in started on Aug 15 19:35:34 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:35:35 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:35:35 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:35:35 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:35:35 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:35:36 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:35:36 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:35:36 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:35:36 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:35:37 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:35:37 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:35:37 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:35:37 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:35:38 2026
+  Chain 3 completed burn-in on Aug 15 19:35:38 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:35:38 2026
+  Chain 2 completed burn-in on Aug 15 19:35:38 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:35:38 2026
+  Chain 1 completed burn-in on Aug 15 19:35:38 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:35:38 2026
+  Chain 4 completed burn-in on Aug 15 19:35:38 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:35:38 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:35:38 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:35:38 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:35:38 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:35:39 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:35:39 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:35:39 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:35:39 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:35:40 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:35:40 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:35:40 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:35:40 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:35:41 2026
+  Chain 3 finished on Aug 15 19:35:41 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:35:41 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:35:41 2026
+  Chain 1 finished on Aug 15 19:35:41 2026
+  Chain 2 finished on Aug 15 19:35:41 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:35:41 2026
+  Chain 4 finished on Aug 15 19:35:41 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.285            12  
+                         1251 to 2500            1.172            12  
+                         1876 to 3750            1.060            12  
+                         2501 to 5000            1.036            12  
+                         3126 to 6250            1.146            12  
+                         3751 to 7500            1.063            25  
+                         4376 to 8750            1.073            12  
+                         5001 to 10000           1.099            12  
+                         5626 to 11250           1.054            12  
+                         6251 to 12500           1.062            12  
+                         6876 to 13750           1.044            12  
+                         7501 to 15000           1.028            12  
+                         8126 to 16250           1.029            12  
+                         8751 to 17500           1.025            12  
+                         9376 to 18750           1.032            12  
+                        10001 to 20000           1.017            12  
+                        10626 to 21250           1.018            12  
+                        11251 to 22500           1.009            12  
+                        11876 to 23750           1.013            12  
+                        12501 to 25000           1.022            12  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                baseline linear
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept
+    [2]  linear ~ Intercept
+    [3]  baseline <-> linear
+
+   measurement:
+    [4]  severity0 ~ baseline@1 linear@0
+    [5]  severity1 ~ baseline@1 linear@1
+    [6]  severity2 ~ baseline@1 linear@2
+    [7]  severity3 ~ baseline@1 linear@3
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5765.312
+      WAIC                  6157.739
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.398      0.427      6.109      6.395      6.684      5.160      7.690 
+  linear                             -0.694      0.420     -0.984     -0.694     -0.406     -1.875      0.536 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.578      1.128      4.987      5.500      6.500      2.460      9.019 
+  severity2                           4.836      1.437      4.000      4.999      5.716      0.931      9.048 
+  severity3                           4.476      1.754      3.266      4.499      5.627     -0.222      9.093 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                -0.012      0.066     -0.139      0.118      0.030      0.863   3302.099 
+  baseline, severity1                -0.002      0.063     -0.123      0.122      0.001      0.982   9031.756 
+  baseline, severity2                 0.009      0.063     -0.114      0.132      0.019      0.890  21632.801 
+  baseline, severity3                -0.005      0.066     -0.134      0.127      0.004      0.948  16445.530 
+  linear, severity0                   0.001      0.065     -0.126      0.128      0.000      0.990   4098.360 
+  linear, severity1                   0.006      0.060     -0.111      0.124      0.011      0.918   9443.647 
+  linear, severity2                  -0.000      0.060     -0.118      0.118      0.000      0.997  20488.927 
+  linear, severity3                  -0.003      0.065     -0.130      0.124      0.003      0.958  13017.150 
+  severity0, severity1                0.034      0.060     -0.086      0.148      0.299      0.585   1874.215 
+  severity0, severity2               -0.005      0.060     -0.121      0.112      0.006      0.937  14367.141 
+  severity0, severity3               -0.006      0.064     -0.129      0.119      0.007      0.933   3735.409 
+  severity1, severity2                0.021      0.058     -0.094      0.133      0.123      0.726  15443.997 
+  severity1, severity3                0.014      0.062     -0.110      0.135      0.048      0.826  18238.010 
+  severity2, severity3               -0.052      0.063     -0.176      0.072      0.683      0.409  15220.608 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.184      0.055      0.096      0.308        ---        ---    223.221 
+
+Coefficients:                   
+  Intercept                           6.399      0.042      6.317      6.483  22964.823      0.000   1836.877 
+
+Standard Deviations:            
+  Residual SD                         0.429      0.064      0.311      0.555        ---        ---    219.070 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   linear     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.178      0.026      0.133      0.236        ---        ---    490.660 
+
+Coefficients:                   
+  Intercept                          -0.693      0.030     -0.753     -0.634    530.393      0.000   2650.809 
+
+Standard Deviations:            
+  Residual SD                         0.422      0.031      0.364      0.485        ---        ---    484.080 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline linear
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,linear)                0.086      0.028      0.025      0.132      9.201      0.002    197.284 
+
+Correlations:                   
+  Cor(baseline,linear)                0.491      0.205      0.109      0.879      5.737      0.017    136.223 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.427      0.054      0.320      0.527     61.520      0.000    209.908 
+  linear                              0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.183      0.046      0.102      0.278        ---        ---    211.757 
+  by Residual Variation               0.816      0.058      0.704      0.931        ---        ---    339.843 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.368      0.052      0.271      0.468     50.437      0.000    200.810 
+  linear                              0.362      0.026      0.313      0.416    188.084      0.000    397.845 
+
+Proportion Variance Explained   
+  by Coefficients                     0.394      0.025      0.345      0.442        ---        ---    683.861 
+  by Residual Variation               0.606      0.034      0.543      0.675        ---        ---   1263.671 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 2.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.299      0.044      0.217      0.384     46.746      0.000    211.511 
+  linear                              0.587      0.037      0.518      0.661    255.445      0.000    303.846 
+
+Proportion Variance Explained   
+  by Coefficients                     0.601      0.020      0.561      0.639        ---        ---   1428.405 
+  by Residual Variation               0.399      0.023      0.356      0.447        ---        ---   2053.304 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 3.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.243      0.036      0.175      0.313     45.624      0.000    227.446 
+  linear                              0.716      0.037      0.646      0.789    378.183      0.000    260.775 
+
+Proportion Variance Explained   
+  by Coefficients                     0.736      0.017      0.701      0.769        ---        ---   1054.740 
+  by Residual Variation               0.264      0.019      0.230      0.302        ---        ---   1268.849 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:35:52 2026
+  Chain 2 burn-in started on Aug 15 19:35:52 2026
+  Chain 3 burn-in started on Aug 15 19:35:52 2026
+  Chain 4 burn-in started on Aug 15 19:35:52 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:35:53 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:35:53 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:35:53 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:35:53 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:35:54 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:35:54 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:35:54 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:35:54 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:35:55 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:35:55 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:35:55 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:35:55 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:35:56 2026
+  Chain 4 completed burn-in on Aug 15 19:35:56 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:35:56 2026
+  Chain 2 completed burn-in on Aug 15 19:35:56 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:35:56 2026
+  Chain 1 completed burn-in on Aug 15 19:35:56 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:35:56 2026
+  Chain 3 completed burn-in on Aug 15 19:35:56 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:35:56 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:35:56 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:35:56 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:35:56 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:35:57 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:35:57 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:35:57 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:35:57 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:35:58 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:35:58 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:35:58 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:35:58 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:35:58 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:35:58 2026
+  Chain 1 finished on Aug 15 19:35:58 2026
+  Chain 3 finished on Aug 15 19:35:58 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:35:58 2026
+  Chain 2 finished on Aug 15 19:35:58 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:35:58 2026
+  Chain 4 finished on Aug 15 19:35:58 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.285            12  
+                         1251 to 2500            1.172            12  
+                         1876 to 3750            1.060            12  
+                         2501 to 5000            1.036            12  
+                         3126 to 6250            1.146            12  
+                         3751 to 7500            1.063            25  
+                         4376 to 8750            1.073            12  
+                         5001 to 10000           1.099            12  
+                         5626 to 11250           1.054            12  
+                         6251 to 12500           1.062            12  
+                         6876 to 13750           1.044            12  
+                         7501 to 15000           1.028            12  
+                         8126 to 16250           1.029            12  
+                         8751 to 17500           1.025            12  
+                         9376 to 18750           1.032            12  
+                        10001 to 20000           1.017            12  
+                        10626 to 21250           1.018            12  
+                        11251 to 22500           1.009            12  
+                        11876 to 23750           1.013            12  
+                        12501 to 25000           1.022            12  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                baseline linear
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept
+    [2]  linear ~ Intercept
+    [3]  baseline <-> linear
+
+   measurement:
+    [4]  severity0 ~ baseline@1 linear@0
+    [5]  severity1 ~ baseline@1 linear@1
+    [6]  severity2 ~ baseline@1 linear@2
+    [7]  severity3 ~ baseline@1 linear@3
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5765.312
+      WAIC                  6157.739
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.398      0.427      6.109      6.395      6.684      5.160      7.690 
+  linear                             -0.694      0.420     -0.984     -0.694     -0.406     -1.875      0.536 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.578      1.128      4.987      5.500      6.500      2.460      9.019 
+  severity2                           4.836      1.437      4.000      4.999      5.716      0.931      9.048 
+  severity3                           4.476      1.754      3.266      4.499      5.627     -0.222      9.093 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                -0.012      0.066     -0.139      0.118      0.030      0.863   3302.099 
+  baseline, severity1                -0.002      0.063     -0.123      0.122      0.001      0.982   9031.756 
+  baseline, severity2                 0.009      0.063     -0.114      0.132      0.019      0.890  21632.801 
+  baseline, severity3                -0.005      0.066     -0.134      0.127      0.004      0.948  16445.530 
+  linear, severity0                   0.001      0.065     -0.126      0.128      0.000      0.990   4098.360 
+  linear, severity1                   0.006      0.060     -0.111      0.124      0.011      0.918   9443.647 
+  linear, severity2                  -0.000      0.060     -0.118      0.118      0.000      0.997  20488.927 
+  linear, severity3                  -0.003      0.065     -0.130      0.124      0.003      0.958  13017.150 
+  severity0, severity1                0.034      0.060     -0.086      0.148      0.299      0.585   1874.215 
+  severity0, severity2               -0.005      0.060     -0.121      0.112      0.006      0.937  14367.141 
+  severity0, severity3               -0.006      0.064     -0.129      0.119      0.007      0.933   3735.409 
+  severity1, severity2                0.021      0.058     -0.094      0.133      0.123      0.726  15443.997 
+  severity1, severity3                0.014      0.062     -0.110      0.135      0.048      0.826  18238.010 
+  severity2, severity3               -0.052      0.063     -0.176      0.072      0.683      0.409  15220.608 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.184      0.055      0.096      0.308        ---        ---    223.221 
+
+Coefficients:                   
+  Intercept                           6.399      0.042      6.317      6.483  22964.823      0.000   1836.877 
+
+Standard Deviations:            
+  Residual SD                         0.429      0.064      0.311      0.555        ---        ---    219.070 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   linear     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.178      0.026      0.133      0.236        ---        ---    490.660 
+
+Coefficients:                   
+  Intercept                          -0.693      0.030     -0.753     -0.634    530.393      0.000   2650.809 
+
+Standard Deviations:            
+  Residual SD                         0.422      0.031      0.364      0.485        ---        ---    484.080 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline linear
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,linear)                0.086      0.028      0.025      0.132      9.201      0.002    197.284 
+
+Correlations:                   
+  Cor(baseline,linear)                0.491      0.205      0.109      0.879      5.737      0.017    136.223 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.427      0.054      0.320      0.527     61.520      0.000    209.908 
+  linear                              0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.183      0.046      0.102      0.278        ---        ---    211.757 
+  by Residual Variation               0.816      0.058      0.704      0.931        ---        ---    339.843 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.368      0.052      0.271      0.468     50.437      0.000    200.810 
+  linear                              0.362      0.026      0.313      0.416    188.084      0.000    397.845 
+
+Proportion Variance Explained   
+  by Coefficients                     0.394      0.025      0.345      0.442        ---        ---    683.861 
+  by Residual Variation               0.606      0.034      0.543      0.675        ---        ---   1263.671 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 2.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.299      0.044      0.217      0.384     46.746      0.000    211.511 
+  linear                              0.587      0.037      0.518      0.661    255.445      0.000    303.846 
+
+Proportion Variance Explained   
+  by Coefficients                     0.601      0.020      0.561      0.639        ---        ---   1428.405 
+  by Residual Variation               0.399      0.023      0.356      0.447        ---        ---   2053.304 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 3.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.243      0.036      0.175      0.313     45.624      0.000    227.446 
+  linear                              0.716      0.037      0.646      0.789    378.183      0.000    260.775 
+
+Proportion Variance Explained   
+  by Coefficients                     0.736      0.017      0.701      0.769        ---        ---   1054.740 
+  by Residual Variation               0.264      0.019      0.230      0.302        ---        ---   1268.849 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:36:13 2026
+  Chain 3 burn-in started on Aug 15 19:36:13 2026
+  Chain 2 burn-in started on Aug 15 19:36:13 2026
+  Chain 4 burn-in started on Aug 15 19:36:13 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:36:14 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:36:14 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:36:14 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:36:14 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:36:15 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:36:15 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:36:15 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:36:15 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:36:16 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:36:16 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:36:16 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:36:16 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:36:17 2026
+  Chain 4 completed burn-in on Aug 15 19:36:17 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:36:17 2026
+  Chain 1 completed burn-in on Aug 15 19:36:17 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:36:17 2026
+  Chain 2 completed burn-in on Aug 15 19:36:17 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:36:17 2026
+  Chain 3 completed burn-in on Aug 15 19:36:17 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:36:17 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:36:17 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:36:17 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:36:17 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:36:18 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:36:18 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:36:18 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:36:18 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:36:19 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:36:19 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:36:19 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:36:19 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:36:19 2026
+  Chain 4 finished on Aug 15 19:36:19 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:36:19 2026
+  Chain 1 finished on Aug 15 19:36:19 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:36:19 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:36:19 2026
+  Chain 3 finished on Aug 15 19:36:19 2026
+  Chain 2 finished on Aug 15 19:36:19 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.159            48  
+                         1251 to 2500            1.033            18  
+                         1876 to 3750            1.189            18  
+                         2501 to 5000            1.107            18  
+                         3126 to 6250            1.071            18  
+                         3751 to 7500            1.115            18  
+                         4376 to 8750            1.126            18  
+                         5001 to 10000           1.094            18  
+                         5626 to 11250           1.127            18  
+                         6251 to 12500           1.077            18  
+                         6876 to 13750           1.083            18  
+                         7501 to 15000           1.130            18  
+                         8126 to 16250           1.130            18  
+                         8751 to 17500           1.180            18  
+                         9376 to 18750           1.126            18  
+                        10001 to 20000           1.091            18  
+                        10626 to 21250           1.103            18  
+                        11251 to 22500           1.094            18  
+                        11876 to 23750           1.108            18  
+                        12501 to 25000           1.110            18  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                     male =  0.0       -     -     -     -  
+                     drug =  0.0       -     -     -     -  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         9
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        male drug
+
+  FACTORS
+    Level-1:                baseline linear
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept drug male
+    [2]  linear ~ Intercept drug
+    [3]  baseline <-> linear
+
+   measurement:
+    [4]  severity0 ~ baseline@1 linear@0
+    [5]  severity1 ~ baseline@1 linear@1
+    [6]  severity2 ~ baseline@1 linear@2
+    [7]  severity3 ~ baseline@1 linear@3
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5582.282
+      WAIC                  5895.174
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.399      0.439      6.100      6.399      6.698      5.127      7.684 
+  linear                             -0.703      0.417     -0.998     -0.719     -0.422     -1.802      0.541 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.571      1.128      4.975      5.500      6.499      2.454      9.016 
+  severity2                           4.820      1.435      3.999      4.997      5.626      0.929      9.032 
+  severity3                           4.449      1.752      3.182      4.494      5.548     -0.196      9.052 
+  male                                0.458      0.499      0.000      0.000      1.000      0.000      1.000 
+  drug                                0.748      0.434      0.000      1.000      1.000      0.000      1.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                -0.001      0.067     -0.131      0.130      0.000      0.989   1761.874 
+  baseline, severity1                -0.018      0.062     -0.137      0.106      0.077      0.782   7264.207 
+  baseline, severity2                 0.008      0.062     -0.114      0.131      0.015      0.902  20726.336 
+  baseline, severity3                 0.001      0.066     -0.127      0.130      0.000      0.987  13058.504 
+  linear, severity0                   0.015      0.066     -0.114      0.145      0.053      0.818   1950.336 
+  linear, severity1                  -0.017      0.061     -0.137      0.100      0.077      0.781   7877.604 
+  linear, severity2                  -0.001      0.061     -0.119      0.119      0.000      0.990  18787.728 
+  linear, severity3                   0.003      0.064     -0.123      0.129      0.003      0.959   9597.772 
+  severity0, severity1                0.039      0.059     -0.079      0.152      0.419      0.517   1023.681 
+  severity0, severity2                0.001      0.059     -0.114      0.119      0.001      0.979  11928.708 
+  severity0, severity3               -0.000      0.064     -0.125      0.126      0.000      0.995   1827.722 
+  severity1, severity2                0.013      0.058     -0.102      0.127      0.050      0.823  16835.529 
+  severity1, severity3                0.002      0.062     -0.120      0.123      0.001      0.979  14755.722 
+  severity2, severity3               -0.053      0.062     -0.175      0.069      0.721      0.396  14953.263 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.187      0.053      0.099      0.301        ---        ---    113.133 
+
+Coefficients:                   
+  Intercept                           6.319      0.089      6.148      6.494   5064.332      0.000    930.863 
+  drug                                0.007      0.093     -0.178      0.187      0.005      0.942   1232.937 
+  male                                0.165      0.079      0.006      0.315      4.296      0.038   1220.304 
+
+Standard Deviations:            
+  Residual SD                         0.432      0.061      0.314      0.549        ---        ---    104.697 
+
+Standardized Coefficients:      
+  drug                                0.007      0.092     -0.177      0.180      0.004      0.947   1057.986 
+  male                                0.186      0.093      0.007      0.374      4.089      0.043    368.645 
+
+Proportion Variance Explained   
+  by Coefficients                     0.044      0.038      0.003      0.149        ---        ---    266.404 
+  by Residual Variation               0.956      0.038      0.851      0.997        ---        ---    266.404 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   linear     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.125      0.022      0.086      0.174        ---        ---    210.935 
+
+Coefficients:                   
+  Intercept                          -0.317      0.053     -0.419     -0.212     35.632      0.000   1327.503 
+  drug                               -0.516      0.063     -0.642     -0.392     67.433      0.000   1145.014 
+
+Standard Deviations:            
+  Residual SD                         0.353      0.032      0.293      0.417        ---        ---    202.982 
+
+Standardized Coefficients:      
+  drug                               -0.536      0.058     -0.644     -0.417     86.114      0.000    468.319 
+
+Proportion Variance Explained   
+  by Coefficients                     0.288      0.061      0.175      0.416        ---        ---    444.297 
+  by Residual Variation               0.712      0.061      0.584      0.825        ---        ---    444.297 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline linear
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,linear)                0.088      0.025      0.033      0.129     12.024      0.001    100.127 
+
+Correlations:                   
+  Cor(baseline,linear)                0.585      0.226      0.168      0.982      6.883      0.009     56.357 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.810      0.039      0.736      0.889        ---        ---    343.867 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.900      0.022      0.858      0.943        ---        ---    344.218 
+
+Standardized Coefficients:      
+  baseline                            0.438      0.050      0.338      0.529     77.587      0.000     96.392 
+  linear                              0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.192      0.043      0.114      0.280        ---        ---    100.035 
+  by Residual Variation               0.806      0.056      0.702      0.918        ---        ---    168.807 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.810      0.039      0.736      0.889        ---        ---    343.867 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.900      0.022      0.858      0.943        ---        ---    344.218 
+
+Standardized Coefficients:      
+  baseline                            0.378      0.048      0.287      0.470     63.308      0.000     92.883 
+  linear                              0.359      0.026      0.311      0.412    191.871      0.000    219.160 
+
+Proportion Variance Explained   
+  by Coefficients                     0.398      0.024      0.349      0.445        ---        ---    415.448 
+  by Residual Variation               0.601      0.033      0.541      0.671        ---        ---    903.358 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.810      0.039      0.736      0.889        ---        ---    343.867 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 2.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.900      0.022      0.858      0.943        ---        ---    344.218 
+
+Standardized Coefficients:      
+  baseline                            0.308      0.040      0.230      0.386     58.109      0.000    102.138 
+  linear                              0.584      0.036      0.517      0.656    262.394      0.000    177.708 
+
+Proportion Variance Explained   
+  by Coefficients                     0.602      0.019      0.562      0.639        ---        ---    859.824 
+  by Residual Variation               0.398      0.023      0.356      0.445        ---        ---   1252.094 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.810      0.039      0.736      0.889        ---        ---    343.867 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 3.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.900      0.022      0.858      0.943        ---        ---    344.218 
+
+Standardized Coefficients:      
+  baseline                            0.251      0.033      0.186      0.316     56.154      0.000    114.415 
+  linear                              0.713      0.036      0.646      0.784    389.942      0.000    157.655 
+
+Proportion Variance Explained   
+  by Coefficients                     0.737      0.017      0.701      0.768        ---        ---    527.791 
+  by Residual Variation               0.263      0.018      0.231      0.302        ---        ---    607.602 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Aug 15 19:36:34 2026
+  Chain 3 burn-in started on Aug 15 19:36:34 2026
+  Chain 1 burn-in started on Aug 15 19:36:34 2026
+  Chain 4 burn-in started on Aug 15 19:36:34 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:36:35 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:36:35 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:36:35 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:36:35 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:36:35 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:36:35 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:36:35 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:36:35 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:36:36 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:36:36 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:36:36 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:36:36 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:36:37 2026
+  Chain 2 completed burn-in on Aug 15 19:36:37 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:36:37 2026
+  Chain 1 completed burn-in on Aug 15 19:36:37 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:36:37 2026
+  Chain 4 completed burn-in on Aug 15 19:36:37 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:36:37 2026
+  Chain 3 completed burn-in on Aug 15 19:36:37 2026
+  Chain 4 saved imputation 4 on Aug 15 19:36:38 2026
+  Chain 2 saved imputation 2 on Aug 15 19:36:38 2026
+  Chain 1 saved imputation 1 on Aug 15 19:36:38 2026
+  Chain 3 saved imputation 3 on Aug 15 19:36:38 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:36:38 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:36:38 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:36:38 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:36:38 2026
+  Chain 3 saved imputation 7 on Aug 15 19:36:38 2026
+  Chain 2 saved imputation 6 on Aug 15 19:36:38 2026
+  Chain 4 saved imputation 8 on Aug 15 19:36:38 2026
+  Chain 1 saved imputation 5 on Aug 15 19:36:38 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:36:38 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:36:38 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:36:38 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:36:38 2026
+  Chain 3 saved imputation 11 on Aug 15 19:36:39 2026
+  Chain 2 saved imputation 10 on Aug 15 19:36:39 2026
+  Chain 4 saved imputation 12 on Aug 15 19:36:39 2026
+  Chain 1 saved imputation 9 on Aug 15 19:36:39 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:36:39 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:36:39 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:36:39 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:36:39 2026
+  Chain 3 saved imputation 15 on Aug 15 19:36:39 2026
+  Chain 2 saved imputation 14 on Aug 15 19:36:39 2026
+  Chain 4 saved imputation 16 on Aug 15 19:36:39 2026
+  Chain 1 saved imputation 13 on Aug 15 19:36:39 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:36:40 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:36:40 2026
+  Chain 3 saved imputation 19 on Aug 15 19:36:40 2026
+  Chain 3 finished on Aug 15 19:36:40 2026
+  Chain 2 saved imputation 18 on Aug 15 19:36:40 2026
+  Chain 2 finished on Aug 15 19:36:40 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:36:40 2026
+  Chain 1 saved imputation 17 on Aug 15 19:36:40 2026
+  Chain 1 finished on Aug 15 19:36:40 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:36:40 2026
+  Chain 4 saved imputation 20 on Aug 15 19:36:40 2026
+  Chain 4 finished on Aug 15 19:36:40 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.285            12  
+                         1251 to 2500            1.172            12  
+                         1876 to 3750            1.060            12  
+                         2501 to 5000            1.036            12  
+                         3126 to 6250            1.146            12  
+                         3751 to 7500            1.063            25  
+                         4376 to 8750            1.073            12  
+                         5001 to 10000           1.099            12  
+                         5626 to 11250           1.054            12  
+                         6251 to 12500           1.062            12  
+                         6876 to 13750           1.044            12  
+                         7501 to 15000           1.028            12  
+                         8126 to 16250           1.029            12  
+                         8751 to 17500           1.025            12  
+                         9376 to 18750           1.032            12  
+                        10001 to 20000           1.017            12  
+                        10626 to 21250           1.018            12  
+                        11251 to 22500           1.009            12  
+                        11876 to 23750           1.013            12  
+                        12501 to 25000           1.022            12  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                baseline linear
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept
+    [2]  linear ~ Intercept
+    [3]  baseline <-> linear
+
+   measurement:
+    [4]  severity0 ~ baseline@1 linear@0
+    [5]  severity1 ~ baseline@1 linear@1
+    [6]  severity2 ~ baseline@1 linear@2
+    [7]  severity3 ~ baseline@1 linear@3
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5765.312
+      WAIC                  6157.739
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.398      0.427      6.109      6.395      6.684      5.160      7.690 
+  linear                             -0.694      0.420     -0.984     -0.694     -0.406     -1.875      0.536 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.578      1.128      4.987      5.500      6.500      2.460      9.019 
+  severity2                           4.836      1.437      4.000      4.999      5.716      0.931      9.048 
+  severity3                           4.476      1.754      3.266      4.499      5.627     -0.222      9.093 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                -0.012      0.066     -0.139      0.118      0.030      0.863   3302.099 
+  baseline, severity1                -0.002      0.063     -0.123      0.122      0.001      0.982   9031.756 
+  baseline, severity2                 0.009      0.063     -0.114      0.132      0.019      0.890  21632.801 
+  baseline, severity3                -0.005      0.066     -0.134      0.127      0.004      0.948  16445.530 
+  linear, severity0                   0.001      0.065     -0.126      0.128      0.000      0.990   4098.360 
+  linear, severity1                   0.006      0.060     -0.111      0.124      0.011      0.918   9443.647 
+  linear, severity2                  -0.000      0.060     -0.118      0.118      0.000      0.997  20488.927 
+  linear, severity3                  -0.003      0.065     -0.130      0.124      0.003      0.958  13017.150 
+  severity0, severity1                0.034      0.060     -0.086      0.148      0.299      0.585   1874.215 
+  severity0, severity2               -0.005      0.060     -0.121      0.112      0.006      0.937  14367.141 
+  severity0, severity3               -0.006      0.064     -0.129      0.119      0.007      0.933   3735.409 
+  severity1, severity2                0.021      0.058     -0.094      0.133      0.123      0.726  15443.997 
+  severity1, severity3                0.014      0.062     -0.110      0.135      0.048      0.826  18238.010 
+  severity2, severity3               -0.052      0.063     -0.176      0.072      0.683      0.409  15220.608 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.184      0.055      0.096      0.308        ---        ---    223.221 
+
+Coefficients:                   
+  Intercept                           6.399      0.042      6.317      6.483  22964.823      0.000   1836.877 
+
+Standard Deviations:            
+  Residual SD                         0.429      0.064      0.311      0.555        ---        ---    219.070 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   linear     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.178      0.026      0.133      0.236        ---        ---    490.660 
+
+Coefficients:                   
+  Intercept                          -0.693      0.030     -0.753     -0.634    530.393      0.000   2650.809 
+
+Standard Deviations:            
+  Residual SD                         0.422      0.031      0.364      0.485        ---        ---    484.080 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline linear
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,linear)                0.086      0.028      0.025      0.132      9.201      0.002    197.284 
+
+Correlations:                   
+  Cor(baseline,linear)                0.491      0.205      0.109      0.879      5.737      0.017    136.223 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.427      0.054      0.320      0.527     61.520      0.000    209.908 
+  linear                              0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.183      0.046      0.102      0.278        ---        ---    211.757 
+  by Residual Variation               0.816      0.058      0.704      0.931        ---        ---    339.843 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.368      0.052      0.271      0.468     50.437      0.000    200.810 
+  linear                              0.362      0.026      0.313      0.416    188.084      0.000    397.845 
+
+Proportion Variance Explained   
+  by Coefficients                     0.394      0.025      0.345      0.442        ---        ---    683.861 
+  by Residual Variation               0.606      0.034      0.543      0.675        ---        ---   1263.671 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 2.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.299      0.044      0.217      0.384     46.746      0.000    211.511 
+  linear                              0.587      0.037      0.518      0.661    255.445      0.000    303.846 
+
+Proportion Variance Explained   
+  by Coefficients                     0.601      0.020      0.561      0.639        ---        ---   1428.405 
+  by Residual Variation               0.399      0.023      0.356      0.447        ---        ---   2053.304 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.813      0.040      0.738      0.893        ---        ---    775.890 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 3.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.902      0.022      0.859      0.945        ---        ---    776.393 
+
+Standardized Coefficients:      
+  baseline                            0.243      0.036      0.175      0.313     45.624      0.000    227.446 
+  linear                              0.716      0.037      0.646      0.789    378.183      0.000    260.775 
+
+Proportion Variance Explained   
+  by Coefficients                     0.736      0.017      0.701      0.769        ---        ---   1054.740 
+  by Residual Variation               0.264      0.019      0.230      0.302        ---        ---   1268.849 
+
+                                ------------------------------------------------------------------------------
+
+
+
+pdf 
+  2 
+pdf 
+  2 
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:37:12 2026
+  Chain 2 burn-in started on Aug 15 19:37:12 2026
+  Chain 3 burn-in started on Aug 15 19:37:12 2026
+  Chain 4 burn-in started on Aug 15 19:37:12 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:37:13 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:37:13 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:37:13 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:37:13 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:37:15 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:37:15 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:37:15 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:37:15 2026
+  Chain 4 burn-in iteration 22500 completed on Aug 15 19:37:16 2026
+  Chain 3 burn-in iteration 22500 completed on Aug 15 19:37:16 2026
+  Chain 2 burn-in iteration 22500 completed on Aug 15 19:37:16 2026
+  Chain 1 burn-in iteration 22500 completed on Aug 15 19:37:16 2026
+  Chain 4 burn-in iteration 30000 completed on Aug 15 19:37:18 2026
+  Chain 4 completed burn-in on Aug 15 19:37:18 2026
+  Chain 3 burn-in iteration 30000 completed on Aug 15 19:37:18 2026
+  Chain 3 completed burn-in on Aug 15 19:37:18 2026
+  Chain 1 burn-in iteration 30000 completed on Aug 15 19:37:18 2026
+  Chain 1 completed burn-in on Aug 15 19:37:18 2026
+  Chain 2 burn-in iteration 30000 completed on Aug 15 19:37:18 2026
+  Chain 2 completed burn-in on Aug 15 19:37:18 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:37:19 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:37:19 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:37:19 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:37:19 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:37:20 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:37:20 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:37:20 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:37:20 2026
+  Chain 4 completed iteration 5625 on Aug 15 19:37:21 2026
+  Chain 1 completed iteration 5625 on Aug 15 19:37:21 2026
+  Chain 2 completed iteration 5625 on Aug 15 19:37:21 2026
+  Chain 3 completed iteration 5625 on Aug 15 19:37:21 2026
+  Chain 4 completed iteration 7500 on Aug 15 19:37:22 2026
+  Chain 4 finished on Aug 15 19:37:22 2026
+  Chain 1 completed iteration 7500 on Aug 15 19:37:22 2026
+  Chain 1 finished on Aug 15 19:37:22 2026
+  Chain 2 completed iteration 7500 on Aug 15 19:37:22 2026
+  Chain 2 finished on Aug 15 19:37:22 2026
+  Chain 3 completed iteration 7500 on Aug 15 19:37:22 2026
+  Chain 3 finished on Aug 15 19:37:22 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          751 to 1500            1.452            11  
+                         1501 to 3000            1.440            18  
+                         2251 to 4500            1.344            18  
+                         3001 to 6000            1.190            19  
+                         3751 to 7500            1.122            39  
+                         4501 to 9000            1.116            21  
+                         5251 to 10500           1.119            21  
+                         6001 to 12000           1.044            11  
+                         6751 to 13500           1.101            18  
+                         7501 to 15000           1.080            18  
+                         8251 to 16500           1.040            20  
+                         9001 to 18000           1.023            49  
+                         9751 to 19500           1.061            21  
+                        10501 to 21000           1.045            21  
+                        11251 to 22500           1.042            18  
+                        12001 to 24000           1.028            20  
+                        12751 to 25500           1.028            20  
+                        13501 to 27000           1.025            59  
+                        14251 to 28500           1.032            18  
+                        15001 to 30000           1.046            18  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         10
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                baseline linear quad
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept
+    [2]  linear ~ Intercept
+    [3]  quad ~ Intercept
+    [4]  baseline linear quad <-> baseline linear quad 
+
+   measurement:
+    [5]  severity0 ~ baseline@1 linear@0 quad@0
+    [6]  severity1 ~ baseline@1 linear@1 quad@1
+    [7]  severity2 ~ baseline@1 linear@2 quad@4
+    [8]  severity3 ~ baseline@1 linear@3 quad@9
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5099.798
+      WAIC                  5582.472
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 30000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.552      0.474      6.230      6.548      6.869      5.170      7.992 
+  linear                             -1.198      0.543     -1.567     -1.198     -0.830     -2.783      0.418 
+  quad                                0.174      0.106      0.102      0.174      0.245     -0.142      0.490 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.562      1.129      4.941      5.500      6.497      2.427      9.009 
+  severity2                           4.815      1.436      3.999      4.996      5.611      0.902      9.030 
+  severity3                           4.532      1.732      3.437      4.500      5.770      0.081      9.115 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 30000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                -0.011      0.068     -0.144      0.123      0.025      0.875   2251.711 
+  baseline, severity1                -0.004      0.066     -0.134      0.126      0.003      0.953   1443.040 
+  baseline, severity2                 0.008      0.064     -0.119      0.133      0.015      0.903   7255.680 
+  baseline, severity3                -0.003      0.068     -0.137      0.130      0.002      0.966   4008.024 
+  linear, severity0                   0.016      0.068     -0.116      0.148      0.054      0.816   2557.041 
+  linear, severity1                  -0.016      0.066     -0.143      0.114      0.055      0.814   1380.811 
+  linear, severity2                  -0.003      0.064     -0.126      0.123      0.001      0.972   5995.180 
+  linear, severity3                   0.003      0.067     -0.128      0.135      0.002      0.966   4779.084 
+  quad, severity0                    -0.023      0.068     -0.155      0.111      0.111      0.739   8567.950 
+  quad, severity1                     0.032      0.068     -0.101      0.166      0.216      0.642   8636.488 
+  quad, severity2                     0.004      0.067     -0.127      0.136      0.004      0.949  21138.151 
+  quad, severity3                    -0.012      0.068     -0.146      0.121      0.034      0.855  21351.021 
+  severity0, severity1                0.041      0.062     -0.082      0.161      0.429      0.512    302.429 
+  severity0, severity2                0.024      0.061     -0.096      0.143      0.155      0.694   1864.836 
+  severity0, severity3               -0.030      0.066     -0.159      0.099      0.204      0.651    516.663 
+  severity1, severity2               -0.040      0.062     -0.162      0.081      0.432      0.511    341.876 
+  severity1, severity3                0.047      0.064     -0.079      0.173      0.518      0.472    369.556 
+  severity2, severity3               -0.036      0.064     -0.160      0.087      0.321      0.571   5992.171 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 30000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.229      0.065      0.118      0.373        ---        ---    237.564 
+
+Coefficients:                   
+  Intercept                           6.552      0.048      6.460      6.646  18975.436      0.000    338.812 
+
+Standard Deviations:            
+  Residual SD                         0.478      0.068      0.344      0.610        ---        ---    215.577 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   linear     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.297      0.110      0.139      0.559        ---        ---    133.749 
+
+Coefficients:                   
+  Intercept                          -1.198      0.072     -1.337     -1.053    275.706      0.000    149.295 
+
+Standard Deviations:            
+  Residual SD                         0.545      0.098      0.373      0.748        ---        ---    127.291 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   quad       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.010      0.009      0.002      0.036        ---        ---     75.283 
+
+Coefficients:                   
+  Intercept                           0.174      0.023      0.128      0.217     59.351      0.000    134.966 
+
+Standard Deviations:            
+  Residual SD                         0.102      0.037      0.039      0.189        ---        ---     61.079 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline linear quad
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,linear)                0.057      0.065     -0.090      0.161      0.645      0.422    146.438 
+  Cov(baseline,quad)                  0.004      0.019     -0.028      0.046      0.076      0.783     56.252 
+  Cov(linear,quad)                   -0.036      0.029     -0.111      0.001      1.964      0.161    102.469 
+
+Correlations:                   
+  Cor(baseline,linear)                0.229      0.278     -0.247      0.822      0.794      0.373    125.381 
+  Cor(baseline,quad)                  0.099      0.379     -0.640      0.768      0.046      0.830     25.952 
+  Cor(linear,quad)                   -0.646      0.235     -0.873      0.051      6.210      0.013     85.159 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.748      0.041      0.672      0.833        ---        ---    128.067 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 0.000        ---        ---        ---        ---        ---        --- 
+  quad                              @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.865      0.024      0.820      0.913        ---        ---    129.566 
+
+Standardized Coefficients:      
+  baseline                            0.481      0.056      0.361      0.580     71.823      0.000    191.979 
+  linear                              0.000      0.000      0.000      0.000        ---        ---        --- 
+  quad                                0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.232      0.053      0.131      0.337        ---        ---    206.612 
+  by Residual Variation               0.767      0.063      0.650      0.894        ---        ---    285.255 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.748      0.041      0.672      0.833        ---        ---    128.067 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  quad                              @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.865      0.024      0.820      0.913        ---        ---    129.566 
+
+Standardized Coefficients:      
+  baseline                            0.412      0.059      0.298      0.526     48.629      0.000    198.216 
+  linear                              0.469      0.081      0.326      0.637     33.948      0.000    127.961 
+  quad                                0.087      0.032      0.034      0.161      8.266      0.004     62.990 
+
+Proportion Variance Explained   
+  by Coefficients                     0.435      0.032      0.372      0.498        ---        ---     47.655 
+  by Residual Variation               0.564      0.038      0.492      0.643        ---        ---     67.227 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.748      0.041      0.672      0.833        ---        ---    128.067 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 2.000        ---        ---        ---        ---        ---        --- 
+  quad                              @ 4.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.865      0.024      0.820      0.913        ---        ---    129.566 
+
+Standardized Coefficients:      
+  baseline                            0.335      0.049      0.240      0.429     47.673      0.000    210.560 
+  linear                              0.763      0.128      0.535      1.027     35.641      0.000    121.723 
+  quad                                0.284      0.104      0.110      0.526      8.170      0.004     62.076 
+
+Proportion Variance Explained   
+  by Coefficients                     0.627      0.022      0.583      0.670        ---        ---    141.015 
+  by Residual Variation               0.372      0.025      0.327      0.424        ---        ---    179.362 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.748      0.041      0.672      0.833        ---        ---    128.067 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  linear                            @ 3.000        ---        ---        ---        ---        ---        --- 
+  quad                              @ 9.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.865      0.024      0.820      0.913        ---        ---    129.566 
+
+Standardized Coefficients:      
+  baseline                            0.274      0.039      0.198      0.348     50.540      0.000    216.848 
+  linear                              0.937      0.171      0.636      1.288     30.151      0.000    124.112 
+  quad                                0.525      0.193      0.200      0.970      8.123      0.004     60.064 
+
+Proportion Variance Explained   
+  by Coefficients                     0.751      0.019      0.711      0.785        ---        ---    200.384 
+  by Residual Variation               0.249      0.020      0.214      0.291        ---        ---    222.107 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:37:41 2026
+  Chain 4 burn-in started on Aug 15 19:37:41 2026
+  Chain 2 burn-in started on Aug 15 19:37:41 2026
+  Chain 3 burn-in started on Aug 15 19:37:41 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:37:42 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:37:42 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:37:42 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:37:42 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:37:43 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:37:43 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:37:43 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:37:43 2026
+  Chain 2 burn-in iteration 22500 completed on Aug 15 19:37:44 2026
+  Chain 1 burn-in iteration 22500 completed on Aug 15 19:37:44 2026
+  Chain 3 burn-in iteration 22500 completed on Aug 15 19:37:44 2026
+  Chain 4 burn-in iteration 22500 completed on Aug 15 19:37:44 2026
+  Chain 1 burn-in iteration 30000 completed on Aug 15 19:37:45 2026
+  Chain 1 completed burn-in on Aug 15 19:37:45 2026
+  Chain 2 burn-in iteration 30000 completed on Aug 15 19:37:45 2026
+  Chain 2 completed burn-in on Aug 15 19:37:45 2026
+  Chain 4 burn-in iteration 30000 completed on Aug 15 19:37:45 2026
+  Chain 4 completed burn-in on Aug 15 19:37:45 2026
+  Chain 3 burn-in iteration 30000 completed on Aug 15 19:37:45 2026
+  Chain 3 completed burn-in on Aug 15 19:37:45 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:37:46 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:37:46 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:37:46 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:37:46 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:37:47 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:37:47 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:37:47 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:37:47 2026
+  Chain 2 completed iteration 5625 on Aug 15 19:37:48 2026
+  Chain 1 completed iteration 5625 on Aug 15 19:37:48 2026
+  Chain 4 completed iteration 5625 on Aug 15 19:37:48 2026
+  Chain 3 completed iteration 5625 on Aug 15 19:37:48 2026
+  Chain 2 completed iteration 7500 on Aug 15 19:37:49 2026
+  Chain 2 finished on Aug 15 19:37:49 2026
+  Chain 1 completed iteration 7500 on Aug 15 19:37:49 2026
+  Chain 1 finished on Aug 15 19:37:49 2026
+  Chain 4 completed iteration 7500 on Aug 15 19:37:49 2026
+  Chain 4 finished on Aug 15 19:37:49 2026
+  Chain 3 completed iteration 7500 on Aug 15 19:37:49 2026
+  Chain 3 finished on Aug 15 19:37:49 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          751 to 1500            1.232            12  
+                         1501 to 3000            1.168            12  
+                         2251 to 4500            1.080            25  
+                         3001 to 6000            1.140            12  
+                         3751 to 7500            1.100            12  
+                         4501 to 9000            1.181            12  
+                         5251 to 10500           1.101            12  
+                         6001 to 12000           1.072            25  
+                         6751 to 13500           1.043            12  
+                         7501 to 15000           1.017            12  
+                         8251 to 16500           1.009            12  
+                         9001 to 18000           1.007            12  
+                         9751 to 19500           1.012            12  
+                        10501 to 21000           1.019            12  
+                        11251 to 22500           1.008            12  
+                        12001 to 24000           1.010            12  
+                        12751 to 25500           1.011            12  
+                        13501 to 27000           1.020            12  
+                        14251 to 28500           1.020            12  
+                        15001 to 30000           1.014            12  
+
+
+DATA INFORMATION:
+
+  Sample Size:              437
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                severity0 =  0.0       -     -     -     -  
+                severity1 =  6.9       -     -     M     -  
+                severity2 = 11.7       -     -     M     M  
+                severity3 = 21.1       -     M     M     M  
+                                 --------------------------
+                                 %  78.9   9.4   6.9   4.8
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         8
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                baseline growth
+
+  MODELS
+
+   structural:
+    [1]  baseline ~ Intercept
+    [2]  growth ~ Intercept
+    [3]  baseline <-> growth
+
+   measurement:
+    [4]  severity0 ~ baseline@1 growth@0
+    [5]  severity1 ~ baseline@1 growth
+    [6]  severity2 ~ baseline@1 growth
+    [7]  severity3 ~ baseline@1 growth@1
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  6666.281
+      WAIC                  7063.206
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 30000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  baseline                            6.520      0.430      6.229      6.517      6.808      5.264      7.826 
+  growth                             -2.025      1.185     -2.841     -2.025     -1.215     -5.372      1.470 
+  severity0                           6.540      0.969      6.000      6.500      7.000      4.500      9.000 
+  severity1                           5.568      1.131      4.960      5.500      6.499      2.425      9.017 
+  severity2                           4.814      1.443      3.998      4.995      5.626      0.869      9.045 
+  severity3                           4.532      1.711      3.455      4.500      5.701      0.308      9.062 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 30000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  baseline, severity0                 0.012      0.067     -0.119      0.144      0.032      0.857   2507.498 
+  baseline, severity1                -0.033      0.065     -0.159      0.094      0.259      0.611  13383.264 
+  baseline, severity2                -0.030      0.065     -0.157      0.098      0.210      0.647   8221.956 
+  baseline, severity3                 0.039      0.066     -0.089      0.166      0.359      0.549   9058.659 
+  growth, severity0                   0.042      0.067     -0.090      0.170      0.374      0.541   3532.136 
+  growth, severity1                  -0.051      0.062     -0.173      0.069      0.696      0.404  19936.031 
+  growth, severity2                  -0.060      0.062     -0.180      0.062      0.924      0.336  28812.930 
+  growth, severity3                   0.068      0.063     -0.057      0.192      1.148      0.284  15734.072 
+  severity0, severity1                0.051      0.060     -0.069      0.167      0.703      0.402   1835.201 
+  severity0, severity2                0.030      0.060     -0.087      0.146      0.254      0.614  26389.557 
+  severity0, severity3               -0.021      0.063     -0.144      0.101      0.114      0.736   4598.570 
+  severity1, severity2               -0.033      0.059     -0.148      0.085      0.302      0.583  25171.281 
+  severity1, severity3                0.025      0.061     -0.094      0.144      0.166      0.683  26579.167 
+  severity2, severity3               -0.048      0.063     -0.170      0.077      0.572      0.449  11558.181 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 30000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   baseline   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.188      0.062      0.086      0.322        ---        ---    242.766 
+
+Coefficients:                   
+  Intercept                           6.521      0.047      6.426      6.612  19008.887      0.000   1757.104 
+
+Standard Deviations:            
+  Residual SD                         0.434      0.072      0.293      0.568        ---        ---    223.569 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   growth     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.418      0.225      1.029      1.902        ---        ---    450.729 
+
+Coefficients:                   
+  Intercept                          -2.024      0.089     -2.199     -1.851    521.103      0.000   3181.737 
+
+Standard Deviations:            
+  Residual SD                         1.191      0.094      1.014      1.379        ---        ---    420.590 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: baseline growth
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(baseline,growth)                0.165      0.090     -0.025      0.316      3.190      0.074    234.007 
+
+Correlations:                   
+  Cor(baseline,growth)                0.323      0.226     -0.037      0.810      2.342      0.126    161.165 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  severity0  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.777      0.040      0.703      0.858        ---        ---    667.413 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  growth                            @ 0.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.881      0.023      0.838      0.926        ---        ---    669.554 
+
+Standardized Coefficients:      
+  baseline                            0.440      0.062      0.309      0.547     48.769      0.000    212.877 
+  growth                              0.000      0.000      0.000      0.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.194      0.054      0.096      0.299        ---        ---    226.561 
+  by Residual Variation               0.805      0.064      0.686      0.935        ---        ---    325.259 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity1  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.777      0.040      0.703      0.858        ---        ---    667.413 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  growth                              0.458      0.024      0.411      0.506    355.223      0.000   5025.239 
+
+Standard Deviations:            
+  Residual SD                         0.881      0.023      0.838      0.926        ---        ---    669.554 
+
+Standardized Coefficients:      
+  baseline                            0.364      0.059      0.248      0.473     37.646      0.000    211.334 
+  growth                              0.457      0.039      0.382      0.534    138.962      0.000    426.857 
+
+Proportion Variance Explained   
+  by Coefficients                     0.448      0.026      0.396      0.496        ---        ---   1063.776 
+  by Residual Variation               0.552      0.032      0.493      0.620        ---        ---   1804.835 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity2  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.777      0.040      0.703      0.858        ---        ---    667.413 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  growth                              0.827      0.028      0.774      0.884    876.755      0.000   4427.775 
+
+Standard Deviations:            
+  Residual SD                         0.881      0.023      0.838      0.926        ---        ---    669.554 
+
+Standardized Coefficients:      
+  baseline                            0.292      0.048      0.197      0.382     36.212      0.000    222.630 
+  growth                              0.662      0.042      0.578      0.743    245.547      0.000    284.753 
+
+Proportion Variance Explained   
+  by Coefficients                     0.645      0.020      0.605      0.682        ---        ---   1544.531 
+  by Residual Variation               0.355      0.022      0.314      0.402        ---        ---   2045.586 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  severity3  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.777      0.040      0.703      0.858        ---        ---    667.413 
+
+Coefficients:                   
+  baseline                          @ 1.000        ---        ---        ---        ---        ---        --- 
+  growth                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.881      0.023      0.838      0.926        ---        ---    669.554 
+
+Standardized Coefficients:      
+  baseline                            0.263      0.043      0.178      0.344     36.473      0.000    232.008 
+  growth                              0.722      0.043      0.637      0.803    286.626      0.000    248.484 
+
+Proportion Variance Explained   
+  by Coefficients                     0.711      0.019      0.671      0.747        ---        ---    873.362 
+  by Residual Variation               0.289      0.021      0.251      0.333        ---        ---   1007.320 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.10.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.10.png

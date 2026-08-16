@@ -206,7 +206,7 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 #------------------------------------------------------------------------------#
 
 rp <- residuals_plot(
-  mixed,
+  mod2,
   point_color  = "grey40",
   curve_color  = "black",
   font_size    = 18,

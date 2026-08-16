@@ -45,7 +45,7 @@ mod2 <- rblimp(
   data = inflammation,                           # R data frame
   ordinal = 'els female',                        # binary and ordinal variables
   count = 'hdd',                                 # count outcome with negative binomial model
-  center = 'inflam els female age',              # center predictors
+  center = 'inflam age',                         # center predictors
   model = 'hdd ~ inflam els female age;',        # regression model
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations

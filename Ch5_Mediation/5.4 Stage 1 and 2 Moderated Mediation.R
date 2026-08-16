@@ -77,7 +77,7 @@ mod3 <- rblimp(
   transform = 'age16 = age - 16',                # centered age variable
   model = '
     victim ~ discrim@a1 age16 discrim*age16@a3 female;  # a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female victim*age16;',  # b path
+    internalize ~ victim@b1 discrim age16 victim*age16@b4 female;',  # b path
   parameters = '
     indirect14 = (a1 - 2*a3)*(b1 - 2*b4);        # conditional indirect effect
     indirect15 = (a1 - 1*a3)*(b1 - 1*b4);        # conditional indirect effect

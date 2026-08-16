@@ -1,0 +1,1024 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:53:29 2026
+  Chain 3 burn-in started on Aug 15 19:53:29 2026
+  Chain 2 burn-in started on Aug 15 19:53:29 2026
+  Chain 4 burn-in started on Aug 15 19:53:29 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 19:53:29 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 19:53:29 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 19:53:29 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 19:53:29 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:53:30 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:53:30 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:53:30 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:53:30 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:53:31 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:53:31 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:53:31 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:53:31 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:53:32 2026
+  Chain 4 completed burn-in on Aug 15 19:53:32 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:53:32 2026
+  Chain 2 completed burn-in on Aug 15 19:53:32 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:53:32 2026
+  Chain 1 completed burn-in on Aug 15 19:53:32 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:53:32 2026
+  Chain 3 completed burn-in on Aug 15 19:53:32 2026
+  Chain 4 completed iteration 625 on Aug 15 19:53:32 2026
+  Chain 2 completed iteration 625 on Aug 15 19:53:32 2026
+  Chain 1 completed iteration 625 on Aug 15 19:53:32 2026
+  Chain 3 completed iteration 625 on Aug 15 19:53:32 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:53:33 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:53:33 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:53:33 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:53:33 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:53:33 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:53:33 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:53:33 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:53:33 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:53:34 2026
+  Chain 4 finished on Aug 15 19:53:34 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:53:34 2026
+  Chain 3 finished on Aug 15 19:53:34 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:53:34 2026
+  Chain 1 finished on Aug 15 19:53:34 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:53:34 2026
+  Chain 2 finished on Aug 15 19:53:34 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.174            24  
+                          501 to 1000            1.038            13  
+                          751 to 1500            1.031            24  
+                         1001 to 2000            1.062            24  
+                         1251 to 2500            1.049            24  
+                         1501 to 3000            1.018            16  
+                         1751 to 3500            1.016            31  
+                         2001 to 4000            1.024            31  
+                         2251 to 4500            1.015             6  
+                         2501 to 5000            1.013            24  
+                         2751 to 5500            1.018             3  
+                         3001 to 6000            1.017            24  
+                         3251 to 6500            1.015            31  
+                         3501 to 7000            1.008             3  
+                         3751 to 7500            1.011            24  
+                         4001 to 8000            1.014            24  
+                         4251 to 8500            1.015            24  
+                         4501 to 9000            1.013            24  
+                         4751 to 9500            1.009            31  
+                         5001 to 10000           1.007            24  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    hispanic                      imputation          0.511          0.500 
+    hispanic                      latent imp          0.502          0.500 
+    hispanic                       parameter          0.558          0.500 
+    stanmath                      imputation          0.496          0.500 
+    stanmath                      latent imp          0.504          0.500 
+    stanmath                       parameter          0.487          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       school
+  Sample Size:              982
+  Level-2 Clusters:         29
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7
+                          miss % --------------------------------------------
+                probsolve = 20.5       -     M     -     -     M     M     -  
+                intschool =  0.0       -     -     -     -     -     -     -  
+                 hispanic =  9.0       -     -     M     -     M     -     M  
+                 stanmath =  7.4       -     -     -     M     -     M     M  
+                                 --------------------------------------------
+                                 %  66.2  17.8   7.1   5.8   1.4   1.2   0.4
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         8
+    Predictor Models:       14
+
+  PREDICTORS
+    Complete ordinal:       intschool
+    Incomplete continuous:  stanmath
+    Incomplete ordinal:     hispanic
+
+  CENTERED PREDICTORS
+    Group Mean Centered:    hispanic stanmath
+
+  LATENT CLUSTER MEANS
+    Grand Mean Centered:    hispanic stanmath
+
+  MODELS
+    [1]  probsolve ~ Intercept stanmath hispanic stanmath.mean[school] hispanic.mean[school] 
+                 intschool
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5832.052
+      WAIC                  5916.025
+
+    Conditional Likelihood
+      DIC2                  5793.271
+      WAIC                  5885.041
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  probsolve                          54.118      5.759     50.870     54.229     58.161     36.642     69.331 
+  intschool                           0.552      0.506      0.000      1.000      1.000      0.000      1.000 
+  hispanic                            0.666      0.472      0.000      1.000      1.000      0.000      1.000 
+  hispanic.mean[school]               0.482      0.863     -0.094      0.612      1.088     -1.263      2.039 
+  stanmath                           50.274     10.143     44.788     51.176     56.656      5.300     87.806 
+  stanmath.mean[school]              50.401      4.216     47.345     50.437     53.213     42.795     60.247 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  probsolve  
+
+Grand Mean Centered: hispanic.mean[school] stanmath.mean[school]
+Group Mean Centered: hispanic stanmath
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 2.324      1.066      1.013      5.160        ---        ---   1455.232 
+  Residual Var.                      19.588      1.036     17.690     21.749        ---        ---   5569.160 
+
+Coefficients:                   
+  Intercept                          52.207      0.682     50.815     53.508   5863.733      0.000    334.929 
+  stanmath                            0.251      0.018      0.216      0.285    201.679      0.000   5393.006 
+  hispanic                            0.972      0.429      0.126      1.801      5.097      0.024   4122.698 
+  stanmath.mean[school]               0.289      0.100      0.089      0.480      8.244      0.004    714.676 
+  hispanic.mean[school]               5.357      1.590      2.163      8.498     11.376      0.001    965.826 
+  intschool                           2.909      0.715      1.485      4.352     16.584      0.000    833.599 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  1.525      0.321      1.007      2.272        ---        ---   1335.652 
+  Residual SD                         4.426      0.117      4.206      4.664        ---        ---   5575.042 
+
+Standardized Coefficients:      
+  stanmath                            0.394      0.027      0.339      0.446    210.250      0.000   3108.596 
+  hispanic                            0.067      0.029      0.009      0.124      5.100      0.024   4055.246 
+  stanmath.mean[school]               0.214      0.072      0.065      0.347      8.721      0.003    736.724 
+  hispanic.mean[school]               0.229      0.065      0.094      0.352     12.380      0.000    972.189 
+  intschool                           0.243      0.057      0.127      0.351     18.384      0.000    833.226 
+
+Proportion Variance Explained   
+  by Coefficients                     0.351      0.038      0.271      0.423        ---        ---   1237.989 
+  by Level-2 Random Intercepts        0.068      0.028      0.031      0.141        ---        ---   1340.276 
+  by Level-1 Residual Variation       0.578      0.038      0.498      0.649        ---        ---   1580.592 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: intschool  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.135      0.262     -0.369      0.659      0.288      0.592   2204.823 
+
+Level 2:                                                                                                      
+  hispanic                           -0.315      0.351     -1.033      0.380      0.819      0.365   1849.472 
+  stanmath                           -0.005      0.074     -0.152      0.139      0.004      0.948   2309.020 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  hispanic   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.485      0.193      0.101      0.864      6.258      0.012    197.948 
+
+Level 1:                                                                                                      
+  stanmath                            0.005      0.005     -0.006      0.015      0.772      0.380   1973.369 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Level 2:                                                                                                      
+  intschool                          -0.168      0.190     -0.528      0.234      0.719      0.396   2504.732 
+  stanmath                            0.086      0.043      0.004      0.172      4.091      0.043   2831.036 
+  Residual Var.                       0.594      0.217      0.316      1.157        ---        ---   1511.429 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  stanmath   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           50.377      0.867     48.772     52.099   3379.441      0.000    305.674 
+
+Level 1:                                                                                                      
+  hispanic                            0.399      0.456     -0.510      1.280      0.756      0.385   2570.627 
+  Residual Var.                      83.530      3.978     76.117     91.841        ---        ---   5846.873 
+
+Level 2:                                                                                                      
+  intschool                          -0.069      0.975     -1.958      1.868      0.003      0.953   2732.399 
+  hispanic                            2.166      1.055      0.106      4.283      4.246      0.039   2460.089 
+  Residual Var.                      13.896      5.033      7.420     27.049        ---        ---   2327.526 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+ [1] "student"               "school"                "intschool"            
+ [4] "hispanic"              "male"                  "frlunch"              
+ [7] "stanmath"              "probsolve"             "probsolve[school]"    
+[10] "intschool.latent"      "hispanic.latent"       "hispanic.mean[school]"
+[13] "stanmath.mean[school]" "probsolve.residual"    "probsolve.predicted"  
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:53:38 2026
+  Chain 2 burn-in started on Aug 15 19:53:38 2026
+  Chain 3 burn-in started on Aug 15 19:53:38 2026
+  Chain 4 burn-in started on Aug 15 19:53:38 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 19:53:39 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 19:53:39 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 19:53:39 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 19:53:39 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:53:39 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:53:39 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:53:39 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:53:39 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:53:40 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:53:40 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:53:40 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:53:40 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:53:41 2026
+  Chain 4 completed burn-in on Aug 15 19:53:41 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:53:41 2026
+  Chain 1 completed burn-in on Aug 15 19:53:41 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:53:41 2026
+  Chain 3 completed burn-in on Aug 15 19:53:41 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:53:41 2026
+  Chain 2 completed burn-in on Aug 15 19:53:41 2026
+  Chain 4 completed iteration 625 on Aug 15 19:53:42 2026
+  Chain 1 completed iteration 625 on Aug 15 19:53:42 2026
+  Chain 3 completed iteration 625 on Aug 15 19:53:42 2026
+  Chain 2 completed iteration 625 on Aug 15 19:53:42 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:53:42 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:53:42 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:53:42 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:53:42 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:53:43 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:53:43 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:53:43 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:53:43 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:53:44 2026
+  Chain 4 finished on Aug 15 19:53:44 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:53:44 2026
+  Chain 3 finished on Aug 15 19:53:44 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:53:44 2026
+  Chain 1 finished on Aug 15 19:53:44 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:53:44 2026
+  Chain 2 finished on Aug 15 19:53:44 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.170            27  
+                          501 to 1000            1.053            10  
+                          751 to 1500            1.032             7  
+                         1001 to 2000            1.026            34  
+                         1251 to 2500            1.030            34  
+                         1501 to 3000            1.030            27  
+                         1751 to 3500            1.030            27  
+                         2001 to 4000            1.014            27  
+                         2251 to 4500            1.011            27  
+                         2501 to 5000            1.009            10  
+                         2751 to 5500            1.007            10  
+                         3001 to 6000            1.006            34  
+                         3251 to 6500            1.008            34  
+                         3501 to 7000            1.006            10  
+                         3751 to 7500            1.007            10  
+                         4001 to 8000            1.008            34  
+                         4251 to 8500            1.005            16  
+                         4501 to 9000            1.008            34  
+                         4751 to 9500            1.007            34  
+                         5001 to 10000           1.008            27  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    hispanic                      imputation          0.495          0.500 
+    hispanic                      latent imp          0.493          0.500 
+    hispanic                       parameter          0.484          0.500 
+    stanmath                      imputation          0.506          0.500 
+    stanmath                      latent imp          0.497          0.500 
+    stanmath                       parameter          0.552          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       school
+  Sample Size:              982
+  Level-2 Clusters:         29
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7
+                          miss % --------------------------------------------
+                probsolve = 20.5       -     M     -     -     M     M     -  
+                intschool =  0.0       -     -     -     -     -     -     -  
+                 hispanic =  9.0       -     -     M     -     M     -     M  
+                 stanmath =  7.4       -     -     -     M     -     M     M  
+                                 --------------------------------------------
+                                 %  66.2  17.8   7.1   5.8   1.4   1.2   0.4
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         36
+    Predictor Models:       14
+
+  PREDICTORS
+    Complete ordinal:       intschool
+    Incomplete continuous:  stanmath
+    Incomplete ordinal:     hispanic
+
+  CENTERED PREDICTORS
+    Group Mean Centered:    hispanic stanmath
+
+  LATENT CLUSTER MEANS
+    Grand Mean Centered:    hispanic stanmath
+
+  MODELS
+    [1]  probsolve ~ Intercept stanmath hispanic stanmath.mean[school] hispanic.mean[school] 
+                 intschool
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5825.172
+      WAIC                  5933.027
+
+    Conditional Likelihood
+      DIC2                  5788.201
+      WAIC                  5907.571
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  probsolve                          54.121      5.764     50.885     54.253     58.172     36.313     69.418 
+  intschool                           0.552      0.506      0.000      1.000      1.000      0.000      1.000 
+  hispanic                            0.666      0.472      0.000      1.000      1.000      0.000      1.000 
+  hispanic.mean[school]               0.482      0.861     -0.098      0.614      1.091     -1.254      2.053 
+  stanmath                           50.266     10.141     44.783     51.167     56.648      5.300     87.806 
+  stanmath.mean[school]              50.371      4.231     47.291     50.414     53.201     42.759     60.246 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  probsolve  
+
+Grand Mean Centered: hispanic.mean[school] stanmath.mean[school]
+Group Mean Centered: hispanic stanmath
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 2.293      1.085      1.007      5.195        ---        ---   1454.869 
+  Heterogeneity Index                 0.047      0.029      0.011      0.123        ---        ---   1329.960 
+  Q25% Residual Var.                 15.765      1.326     13.321     18.477        ---        ---   1437.840 
+  Q50% Residual Var.                 19.153      1.307     16.755     21.892        ---        ---   3400.816 
+  Mean Residual Var.                 20.045      1.180     17.915     22.591        ---        ---   2463.405 
+  Q75% Residual Var.                 23.272      1.937     20.127     27.718        ---        ---   2049.746 
+
+Coefficients:                   
+  Intercept                          52.251      0.712     50.785     53.570   5385.963      0.000    351.909 
+  stanmath                            0.251      0.017      0.217      0.285    211.207      0.000   5740.993 
+  hispanic                            0.850      0.423      0.009      1.676      3.992      0.046   3930.250 
+  stanmath.mean[school]               0.288      0.097      0.090      0.477      8.663      0.003    709.536 
+  hispanic.mean[school]               5.336      1.629      2.175      8.587     10.717      0.001    774.946 
+  intschool                           2.805      0.708      1.359      4.202     15.571      0.000    876.066 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  1.514      0.326      1.004      2.279        ---        ---   1389.807 
+
+Standardized Coefficients:      
+  stanmath                            0.392      0.027      0.339      0.443    218.693      0.000   2974.458 
+  hispanic                            0.058      0.029      0.001      0.115      4.003      0.045   3903.002 
+  stanmath.mean[school]               0.215      0.070      0.067      0.341      9.187      0.002    724.922 
+  hispanic.mean[school]               0.227      0.065      0.094      0.346     12.085      0.001    818.033 
+  intschool                           0.234      0.056      0.115      0.338     17.110      0.000    842.648 
+
+Proportion Variance Explained   
+  by Coefficients                     0.342      0.039      0.264      0.417        ---        ---    863.036 
+  by Level-2 Random Intercepts        0.067      0.029      0.030      0.141        ---        ---   1330.773 
+  by Level-1 Residual Variation       0.541      0.050      0.440      0.635        ---        ---   1663.123 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: intschool  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.135      0.261     -0.368      0.666      0.287      0.592   2570.026 
+
+Level 2:                                                                                                      
+  hispanic                           -0.299      0.358     -1.042      0.365      0.764      0.382   1599.139 
+  stanmath                           -0.004      0.073     -0.149      0.136      0.003      0.959   2116.956 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  hispanic   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.464      0.199      0.069      0.868      5.547      0.019    293.683 
+
+Level 1:                                                                                                      
+  stanmath                            0.004      0.005     -0.006      0.015      0.662      0.416   1937.439 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Level 2:                                                                                                      
+  intschool                          -0.164      0.191     -0.528      0.220      0.722      0.396   2818.428 
+  stanmath                            0.086      0.043      0.005      0.173      4.150      0.042   2083.189 
+  Residual Var.                       0.592      0.223      0.308      1.177        ---        ---   1208.335 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  stanmath   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           50.265      0.949     48.350     52.182   2804.166      0.000    303.760 
+
+Level 1:                                                                                                      
+  hispanic                            0.375      0.456     -0.530      1.258      0.672      0.412   2429.399 
+  Residual Var.                      83.464      4.027     75.996     91.919        ---        ---   5918.736 
+
+Level 2:                                                                                                      
+  intschool                          -0.042      1.004     -2.000      1.932      0.001      0.973   2644.755 
+  hispanic                            2.195      1.069      0.133      4.339      4.276      0.039   1945.683 
+  Residual Var.                      14.217      5.212      7.372     27.573        ---        ---   2244.689 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:53:48 2026
+  Chain 2 burn-in started on Aug 15 19:53:48 2026
+  Chain 4 burn-in started on Aug 15 19:53:48 2026
+  Chain 3 burn-in started on Aug 15 19:53:48 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 19:53:49 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 19:53:49 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 19:53:49 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 19:53:49 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:53:50 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:53:50 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:53:50 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:53:50 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:53:51 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:53:51 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:53:51 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:53:51 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:53:51 2026
+  Chain 3 completed burn-in on Aug 15 19:53:51 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:53:51 2026
+  Chain 2 completed burn-in on Aug 15 19:53:51 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:53:51 2026
+  Chain 4 completed burn-in on Aug 15 19:53:51 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:53:51 2026
+  Chain 1 completed burn-in on Aug 15 19:53:51 2026
+  Chain 2 saved imputation 2 on Aug 15 19:53:52 2026
+  Chain 3 saved imputation 3 on Aug 15 19:53:52 2026
+  Chain 4 saved imputation 4 on Aug 15 19:53:52 2026
+  Chain 1 saved imputation 1 on Aug 15 19:53:52 2026
+  Chain 2 completed iteration 625 on Aug 15 19:53:52 2026
+  Chain 3 completed iteration 625 on Aug 15 19:53:52 2026
+  Chain 4 completed iteration 625 on Aug 15 19:53:52 2026
+  Chain 1 completed iteration 625 on Aug 15 19:53:52 2026
+  Chain 2 saved imputation 6 on Aug 15 19:53:52 2026
+  Chain 4 saved imputation 8 on Aug 15 19:53:52 2026
+  Chain 3 saved imputation 7 on Aug 15 19:53:52 2026
+  Chain 1 saved imputation 5 on Aug 15 19:53:52 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:53:52 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:53:52 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:53:52 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:53:52 2026
+  Chain 2 saved imputation 10 on Aug 15 19:53:53 2026
+  Chain 4 saved imputation 12 on Aug 15 19:53:53 2026
+  Chain 1 saved imputation 9 on Aug 15 19:53:53 2026
+  Chain 3 saved imputation 11 on Aug 15 19:53:53 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:53:53 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:53:53 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:53:53 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:53:53 2026
+  Chain 2 saved imputation 14 on Aug 15 19:53:53 2026
+  Chain 4 saved imputation 16 on Aug 15 19:53:53 2026
+  Chain 3 saved imputation 15 on Aug 15 19:53:53 2026
+  Chain 1 saved imputation 13 on Aug 15 19:53:53 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:53:53 2026
+  Chain 4 saved imputation 20 on Aug 15 19:53:53 2026
+  Chain 4 finished on Aug 15 19:53:53 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:53:53 2026
+  Chain 2 saved imputation 18 on Aug 15 19:53:53 2026
+  Chain 2 finished on Aug 15 19:53:53 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:53:53 2026
+  Chain 3 saved imputation 19 on Aug 15 19:53:53 2026
+  Chain 3 finished on Aug 15 19:53:53 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:53:53 2026
+  Chain 1 saved imputation 17 on Aug 15 19:53:53 2026
+  Chain 1 finished on Aug 15 19:53:53 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.174            24  
+                          501 to 1000            1.038            13  
+                          751 to 1500            1.031            24  
+                         1001 to 2000            1.062            24  
+                         1251 to 2500            1.049            24  
+                         1501 to 3000            1.018            16  
+                         1751 to 3500            1.016            31  
+                         2001 to 4000            1.024            31  
+                         2251 to 4500            1.015             6  
+                         2501 to 5000            1.013            24  
+                         2751 to 5500            1.018             3  
+                         3001 to 6000            1.017            24  
+                         3251 to 6500            1.015            31  
+                         3501 to 7000            1.008             3  
+                         3751 to 7500            1.011            24  
+                         4001 to 8000            1.014            24  
+                         4251 to 8500            1.015            24  
+                         4501 to 9000            1.013            24  
+                         4751 to 9500            1.009            31  
+                         5001 to 10000           1.007            24  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    hispanic                      imputation          0.511          0.500 
+    hispanic                      latent imp          0.502          0.500 
+    hispanic                       parameter          0.558          0.500 
+    stanmath                      imputation          0.496          0.500 
+    stanmath                      latent imp          0.504          0.500 
+    stanmath                       parameter          0.487          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       school
+  Sample Size:              982
+  Level-2 Clusters:         29
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7
+                          miss % --------------------------------------------
+                probsolve = 20.5       -     M     -     -     M     M     -  
+                intschool =  0.0       -     -     -     -     -     -     -  
+                 hispanic =  9.0       -     -     M     -     M     -     M  
+                 stanmath =  7.4       -     -     -     M     -     M     M  
+                                 --------------------------------------------
+                                 %  66.2  17.8   7.1   5.8   1.4   1.2   0.4
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         8
+    Predictor Models:       14
+
+  PREDICTORS
+    Complete ordinal:       intschool
+    Incomplete continuous:  stanmath
+    Incomplete ordinal:     hispanic
+
+  CENTERED PREDICTORS
+    Group Mean Centered:    hispanic stanmath
+
+  LATENT CLUSTER MEANS
+    Grand Mean Centered:    hispanic stanmath
+
+  MODELS
+    [1]  probsolve ~ Intercept stanmath hispanic stanmath.mean[school] hispanic.mean[school] 
+                 intschool
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5832.052
+      WAIC                  5916.025
+
+    Conditional Likelihood
+      DIC2                  5793.271
+      WAIC                  5885.041
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  probsolve                          54.118      5.759     50.870     54.229     58.161     36.642     69.331 
+  intschool                           0.552      0.506      0.000      1.000      1.000      0.000      1.000 
+  hispanic                            0.666      0.472      0.000      1.000      1.000      0.000      1.000 
+  hispanic.mean[school]               0.482      0.863     -0.094      0.612      1.088     -1.263      2.039 
+  stanmath                           50.274     10.143     44.788     51.176     56.656      5.300     87.806 
+  stanmath.mean[school]              50.401      4.216     47.345     50.437     53.213     42.795     60.247 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  probsolve  
+
+Grand Mean Centered: hispanic.mean[school] stanmath.mean[school]
+Group Mean Centered: hispanic stanmath
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 2.324      1.066      1.013      5.160        ---        ---   1455.232 
+  Residual Var.                      19.588      1.036     17.690     21.749        ---        ---   5569.160 
+
+Coefficients:                   
+  Intercept                          52.207      0.682     50.815     53.508   5863.733      0.000    334.929 
+  stanmath                            0.251      0.018      0.216      0.285    201.679      0.000   5393.006 
+  hispanic                            0.972      0.429      0.126      1.801      5.097      0.024   4122.698 
+  stanmath.mean[school]               0.289      0.100      0.089      0.480      8.244      0.004    714.676 
+  hispanic.mean[school]               5.357      1.590      2.163      8.498     11.376      0.001    965.826 
+  intschool                           2.909      0.715      1.485      4.352     16.584      0.000    833.599 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  1.525      0.321      1.007      2.272        ---        ---   1335.652 
+  Residual SD                         4.426      0.117      4.206      4.664        ---        ---   5575.042 
+
+Standardized Coefficients:      
+  stanmath                            0.394      0.027      0.339      0.446    210.250      0.000   3108.596 
+  hispanic                            0.067      0.029      0.009      0.124      5.100      0.024   4055.246 
+  stanmath.mean[school]               0.214      0.072      0.065      0.347      8.721      0.003    736.724 
+  hispanic.mean[school]               0.229      0.065      0.094      0.352     12.380      0.000    972.189 
+  intschool                           0.243      0.057      0.127      0.351     18.384      0.000    833.226 
+
+Proportion Variance Explained   
+  by Coefficients                     0.351      0.038      0.271      0.423        ---        ---   1237.989 
+  by Level-2 Random Intercepts        0.068      0.028      0.031      0.141        ---        ---   1340.276 
+  by Level-1 Residual Variation       0.578      0.038      0.498      0.649        ---        ---   1580.592 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: intschool  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.135      0.262     -0.369      0.659      0.288      0.592   2204.823 
+
+Level 2:                                                                                                      
+  hispanic                           -0.315      0.351     -1.033      0.380      0.819      0.365   1849.472 
+  stanmath                           -0.005      0.074     -0.152      0.139      0.004      0.948   2309.020 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  hispanic   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.485      0.193      0.101      0.864      6.258      0.012    197.948 
+
+Level 1:                                                                                                      
+  stanmath                            0.005      0.005     -0.006      0.015      0.772      0.380   1973.369 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Level 2:                                                                                                      
+  intschool                          -0.168      0.190     -0.528      0.234      0.719      0.396   2504.732 
+  stanmath                            0.086      0.043      0.004      0.172      4.091      0.043   2831.036 
+  Residual Var.                       0.594      0.217      0.316      1.157        ---        ---   1511.429 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  stanmath   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           50.377      0.867     48.772     52.099   3379.441      0.000    305.674 
+
+Level 1:                                                                                                      
+  hispanic                            0.399      0.456     -0.510      1.280      0.756      0.385   2570.627 
+  Residual Var.                      83.530      3.978     76.117     91.841        ---        ---   5846.873 
+
+Level 2:                                                                                                      
+  intschool                          -0.069      0.975     -1.958      1.868      0.003      0.953   2732.399 
+  hispanic                            2.166      1.055      0.106      4.283      4.246      0.039   2460.089 
+  Residual Var.                      13.896      5.033      7.420     27.049        ---        ---   2327.526 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+pdf 
+  2 
+pdf 
+  2 
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.3.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.3.png
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.4.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.4.png

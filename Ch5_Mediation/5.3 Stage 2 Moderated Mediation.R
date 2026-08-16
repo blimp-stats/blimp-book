@@ -79,8 +79,8 @@ mod3 <- rblimp(
   transform = 'age16 = age - 16',                # centered age variable
   model = '
     victim ~ discrim@a1 age16 female;            # a path
-    internalize ~ victim@b1 discrim age16 victim*age16@b4 female victim*age16;',  # bpath
-  simple = 'victim | age16 @ quartile',          # conditional effects
+    internalize ~ victim@b1 discrim age16 discrim*age16@b4 female;',  # bpath
+  simple = 'discrim | age16 @ quartile',          # conditional effects
   parameters = '
     index_mod = a1*b4;                           # index of mediated moderation
     indirect14 = a1*(b1 - 2*b4);                 # conditional indirect effect

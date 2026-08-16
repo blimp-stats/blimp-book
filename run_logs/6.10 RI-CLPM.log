@@ -3921,3 +3921,614 @@ ITERATION HISTORY:
   Chain 1 completed iteration 2500 on Aug 15 18:00:17 2026
   Chain 1 finished on Aug 15 18:00:17 2026
 
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.206            19  
+                          501 to 1000            1.099             4  
+                          751 to 1500            1.050             2  
+                         1001 to 2000            1.052            30  
+                         1251 to 2500            1.047             4  
+                         1501 to 3000            1.031            41  
+                         1751 to 3500            1.030           107  
+                         2001 to 4000            1.032            21  
+                         2251 to 4500            1.024           107  
+                         2501 to 5000            1.014            41  
+                         2751 to 5500            1.014            34  
+                         3001 to 6000            1.016            21  
+                         3251 to 6500            1.011            19  
+                         3501 to 7000            1.013            19  
+                         3751 to 7500            1.009            19  
+                         4001 to 8000            1.009            47  
+                         4251 to 8500            1.009            94  
+                         4501 to 9000            1.009            76  
+                         4751 to 9500            1.010            74  
+                         5001 to 10000           1.009            47  
+
+
+DATA INFORMATION:
+
+  Sample Size:              1508
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4
+                          miss % --------------------------
+                   female =  0.0       -     -     -     -  
+                  anxdep1 =  0.0       -     -     -     -  
+                  anxdep2 =  8.0       -     -     M     -  
+                  anxdep3 = 16.0       -     -     M     M  
+                  anxdep4 = 25.0       -     M     M     M  
+                  lonely1 =  0.0       -     -     -     -  
+                  lonely2 =  8.0       -     -     M     -  
+                  lonely3 = 16.0       -     -     M     M  
+                  lonely4 = 25.0       -     M     M     M  
+                                 --------------------------
+                                 %  75.0   9.0   8.0   8.0
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         35
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                anxdep lonely
+
+  DEFINED VARIABLES
+    [1]  anxdep1w = anxdep1 - (a01 + anxdep) 
+    [2]  anxdep2w = anxdep2 - (a02 + anxdep) 
+    [3]  anxdep3w = anxdep3 - (a03 + anxdep) 
+    [4]  lonely1w = lonely1 - (b01 + lonely) 
+    [5]  lonely2w = lonely2 - (b02 + lonely) 
+    [6]  lonely3w = lonely3 - (b03 + lonely) 
+
+  MODELS
+
+   between.person:
+    [1]  anxdep ~ female
+    [2]  lonely ~ female
+    [3]  female ~ Intercept
+    [4]  anxdep <-> lonely
+
+   within.person:
+    [5]  anxdep1 ~ Intercept@a01 anxdep@1
+    [6]  anxdep2 ~ Intercept@a02 anxdep@1 anxdep1w@a1 lonely1w@a2 anxdep1w*female@a3
+    [7]  anxdep3 ~ Intercept@a03 anxdep@1 anxdep2w@a1 lonely2w@a2 anxdep2w*female@a3
+    [8]  anxdep4 ~ Intercept@a04 anxdep@1 anxdep3w@a1 lonely3w@a2 anxdep3w*female@a3
+    [9]  lonely1 ~ Intercept@b01 lonely@1
+   [10]  lonely2 ~ Intercept@b02 lonely@1 lonely1w@b1 anxdep1w@b2 lonely1w*female@b3
+   [11]  lonely3 ~ Intercept@b03 lonely@1 lonely2w@b1 anxdep2w@b2 lonely2w*female@b3
+   [12]  lonely4 ~ Intercept@b04 lonely@1 lonely3w@b1 anxdep3w@b2 lonely3w*female@b3
+   [13]  anxdep1 <-> lonely1
+   [14]  anxdep2 <-> lonely2
+   [15]  anxdep3 <-> lonely3
+   [16]  anxdep4 <-> lonely4
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  23261.361
+      WAIC                  24996.154
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  anxdep                              0.283      0.461     -0.044      0.268      0.595     -1.059      1.890 
+  lonely                              0.103      0.501     -0.246      0.095      0.440     -1.396      1.871 
+  female                              0.607      0.488      0.000      1.000      1.000      0.000      1.000 
+  anxdep1                             1.882      0.696      1.250      1.750      2.250      1.000      5.000 
+  anxdep2                             1.977      0.737      1.461      2.000      2.500      0.279      4.753 
+  anxdep3                             2.049      0.748      1.500      2.000      2.502      0.075      4.534 
+  anxdep4                             2.156      0.750      1.534      2.105      2.741      0.065      5.006 
+  lonely1                             2.205      0.730      1.750      2.250      2.750      1.000      4.500 
+  lonely2                             2.259      0.738      1.750      2.250      2.750      0.469      5.004 
+  lonely3                             2.347      0.757      1.750      2.264      2.771      0.337      5.012 
+  lonely4                             2.355      0.780      1.750      2.262      2.875      0.094      5.033 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  anxdep, female                      0.000      0.037     -0.071      0.073      0.000      0.993   1164.933 
+  anxdep, anxdep1                    -0.016      0.037     -0.090      0.056      0.193      0.660   2150.395 
+  anxdep, anxdep2                     0.015      0.035     -0.055      0.083      0.163      0.687   5397.375 
+  anxdep, anxdep3                    -0.023      0.034     -0.090      0.043      0.463      0.496   6877.349 
+  anxdep, anxdep4                     0.034      0.034     -0.032      0.101      0.993      0.319   5638.696 
+  anxdep, lonely1                    -0.024      0.036     -0.096      0.049      0.425      0.515   3562.581 
+  anxdep, lonely2                     0.008      0.035     -0.058      0.077      0.058      0.809   5000.685 
+  anxdep, lonely3                     0.026      0.034     -0.041      0.093      0.596      0.440   6241.575 
+  anxdep, lonely4                    -0.004      0.034     -0.070      0.063      0.013      0.911   7733.848 
+  lonely, female                      0.001      0.036     -0.070      0.070      0.000      0.987   1119.678 
+  lonely, anxdep1                    -0.008      0.036     -0.080      0.063      0.056      0.813   3191.198 
+  lonely, anxdep2                     0.014      0.034     -0.052      0.080      0.167      0.683   4106.164 
+  lonely, anxdep3                    -0.054      0.033     -0.118      0.012      2.656      0.103   7276.069 
+  lonely, anxdep4                     0.054      0.033     -0.012      0.118      2.584      0.108   6980.239 
+  lonely, lonely1                    -0.008      0.036     -0.079      0.062      0.052      0.819   3339.198 
+  lonely, lonely2                     0.006      0.035     -0.063      0.074      0.028      0.867   3541.975 
+  lonely, lonely3                     0.006      0.034     -0.059      0.072      0.033      0.855   6354.442 
+  lonely, lonely4                    -0.013      0.033     -0.077      0.053      0.137      0.711   6687.412 
+  female, anxdep1                    -0.010      0.032     -0.073      0.054      0.095      0.758   1538.561 
+  female, anxdep2                     0.084      0.029      0.027      0.140      8.504      0.004   4758.550 
+  female, anxdep3                    -0.014      0.029     -0.072      0.044      0.237      0.626   4754.399 
+  female, anxdep4                    -0.053      0.030     -0.111      0.006      3.073      0.080   6957.324 
+  female, lonely1                    -0.022      0.032     -0.084      0.040      0.495      0.482   1807.614 
+  female, lonely2                     0.052      0.029     -0.005      0.108      3.191      0.074   5327.946 
+  female, lonely3                     0.017      0.030     -0.041      0.074      0.337      0.561   5112.448 
+  female, lonely4                    -0.035      0.030     -0.094      0.023      1.433      0.231   7847.239 
+  anxdep1, anxdep2                   -0.026      0.033     -0.091      0.037      0.651      0.420   7062.245 
+  anxdep1, anxdep3                   -0.007      0.033     -0.072      0.058      0.048      0.827   1971.931 
+  anxdep1, anxdep4                    0.001      0.035     -0.067      0.069      0.000      0.983   1166.455 
+  anxdep1, lonely2                   -0.039      0.033     -0.104      0.027      1.380      0.240   7997.693 
+  anxdep1, lonely3                    0.046      0.033     -0.020      0.110      1.893      0.169   2691.201 
+  anxdep1, lonely4                   -0.028      0.033     -0.094      0.034      0.755      0.385   3839.398 
+  anxdep2, anxdep3                    0.023      0.031     -0.037      0.083      0.561      0.454   4403.189 
+  anxdep2, anxdep4                    0.055      0.031     -0.004      0.115      3.175      0.075   8257.100 
+  anxdep2, lonely1                   -0.013      0.033     -0.077      0.053      0.154      0.694   7243.156 
+  anxdep2, lonely3                    0.007      0.032     -0.055      0.070      0.051      0.821   5445.627 
+  anxdep2, lonely4                    0.053      0.031     -0.006      0.114      2.993      0.084   8147.532 
+  anxdep3, anxdep4                   -0.012      0.034     -0.078      0.056      0.116      0.733   2225.787 
+  anxdep3, lonely1                   -0.073      0.033     -0.138     -0.008      4.923      0.026   3696.187 
+  anxdep3, lonely2                    0.023      0.032     -0.040      0.085      0.503      0.478   6118.675 
+  anxdep3, lonely4                   -0.004      0.034     -0.069      0.064      0.010      0.921   2476.320 
+  anxdep4, lonely1                    0.025      0.034     -0.041      0.091      0.527      0.468   2418.767 
+  anxdep4, lonely2                    0.068      0.031      0.008      0.128      4.860      0.027   9245.799 
+  anxdep4, lonely3                   -0.011      0.034     -0.078      0.057      0.096      0.756   3154.222 
+  lonely1, lonely2                   -0.021      0.033     -0.087      0.044      0.399      0.528   7172.658 
+  lonely1, lonely3                    0.001      0.034     -0.066      0.068      0.000      0.982   1901.088 
+  lonely1, lonely4                   -0.006      0.034     -0.071      0.059      0.027      0.870   2950.246 
+  lonely2, lonely3                    0.027      0.032     -0.035      0.089      0.700      0.403   5476.194 
+  lonely2, lonely4                    0.032      0.031     -0.029      0.093      1.033      0.310   7136.078 
+  lonely3, lonely4                   -0.028      0.034     -0.094      0.037      0.676      0.411   2210.913 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  between.person block:
+
+Latent Variable:   anxdep     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.162      0.019      0.124      0.198        ---        ---    246.362 
+
+Coefficients:                   
+  female                              0.466      0.029      0.411      0.523    258.968      0.000    249.741 
+
+Standard Deviations:            
+  Residual SD                         0.403      0.023      0.352      0.445        ---        ---    245.775 
+
+Standardized Coefficients:      
+  female                              0.493      0.032      0.433      0.558    242.168      0.000    312.198 
+
+Proportion Variance Explained   
+  by Coefficients                     0.243      0.031      0.187      0.312        ---        ---    315.546 
+  by Residual Variation               0.757      0.031      0.688      0.813        ---        ---    315.546 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   lonely     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.246      0.020      0.205      0.284        ---        ---    337.392 
+
+Coefficients:                   
+  female                              0.170      0.032      0.109      0.234     28.078      0.000    295.899 
+
+Standard Deviations:            
+  Residual SD                         0.496      0.021      0.453      0.533        ---        ---    331.996 
+
+Standardized Coefficients:      
+  female                              0.165      0.031      0.107      0.226     28.954      0.000    314.709 
+
+Proportion Variance Explained   
+  by Coefficients                     0.027      0.010      0.012      0.051        ---        ---    309.304 
+  by Residual Variation               0.973      0.010      0.949      0.988        ---        ---    309.304 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.239      0.009      0.223      0.257        ---        ---   9887.119 
+
+Coefficients:                   
+  Intercept                           0.607      0.013      0.582      0.632   2334.453      0.000   9861.203 
+
+Standard Deviations:            
+  Residual SD                         0.489      0.009      0.472      0.507        ---        ---   9879.906 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: anxdep lonely
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(anxdep,lonely)                  0.137      0.016      0.105      0.168     71.980      0.000    323.907 
+
+Correlations:                   
+  Cor(anxdep,lonely)                  0.690      0.036      0.611      0.754    361.255      0.000    541.775 
+
+                                ------------------------------------------------------------------------------
+
+
+  within.person block:
+
+Outcome Variable:  anxdep1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.281      0.018      0.248      0.319        ---        ---    471.357 
+
+Coefficients:                   
+  Intercept                           1.599      0.024      1.552      1.646   4446.201      0.000    278.771 
+  anxdep                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.530      0.017      0.498      0.565        ---        ---    471.934 
+
+Standardized Coefficients:      
+  anxdep                              0.657      0.026      0.600      0.700    659.317      0.000    236.178 
+
+Proportion Variance Explained   
+  by Coefficients                     0.432      0.033      0.361      0.491        ---        ---    235.677 
+  by Residual Variation               0.568      0.033      0.509      0.639        ---        ---    235.677 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  anxdep2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.258      0.013      0.234      0.284        ---        ---    890.268 
+
+Coefficients:                   
+  Intercept                           1.693      0.025      1.646      1.742   4612.419      0.000    272.417 
+  anxdep                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  anxdep1w                            0.372      0.038      0.294      0.440     95.891      0.000    473.135 
+  lonely1w                            0.150      0.030      0.090      0.207     24.849      0.000    526.017 
+  anxdep1w*female                    -0.002      0.041     -0.083      0.075      0.004      0.950    563.802 
+
+Standard Deviations:            
+  Residual SD                         0.508      0.012      0.484      0.532        ---        ---    888.181 
+
+Standardized Coefficients:      
+  anxdep                              0.637      0.029      0.576      0.688    489.613      0.000    242.444 
+  anxdep1w                            0.272      0.030      0.211      0.327     81.500      0.000    413.876 
+  lonely1w                            0.111      0.023      0.065      0.156     22.872      0.000    474.538 
+  anxdep1w*female                    -0.001      0.025     -0.050      0.046      0.003      0.956    564.712 
+
+Proportion Variance Explained   
+  by Coefficients                     0.509      0.015      0.479      0.539        ---        ---    464.897 
+  by Residual Variation               0.491      0.015      0.461      0.521        ---        ---    464.897 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  anxdep3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.285      0.013      0.259      0.312        ---        ---   1669.299 
+
+Coefficients:                   
+  Intercept                           1.766      0.026      1.716      1.817   4587.804      0.000    298.552 
+  anxdep                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  anxdep2w                            0.372      0.038      0.294      0.440     95.891      0.000    473.135 
+  lonely2w                            0.150      0.030      0.090      0.207     24.849      0.000    526.017 
+  anxdep2w*female                    -0.002      0.041     -0.083      0.075      0.004      0.950    563.802 
+
+Standard Deviations:            
+  Residual SD                         0.534      0.012      0.509      0.558        ---        ---   1670.829 
+
+Standardized Coefficients:      
+  anxdep                              0.610      0.027      0.552      0.657    509.427      0.000    244.241 
+  anxdep2w                            0.274      0.032      0.210      0.333     73.706      0.000    403.499 
+  lonely2w                            0.106      0.023      0.062      0.152     21.231      0.000    450.912 
+  anxdep2w*female                    -0.001      0.025     -0.050      0.047      0.002      0.960    565.832 
+
+Proportion Variance Explained   
+  by Coefficients                     0.502      0.014      0.475      0.531        ---        ---    783.044 
+  by Residual Variation               0.498      0.014      0.469      0.525        ---        ---    783.044 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  anxdep4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.266      0.013      0.242      0.292        ---        ---   1780.261 
+
+Coefficients:                   
+  Intercept                           1.874      0.027      1.822      1.926   4932.301      0.000    320.083 
+  anxdep                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  anxdep3w                            0.372      0.038      0.294      0.440     95.891      0.000    473.135 
+  lonely3w                            0.150      0.030      0.090      0.207     24.849      0.000    526.017 
+  anxdep3w*female                    -0.002      0.041     -0.083      0.075      0.004      0.950    563.802 
+
+Standard Deviations:            
+  Residual SD                         0.516      0.012      0.492      0.541        ---        ---   1780.023 
+
+Standardized Coefficients:      
+  anxdep                              0.619      0.027      0.561      0.666    518.220      0.000    235.449 
+  anxdep3w                            0.295      0.034      0.227      0.359     75.176      0.000    424.881 
+  lonely3w                            0.113      0.024      0.065      0.161     21.474      0.000    452.185 
+  anxdep3w*female                    -0.001      0.026     -0.052      0.050      0.002      0.961    565.931 
+
+Proportion Variance Explained   
+  by Coefficients                     0.522      0.015      0.493      0.551        ---        ---    831.212 
+  by Residual Variation               0.478      0.015      0.449      0.507        ---        ---    831.212 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  lonely1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.289      0.019      0.255      0.330        ---        ---    558.203 
+
+Coefficients:                   
+  Intercept                           2.102      0.027      2.048      2.153   6082.728      0.000    293.825 
+  lonely                            @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.537      0.018      0.505      0.575        ---        ---    565.593 
+
+Standardized Coefficients:      
+  lonely                              0.683      0.023      0.632      0.721    903.732      0.000    302.871 
+
+Proportion Variance Explained   
+  by Coefficients                     0.466      0.031      0.399      0.520        ---        ---    308.663 
+  by Residual Variation               0.534      0.031      0.480      0.601        ---        ---    308.663 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  lonely2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.243      0.013      0.218      0.270        ---        ---    632.733 
+
+Coefficients:                   
+  Intercept                           2.156      0.027      2.101      2.209   6191.588      0.000    292.935 
+  lonely                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  lonely1w                            0.378      0.049      0.281      0.475     60.252      0.000    271.156 
+  anxdep1w                            0.090      0.029      0.033      0.146      9.782      0.002    556.801 
+  lonely1w*female                    -0.003      0.045     -0.091      0.086      0.003      0.955    510.943 
+
+Standard Deviations:            
+  Residual SD                         0.493      0.013      0.467      0.520        ---        ---    633.452 
+
+Standardized Coefficients:      
+  lonely                              0.680      0.026      0.624      0.726    657.930      0.000    267.012 
+  lonely1w                            0.275      0.039      0.202      0.355     50.504      0.000    254.470 
+  anxdep1w                            0.064      0.021      0.023      0.107      9.257      0.002    515.357 
+  lonely1w*female                    -0.002      0.026     -0.053      0.050      0.003      0.956    511.610 
+
+Proportion Variance Explained   
+  by Coefficients                     0.554      0.016      0.523      0.585        ---        ---    453.677 
+  by Residual Variation               0.446      0.016      0.415      0.477        ---        ---    453.677 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  lonely3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.254      0.013      0.231      0.279        ---        ---   1103.285 
+
+Coefficients:                   
+  Intercept                           2.244      0.028      2.187      2.298   6266.782      0.000    293.598 
+  lonely                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  lonely2w                            0.378      0.049      0.281      0.475     60.252      0.000    271.156 
+  anxdep2w                            0.090      0.029      0.033      0.146      9.782      0.002    556.801 
+  lonely2w*female                    -0.003      0.045     -0.091      0.086      0.003      0.955    510.943 
+
+Standard Deviations:            
+  Residual SD                         0.504      0.012      0.480      0.528        ---        ---   1103.206 
+
+Standardized Coefficients:      
+  lonely                              0.669      0.024      0.616      0.711    767.043      0.000    269.684 
+  lonely2w                            0.271      0.041      0.194      0.357     43.361      0.000    250.662 
+  anxdep2w                            0.067      0.022      0.024      0.111      9.006      0.003    512.167 
+  lonely2w*female                    -0.002      0.026     -0.052      0.050      0.003      0.960    509.705 
+
+Proportion Variance Explained   
+  by Coefficients                     0.549      0.015      0.519      0.578        ---        ---    598.142 
+  by Residual Variation               0.451      0.015      0.422      0.481        ---        ---    598.142 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  lonely4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.308      0.015      0.281      0.339        ---        ---   2060.838 
+
+Coefficients:                   
+  Intercept                           2.252      0.030      2.193      2.310   5677.322      0.000    347.369 
+  lonely                            @ 1.000        ---        ---        ---        ---        ---        --- 
+  lonely3w                            0.378      0.049      0.281      0.475     60.252      0.000    271.156 
+  anxdep3w                            0.090      0.029      0.033      0.146      9.782      0.002    556.801 
+  lonely3w*female                    -0.003      0.045     -0.091      0.086      0.003      0.955    510.943 
+
+Standard Deviations:            
+  Residual SD                         0.555      0.013      0.530      0.582        ---        ---   2066.405 
+
+Standardized Coefficients:      
+  lonely                              0.637      0.023      0.585      0.676    750.558      0.000    283.200 
+  lonely3w                            0.269      0.040      0.193      0.353     44.591      0.000    253.313 
+  anxdep3w                            0.067      0.023      0.024      0.112      9.037      0.003    515.035 
+  lonely3w*female                    -0.002      0.025     -0.049      0.048      0.002      0.960    511.969 
+
+Proportion Variance Explained   
+  by Coefficients                     0.504      0.014      0.476      0.531        ---        ---   1147.295 
+  by Residual Variation               0.496      0.014      0.469      0.524        ---        ---   1147.295 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: anxdep1 lonely1
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(anxdep1,lonely1)                0.136      0.015      0.109      0.169     82.856      0.000    557.792 
+
+Correlations:                   
+  Cor(anxdep1,lonely1)                0.479      0.033      0.412      0.543    209.946      0.000    882.411 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: anxdep2 lonely2
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(anxdep2,lonely2)                0.114      0.010      0.095      0.134    128.763      0.000    721.294 
+
+Correlations:                   
+  Cor(anxdep2,lonely2)                0.455      0.028      0.398      0.509    255.404      0.000   1028.555 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: anxdep3 lonely3
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(anxdep3,lonely3)                0.136      0.010      0.117      0.156    180.352      0.000   1658.933 
+
+Correlations:                   
+  Cor(anxdep3,lonely3)                0.507      0.025      0.456      0.555    395.096      0.000   1879.463 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: anxdep4 lonely4
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(anxdep4,lonely4)                0.119      0.011      0.099      0.140    128.082      0.000   2074.527 
+
+Correlations:                   
+  Cor(anxdep4,lonely4)                0.415      0.028      0.359      0.468    222.287      0.000   2879.600 
+
+                                ------------------------------------------------------------------------------
+
+
+

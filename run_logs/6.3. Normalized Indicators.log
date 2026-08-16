@@ -1,0 +1,532 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 18:01:39 2026
+  Chain 4 burn-in started on Aug 15 18:01:39 2026
+  Chain 2 burn-in started on Aug 15 18:01:39 2026
+  Chain 3 burn-in started on Aug 15 18:01:39 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 18:01:40 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 18:01:40 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 18:01:40 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 18:01:40 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 18:01:41 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 18:01:41 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 18:01:41 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 18:01:41 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 18:01:42 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 18:01:42 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 18:01:42 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 18:01:42 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 18:01:43 2026
+  Chain 1 completed burn-in on Aug 15 18:01:43 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 18:01:43 2026
+  Chain 3 completed burn-in on Aug 15 18:01:43 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 18:01:43 2026
+  Chain 4 completed burn-in on Aug 15 18:01:43 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 18:01:43 2026
+  Chain 2 completed burn-in on Aug 15 18:01:43 2026
+  Chain 1 completed iteration 625 on Aug 15 18:01:43 2026
+  Chain 3 completed iteration 625 on Aug 15 18:01:43 2026
+  Chain 4 completed iteration 625 on Aug 15 18:01:43 2026
+  Chain 2 completed iteration 625 on Aug 15 18:01:43 2026
+  Chain 1 completed iteration 1250 on Aug 15 18:01:44 2026
+  Chain 3 completed iteration 1250 on Aug 15 18:01:44 2026
+  Chain 4 completed iteration 1250 on Aug 15 18:01:44 2026
+  Chain 2 completed iteration 1250 on Aug 15 18:01:44 2026
+  Chain 1 completed iteration 1875 on Aug 15 18:01:44 2026
+  Chain 3 completed iteration 1875 on Aug 15 18:01:44 2026
+  Chain 4 completed iteration 1875 on Aug 15 18:01:44 2026
+  Chain 2 completed iteration 1875 on Aug 15 18:01:44 2026
+  Chain 1 completed iteration 2500 on Aug 15 18:01:44 2026
+  Chain 1 finished on Aug 15 18:01:44 2026
+  Chain 3 completed iteration 2500 on Aug 15 18:01:44 2026
+  Chain 3 finished on Aug 15 18:01:44 2026
+  Chain 4 completed iteration 2500 on Aug 15 18:01:44 2026
+  Chain 4 finished on Aug 15 18:01:44 2026
+  Chain 2 completed iteration 2500 on Aug 15 18:01:44 2026
+  Chain 2 finished on Aug 15 18:01:44 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.053            30  
+                          501 to 1000            1.022            36  
+                          751 to 1500            1.016            26  
+                         1001 to 2000            1.013            26  
+                         1251 to 2500            1.010            30  
+                         1501 to 3000            1.010            17  
+                         1751 to 3500            1.006            44  
+                         2001 to 4000            1.008            44  
+                         2251 to 4500            1.007            44  
+                         2501 to 5000            1.005            44  
+                         2751 to 5500            1.006            44  
+                         3001 to 6000            1.005            44  
+                         3251 to 6500            1.004            66  
+                         3501 to 7000            1.004            44  
+                         3751 to 7500            1.003            44  
+                         4001 to 8000            1.004            36  
+                         4251 to 8500            1.004            36  
+                         4501 to 9000            1.003            26  
+                         4751 to 9500            1.003            26  
+                         5001 to 10000           1.002            34  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    yjt(dpdd-6)                    parameter          0.467          0.500 
+    yjt(crp)                       parameter          0.518          0.500 
+    yjt(ifn)                       parameter          0.530          0.500 
+    yjt(il6)                       parameter          0.534          0.500 
+    els                           imputation          0.513          0.500 
+    age                            parameter          0.522          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                      crp =  6.1       -     -     M     -     -  
+                      il6 =  6.1       -     -     M     -     -  
+                      tnf =  6.1       -     -     M     -     -  
+                      ifn =  6.1       -     -     M     -     -  
+                     dpdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         25
+    Predictor Models:       10
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete ordinal:     els
+
+  FACTORS
+    Level-1:                inflammation
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age
+
+  MODELS
+
+   structural:
+    [1]  inflammation ~ els female age
+    [2]  yjt(dpdd-6) ~ Intercept inflammation els female age
+
+   measurement:
+    [3]  yjt(crp) ~ Intercept inflammation@load1
+    [4]  yjt(ifn) ~ Intercept inflammation
+    [5]  yjt(il6) ~ Intercept inflammation
+    [6]  tnf ~ Intercept inflammation
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  4752.117
+      WAIC                  4910.634
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  inflammation                        0.125      1.006     -0.565      0.122      0.816     -2.686      3.000 
+  dpdd                                6.175      4.516      3.331      5.375      8.025     -0.612     29.301 
+  dpdd.yjt                           -0.924      4.032     -3.415     -0.679      1.667    -10.084     11.808 
+  crp                                 0.239      1.342     -0.502     -0.120      0.549     -1.217     10.091 
+  crp.yjt                            -0.113      0.798     -0.640     -0.128      0.430     -2.038      2.196 
+  ifn                                 0.307      0.777     -0.239      0.120      0.679     -0.997      3.389 
+  ifn.yjt                             0.128      0.570     -0.267      0.114      0.525     -1.463      1.534 
+  il6                                -0.201      0.777     -0.695     -0.321      0.052     -1.678      4.870 
+  il6.yjt                            -0.414      0.731     -0.929     -0.372      0.050     -3.034      1.820 
+  tnf                                 0.529      0.940     -0.153      0.467      1.175     -1.735      3.274 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  inflammation, yjt(dpdd-6)          -0.000      0.083     -0.162      0.163      0.000      0.996   9287.811 
+  inflammation, yjt(crp)              0.003      0.082     -0.155      0.166      0.003      0.959  10205.119 
+  inflammation, yjt(ifn)              0.006      0.083     -0.158      0.167      0.005      0.945  10033.135 
+  inflammation, yjt(il6)             -0.008      0.083     -0.172      0.155      0.011      0.918  10088.092 
+  inflammation, tnf                   0.008      0.082     -0.151      0.170      0.010      0.919   9879.388 
+  yjt(dpdd-6), yjt(crp)               0.045      0.072     -0.100      0.183      0.382      0.536   6004.028 
+  yjt(dpdd-6), yjt(ifn)              -0.071      0.072     -0.211      0.071      0.981      0.322   8878.744 
+  yjt(dpdd-6), yjt(il6)               0.051      0.070     -0.086      0.188      0.535      0.465   8063.544 
+  yjt(dpdd-6), tnf                   -0.010      0.072     -0.152      0.132      0.020      0.887   8306.932 
+  yjt(crp), yjt(ifn)                 -0.012      0.076     -0.164      0.134      0.028      0.866   5770.404 
+  yjt(crp), yjt(il6)                  0.088      0.078     -0.069      0.237      1.228      0.268   3171.973 
+  yjt(crp), tnf                      -0.061      0.074     -0.206      0.082      0.693      0.405   5043.639 
+  yjt(ifn), yjt(il6)                 -0.060      0.073     -0.207      0.081      0.696      0.404   6299.452 
+  yjt(ifn), tnf                       0.127      0.082     -0.036      0.282      2.359      0.125   2611.906 
+  yjt(il6), tnf                      -0.048      0.072     -0.194      0.090      0.454      0.500   5799.208 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   inflammation
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Coefficients:                   
+  els                                 0.264      0.149     -0.024      0.558      3.165      0.075   1157.501 
+  female                              0.067      0.151     -0.230      0.362      0.200      0.655   1206.516 
+  age                                 0.019      0.013     -0.006      0.045      2.197      0.138   3162.282 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  els                                 0.127      0.070     -0.012      0.261      3.267      0.071   1166.683 
+  female                              0.032      0.071     -0.108      0.170      0.200      0.654   1217.367 
+  age                                 0.108      0.071     -0.032      0.247      2.245      0.134   3204.309 
+
+Proportion Variance Explained   
+  by Coefficients                     0.034      0.024      0.005      0.095        ---        ---   1264.337 
+  by Residual Variation               0.966      0.024      0.905      0.995        ---        ---   1264.337 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  yjt(dpdd-6)
+
+Grand Mean Centered: age
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      14.526      1.428     12.059     17.609        ---        ---   4609.500 
+
+Coefficients:                   
+  Intercept                          -0.780      0.396     -1.567      0.004      3.891      0.049   2681.889 
+  inflammation                        1.423      0.307      0.818      2.017     21.558      0.000   2738.828 
+  els                                -0.521      0.528     -1.568      0.489      0.995      0.318   5472.069 
+  female                             -0.310      0.520     -1.329      0.707      0.359      0.549   5984.423 
+  age                                -0.004      0.046     -0.093      0.085      0.010      0.920   4936.359 
+
+Transformation:                 
+  Yeo-Johnson (lambda)                0.696      0.036      0.624      0.765        ---        ---   1482.448 
+
+Standard Deviations:            
+  Residual SD                         3.811      0.186      3.473      4.196        ---        ---   4568.489 
+
+Standardized Coefficients:      
+  inflammation                        0.349      0.070      0.205      0.477     24.922      0.000   2604.040 
+  els                                -0.062      0.062     -0.185      0.058      1.005      0.316   5424.874 
+  female                             -0.037      0.061     -0.155      0.083      0.360      0.549   5954.189 
+  age                                -0.006      0.063     -0.127      0.118      0.010      0.920   4913.158 
+
+Proportion Variance Explained   
+  by Coefficients                     0.132      0.046      0.053      0.233        ---        ---   2775.009 
+  by Residual Variation               0.868      0.046      0.767      0.947        ---        ---   2775.009 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  yjt(crp)   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.391      0.048      0.303      0.490        ---        ---   1922.162 
+
+Coefficients:                   
+  Intercept                          -0.176      0.065     -0.302     -0.048      7.340      0.007    746.212 
+  inflammation                        0.499      0.055      0.392      0.607     82.796      0.000   1744.285 
+
+Transformation:                 
+  Yeo-Johnson (lambda)               -0.078      0.082     -0.244      0.074        ---        ---   1301.935 
+
+Standard Deviations:            
+  Residual SD                         0.626      0.038      0.550      0.700        ---        ---   1907.050 
+
+Standardized Coefficients:      
+  inflammation                        0.625      0.053      0.512      0.721    135.614      0.000   1479.604 
+
+Proportion Variance Explained   
+  by Coefficients                     0.391      0.066      0.262      0.520        ---        ---   1464.088 
+  by Residual Variation               0.609      0.066      0.480      0.738        ---        ---   1464.088 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  yjt(ifn)   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.192      0.025      0.148      0.246        ---        ---   1996.677 
+
+Coefficients:                   
+  Intercept                           0.082      0.047     -0.011      0.175      3.043      0.081    772.786 
+  inflammation                        0.365      0.039      0.288      0.443     86.443      0.000   1966.607 
+
+Transformation:                 
+  Yeo-Johnson (lambda)                0.057      0.098     -0.156      0.239        ---        ---   1231.847 
+
+Standard Deviations:            
+  Residual SD                         0.439      0.028      0.385      0.496        ---        ---   1974.259 
+
+Standardized Coefficients:      
+  inflammation                        0.641      0.052      0.530      0.735    149.855      0.000   1839.308 
+
+Proportion Variance Explained   
+  by Coefficients                     0.411      0.066      0.281      0.540        ---        ---   1813.312 
+  by Residual Variation               0.589      0.066      0.460      0.719        ---        ---   1813.312 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  yjt(il6)   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.375      0.042      0.300      0.464        ---        ---   2491.695 
+
+Coefficients:                   
+  Intercept                          -0.465      0.059     -0.582     -0.350     62.021      0.000    899.793 
+  inflammation                        0.402      0.050      0.305      0.501     64.292      0.000   2794.556 
+
+Transformation:                 
+  Yeo-Johnson (lambda)                0.033      0.094     -0.162      0.206        ---        ---   1077.970 
+
+Standard Deviations:            
+  Residual SD                         0.612      0.034      0.548      0.681        ---        ---   2490.271 
+
+Standardized Coefficients:      
+  inflammation                        0.550      0.055      0.434      0.648     98.888      0.000   2553.509 
+
+Proportion Variance Explained   
+  by Coefficients                     0.303      0.060      0.189      0.420        ---        ---   2527.358 
+  by Residual Variation               0.697      0.060      0.580      0.811        ---        ---   2527.358 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  tnf        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.553      0.067      0.433      0.699        ---        ---   2028.189 
+
+Coefficients:                   
+  Intercept                           0.458      0.073      0.315      0.601     39.428      0.000    794.600 
+  inflammation                        0.577      0.065      0.452      0.707     79.949      0.000   2056.053 
+
+Standard Deviations:            
+  Residual SD                         0.743      0.045      0.658      0.836        ---        ---   2010.294 
+
+Standardized Coefficients:      
+  inflammation                        0.615      0.054      0.500      0.711    128.017      0.000   1771.423 
+
+Proportion Variance Explained   
+  by Coefficients                     0.378      0.066      0.250      0.505        ---        ---   1753.816 
+  by Residual Variation               0.622      0.066      0.495      0.750        ---        ---   1753.816 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.355      0.076     -0.504     -0.207     21.821      0.000   3951.718 
+
+Level 1:                                                                                                      
+  els                                 0.054      0.092     -0.126      0.237      0.341      0.560   2222.465 
+  age                                -0.027      0.014     -0.053     -0.000      3.991      0.046   4336.147 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.292      0.078     -0.445     -0.136     13.932      0.000   3085.570 
+
+Level 1:                                                                                                      
+  female                              0.052      0.093     -0.132      0.233      0.320      0.572   2063.646 
+  age                                -0.035      0.014     -0.063     -0.008      6.591      0.010   3762.828 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.595      0.335     44.941     46.264  18535.722      0.000   1636.490 
+
+Level 1:                                                                                                      
+  female                             -0.812      0.404     -1.599     -0.020      4.005      0.045   6521.354 
+  els                                -1.052      0.405     -1.833     -0.257      6.708      0.010   5866.349 
+  Residual Var.                      30.017      2.590     25.353     35.541        ---        ---   8821.081 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+                                          Estimate   StdDev     2.5%    97.5%
+inflammation ~ els (standardized)            0.127    0.070   -0.012    0.261
+inflammation ~ female (standardized)         0.032    0.071   -0.108    0.170
+inflammation ~ age (standardized)            0.108    0.071   -0.032    0.246
+yjt(dpdd-6) ~ inflammation (standardized)    0.350    0.070    0.205    0.477
+yjt(dpdd-6) ~ els (standardized)            -0.062    0.062   -0.185    0.058
+yjt(dpdd-6) ~ female (standardized)         -0.037    0.061   -0.155    0.083
+yjt(dpdd-6) ~ age (standardized)            -0.006    0.063   -0.127    0.118
+yjt(crp) ~ inflammation (standardized)       0.625    0.054    0.512    0.721
+yjt(ifn) ~ inflammation (standardized)       0.641    0.052    0.530    0.735
+yjt(il6) ~ inflammation (standardized)       0.550    0.055    0.434    0.648
+tnf ~ inflammation (standardized)            0.615    0.054    0.500    0.711
+                                             ChiSq   PValue    N_Eff
+inflammation ~ els (standardized)            3.267    0.071 1166.683
+inflammation ~ female (standardized)         0.200    0.654 1217.367
+inflammation ~ age (standardized)            2.245    0.134 3204.309
+yjt(dpdd-6) ~ inflammation (standardized)   24.922    0.000 2604.040
+yjt(dpdd-6) ~ els (standardized)             1.005    0.316 5424.874
+yjt(dpdd-6) ~ female (standardized)          0.360    0.549 5954.189
+yjt(dpdd-6) ~ age (standardized)             0.010    0.920 4913.158
+yjt(crp) ~ inflammation (standardized)     135.614    0.000 1479.604
+yjt(ifn) ~ inflammation (standardized)     149.855    0.000 1839.308
+yjt(il6) ~ inflammation (standardized)      98.888    0.000 2553.509
+tnf ~ inflammation (standardized)          128.017    0.000 1771.423
+DEBUG ERROR: Please contact Blimp Support. Error message:
+             Invalid starting values.
+Error:
+! Blimp had an error. Check output.
+Backtrace:
+    ▆
+ 1. └─rblimp::rblimp(...)
+ 2.   └─rblimp:::throw_error("Blimp had an error. Check output.")
+ 3.     └─cli::cli_abort(...)
+ 4.       └─rlang::abort(...)
+Execution halted

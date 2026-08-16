@@ -1,0 +1,1432 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:54:16 2026
+  Chain 2 burn-in started on Aug 15 19:54:16 2026
+  Chain 3 burn-in started on Aug 15 19:54:16 2026
+  Chain 4 burn-in started on Aug 15 19:54:16 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 19:54:16 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 19:54:16 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 19:54:16 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 19:54:16 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:54:17 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:54:17 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:54:17 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:54:17 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:54:17 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:54:17 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:54:17 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:54:17 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:54:17 2026
+  Chain 1 completed burn-in on Aug 15 19:54:17 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:54:17 2026
+  Chain 4 completed burn-in on Aug 15 19:54:17 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:54:17 2026
+  Chain 3 completed burn-in on Aug 15 19:54:17 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:54:17 2026
+  Chain 2 completed burn-in on Aug 15 19:54:17 2026
+  Chain 1 completed iteration 625 on Aug 15 19:54:18 2026
+  Chain 4 completed iteration 625 on Aug 15 19:54:18 2026
+  Chain 3 completed iteration 625 on Aug 15 19:54:18 2026
+  Chain 2 completed iteration 625 on Aug 15 19:54:18 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:54:18 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:54:18 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:54:18 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:54:18 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:54:18 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:54:18 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:54:18 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:54:18 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:54:18 2026
+  Chain 1 finished on Aug 15 19:54:18 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:54:19 2026
+  Chain 4 finished on Aug 15 19:54:19 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:54:19 2026
+  Chain 3 finished on Aug 15 19:54:19 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:54:19 2026
+  Chain 2 finished on Aug 15 19:54:19 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.051             7  
+                          501 to 1000            1.018             1  
+                          751 to 1500            1.009             7  
+                         1001 to 2000            1.017             7  
+                         1251 to 2500            1.008             1  
+                         1501 to 3000            1.006             3  
+                         1751 to 3500            1.007             1  
+                         2001 to 4000            1.004             1  
+                         2251 to 4500            1.002             3  
+                         2501 to 5000            1.002             3  
+                         2751 to 5500            1.002             1  
+                         3001 to 6000            1.002             3  
+                         3251 to 6500            1.001             3  
+                         3501 to 7000            1.000             7  
+                         3751 to 7500            1.001             7  
+                         4001 to 8000            1.001             7  
+                         4251 to 8500            1.001             1  
+                         4501 to 9000            1.001             1  
+                         4751 to 9500            1.001             1  
+                         5001 to 10000           1.001             8  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         3
+    Predictor Models:       0
+
+  MODELS
+    [1]  severity ~ Intercept
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  6384.919
+      WAIC                  6451.933
+
+    Conditional Likelihood
+      DIC2                  6159.175
+      WAIC                  6325.510
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  severity                            5.465      1.524      4.500      5.500      6.500      0.923      9.676 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 0.525      0.073      0.395      0.681        ---        ---   1162.452 
+  Residual Var.                       1.806      0.075      1.662      1.959        ---        ---   3876.191 
+
+Coefficients:                   
+  Intercept                           5.466      0.049      5.370      5.561  12585.896      0.000   2937.416 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  0.725      0.050      0.629      0.825        ---        ---   1156.011 
+  Residual SD                         1.344      0.028      1.289      1.400        ---        ---   3872.565 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Level-2 Random Intercepts        0.225      0.027      0.174      0.280        ---        ---   1183.195 
+  by Level-1 Residual Variation       0.775      0.027      0.720      0.826        ---        ---   1183.195 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:54:19 2026
+  Chain 4 burn-in started on Aug 15 19:54:19 2026
+  Chain 3 burn-in started on Aug 15 19:54:19 2026
+  Chain 2 burn-in started on Aug 15 19:54:19 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:54:21 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:54:21 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:54:21 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:54:21 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:54:22 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:54:22 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:54:22 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:54:22 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:54:23 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:54:23 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:54:23 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:54:23 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:54:24 2026
+  Chain 1 completed burn-in on Aug 15 19:54:24 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:54:24 2026
+  Chain 4 completed burn-in on Aug 15 19:54:24 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:54:24 2026
+  Chain 3 completed burn-in on Aug 15 19:54:24 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:54:24 2026
+  Chain 2 completed burn-in on Aug 15 19:54:24 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:54:24 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:54:24 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:54:25 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:54:25 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:54:25 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:54:25 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:54:25 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:54:25 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:54:26 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:54:26 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:54:26 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:54:26 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:54:27 2026
+  Chain 1 finished on Aug 15 19:54:27 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:54:27 2026
+  Chain 4 finished on Aug 15 19:54:27 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:54:27 2026
+  Chain 3 finished on Aug 15 19:54:27 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:54:27 2026
+  Chain 2 finished on Aug 15 19:54:27 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.599             8  
+                         1251 to 2500            1.151             8  
+                         1876 to 3750            1.132             8  
+                         2501 to 5000            1.097             8  
+                         3126 to 6250            1.060             8  
+                         3751 to 7500            1.056             8  
+                         4376 to 8750            1.034             8  
+                         5001 to 10000           1.044             8  
+                         5626 to 11250           1.032             8  
+                         6251 to 12500           1.036             8  
+                         6876 to 13750           1.021             8  
+                         7501 to 15000           1.013             1  
+                         8126 to 16250           1.023             8  
+                         8751 to 17500           1.015             8  
+                         9376 to 18750           1.012             1  
+                        10001 to 20000           1.010             1  
+                        10626 to 21250           1.011             8  
+                        11251 to 22500           1.016             8  
+                        11876 to 23750           1.016             8  
+                        12501 to 25000           1.009             8  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                    visit =  0.0       -     -  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        visit
+
+  MODELS
+    [1]  severity ~ Intercept visit | Intercept visit
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5501.956
+      WAIC                  5569.231
+
+    Conditional Likelihood
+      DIC2                  4827.402
+      WAIC                  5045.577
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  severity                            5.358      1.569      4.500      5.500      6.500     -0.238      9.139 
+  visit                               1.500      1.118      0.500      1.500      2.500      0.000      3.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 0.180      0.058      0.075      0.304        ---        ---    132.096 
+  L2 : Cov(visit,Intercept)           0.089      0.028      0.025      0.136        ---        ---    187.287 
+  L2 : Var(visit)                     0.177      0.026      0.132      0.233        ---        ---    444.924 
+  Residual Var.                       0.816      0.041      0.740      0.899        ---        ---    412.365 
+
+Coefficients:                   
+  Intercept                           6.398      0.042      6.314      6.480  22703.771      0.000   8504.663 
+  visit                              -0.694      0.031     -0.755     -0.635    516.348      0.000   3080.987 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  0.424      0.070      0.275      0.551        ---        ---    120.124 
+  L2 : Cor(visit,Intercept)           0.502      0.229      0.111      0.943        ---        ---    107.503 
+  L2 : SD(visit)                      0.421      0.031      0.363      0.483        ---        ---    434.529 
+  Residual SD                         0.903      0.023      0.860      0.948        ---        ---    414.538 
+
+Standardized Coefficients:      
+  visit                              -0.492      0.019     -0.528     -0.455    705.839      0.000   3911.458 
+
+Proportion Variance Explained   
+  by Coefficients                     0.242      0.018      0.207      0.279        ---        ---   3918.055 
+  by Level-2 Random Intercepts        0.339      0.022      0.297      0.382        ---        ---   2492.755 
+  by Level-2 Random Slopes            0.089      0.012      0.068      0.114        ---        ---    366.336 
+  by Level-1 Residual Variation       0.329      0.020      0.290      0.369        ---        ---    503.814 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:54:34 2026
+  Chain 3 burn-in started on Aug 15 19:54:34 2026
+  Chain 4 burn-in started on Aug 15 19:54:34 2026
+  Chain 2 burn-in started on Aug 15 19:54:34 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:54:35 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:54:35 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:54:35 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:54:35 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:54:36 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:54:36 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:54:36 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:54:36 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:54:37 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:54:37 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:54:37 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:54:37 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:54:38 2026
+  Chain 1 completed burn-in on Aug 15 19:54:38 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:54:38 2026
+  Chain 3 completed burn-in on Aug 15 19:54:38 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:54:38 2026
+  Chain 2 completed burn-in on Aug 15 19:54:38 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:54:38 2026
+  Chain 4 completed burn-in on Aug 15 19:54:38 2026
+  Chain 3 saved imputation 3 on Aug 15 19:54:38 2026
+  Chain 1 saved imputation 1 on Aug 15 19:54:38 2026
+  Chain 2 saved imputation 2 on Aug 15 19:54:38 2026
+  Chain 4 saved imputation 4 on Aug 15 19:54:38 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:54:38 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:54:38 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:54:38 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:54:38 2026
+  Chain 1 saved imputation 5 on Aug 15 19:54:39 2026
+  Chain 3 saved imputation 7 on Aug 15 19:54:39 2026
+  Chain 2 saved imputation 6 on Aug 15 19:54:39 2026
+  Chain 4 saved imputation 8 on Aug 15 19:54:39 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:54:39 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:54:39 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:54:39 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:54:39 2026
+  Chain 2 saved imputation 10 on Aug 15 19:54:40 2026
+  Chain 1 saved imputation 9 on Aug 15 19:54:40 2026
+  Chain 4 saved imputation 12 on Aug 15 19:54:40 2026
+  Chain 3 saved imputation 11 on Aug 15 19:54:40 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:54:40 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:54:40 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:54:40 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:54:40 2026
+  Chain 2 saved imputation 14 on Aug 15 19:54:40 2026
+  Chain 4 saved imputation 16 on Aug 15 19:54:40 2026
+  Chain 1 saved imputation 13 on Aug 15 19:54:40 2026
+  Chain 3 saved imputation 15 on Aug 15 19:54:40 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:54:41 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:54:41 2026
+  Chain 2 saved imputation 18 on Aug 15 19:54:41 2026
+  Chain 2 finished on Aug 15 19:54:41 2026
+  Chain 4 saved imputation 20 on Aug 15 19:54:41 2026
+  Chain 4 finished on Aug 15 19:54:41 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:54:41 2026
+  Chain 1 saved imputation 17 on Aug 15 19:54:41 2026
+  Chain 1 finished on Aug 15 19:54:41 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:54:41 2026
+  Chain 3 saved imputation 19 on Aug 15 19:54:41 2026
+  Chain 3 finished on Aug 15 19:54:41 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.599             8  
+                         1251 to 2500            1.151             8  
+                         1876 to 3750            1.132             8  
+                         2501 to 5000            1.097             8  
+                         3126 to 6250            1.060             8  
+                         3751 to 7500            1.056             8  
+                         4376 to 8750            1.034             8  
+                         5001 to 10000           1.044             8  
+                         5626 to 11250           1.032             8  
+                         6251 to 12500           1.036             8  
+                         6876 to 13750           1.021             8  
+                         7501 to 15000           1.013             1  
+                         8126 to 16250           1.023             8  
+                         8751 to 17500           1.015             8  
+                         9376 to 18750           1.012             1  
+                        10001 to 20000           1.010             1  
+                        10626 to 21250           1.011             8  
+                        11251 to 22500           1.016             8  
+                        11876 to 23750           1.016             8  
+                        12501 to 25000           1.009             8  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                    visit =  0.0       -     -  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        visit
+
+  MODELS
+    [1]  severity ~ Intercept visit | Intercept visit
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5501.956
+      WAIC                  5569.231
+
+    Conditional Likelihood
+      DIC2                  4827.402
+      WAIC                  5045.577
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  severity                            5.358      1.569      4.500      5.500      6.500     -0.238      9.139 
+  visit                               1.500      1.118      0.500      1.500      2.500      0.000      3.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 0.180      0.058      0.075      0.304        ---        ---    132.096 
+  L2 : Cov(visit,Intercept)           0.089      0.028      0.025      0.136        ---        ---    187.287 
+  L2 : Var(visit)                     0.177      0.026      0.132      0.233        ---        ---    444.924 
+  Residual Var.                       0.816      0.041      0.740      0.899        ---        ---    412.365 
+
+Coefficients:                   
+  Intercept                           6.398      0.042      6.314      6.480  22703.771      0.000   8504.663 
+  visit                              -0.694      0.031     -0.755     -0.635    516.348      0.000   3080.987 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  0.424      0.070      0.275      0.551        ---        ---    120.124 
+  L2 : Cor(visit,Intercept)           0.502      0.229      0.111      0.943        ---        ---    107.503 
+  L2 : SD(visit)                      0.421      0.031      0.363      0.483        ---        ---    434.529 
+  Residual SD                         0.903      0.023      0.860      0.948        ---        ---    414.538 
+
+Standardized Coefficients:      
+  visit                              -0.492      0.019     -0.528     -0.455    705.839      0.000   3911.458 
+
+Proportion Variance Explained   
+  by Coefficients                     0.242      0.018      0.207      0.279        ---        ---   3918.055 
+  by Level-2 Random Intercepts        0.339      0.022      0.297      0.382        ---        ---   2492.755 
+  by Level-2 Random Slopes            0.089      0.012      0.068      0.114        ---        ---    366.336 
+  by Level-1 Residual Variation       0.329      0.020      0.290      0.369        ---        ---    503.814 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Warning message:
+Predictor 'visit' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+pdf 
+  2 
+Warning message:
+Predictor 'visit' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+pdf 
+  2 
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:54:56 2026
+  Chain 4 burn-in started on Aug 15 19:54:56 2026
+  Chain 2 burn-in started on Aug 15 19:54:56 2026
+  Chain 3 burn-in started on Aug 15 19:54:56 2026
+  Chain 3 burn-in iteration 6250 completed on Aug 15 19:54:57 2026
+  Chain 2 burn-in iteration 6250 completed on Aug 15 19:54:57 2026
+  Chain 1 burn-in iteration 6250 completed on Aug 15 19:54:57 2026
+  Chain 4 burn-in iteration 6250 completed on Aug 15 19:54:57 2026
+  Chain 3 burn-in iteration 12500 completed on Aug 15 19:54:58 2026
+  Chain 2 burn-in iteration 12500 completed on Aug 15 19:54:58 2026
+  Chain 1 burn-in iteration 12500 completed on Aug 15 19:54:58 2026
+  Chain 4 burn-in iteration 12500 completed on Aug 15 19:54:58 2026
+  Chain 3 burn-in iteration 18750 completed on Aug 15 19:54:59 2026
+  Chain 2 burn-in iteration 18750 completed on Aug 15 19:54:59 2026
+  Chain 1 burn-in iteration 18750 completed on Aug 15 19:54:59 2026
+  Chain 4 burn-in iteration 18750 completed on Aug 15 19:54:59 2026
+  Chain 3 burn-in iteration 25000 completed on Aug 15 19:55:00 2026
+  Chain 3 completed burn-in on Aug 15 19:55:00 2026
+  Chain 1 burn-in iteration 25000 completed on Aug 15 19:55:01 2026
+  Chain 1 completed burn-in on Aug 15 19:55:01 2026
+  Chain 2 burn-in iteration 25000 completed on Aug 15 19:55:01 2026
+  Chain 2 completed burn-in on Aug 15 19:55:01 2026
+  Chain 4 burn-in iteration 25000 completed on Aug 15 19:55:01 2026
+  Chain 4 completed burn-in on Aug 15 19:55:01 2026
+  Chain 3 completed iteration 1562 on Aug 15 19:55:01 2026
+  Chain 1 completed iteration 1562 on Aug 15 19:55:02 2026
+  Chain 2 completed iteration 1562 on Aug 15 19:55:02 2026
+  Chain 4 completed iteration 1562 on Aug 15 19:55:02 2026
+  Chain 3 completed iteration 3124 on Aug 15 19:55:02 2026
+  Chain 1 completed iteration 3124 on Aug 15 19:55:02 2026
+  Chain 2 completed iteration 3124 on Aug 15 19:55:02 2026
+  Chain 4 completed iteration 3124 on Aug 15 19:55:03 2026
+  Chain 3 completed iteration 4686 on Aug 15 19:55:03 2026
+  Chain 1 completed iteration 4686 on Aug 15 19:55:03 2026
+  Chain 2 completed iteration 4686 on Aug 15 19:55:03 2026
+  Chain 4 completed iteration 4686 on Aug 15 19:55:04 2026
+  Chain 3 completed iteration 6248 on Aug 15 19:55:04 2026
+  Chain 3 finished on Aug 15 19:55:04 2026
+  Chain 1 completed iteration 6248 on Aug 15 19:55:04 2026
+  Chain 1 finished on Aug 15 19:55:04 2026
+  Chain 2 completed iteration 6248 on Aug 15 19:55:04 2026
+  Chain 2 finished on Aug 15 19:55:04 2026
+  Chain 4 completed iteration 6248 on Aug 15 19:55:04 2026
+  Chain 4 finished on Aug 15 19:55:04 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          626 to 1250            1.339             9  
+                         1251 to 2500            1.201             9  
+                         1876 to 3750            1.059             9  
+                         2501 to 5000            1.059             1  
+                         3126 to 6250            1.045             9  
+                         3751 to 7500            1.099             9  
+                         4376 to 8750            1.033             9  
+                         5001 to 10000           1.063             9  
+                         5626 to 11250           1.046             9  
+                         6251 to 12500           1.030             9  
+                         6876 to 13750           1.023             9  
+                         7501 to 15000           1.028             9  
+                         8126 to 16250           1.015             9  
+                         8751 to 17500           1.012             9  
+                         9376 to 18750           1.008             9  
+                        10001 to 20000           1.008             9  
+                        10626 to 21250           1.008             9  
+                        11251 to 22500           1.005             9  
+                        11876 to 23750           1.006             9  
+                        12501 to 25000           1.004             9  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                    visit =  0.0       -     -  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         7
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        visit
+
+  MODELS
+    [1]  severity ~ Intercept visit visit^2 | Intercept visit
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5438.140
+      WAIC                  5505.233
+
+    Conditional Likelihood
+      DIC2                  4726.306
+      WAIC                  4954.368
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 25000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  severity                            5.362      1.556      4.500      5.500      6.500      0.051      9.145 
+  visit                               1.500      1.118      0.500      1.500      2.500      0.000      3.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 25000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 0.222      0.060      0.112      0.349        ---        ---    199.360 
+  L2 : Cov(visit,Intercept)           0.074      0.030      0.013      0.130        ---        ---    202.674 
+  L2 : Var(visit)                     0.180      0.026      0.131      0.236        ---        ---    472.970 
+  Residual Var.                       0.763      0.039      0.690      0.844        ---        ---    582.245 
+
+Coefficients:                   
+  Intercept                           6.551      0.047      6.459      6.643  19147.332      0.000   8855.374 
+  visit                              -1.196      0.071     -1.336     -1.057    281.405      0.000  10721.550 
+  visit^2                             0.173      0.022      0.130      0.216     60.526      0.000  16493.520 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  0.472      0.065      0.335      0.591        ---        ---    186.166 
+  L2 : Cor(visit,Intercept)           0.374      0.205      0.054      0.834        ---        ---    139.729 
+  L2 : SD(visit)                      0.424      0.031      0.362      0.486        ---        ---    455.312 
+  Residual SD                         0.874      0.022      0.831      0.919        ---        ---    585.713 
+
+Standardized Coefficients:      
+  visit                              -0.856      0.050     -0.953     -0.757    291.105      0.000  13937.443 
+  visit^2                             0.387      0.050      0.289      0.486     59.201      0.000  15075.353 
+
+Proportion Variance Explained   
+  by Coefficients                     0.247      0.018      0.212      0.283        ---        ---   3885.576 
+  by Level-2 Random Intercepts        0.347      0.022      0.306      0.390        ---        ---   3817.822 
+  by Level-2 Random Slopes            0.092      0.012      0.069      0.117        ---        ---    388.896 
+  by Level-1 Residual Variation       0.312      0.019      0.276      0.352        ---        ---    836.054 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:55:11 2026
+  Chain 2 burn-in started on Aug 15 19:55:11 2026
+  Chain 4 burn-in started on Aug 15 19:55:11 2026
+  Chain 3 burn-in started on Aug 15 19:55:11 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:55:12 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:55:12 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:55:12 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:55:12 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:55:14 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:55:14 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:55:14 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:55:14 2026
+  Chain 1 burn-in iteration 22500 completed on Aug 15 19:55:16 2026
+  Chain 3 burn-in iteration 22500 completed on Aug 15 19:55:16 2026
+  Chain 2 burn-in iteration 22500 completed on Aug 15 19:55:16 2026
+  Chain 4 burn-in iteration 22500 completed on Aug 15 19:55:16 2026
+  Chain 2 burn-in iteration 30000 completed on Aug 15 19:55:18 2026
+  Chain 2 completed burn-in on Aug 15 19:55:18 2026
+  Chain 3 burn-in iteration 30000 completed on Aug 15 19:55:18 2026
+  Chain 3 completed burn-in on Aug 15 19:55:18 2026
+  Chain 4 burn-in iteration 30000 completed on Aug 15 19:55:18 2026
+  Chain 4 completed burn-in on Aug 15 19:55:18 2026
+  Chain 1 burn-in iteration 30000 completed on Aug 15 19:55:18 2026
+  Chain 1 completed burn-in on Aug 15 19:55:18 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:55:20 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:55:20 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:55:20 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:55:20 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:55:21 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:55:21 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:55:21 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:55:21 2026
+  Chain 2 completed iteration 5625 on Aug 15 19:55:23 2026
+  Chain 4 completed iteration 5625 on Aug 15 19:55:23 2026
+  Chain 3 completed iteration 5625 on Aug 15 19:55:23 2026
+  Chain 1 completed iteration 5625 on Aug 15 19:55:23 2026
+  Chain 2 completed iteration 7500 on Aug 15 19:55:24 2026
+  Chain 2 finished on Aug 15 19:55:24 2026
+  Chain 4 completed iteration 7500 on Aug 15 19:55:24 2026
+  Chain 4 finished on Aug 15 19:55:24 2026
+  Chain 3 completed iteration 7500 on Aug 15 19:55:24 2026
+  Chain 3 finished on Aug 15 19:55:24 2026
+  Chain 1 completed iteration 7500 on Aug 15 19:55:24 2026
+  Chain 1 finished on Aug 15 19:55:24 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          751 to 1500            1.270            12  
+                         1501 to 3000            1.159            15  
+                         2251 to 4500            1.192            14  
+                         3001 to 6000            1.084             4  
+                         3751 to 7500            1.134             6  
+                         4501 to 9000            1.047            14  
+                         5251 to 10500           1.112             6  
+                         6001 to 12000           1.074             6  
+                         6751 to 13500           1.049            12  
+                         7501 to 15000           1.088             6  
+                         8251 to 16500           1.154             6  
+                         9001 to 18000           1.063            12  
+                         9751 to 19500           1.032             6  
+                        10501 to 21000           1.070            12  
+                        11251 to 22500           1.046            14  
+                        12001 to 24000           1.043             6  
+                        12751 to 25500           1.032             6  
+                        13501 to 27000           1.034            14  
+                        14251 to 28500           1.030            15  
+                        15001 to 30000           1.024            15  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                    visit =  0.0       -     -  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         10
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        visit
+
+  MODELS
+    [1]  severity ~ Intercept visit visit^2 | Intercept visit visit^2
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  5445.215
+      WAIC                  5511.948
+
+    Conditional Likelihood
+      DIC2                  4711.894
+      WAIC                  4943.508
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 30000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  severity                            5.363      1.556      4.500      5.500      6.500      0.065      9.144 
+  visit                               1.500      1.118      0.500      1.500      2.500      0.000      3.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 30000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 0.231      0.071      0.095      0.374        ---        ---     58.505 
+  L2 : Cov(visit,Intercept)           0.063      0.068     -0.093      0.166        ---        ---     66.850 
+  L2 : Var(visit)                     0.305      0.123      0.118      0.599        ---        ---     88.999 
+  L2 : Cov(visit^2,Intercept)         0.002      0.019     -0.029      0.046        ---        ---     82.056 
+  L2 : Cov(visit^2,visit)            -0.039      0.032     -0.119      0.003        ---        ---     88.025 
+  L2 : Var(visit^2)                   0.013      0.009      0.001      0.037        ---        ---     99.564 
+  Residual Var.                       0.745      0.042      0.666      0.832        ---        ---    210.489 
+
+Coefficients:                   
+  Intercept                           6.552      0.047      6.460      6.642  19780.011      0.000  10461.022 
+  visit                              -1.200      0.074     -1.346     -1.056    263.317      0.000  11337.682 
+  visit^2                             0.174      0.023      0.129      0.220     56.559      0.000  17901.672 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  0.481      0.075      0.308      0.612        ---        ---     45.218 
+  L2 : Cor(visit,Intercept)           0.244      0.313     -0.240      0.932        ---        ---     36.774 
+  L2 : SD(visit)                      0.552      0.109      0.343      0.774        ---        ---     80.682 
+  L2 : Cor(visit^2,Intercept)         0.044      0.350     -0.767      0.593        ---        ---     42.313 
+  L2 : Cor(visit^2,visit)            -0.651      0.257     -0.871      0.178        ---        ---     71.028 
+  L2 : SD(visit^2)                    0.113      0.039      0.033      0.193        ---        ---     65.312 
+  Residual SD                         0.863      0.024      0.816      0.912        ---        ---    215.530 
+
+Standardized Coefficients:      
+  visit                              -0.856      0.052     -0.958     -0.754    273.383      0.000  14376.289 
+  visit^2                             0.390      0.052      0.286      0.493     55.664      0.000  16294.768 
+
+Proportion Variance Explained   
+  by Coefficients                     0.246      0.018      0.211      0.281        ---        ---   4882.771 
+  by Level-2 Random Intercepts        0.350      0.021      0.309      0.392        ---        ---   4303.806 
+  by Level-2 Random Slopes            0.099      0.013      0.075      0.127        ---        ---    337.061 
+  by Level-1 Residual Variation       0.304      0.020      0.266      0.345        ---        ---    257.101 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:55:34 2026
+  Chain 2 burn-in started on Aug 15 19:55:34 2026
+  Chain 3 burn-in started on Aug 15 19:55:34 2026
+  Chain 4 burn-in started on Aug 15 19:55:34 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:55:35 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:55:35 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:55:35 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:55:35 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:55:36 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:55:36 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:55:36 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:55:36 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:55:37 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:55:37 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:55:37 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:55:37 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:55:38 2026
+  Chain 1 completed burn-in on Aug 15 19:55:38 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:55:39 2026
+  Chain 2 completed burn-in on Aug 15 19:55:39 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:55:39 2026
+  Chain 4 completed burn-in on Aug 15 19:55:39 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:55:39 2026
+  Chain 3 completed burn-in on Aug 15 19:55:39 2026
+  Chain 1 saved imputation 1 on Aug 15 19:55:39 2026
+  Chain 2 saved imputation 2 on Aug 15 19:55:39 2026
+  Chain 4 saved imputation 4 on Aug 15 19:55:39 2026
+  Chain 3 saved imputation 3 on Aug 15 19:55:39 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:55:39 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:55:39 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:55:39 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:55:39 2026
+  Chain 1 saved imputation 5 on Aug 15 19:55:39 2026
+  Chain 2 saved imputation 6 on Aug 15 19:55:39 2026
+  Chain 4 saved imputation 8 on Aug 15 19:55:39 2026
+  Chain 3 saved imputation 7 on Aug 15 19:55:40 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:55:40 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:55:40 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:55:40 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:55:40 2026
+  Chain 1 saved imputation 9 on Aug 15 19:55:40 2026
+  Chain 2 saved imputation 10 on Aug 15 19:55:40 2026
+  Chain 4 saved imputation 12 on Aug 15 19:55:40 2026
+  Chain 3 saved imputation 11 on Aug 15 19:55:40 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:55:40 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:55:40 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:55:40 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:55:40 2026
+  Chain 1 saved imputation 13 on Aug 15 19:55:40 2026
+  Chain 2 saved imputation 14 on Aug 15 19:55:40 2026
+  Chain 4 saved imputation 16 on Aug 15 19:55:40 2026
+  Chain 3 saved imputation 15 on Aug 15 19:55:41 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:55:41 2026
+  Chain 1 saved imputation 17 on Aug 15 19:55:41 2026
+  Chain 1 finished on Aug 15 19:55:41 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:55:41 2026
+  Chain 2 saved imputation 18 on Aug 15 19:55:41 2026
+  Chain 2 finished on Aug 15 19:55:41 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:55:41 2026
+  Chain 4 saved imputation 20 on Aug 15 19:55:41 2026
+  Chain 4 finished on Aug 15 19:55:41 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:55:41 2026
+  Chain 3 saved imputation 19 on Aug 15 19:55:41 2026
+  Chain 3 finished on Aug 15 19:55:41 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.534            12  
+                         1001 to 2000            1.301            12  
+                         1501 to 3000            1.156            12  
+                         2001 to 4000            1.121            12  
+                         2501 to 5000            1.151            12  
+                         3001 to 6000            1.076            12  
+                         3501 to 7000            1.029             1  
+                         4001 to 8000            1.035            12  
+                         4501 to 9000            1.057            12  
+                         5001 to 10000           1.091            12  
+                         5501 to 11000           1.068            12  
+                         6001 to 12000           1.040            12  
+                         6501 to 13000           1.048            12  
+                         7001 to 14000           1.059            12  
+                         7501 to 15000           1.057            12  
+                         8001 to 16000           1.049            12  
+                         8501 to 17000           1.040            12  
+                         9001 to 18000           1.028            12  
+                         9501 to 19000           1.019            12  
+                        10001 to 20000           1.010             1  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              1748
+  Level-2 Clusters:         437
+  Missing Data Info:
+
+                      Pattern #:       1     2
+                          miss % --------------
+                 severity =  9.9       -     M  
+                    visit =  0.0       -     -  
+                                 --------------
+                                 %  90.1   9.9
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        visit
+
+  FACTORS
+    Level-2:                b0j b1j
+
+  MODELS
+
+   level2:
+    [1]  b0j ~ Intercept
+    [2]  b1j ~ Intercept
+    [3]  b0j <-> b1j
+
+   level1:
+    [4]  severity ~ b0j@1 visit*b1j@1
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  5719.998
+      WAIC                  6024.200
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  b0j                                 6.396      0.405      6.121      6.393      6.668      5.224      7.619 
+  b1j                                -0.693      0.416     -0.980     -0.693     -0.408     -1.861      0.527 
+  severity                            5.358      1.569      4.500      5.500      6.500     -0.232      9.147 
+  visit                               1.500      1.118      0.500      1.500      2.500      0.000      3.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   b0j        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.167      0.057      0.078      0.294        ---        ---     25.552 
+
+Coefficients:                   
+  Intercept                           6.397      0.042      6.315      6.478  23277.802      0.000    736.964 
+
+Standard Deviations:            
+  Residual SD                         0.409      0.069      0.279      0.543        ---        ---     22.709 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1j        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.175      0.026      0.131      0.232        ---        ---    172.001 
+
+Coefficients:                   
+  Intercept                          -0.693      0.030     -0.750     -0.633    521.731      0.000   1247.899 
+
+Standard Deviations:            
+  Residual SD                         0.418      0.031      0.362      0.482        ---        ---    166.868 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: b0j b1j    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(b0j,b1j)                        0.095      0.028      0.030      0.139     10.649      0.001     32.804 
+
+Correlations:                   
+  Cor(b0j,b1j)                        0.568      0.240      0.138      0.978      5.744      0.017     16.272 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  severity   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.821      0.041      0.744      0.903        ---        ---     83.625 
+
+Coefficients:                   
+  b0j                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  visit*b1j                         @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         0.906      0.022      0.862      0.950        ---        ---     84.277 
+
+Standardized Coefficients:      
+  visit*b1j                           0.771      0.016      0.740      0.802   2345.516      0.000     61.124 
+
+Proportion Variance Explained   
+  by Coefficients                     0.594      0.025      0.547      0.643        ---        ---     61.711 
+  by Residual Variation               0.406      0.025      0.357      0.453        ---        ---     61.711 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.5.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.5.png
+Warning message:
+Predictor 'visit' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.6.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 7.6.png

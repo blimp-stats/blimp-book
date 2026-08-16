@@ -47,7 +47,7 @@ mod1 <- rblimp(
 
 output(mod1)                                     # print output
 posterior_plot(mod1, 'wrkbehave')                # plot parameter distributions
-standardized(mod1).                              # print standardized estimates in one table
+standardized(mod1)                               # print standardized estimates in one table
 simple_plot(wrkbehave ~ orgconstr | conrating, mod1)  # plot conditional effects
 
 #------------------------------------------------------------------------------#

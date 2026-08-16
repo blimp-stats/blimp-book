@@ -1,0 +1,2418 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Aug 15 18:07:43 2026
+  Chain 4 burn-in started on Aug 15 18:07:43 2026
+  Chain 3 burn-in started on Aug 15 18:07:43 2026
+  Chain 1 burn-in started on Aug 15 18:07:43 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 18:07:52 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 18:07:52 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 18:07:52 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 18:07:52 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 18:08:00 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 18:08:00 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 18:08:00 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 18:08:00 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 18:08:08 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 18:08:08 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 18:08:08 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 18:08:08 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 18:08:16 2026
+  Chain 3 completed burn-in on Aug 15 18:08:16 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 18:08:16 2026
+  Chain 4 completed burn-in on Aug 15 18:08:16 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 18:08:16 2026
+  Chain 2 completed burn-in on Aug 15 18:08:16 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 18:08:16 2026
+  Chain 1 completed burn-in on Aug 15 18:08:16 2026
+  Chain 4 completed iteration 1250 on Aug 15 18:08:23 2026
+  Chain 2 completed iteration 1250 on Aug 15 18:08:23 2026
+  Chain 3 completed iteration 1250 on Aug 15 18:08:23 2026
+  Chain 1 completed iteration 1250 on Aug 15 18:08:23 2026
+  Chain 4 completed iteration 2500 on Aug 15 18:08:31 2026
+  Chain 2 completed iteration 2500 on Aug 15 18:08:31 2026
+  Chain 3 completed iteration 2500 on Aug 15 18:08:31 2026
+  Chain 1 completed iteration 2500 on Aug 15 18:08:31 2026
+  Chain 4 completed iteration 3750 on Aug 15 18:08:38 2026
+  Chain 2 completed iteration 3750 on Aug 15 18:08:38 2026
+  Chain 3 completed iteration 3750 on Aug 15 18:08:38 2026
+  Chain 1 completed iteration 3750 on Aug 15 18:08:38 2026
+  Chain 4 completed iteration 5000 on Aug 15 18:08:45 2026
+  Chain 4 finished on Aug 15 18:08:45 2026
+  Chain 2 completed iteration 5000 on Aug 15 18:08:46 2026
+  Chain 2 finished on Aug 15 18:08:46 2026
+  Chain 3 completed iteration 5000 on Aug 15 18:08:46 2026
+  Chain 3 finished on Aug 15 18:08:46 2026
+  Chain 1 completed iteration 5000 on Aug 15 18:08:46 2026
+  Chain 1 finished on Aug 15 18:08:46 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.483           146  
+                         1001 to 2000            1.199           103  
+                         1501 to 3000            1.129            71  
+                         2001 to 4000            1.152            49  
+                         2501 to 5000            1.107            49  
+                         3001 to 6000            1.078            49  
+                         3501 to 7000            1.059           203  
+                         4001 to 8000            1.041           148  
+                         4501 to 9000            1.047           148  
+                         5001 to 10000           1.055            38  
+                         5501 to 11000           1.047            38  
+                         6001 to 12000           1.035            38  
+                         6501 to 13000           1.033           103  
+                         7001 to 14000           1.042            38  
+                         7501 to 15000           1.050            38  
+                         8001 to 16000           1.049            38  
+                         8501 to 17000           1.052            38  
+                         9001 to 18000           1.051            38  
+                         9501 to 19000           1.032            38  
+                        10001 to 20000           1.025            38  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    consci1                        threshold          0.312          0.350 
+    consci2                        threshold          0.334          0.350 
+    consci3                        threshold          0.345          0.350 
+    consci4                        threshold          0.346          0.350 
+    consci5                        threshold          0.414          0.350 
+    consci6                        threshold          0.360          0.350 
+    orgcon1                        threshold          0.363          0.350 
+    orgcon2                        threshold          0.389          0.350 
+    orgcon3                        threshold          0.366          0.350 
+    orgcon4                        threshold          0.372          0.350 
+    orgcon5                        threshold          0.396          0.350 
+    orgcon6                        threshold          0.358          0.350 
+    workbeh1                       threshold          0.333          0.350 
+    workbeh2                       threshold          0.318          0.350 
+    workbeh3                       threshold          0.364          0.350 
+    workbeh4                       threshold          0.344          0.350 
+    workbeh5                       threshold          0.392          0.350 
+    workbeh6                       threshold          0.385          0.350 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              932
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                  consci1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci2 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci4 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci5 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci6 =  3.0       -     -     -     -     -     -     -     M     -     -  
+                  orgcon1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon2 =  5.8       -     -     -     -     -     -     M     -     -     M  
+                  orgcon3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon4 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon5 =  5.3       -     -     -     -     -     M     -     -     -     -  
+                  orgcon6 =  6.2       -     -     -     -     M     -     -     -     -     -  
+                 workbeh1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                 workbeh2 =  2.8       -     -     -     -     -     -     -     -     M     -  
+                 workbeh3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                 workbeh4 =  9.3       -     -     -     M     -     -     -     -     -     M  
+                 workbeh5 = 11.1       -     M     -     -     -     -     -     -     -     -  
+                 workbeh6 = 10.6       -     -     M     -     -     -     -     -     -     -  
+                                 --------------------------------------------------------------
+                                 %  56.4   7.9   7.2   6.0   3.6   3.2   3.0   1.6   1.6   0.9
+
+  NOTE: Suppressing printing of 34 missing data patterns.
+        These patterns consist of 8.5% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         94
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                orgconstr conscient wrkbehave
+
+  MODELS
+
+   structural:
+    [1]  wrkbehave ~ orgconstr conscient orgconstr*conscient
+
+   predictor:
+    [2]  conscient ~ Intercept@0
+    [3]  orgconstr ~ Intercept@0
+    [4]  conscient <-> orgconstr
+
+   measurement:
+    [5]  consci1 ~ Intercept conscient@cload1
+    [6]  consci2 ~ Intercept conscient
+    [7]  consci3 ~ Intercept conscient
+    [8]  consci4 ~ Intercept conscient
+    [9]  consci5 ~ Intercept conscient
+   [10]  consci6 ~ Intercept conscient
+   [11]  orgcon1 ~ Intercept orgconstr@oload1
+   [12]  orgcon2 ~ Intercept orgconstr
+   [13]  orgcon3 ~ Intercept orgconstr
+   [14]  orgcon4 ~ Intercept orgconstr
+   [15]  orgcon5 ~ Intercept orgconstr
+   [16]  orgcon6 ~ Intercept orgconstr
+   [17]  workbeh1 ~ Intercept wrkbehave@wload1
+   [18]  workbeh2 ~ Intercept wrkbehave
+   [19]  workbeh3 ~ Intercept wrkbehave
+   [20]  workbeh4 ~ Intercept wrkbehave
+   [21]  workbeh5 ~ Intercept wrkbehave
+   [22]  workbeh6 ~ Intercept wrkbehave
+
+
+ WARNING MESSAGES:
+
+  WARNING: The focal predictor "orgconstr" is not centered.
+           Simple intercepts in the conditional effects table are
+           evaluated at a score of zero on the focal predictor.
+  
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  59557.591
+      WAIC                  64099.965
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  wrkbehave                           0.051      1.350     -0.861     -0.013      0.915     -4.132      5.575 
+  conscient                           0.003      0.996     -0.676     -0.000      0.666     -3.208      3.237 
+  orgconstr                           0.002      0.995     -0.670      0.007      0.678     -3.169      3.236 
+  consci1                             3.812      1.291      3.000      4.000      5.000      1.000      5.000 
+  consci2                             3.851      1.224      3.000      4.000      5.000      1.000      5.000 
+  consci3                             3.850      1.213      3.000      4.000      5.000      1.000      5.000 
+  consci4                             3.833      1.203      3.000      4.000      5.000      1.000      5.000 
+  consci5                             3.853      1.189      3.000      4.000      5.000      1.000      5.000 
+  consci6                             3.919      1.241      3.000      4.000      5.000      1.000      5.000 
+  orgcon1                             2.804      1.337      2.000      2.500      4.000      1.000      5.000 
+  orgcon2                             2.782      1.294      2.000      2.995      4.000      1.000      5.000 
+  orgcon3                             2.771      1.299      2.000      2.000      4.000      1.000      5.000 
+  orgcon4                             2.793      1.321      2.000      2.000      4.000      1.000      5.000 
+  orgcon5                             2.748      1.253      2.000      2.000      4.000      1.000      5.000 
+  orgcon6                             2.782      1.333      2.000      2.000      4.000      1.000      5.000 
+  workbeh1                            1.691      0.862      1.000      1.000      2.000      1.000      5.000 
+  workbeh2                            1.695      0.852      1.000      1.016      2.000      1.000      5.000 
+  workbeh3                            1.665      0.871      1.000      1.000      2.000      1.000      5.000 
+  workbeh4                            1.648      0.823      1.000      1.000      2.000      1.000      5.000 
+  workbeh5                            1.680      0.892      1.000      1.000      2.000      1.000      5.000 
+  workbeh6                            1.634      0.814      1.000      1.000      2.000      1.000      5.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  wrkbehave, conscient                0.001      0.047     -0.092      0.092      0.000      0.994  19724.184 
+  wrkbehave, orgconstr               -0.001      0.047     -0.092      0.092      0.000      0.997  19010.552 
+  wrkbehave, consci1                  0.008      0.042     -0.075      0.090      0.035      0.851  10621.907 
+  wrkbehave, consci2                  0.027      0.042     -0.055      0.110      0.430      0.512  11011.815 
+  wrkbehave, consci3                  0.015      0.042     -0.067      0.097      0.126      0.723  10583.965 
+  wrkbehave, consci4                 -0.021      0.042     -0.104      0.060      0.266      0.606   9757.405 
+  wrkbehave, consci5                  0.003      0.042     -0.079      0.086      0.004      0.948  11120.262 
+  wrkbehave, consci6                 -0.026      0.042     -0.108      0.057      0.368      0.544  10953.682 
+  wrkbehave, orgcon1                 -0.002      0.042     -0.086      0.080      0.004      0.949   8084.972 
+  wrkbehave, orgcon2                  0.010      0.042     -0.073      0.092      0.052      0.820   9133.888 
+  wrkbehave, orgcon3                 -0.019      0.042     -0.102      0.062      0.221      0.639   7837.898 
+  wrkbehave, orgcon4                  0.003      0.042     -0.080      0.085      0.006      0.937  10192.844 
+  wrkbehave, orgcon5                 -0.028      0.042     -0.110      0.055      0.443      0.506   9569.901 
+  wrkbehave, orgcon6                  0.044      0.042     -0.038      0.128      1.076      0.300   9949.743 
+  wrkbehave, workbeh1                 0.001      0.045     -0.088      0.087      0.000      0.986  13500.076 
+  wrkbehave, workbeh2                 0.015      0.045     -0.073      0.104      0.117      0.733  14907.736 
+  wrkbehave, workbeh3                -0.006      0.045     -0.094      0.083      0.017      0.896  16013.745 
+  wrkbehave, workbeh4                 0.007      0.045     -0.080      0.097      0.028      0.868  16177.787 
+  wrkbehave, workbeh5                -0.009      0.045     -0.098      0.080      0.040      0.842  15412.756 
+  wrkbehave, workbeh6                -0.008      0.045     -0.097      0.080      0.031      0.860  15022.731 
+  conscient, consci1                  0.001      0.047     -0.090      0.093      0.000      0.989  20359.182 
+  conscient, consci2                  0.001      0.047     -0.091      0.092      0.000      0.992  20577.094 
+  conscient, consci3                  0.000      0.047     -0.090      0.092      0.000      0.996  19848.854 
+  conscient, consci4                 -0.000      0.047     -0.091      0.090      0.000      1.000  19307.360 
+  conscient, consci5                  0.001      0.047     -0.091      0.092      0.000      0.996  19826.942 
+  conscient, consci6                  0.000      0.047     -0.092      0.092      0.000      0.994  19396.052 
+  conscient, orgcon1                 -0.022      0.041     -0.101      0.058      0.297      0.586  14064.786 
+  conscient, orgcon2                 -0.001      0.041     -0.080      0.078      0.001      0.975  13267.277 
+  conscient, orgcon3                 -0.003      0.040     -0.082      0.076      0.005      0.941  12651.373 
+  conscient, orgcon4                 -0.005      0.040     -0.084      0.072      0.018      0.893  12457.953 
+  conscient, orgcon5                 -0.029      0.040     -0.107      0.049      0.503      0.478  12583.569 
+  conscient, orgcon6                  0.051      0.040     -0.028      0.130      1.645      0.200  13331.079 
+  conscient, workbeh1                 0.007      0.042     -0.076      0.089      0.028      0.868  10785.819 
+  conscient, workbeh2                 0.012      0.042     -0.071      0.095      0.087      0.768  10683.608 
+  conscient, workbeh3                -0.024      0.042     -0.106      0.059      0.309      0.579  11266.965 
+  conscient, workbeh4                -0.008      0.043     -0.091      0.076      0.034      0.853  11225.775 
+  conscient, workbeh5                -0.002      0.043     -0.087      0.082      0.003      0.958  11921.033 
+  conscient, workbeh6                 0.015      0.043     -0.069      0.099      0.115      0.734  11311.163 
+  orgconstr, consci1                  0.017      0.041     -0.063      0.096      0.171      0.679  12285.089 
+  orgconstr, consci2                 -0.010      0.040     -0.088      0.070      0.060      0.807  11842.139 
+  orgconstr, consci3                  0.006      0.041     -0.074      0.086      0.024      0.876  12307.124 
+  orgconstr, consci4                 -0.011      0.040     -0.089      0.069      0.071      0.790  12972.768 
+  orgconstr, consci5                  0.001      0.040     -0.077      0.081      0.001      0.973  13508.744 
+  orgconstr, consci6                  0.001      0.041     -0.080      0.081      0.000      0.985  12103.702 
+  orgconstr, orgcon1                 -0.000      0.047     -0.091      0.092      0.000      1.000  19999.379 
+  orgconstr, orgcon2                 -0.000      0.047     -0.091      0.092      0.000      0.999  19700.011 
+  orgconstr, orgcon3                 -0.000      0.046     -0.091      0.090      0.000      0.997  19719.557 
+  orgconstr, orgcon4                 -0.000      0.047     -0.091      0.092      0.000      0.996  19985.382 
+  orgconstr, orgcon5                  0.000      0.047     -0.091      0.091      0.000      0.993  20115.669 
+  orgconstr, orgcon6                 -0.000      0.047     -0.093      0.092      0.000      0.996  20422.132 
+  orgconstr, workbeh1                -0.005      0.044     -0.091      0.080      0.013      0.909  10960.966 
+  orgconstr, workbeh2                -0.016      0.044     -0.102      0.071      0.125      0.723  13468.954 
+  orgconstr, workbeh3                -0.010      0.044     -0.096      0.077      0.051      0.821  13718.135 
+  orgconstr, workbeh4                -0.011      0.044     -0.098      0.077      0.064      0.801  11925.614 
+  orgconstr, workbeh5                 0.017      0.045     -0.072      0.104      0.135      0.713  13400.900 
+  orgconstr, workbeh6                 0.026      0.044     -0.061      0.112      0.347      0.556  14086.207 
+  consci1, consci2                   -0.004      0.042     -0.088      0.078      0.012      0.912   4725.297 
+  consci1, consci3                    0.004      0.042     -0.078      0.086      0.011      0.917   5944.810 
+  consci1, consci4                   -0.025      0.042     -0.108      0.058      0.352      0.553   6557.689 
+  consci1, consci5                    0.028      0.042     -0.055      0.112      0.437      0.509   5453.267 
+  consci1, consci6                    0.006      0.043     -0.078      0.091      0.023      0.879   3961.256 
+  consci1, orgcon1                    0.017      0.041     -0.064      0.097      0.174      0.677  12327.721 
+  consci1, orgcon2                   -0.006      0.042     -0.089      0.074      0.024      0.877  11814.094 
+  consci1, orgcon3                    0.025      0.041     -0.054      0.107      0.387      0.534  11980.542 
+  consci1, orgcon4                   -0.053      0.041     -0.133      0.028      1.660      0.198  12935.319 
+  consci1, orgcon5                    0.021      0.042     -0.061      0.102      0.255      0.614  13474.861 
+  consci1, orgcon6                   -0.001      0.042     -0.083      0.080      0.001      0.976  13802.995 
+  consci1, workbeh1                   0.012      0.042     -0.071      0.094      0.082      0.775  11667.218 
+  consci1, workbeh2                  -0.010      0.042     -0.091      0.074      0.050      0.823  11212.272 
+  consci1, workbeh3                   0.018      0.042     -0.065      0.102      0.178      0.673  11373.056 
+  consci1, workbeh4                  -0.008      0.043     -0.092      0.077      0.030      0.862  11687.895 
+  consci1, workbeh5                  -0.005      0.043     -0.090      0.079      0.013      0.908  12709.609 
+  consci1, workbeh6                   0.003      0.043     -0.082      0.086      0.004      0.952  12223.875 
+  consci2, consci3                    0.008      0.042     -0.075      0.093      0.041      0.840   4832.157 
+  consci2, consci4                    0.041      0.042     -0.043      0.122      0.930      0.335   3559.892 
+  consci2, consci5                   -0.030      0.042     -0.112      0.053      0.487      0.485   7210.294 
+  consci2, consci6                   -0.001      0.043     -0.084      0.083      0.000      0.993   5901.599 
+  consci2, orgcon1                   -0.009      0.041     -0.088      0.072      0.046      0.830  12452.784 
+  consci2, orgcon2                    0.010      0.042     -0.072      0.090      0.055      0.815  13235.750 
+  consci2, orgcon3                   -0.008      0.041     -0.087      0.073      0.033      0.856  12854.181 
+  consci2, orgcon4                   -0.008      0.041     -0.087      0.073      0.033      0.856  12301.486 
+  consci2, orgcon5                    0.001      0.041     -0.079      0.082      0.001      0.975  13274.548 
+  consci2, orgcon6                   -0.020      0.042     -0.100      0.062      0.227      0.634  12782.839 
+  consci2, workbeh1                  -0.002      0.043     -0.087      0.082      0.003      0.954  10707.310 
+  consci2, workbeh2                   0.001      0.042     -0.081      0.084      0.001      0.981  11192.689 
+  consci2, workbeh3                  -0.001      0.042     -0.083      0.082      0.000      0.991  11592.595 
+  consci2, workbeh4                   0.018      0.043     -0.066      0.101      0.180      0.671  12690.325 
+  consci2, workbeh5                   0.009      0.044     -0.076      0.094      0.040      0.841  12200.673 
+  consci2, workbeh6                   0.007      0.043     -0.077      0.089      0.026      0.871  11369.230 
+  consci3, consci4                    0.007      0.042     -0.076      0.089      0.026      0.871   4574.550 
+  consci3, consci5                   -0.007      0.042     -0.089      0.076      0.028      0.868   5619.905 
+  consci3, consci6                   -0.000      0.042     -0.084      0.083      0.000      0.994   6347.277 
+  consci3, orgcon1                   -0.024      0.041     -0.105      0.055      0.360      0.549  12030.664 
+  consci3, orgcon2                    0.051      0.041     -0.031      0.131      1.508      0.220  12336.457 
+  consci3, orgcon3                   -0.028      0.041     -0.109      0.052      0.468      0.494  12346.379 
+  consci3, orgcon4                    0.013      0.041     -0.067      0.092      0.104      0.748  12848.256 
+  consci3, orgcon5                   -0.003      0.041     -0.085      0.077      0.006      0.936  12934.005 
+  consci3, orgcon6                   -0.009      0.041     -0.088      0.073      0.043      0.835  13348.287 
+  consci3, workbeh1                  -0.001      0.043     -0.085      0.081      0.001      0.970  10531.578 
+  consci3, workbeh2                   0.032      0.042     -0.051      0.114      0.582      0.445  12182.217 
+  consci3, workbeh3                  -0.038      0.042     -0.120      0.044      0.813      0.367  11372.371 
+  consci3, workbeh4                   0.005      0.043     -0.078      0.089      0.013      0.908  11896.388 
+  consci3, workbeh5                   0.002      0.043     -0.082      0.087      0.003      0.959  12995.397 
+  consci3, workbeh6                   0.019      0.043     -0.064      0.103      0.197      0.657  11616.859 
+  consci4, consci5                   -0.011      0.042     -0.095      0.070      0.077      0.782   5219.753 
+  consci4, consci6                   -0.028      0.042     -0.110      0.055      0.431      0.512   7142.984 
+  consci4, orgcon1                    0.023      0.041     -0.055      0.104      0.334      0.563  13120.057 
+  consci4, orgcon2                    0.014      0.041     -0.068      0.094      0.106      0.745  12408.107 
+  consci4, orgcon3                   -0.016      0.041     -0.094      0.064      0.146      0.702  12126.501 
+  consci4, orgcon4                   -0.015      0.040     -0.094      0.064      0.132      0.716  12143.570 
+  consci4, orgcon5                   -0.047      0.041     -0.126      0.035      1.283      0.257  11507.840 
+  consci4, orgcon6                    0.037      0.041     -0.044      0.119      0.807      0.369  13775.286 
+  consci4, workbeh1                  -0.003      0.042     -0.084      0.081      0.004      0.951  11154.857 
+  consci4, workbeh2                  -0.026      0.042     -0.107      0.056      0.373      0.541  11149.782 
+  consci4, workbeh3                   0.013      0.042     -0.071      0.095      0.082      0.775  11803.752 
+  consci4, workbeh4                  -0.010      0.043     -0.093      0.074      0.055      0.815  12751.992 
+  consci4, workbeh5                   0.012      0.043     -0.073      0.096      0.079      0.778  12349.352 
+  consci4, workbeh6                  -0.016      0.043     -0.101      0.067      0.142      0.706  12727.874 
+  consci5, consci6                    0.010      0.043     -0.074      0.095      0.060      0.807   4154.794 
+  consci5, orgcon1                   -0.021      0.041     -0.102      0.059      0.270      0.604  12713.163 
+  consci5, orgcon2                   -0.040      0.041     -0.120      0.042      0.924      0.336  13645.749 
+  consci5, orgcon3                   -0.019      0.041     -0.100      0.061      0.222      0.637  12625.143 
+  consci5, orgcon4                    0.055      0.041     -0.026      0.135      1.786      0.181  13191.899 
+  consci5, orgcon5                   -0.017      0.041     -0.098      0.064      0.164      0.685  12398.351 
+  consci5, orgcon6                    0.043      0.042     -0.039      0.123      1.040      0.308  12924.318 
+  consci5, workbeh1                  -0.021      0.043     -0.105      0.063      0.228      0.633  12077.224 
+  consci5, workbeh2                   0.029      0.042     -0.054      0.111      0.467      0.494  11472.317 
+  consci5, workbeh3                  -0.013      0.042     -0.095      0.070      0.097      0.755  11276.488 
+  consci5, workbeh4                   0.008      0.043     -0.076      0.091      0.030      0.862  12427.256 
+  consci5, workbeh5                  -0.000      0.044     -0.087      0.086      0.000      0.991  12858.662 
+  consci5, workbeh6                   0.003      0.043     -0.082      0.086      0.004      0.951  12845.592 
+  consci6, orgcon1                   -0.016      0.042     -0.097      0.066      0.152      0.697  13134.994 
+  consci6, orgcon2                   -0.030      0.042     -0.111      0.052      0.502      0.479  13032.600 
+  consci6, orgcon3                    0.039      0.041     -0.041      0.119      0.917      0.338  11962.691 
+  consci6, orgcon4                    0.008      0.042     -0.073      0.089      0.035      0.851  12799.027 
+  consci6, orgcon5                    0.006      0.042     -0.075      0.086      0.019      0.891  12863.508 
+  consci6, orgcon6                    0.018      0.042     -0.064      0.098      0.178      0.673  13009.905 
+  consci6, workbeh1                   0.025      0.043     -0.059      0.108      0.328      0.567  10950.451 
+  consci6, workbeh2                  -0.019      0.043     -0.104      0.064      0.213      0.645  11524.962 
+  consci6, workbeh3                  -0.002      0.043     -0.085      0.083      0.003      0.959  11830.476 
+  consci6, workbeh4                  -0.019      0.043     -0.104      0.065      0.195      0.658  12440.812 
+  consci6, workbeh5                  -0.017      0.043     -0.103      0.068      0.153      0.695  13095.927 
+  consci6, workbeh6                   0.004      0.043     -0.080      0.089      0.009      0.923  11982.787 
+  orgcon1, orgcon2                   -0.007      0.042     -0.090      0.076      0.031      0.859   4955.293 
+  orgcon1, orgcon3                    0.014      0.042     -0.069      0.095      0.108      0.743   3213.960 
+  orgcon1, orgcon4                   -0.035      0.042     -0.116      0.047      0.700      0.403   4034.289 
+  orgcon1, orgcon5                    0.006      0.042     -0.076      0.090      0.025      0.875   4274.203 
+  orgcon1, orgcon6                    0.018      0.042     -0.065      0.100      0.184      0.668   4119.733 
+  orgcon1, workbeh1                   0.021      0.042     -0.060      0.104      0.249      0.618  10825.520 
+  orgcon1, workbeh2                   0.014      0.042     -0.068      0.097      0.119      0.730  10853.616 
+  orgcon1, workbeh3                  -0.017      0.042     -0.098      0.065      0.167      0.682  12514.288 
+  orgcon1, workbeh4                  -0.023      0.043     -0.108      0.060      0.298      0.585  13026.637 
+  orgcon1, workbeh5                   0.002      0.043     -0.081      0.085      0.002      0.968  12633.222 
+  orgcon1, workbeh6                   0.002      0.043     -0.082      0.086      0.002      0.964  12091.093 
+  orgcon2, orgcon3                    0.002      0.041     -0.078      0.082      0.002      0.962   5110.922 
+  orgcon2, orgcon4                   -0.014      0.041     -0.096      0.067      0.120      0.729   5066.180 
+  orgcon2, orgcon5                    0.004      0.042     -0.079      0.086      0.007      0.933   5976.548 
+  orgcon2, orgcon6                    0.002      0.042     -0.081      0.083      0.001      0.969   7743.872 
+  orgcon2, workbeh1                   0.005      0.042     -0.078      0.087      0.014      0.905  12088.203 
+  orgcon2, workbeh2                  -0.013      0.042     -0.095      0.070      0.088      0.766  11898.080 
+  orgcon2, workbeh3                   0.007      0.042     -0.076      0.090      0.029      0.864  10922.908 
+  orgcon2, workbeh4                   0.037      0.043     -0.046      0.121      0.785      0.375  12797.158 
+  orgcon2, workbeh5                  -0.016      0.043     -0.099      0.069      0.130      0.719  12702.513 
+  orgcon2, workbeh6                  -0.009      0.043     -0.093      0.075      0.047      0.828  13441.922 
+  orgcon3, orgcon4                    0.008      0.041     -0.072      0.090      0.043      0.837   4084.299 
+  orgcon3, orgcon5                   -0.011      0.042     -0.093      0.070      0.073      0.787   4822.837 
+  orgcon3, orgcon6                   -0.010      0.042     -0.093      0.072      0.065      0.799   6131.991 
+  orgcon3, workbeh1                  -0.014      0.041     -0.095      0.068      0.115      0.734  11533.108 
+  orgcon3, workbeh2                  -0.003      0.042     -0.086      0.080      0.005      0.942  12226.304 
+  orgcon3, workbeh3                  -0.005      0.042     -0.088      0.078      0.016      0.900  10634.382 
+  orgcon3, workbeh4                   0.001      0.043     -0.083      0.084      0.000      0.992  12004.581 
+  orgcon3, workbeh5                   0.003      0.043     -0.080      0.088      0.009      0.926  12524.283 
+  orgcon3, workbeh6                  -0.006      0.043     -0.090      0.077      0.024      0.877  12431.265 
+  orgcon4, orgcon5                    0.046      0.041     -0.036      0.126      1.208      0.272   6529.785 
+  orgcon4, orgcon6                   -0.003      0.042     -0.086      0.078      0.006      0.937   4552.603 
+  orgcon4, workbeh1                   0.030      0.042     -0.052      0.114      0.527      0.468  10583.394 
+  orgcon4, workbeh2                  -0.016      0.041     -0.098      0.065      0.152      0.696  11753.572 
+  orgcon4, workbeh3                  -0.019      0.041     -0.101      0.062      0.214      0.643  11235.713 
+  orgcon4, workbeh4                  -0.009      0.043     -0.092      0.077      0.037      0.848  12166.720 
+  orgcon4, workbeh5                   0.001      0.043     -0.085      0.085      0.000      0.992  12605.169 
+  orgcon4, workbeh6                   0.017      0.043     -0.068      0.100      0.155      0.694  13020.747 
+  orgcon5, orgcon6                   -0.028      0.042     -0.110      0.055      0.451      0.502   5754.617 
+  orgcon5, workbeh1                  -0.022      0.042     -0.103      0.061      0.268      0.605  12697.070 
+  orgcon5, workbeh2                  -0.011      0.042     -0.093      0.071      0.076      0.782  12473.750 
+  orgcon5, workbeh3                   0.018      0.042     -0.065      0.101      0.187      0.665  11443.950 
+  orgcon5, workbeh4                  -0.031      0.043     -0.115      0.054      0.514      0.473  11392.071 
+  orgcon5, workbeh5                  -0.003      0.043     -0.087      0.083      0.004      0.947  13767.453 
+  orgcon5, workbeh6                   0.016      0.043     -0.067      0.100      0.134      0.714  12053.465 
+  orgcon6, workbeh1                  -0.022      0.042     -0.104      0.060      0.278      0.598  11722.117 
+  orgcon6, workbeh2                   0.010      0.042     -0.072      0.092      0.055      0.814  12081.830 
+  orgcon6, workbeh3                   0.001      0.042     -0.081      0.083      0.001      0.975  12980.639 
+  orgcon6, workbeh4                   0.006      0.043     -0.078      0.089      0.019      0.890  12951.640 
+  orgcon6, workbeh5                   0.036      0.044     -0.050      0.121      0.671      0.413  12877.531 
+  orgcon6, workbeh6                   0.017      0.043     -0.067      0.100      0.161      0.688  12670.597 
+  workbeh1, workbeh2                 -0.010      0.043     -0.096      0.073      0.058      0.810   8595.742 
+  workbeh1, workbeh3                 -0.000      0.043     -0.085      0.084      0.000      0.992   8143.136 
+  workbeh1, workbeh4                  0.036      0.044     -0.052      0.121      0.656      0.418   6308.776 
+  workbeh1, workbeh5                 -0.017      0.044     -0.102      0.069      0.158      0.691   8573.167 
+  workbeh1, workbeh6                 -0.008      0.044     -0.094      0.077      0.031      0.859   8675.424 
+  workbeh2, workbeh3                 -0.001      0.043     -0.085      0.083      0.000      0.984   6974.189 
+  workbeh2, workbeh4                  0.004      0.044     -0.081      0.090      0.008      0.928   7019.400 
+  workbeh2, workbeh5                 -0.003      0.044     -0.088      0.083      0.005      0.944   8481.424 
+  workbeh2, workbeh6                  0.025      0.044     -0.060      0.110      0.327      0.568   6590.305 
+  workbeh3, workbeh4                 -0.023      0.044     -0.109      0.063      0.273      0.601   9655.463 
+  workbeh3, workbeh5                  0.019      0.044     -0.067      0.107      0.203      0.652   6425.143 
+  workbeh3, workbeh6                 -0.011      0.044     -0.096      0.075      0.059      0.809   9726.878 
+  workbeh4, workbeh5                 -0.007      0.044     -0.094      0.080      0.025      0.874  11215.343 
+  workbeh4, workbeh6                 -0.003      0.044     -0.088      0.083      0.004      0.947  10463.844 
+  workbeh5, workbeh6                 -0.011      0.044     -0.097      0.075      0.063      0.802   9231.170 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   wrkbehave  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Coefficients:                   
+  orgconstr                           0.774      0.061      0.657      0.896    160.520      0.000   1208.074 
+  conscient                          -0.259      0.052     -0.360     -0.157     25.048      0.000   2649.323 
+  orgconstr*conscient                -0.339      0.063     -0.465     -0.220     28.854      0.000   1345.828 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.569      0.030      0.508      0.625    366.355      0.000   1503.134 
+  conscient                          -0.191      0.036     -0.260     -0.117     27.163      0.000   2743.797 
+  orgconstr*conscient                -0.235      0.040     -0.310     -0.157     35.288      0.000   1522.536 
+
+Proportion Variance Explained   
+  by Coefficients                     0.453      0.033      0.387      0.516        ---        ---   1005.315 
+  by Residual Variation               0.547      0.033      0.484      0.613        ---        ---   1005.315 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  orgconstr |                                                                                                 
+         conscient @ Mean + 1 SD                                                                              
+    Intercept                        -0.258      0.052     -0.362     -0.156     24.483      0.000   2365.093 
+    Slope                             0.435      0.076      0.288      0.586     32.849      0.000   2430.186 
+                                                                                                              
+  orgconstr | conscient @ Mean                                                                                
+    Intercept                        -0.001      0.009     -0.018      0.017      0.008      0.927   1289.917 
+    Slope                             0.773      0.060      0.659      0.893    165.570      0.000   1219.598 
+                                                                                                              
+  orgconstr |                                                                                                 
+         conscient @ Mean - 1 SD                                                                              
+    Intercept                         0.257      0.051      0.156      0.357     25.124      0.000   2817.963 
+    Slope                             1.110      0.096      0.927      1.304    133.687      0.000    999.547 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+  predictor block:
+
+Latent Variable:   conscient  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   orgconstr  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: conscient orgconstr
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(conscient,orgconstr)           -0.146      0.039     -0.221     -0.067     13.625      0.000   6695.733 
+
+Correlations:                   
+  Cor(conscient,orgconstr)           -0.146      0.039     -0.221     -0.067     13.625      0.000   6695.733 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  consci1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.948      0.094      1.766      2.139    432.820      0.000    186.045 
+  conscient                           0.995      0.068      0.868      1.132    212.987      0.000    398.544 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.693      0.067      0.565      0.826        ---        ---    233.716 
+  Tau 3                               1.321      0.081      1.162      1.482        ---        ---    155.647 
+  Tau 4                               2.277      0.099      2.082      2.477        ---        ---    136.860 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.704      0.023      0.657      0.746    947.186      0.000    371.283 
+
+Proportion Variance Explained   
+  by Coefficients                     0.495      0.032      0.432      0.557        ---        ---    370.976 
+  by Residual Variation               0.505      0.032      0.443      0.568        ---        ---    370.976 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.177      0.103      1.978      2.387    447.541      0.000    215.914 
+  conscient                           0.979      0.067      0.853      1.116    216.820      0.000    533.510 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.827      0.076      0.683      0.983        ---        ---    259.335 
+  Tau 3                               1.526      0.089      1.356      1.711        ---        ---    210.802 
+  Tau 4                               2.537      0.109      2.325      2.763        ---        ---    194.067 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.698      0.023      0.649      0.740    914.691      0.000    466.393 
+
+Proportion Variance Explained   
+  by Coefficients                     0.488      0.032      0.421      0.548        ---        ---    465.592 
+  by Residual Variation               0.512      0.032      0.452      0.579        ---        ---    465.592 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.153      0.105      1.969      2.376    425.065      0.000    133.086 
+  conscient                           0.997      0.069      0.868      1.138    207.002      0.000    312.291 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.751      0.076      0.614      0.912        ---        ---    223.822 
+  Tau 3                               1.492      0.093      1.326      1.688        ---        ---    152.749 
+  Tau 4                               2.549      0.112      2.348      2.789        ---        ---    123.339 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.704      0.023      0.657      0.747    921.600      0.000    284.634 
+
+Proportion Variance Explained   
+  by Coefficients                     0.496      0.033      0.431      0.558        ---        ---    281.363 
+  by Residual Variation               0.504      0.033      0.442      0.569        ---        ---    281.363 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.063      0.091      1.886      2.248    509.983      0.000    243.454 
+  conscient                           0.913      0.062      0.795      1.041    215.900      0.000    578.912 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.670      0.067      0.546      0.810        ---        ---    327.055 
+  Tau 3                               1.476      0.083      1.311      1.647        ---        ---    246.696 
+  Tau 4                               2.485      0.099      2.289      2.684        ---        ---    205.686 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.673      0.024      0.624      0.716    811.058      0.000    534.323 
+
+Proportion Variance Explained   
+  by Coefficients                     0.452      0.032      0.389      0.512        ---        ---    532.755 
+  by Residual Variation               0.548      0.032      0.488      0.611        ---        ---    532.755 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci5    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.206      0.101      2.012      2.411    482.517      0.000    209.244 
+  conscient                           1.017      0.067      0.890      1.155    229.281      0.000    500.928 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.725      0.072      0.587      0.875        ---        ---    267.869 
+  Tau 3                               1.491      0.089      1.324      1.670        ---        ---    202.616 
+  Tau 4                               2.678      0.110      2.469      2.902        ---        ---    191.679 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.712      0.022      0.666      0.751   1054.384      0.000    459.981 
+
+Proportion Variance Explained   
+  by Coefficients                     0.506      0.031      0.443      0.565        ---        ---    458.452 
+  by Residual Variation               0.494      0.031      0.435      0.557        ---        ---    458.452 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci6    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.112      0.101      1.920      2.316    440.775      0.000    188.100 
+  conscient                           1.046      0.072      0.915      1.197    211.358      0.000    432.390 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.607      0.067      0.485      0.747        ---        ---    253.815 
+  Tau 3                               1.370      0.085      1.214      1.548        ---        ---    182.718 
+  Tau 4                               2.321      0.103      2.128      2.526        ---        ---    179.506 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.721      0.022      0.675      0.763   1035.999      0.000    400.906 
+
+Proportion Variance Explained   
+  by Coefficients                     0.520      0.032      0.456      0.583        ---        ---    397.117 
+  by Residual Variation               0.480      0.032      0.417      0.544        ---        ---    397.117 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.391      0.079      1.241      1.553    310.250      0.000    201.975 
+  orgconstr                           1.051      0.068      0.927      1.194    238.769      0.000    292.448 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.390      0.078      1.247      1.555        ---        ---    167.208 
+  Tau 3                               2.156      0.094      1.987      2.358        ---        ---    144.911 
+  Tau 4                               2.764      0.110      2.568      3.003        ---        ---    146.826 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.723      0.021      0.681      0.763   1206.676      0.000    267.050 
+
+Proportion Variance Explained   
+  by Coefficients                     0.523      0.030      0.464      0.582        ---        ---    264.501 
+  by Residual Variation               0.477      0.030      0.418      0.536        ---        ---    264.501 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.359      0.072      1.216      1.501    351.551      0.000    331.344 
+  orgconstr                           0.995      0.062      0.874      1.120    254.133      0.000    595.851 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.339      0.070      1.208      1.478        ---        ---    300.513 
+  Tau 3                               2.128      0.085      1.969      2.299        ---        ---    252.060 
+  Tau 4                               2.844      0.102      2.655      3.056        ---        ---    246.683 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.704      0.021      0.660      0.741   1140.121      0.000    542.421 
+
+Proportion Variance Explained   
+  by Coefficients                     0.495      0.029      0.435      0.549        ---        ---    542.215 
+  by Residual Variation               0.505      0.029      0.451      0.565        ---        ---    542.215 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.391      0.072      1.255      1.537    377.546      0.000    321.493 
+  orgconstr                           0.965      0.062      0.847      1.092    240.349      0.000    481.808 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.443      0.073      1.305      1.596        ---        ---    267.533 
+  Tau 3                               2.159      0.088      1.996      2.344        ---        ---    220.701 
+  Tau 4                               2.799      0.104      2.607      3.014        ---        ---    222.886 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.693      0.022      0.648      0.733   1012.079      0.000    438.577 
+
+Proportion Variance Explained   
+  by Coefficients                     0.480      0.030      0.420      0.537        ---        ---    436.905 
+  by Residual Variation               0.520      0.030      0.463      0.580        ---        ---    436.905 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.373      0.072      1.235      1.516    363.685      0.000    242.104 
+  orgconstr                           0.970      0.062      0.852      1.094    241.434      0.000    398.462 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.425      0.072      1.287      1.566        ---        ---    194.458 
+  Tau 3                               2.078      0.086      1.913      2.249        ---        ---    163.662 
+  Tau 4                               2.752      0.100      2.562      2.953        ---        ---    161.497 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.694      0.021      0.650      0.733   1048.220      0.000    371.020 
+
+Proportion Variance Explained   
+  by Coefficients                     0.482      0.030      0.422      0.537        ---        ---    369.287 
+  by Residual Variation               0.518      0.030      0.463      0.578        ---        ---    369.287 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon5    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.408      0.074      1.263      1.557    358.122      0.000    248.840 
+  orgconstr                           0.952      0.061      0.838      1.076    247.974      0.000    478.259 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.446      0.074      1.307      1.601        ---        ---    196.578 
+  Tau 3                               2.182      0.088      2.022      2.360        ---        ---    183.398 
+  Tau 4                               2.988      0.107      2.791      3.200        ---        ---    186.625 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.687      0.022      0.643      0.728    998.532      0.000    414.263 
+
+Proportion Variance Explained   
+  by Coefficients                     0.473      0.030      0.413      0.530        ---        ---    412.763 
+  by Residual Variation               0.527      0.030      0.470      0.587        ---        ---    412.763 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon6    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.415      0.079      1.261      1.569    324.101      0.000    233.522 
+  orgconstr                           1.016      0.067      0.889      1.155    229.208      0.000    306.446 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.534      0.080      1.377      1.691        ---        ---    181.602 
+  Tau 3                               2.148      0.095      1.966      2.337        ---        ---    152.825 
+  Tau 4                               2.776      0.111      2.572      2.997        ---        ---    149.259 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.711      0.022      0.665      0.751   1051.177      0.000    266.169 
+
+Proportion Variance Explained   
+  by Coefficients                     0.506      0.031      0.442      0.564        ---        ---    265.604 
+  by Residual Variation               0.494      0.031      0.436      0.558        ---        ---    265.604 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh1   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.078      0.060     -0.195      0.039      1.695      0.193   1148.978 
+  wrkbehave                           0.803      0.058      0.691      0.922    188.708      0.000    598.587 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.372      0.077      1.228      1.524        ---        ---    669.984 
+  Tau 3                               2.855      0.151      2.571      3.159        ---        ---    414.812 
+  Tau 4                               3.352      0.192      3.003      3.758        ---        ---    301.179 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.735      0.022      0.689      0.775   1145.132      0.000    595.576 
+
+Proportion Variance Explained   
+  by Coefficients                     0.540      0.032      0.475      0.600        ---        ---    594.249 
+  by Residual Variation               0.460      0.032      0.400      0.525        ---        ---    594.249 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh2   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.031      0.060     -0.149      0.086      0.272      0.602   1067.281 
+  wrkbehave                           0.757      0.058      0.648      0.875    171.736      0.000    626.552 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.435      0.079      1.286      1.595        ---        ---    678.531 
+  Tau 3                               2.798      0.142      2.534      3.087        ---        ---    404.580 
+  Tau 4                               3.238      0.176      2.908      3.608        ---        ---    387.857 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.715      0.023      0.665      0.757    937.771      0.000    637.700 
+
+Proportion Variance Explained   
+  by Coefficients                     0.511      0.033      0.443      0.573        ---        ---    634.998 
+  by Residual Variation               0.489      0.033      0.427      0.557        ---        ---    634.998 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh3   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.140      0.061     -0.259     -0.019      5.215      0.022   1262.298 
+  wrkbehave                           0.793      0.060      0.684      0.918    177.770      0.000    503.594 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.399      0.078      1.256      1.559        ---        ---    555.654 
+  Tau 3                               2.706      0.150      2.430      3.017        ---        ---    220.084 
+  Tau 4                               3.069      0.177      2.749      3.428        ---        ---    252.828 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.731      0.022      0.685      0.773   1062.818      0.000    450.098 
+
+Proportion Variance Explained   
+  by Coefficients                     0.534      0.033      0.470      0.597        ---        ---    448.074 
+  by Residual Variation               0.466      0.033      0.403      0.530        ---        ---    448.074 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh4   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.115      0.065     -0.244      0.011      3.168      0.075    949.568 
+  wrkbehave                           0.842      0.065      0.723      0.982    167.088      0.000    383.258 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.568      0.095      1.396      1.769        ---        ---    406.004 
+  Tau 3                               3.008      0.172      2.699      3.373        ---        ---    265.764 
+  Tau 4                               3.448      0.223      3.068      3.957        ---        ---    223.129 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.751      0.023      0.704      0.794   1081.362      0.000    331.854 
+
+Proportion Variance Explained   
+  by Coefficients                     0.564      0.034      0.495      0.630        ---        ---    329.723 
+  by Residual Variation               0.436      0.034      0.370      0.505        ---        ---    329.723 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh5   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.169      0.070     -0.309     -0.032      5.833      0.016    940.309 
+  wrkbehave                           0.961      0.073      0.825      1.116    172.056      0.000    427.207 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.441      0.092      1.269      1.633        ---        ---    445.589 
+  Tau 3                               2.923      0.171      2.620      3.296        ---        ---    274.335 
+  Tau 4                               3.507      0.217      3.126      3.959        ---        ---    217.770 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.792      0.020      0.750      0.830   1499.635      0.000    369.361 
+
+Proportion Variance Explained   
+  by Coefficients                     0.627      0.032      0.562      0.689        ---        ---    365.687 
+  by Residual Variation               0.373      0.032      0.311      0.438        ---        ---    365.687 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh6   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.148      0.063     -0.275     -0.028      5.637      0.018   1138.434 
+  wrkbehave                           0.793      0.063      0.673      0.921    157.495      0.000    421.725 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.465      0.085      1.304      1.636        ---        ---    477.282 
+  Tau 3                               3.025      0.188      2.668      3.408        ---        ---    184.760 
+  Tau 4                               3.329      0.219      2.916      3.764        ---        ---    203.100 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.730      0.025      0.678      0.775    882.028      0.000    401.513 
+
+Proportion Variance Explained   
+  by Coefficients                     0.533      0.036      0.460      0.601        ---        ---    401.070 
+  by Residual Variation               0.467      0.036      0.399      0.540        ---        ---    401.070 
+
+                                ------------------------------------------------------------------------------
+
+
+
+                                               Estimate   StdDev     2.5%
+wrkbehave ~ orgconstr (standardized)              0.569    0.030    0.508
+wrkbehave ~ conscient (standardized)             -0.191    0.036   -0.260
+wrkbehave ~ orgconstr*conscient (standardized)   -0.235    0.040   -0.310
+consci1 ~ conscient (standardized)                0.704    0.023    0.657
+consci2 ~ conscient (standardized)                0.698    0.023    0.649
+consci3 ~ conscient (standardized)                0.704    0.023    0.657
+consci4 ~ conscient (standardized)                0.673    0.024    0.624
+consci5 ~ conscient (standardized)                0.712    0.022    0.666
+consci6 ~ conscient (standardized)                0.721    0.022    0.675
+orgcon1 ~ orgconstr (standardized)                0.723    0.021    0.681
+orgcon2 ~ orgconstr (standardized)                0.704    0.021    0.659
+orgcon3 ~ orgconstr (standardized)                0.693    0.022    0.648
+orgcon4 ~ orgconstr (standardized)                0.694    0.021    0.650
+orgcon5 ~ orgconstr (standardized)                0.688    0.022    0.643
+orgcon6 ~ orgconstr (standardized)                0.711    0.022    0.665
+workbeh1 ~ wrkbehave (standardized)               0.735    0.022    0.689
+workbeh2 ~ wrkbehave (standardized)               0.715    0.023    0.665
+workbeh3 ~ wrkbehave (standardized)               0.731    0.022    0.685
+workbeh4 ~ wrkbehave (standardized)               0.751    0.023    0.704
+workbeh5 ~ wrkbehave (standardized)               0.792    0.020    0.750
+workbeh6 ~ wrkbehave (standardized)               0.730    0.025    0.678
+Cor( conscient, orgconstr )                      -0.146    0.040   -0.221
+                                                  97.5%    ChiSq   PValue
+wrkbehave ~ orgconstr (standardized)              0.625  366.355        0
+wrkbehave ~ conscient (standardized)             -0.117   27.163        0
+wrkbehave ~ orgconstr*conscient (standardized)   -0.157   35.288        0
+consci1 ~ conscient (standardized)                0.746  947.186        0
+consci2 ~ conscient (standardized)                0.740  914.691        0
+consci3 ~ conscient (standardized)                0.747  921.600        0
+consci4 ~ conscient (standardized)                0.716  811.058        0
+consci5 ~ conscient (standardized)                0.751 1054.384        0
+consci6 ~ conscient (standardized)                0.763 1035.999        0
+orgcon1 ~ orgconstr (standardized)                0.763 1206.676        0
+orgcon2 ~ orgconstr (standardized)                0.741 1140.121        0
+orgcon3 ~ orgconstr (standardized)                0.733 1012.079        0
+orgcon4 ~ orgconstr (standardized)                0.733 1048.220        0
+orgcon5 ~ orgconstr (standardized)                0.728  998.532        0
+orgcon6 ~ orgconstr (standardized)                0.751 1051.177        0
+workbeh1 ~ wrkbehave (standardized)               0.774 1145.132        0
+workbeh2 ~ wrkbehave (standardized)               0.757  937.771        0
+workbeh3 ~ wrkbehave (standardized)               0.773 1062.818        0
+workbeh4 ~ wrkbehave (standardized)               0.794 1081.362        0
+workbeh5 ~ wrkbehave (standardized)               0.830 1499.635        0
+workbeh6 ~ wrkbehave (standardized)               0.775  882.028        0
+Cor( conscient, orgconstr )                      -0.067   13.625        0
+                                                  N_Eff
+wrkbehave ~ orgconstr (standardized)           1503.134
+wrkbehave ~ conscient (standardized)           2743.797
+wrkbehave ~ orgconstr*conscient (standardized) 1522.536
+consci1 ~ conscient (standardized)              371.283
+consci2 ~ conscient (standardized)              466.393
+consci3 ~ conscient (standardized)              284.634
+consci4 ~ conscient (standardized)              534.324
+consci5 ~ conscient (standardized)              459.981
+consci6 ~ conscient (standardized)              400.906
+orgcon1 ~ orgconstr (standardized)              267.050
+orgcon2 ~ orgconstr (standardized)              542.421
+orgcon3 ~ orgconstr (standardized)              438.577
+orgcon4 ~ orgconstr (standardized)              371.020
+orgcon5 ~ orgconstr (standardized)              414.264
+orgcon6 ~ orgconstr (standardized)              266.169
+workbeh1 ~ wrkbehave (standardized)             595.576
+workbeh2 ~ wrkbehave (standardized)             637.700
+workbeh3 ~ wrkbehave (standardized)             450.098
+workbeh4 ~ wrkbehave (standardized)             331.854
+workbeh5 ~ wrkbehave (standardized)             369.361
+workbeh6 ~ wrkbehave (standardized)             401.513
+Cor( conscient, orgconstr )                    6695.733
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 18:09:40 2026
+  Chain 3 burn-in started on Aug 15 18:09:40 2026
+  Chain 2 burn-in started on Aug 15 18:09:40 2026
+  Chain 4 burn-in started on Aug 15 18:09:40 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 18:09:48 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 18:09:48 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 18:09:48 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 18:09:48 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 18:09:56 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 18:09:56 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 18:09:56 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 18:09:56 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 18:10:04 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 18:10:04 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 18:10:04 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 18:10:04 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 18:10:12 2026
+  Chain 1 completed burn-in on Aug 15 18:10:12 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 18:10:12 2026
+  Chain 4 completed burn-in on Aug 15 18:10:12 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 18:10:13 2026
+  Chain 2 completed burn-in on Aug 15 18:10:13 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 18:10:13 2026
+  Chain 3 completed burn-in on Aug 15 18:10:13 2026
+  Chain 1 saved imputation 1 on Aug 15 18:10:16 2026
+  Chain 4 saved imputation 4 on Aug 15 18:10:16 2026
+  Chain 2 saved imputation 2 on Aug 15 18:10:16 2026
+  Chain 3 saved imputation 3 on Aug 15 18:10:16 2026
+  Chain 1 completed iteration 625 on Aug 15 18:10:16 2026
+  Chain 4 completed iteration 625 on Aug 15 18:10:16 2026
+  Chain 2 completed iteration 625 on Aug 15 18:10:16 2026
+  Chain 3 completed iteration 625 on Aug 15 18:10:17 2026
+  Chain 1 saved imputation 5 on Aug 15 18:10:19 2026
+  Chain 2 saved imputation 6 on Aug 15 18:10:19 2026
+  Chain 4 saved imputation 8 on Aug 15 18:10:19 2026
+  Chain 3 saved imputation 7 on Aug 15 18:10:19 2026
+  Chain 1 completed iteration 1250 on Aug 15 18:10:20 2026
+  Chain 2 completed iteration 1250 on Aug 15 18:10:20 2026
+  Chain 4 completed iteration 1250 on Aug 15 18:10:20 2026
+  Chain 3 completed iteration 1250 on Aug 15 18:10:20 2026
+  Chain 1 saved imputation 9 on Aug 15 18:10:22 2026
+  Chain 2 saved imputation 10 on Aug 15 18:10:22 2026
+  Chain 4 saved imputation 12 on Aug 15 18:10:22 2026
+  Chain 3 saved imputation 11 on Aug 15 18:10:22 2026
+  Chain 1 completed iteration 1875 on Aug 15 18:10:24 2026
+  Chain 4 completed iteration 1875 on Aug 15 18:10:24 2026
+  Chain 2 completed iteration 1875 on Aug 15 18:10:24 2026
+  Chain 3 completed iteration 1875 on Aug 15 18:10:24 2026
+  Chain 1 saved imputation 13 on Aug 15 18:10:25 2026
+  Chain 4 saved imputation 16 on Aug 15 18:10:25 2026
+  Chain 2 saved imputation 14 on Aug 15 18:10:25 2026
+  Chain 3 saved imputation 15 on Aug 15 18:10:25 2026
+  Chain 1 completed iteration 2500 on Aug 15 18:10:28 2026
+  Chain 1 saved imputation 17 on Aug 15 18:10:28 2026
+  Chain 1 finished on Aug 15 18:10:28 2026
+  Chain 4 completed iteration 2500 on Aug 15 18:10:28 2026
+  Chain 4 saved imputation 20 on Aug 15 18:10:28 2026
+  Chain 4 finished on Aug 15 18:10:28 2026
+  Chain 2 completed iteration 2500 on Aug 15 18:10:28 2026
+  Chain 2 saved imputation 18 on Aug 15 18:10:28 2026
+  Chain 2 finished on Aug 15 18:10:28 2026
+  Chain 3 completed iteration 2500 on Aug 15 18:10:28 2026
+  Chain 3 saved imputation 19 on Aug 15 18:10:28 2026
+  Chain 3 finished on Aug 15 18:10:28 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.483           146  
+                         1001 to 2000            1.199           103  
+                         1501 to 3000            1.129            71  
+                         2001 to 4000            1.152            49  
+                         2501 to 5000            1.107            49  
+                         3001 to 6000            1.078            49  
+                         3501 to 7000            1.059           203  
+                         4001 to 8000            1.041           148  
+                         4501 to 9000            1.047           148  
+                         5001 to 10000           1.055            38  
+                         5501 to 11000           1.047            38  
+                         6001 to 12000           1.035            38  
+                         6501 to 13000           1.033           103  
+                         7001 to 14000           1.042            38  
+                         7501 to 15000           1.050            38  
+                         8001 to 16000           1.049            38  
+                         8501 to 17000           1.052            38  
+                         9001 to 18000           1.051            38  
+                         9501 to 19000           1.032            38  
+                        10001 to 20000           1.025            38  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    consci1                        threshold          0.312          0.350 
+    consci2                        threshold          0.334          0.350 
+    consci3                        threshold          0.347          0.350 
+    consci4                        threshold          0.343          0.350 
+    consci5                        threshold          0.411          0.350 
+    consci6                        threshold          0.357          0.350 
+    orgcon1                        threshold          0.364          0.350 
+    orgcon2                        threshold          0.393          0.350 
+    orgcon3                        threshold          0.368          0.350 
+    orgcon4                        threshold          0.372          0.350 
+    orgcon5                        threshold          0.401          0.350 
+    orgcon6                        threshold          0.358          0.350 
+    workbeh1                       threshold          0.335          0.350 
+    workbeh2                       threshold          0.318          0.350 
+    workbeh3                       threshold          0.362          0.350 
+    workbeh4                       threshold          0.344          0.350 
+    workbeh5                       threshold          0.391          0.350 
+    workbeh6                       threshold          0.384          0.350 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              932
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                  consci1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci2 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci4 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci5 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  consci6 =  3.0       -     -     -     -     -     -     -     M     -     -  
+                  orgcon1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon2 =  5.8       -     -     -     -     -     -     M     -     -     M  
+                  orgcon3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon4 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  orgcon5 =  5.3       -     -     -     -     -     M     -     -     -     -  
+                  orgcon6 =  6.2       -     -     -     -     M     -     -     -     -     -  
+                 workbeh1 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                 workbeh2 =  2.8       -     -     -     -     -     -     -     -     M     -  
+                 workbeh3 =  0.0       -     -     -     -     -     -     -     -     -     -  
+                 workbeh4 =  9.3       -     -     -     M     -     -     -     -     -     M  
+                 workbeh5 = 11.1       -     M     -     -     -     -     -     -     -     -  
+                 workbeh6 = 10.6       -     -     M     -     -     -     -     -     -     -  
+                                 --------------------------------------------------------------
+                                 %  56.4   7.9   7.2   6.0   3.6   3.2   3.0   1.6   1.6   0.9
+
+  NOTE: Suppressing printing of 34 missing data patterns.
+        These patterns consist of 8.5% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         94
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                orgconstr conscient wrkbehave
+
+  MODELS
+
+   structural:
+    [1]  wrkbehave ~ orgconstr conscient orgconstr*conscient
+
+   predictor:
+    [2]  conscient ~ Intercept@0
+    [3]  orgconstr ~ Intercept@0
+    [4]  conscient <-> orgconstr
+
+   measurement:
+    [5]  consci1 ~ Intercept conscient@cload1
+    [6]  consci2 ~ Intercept conscient
+    [7]  consci3 ~ Intercept conscient
+    [8]  consci4 ~ Intercept conscient
+    [9]  consci5 ~ Intercept conscient
+   [10]  consci6 ~ Intercept conscient
+   [11]  orgcon1 ~ Intercept orgconstr@oload1
+   [12]  orgcon2 ~ Intercept orgconstr
+   [13]  orgcon3 ~ Intercept orgconstr
+   [14]  orgcon4 ~ Intercept orgconstr
+   [15]  orgcon5 ~ Intercept orgconstr
+   [16]  orgcon6 ~ Intercept orgconstr
+   [17]  workbeh1 ~ Intercept wrkbehave@wload1
+   [18]  workbeh2 ~ Intercept wrkbehave
+   [19]  workbeh3 ~ Intercept wrkbehave
+   [20]  workbeh4 ~ Intercept wrkbehave
+   [21]  workbeh5 ~ Intercept wrkbehave
+   [22]  workbeh6 ~ Intercept wrkbehave
+
+
+ WARNING MESSAGES:
+
+  WARNING: The focal predictor "orgconstr" is not centered.
+           Simple intercepts in the conditional effects table are
+           evaluated at a score of zero on the focal predictor.
+  
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  59564.262
+      WAIC                  64119.298
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  wrkbehave                           0.049      1.349     -0.862     -0.014      0.913     -4.117      5.563 
+  conscient                           0.002      0.996     -0.677     -0.000      0.665     -3.210      3.238 
+  orgconstr                           0.002      0.995     -0.670      0.007      0.679     -3.174      3.227 
+  consci1                             3.812      1.291      3.000      4.000      5.000      1.000      5.000 
+  consci2                             3.851      1.224      3.000      4.000      5.000      1.000      5.000 
+  consci3                             3.850      1.213      3.000      4.000      5.000      1.000      5.000 
+  consci4                             3.833      1.203      3.000      4.000      5.000      1.000      5.000 
+  consci5                             3.853      1.189      3.000      4.000      5.000      1.000      5.000 
+  consci6                             3.919      1.241      3.000      4.000      5.000      1.000      5.000 
+  orgcon1                             2.804      1.337      2.000      2.500      4.000      1.000      5.000 
+  orgcon2                             2.782      1.294      2.000      2.994      4.000      1.000      5.000 
+  orgcon3                             2.771      1.299      2.000      2.000      4.000      1.000      5.000 
+  orgcon4                             2.793      1.321      2.000      2.000      4.000      1.000      5.000 
+  orgcon5                             2.748      1.253      2.000      2.000      4.000      1.000      5.000 
+  orgcon6                             2.782      1.333      2.000      2.000      4.000      1.000      5.000 
+  workbeh1                            1.691      0.862      1.000      1.000      2.000      1.000      5.000 
+  workbeh2                            1.695      0.852      1.000      1.015      2.000      1.000      5.000 
+  workbeh3                            1.665      0.871      1.000      1.000      2.000      1.000      5.000 
+  workbeh4                            1.648      0.823      1.000      1.000      2.000      1.000      5.000 
+  workbeh5                            1.680      0.892      1.000      1.000      2.000      1.000      5.000 
+  workbeh6                            1.634      0.814      1.000      1.000      2.000      1.000      5.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  wrkbehave, conscient                0.000      0.047     -0.092      0.091      0.000      0.998  10260.768 
+  wrkbehave, orgconstr               -0.001      0.047     -0.091      0.094      0.000      0.998   9157.903 
+  wrkbehave, consci1                  0.009      0.042     -0.075      0.090      0.037      0.848   5682.376 
+  wrkbehave, consci2                  0.027      0.042     -0.055      0.111      0.431      0.511   6048.041 
+  wrkbehave, consci3                  0.015      0.042     -0.067      0.097      0.124      0.724   5975.704 
+  wrkbehave, consci4                 -0.020      0.042     -0.104      0.059      0.251      0.617   5458.628 
+  wrkbehave, consci5                  0.002      0.043     -0.080      0.085      0.004      0.951   5252.073 
+  wrkbehave, consci6                 -0.025      0.042     -0.108      0.056      0.371      0.543   5407.189 
+  wrkbehave, orgcon1                 -0.002      0.042     -0.087      0.080      0.004      0.950   3941.518 
+  wrkbehave, orgcon2                  0.010      0.042     -0.073      0.091      0.052      0.820   5034.284 
+  wrkbehave, orgcon3                 -0.019      0.042     -0.102      0.064      0.217      0.641   3835.481 
+  wrkbehave, orgcon4                  0.003      0.042     -0.080      0.085      0.005      0.941   5237.942 
+  wrkbehave, orgcon5                 -0.028      0.042     -0.109      0.054      0.448      0.503   4987.103 
+  wrkbehave, orgcon6                  0.044      0.042     -0.036      0.128      1.109      0.292   5039.941 
+  wrkbehave, workbeh1                 0.001      0.045     -0.087      0.086      0.000      0.982   6713.222 
+  wrkbehave, workbeh2                 0.015      0.045     -0.071      0.105      0.119      0.730   7882.604 
+  wrkbehave, workbeh3                -0.007      0.045     -0.095      0.083      0.022      0.881   8064.624 
+  wrkbehave, workbeh4                 0.008      0.045     -0.080      0.096      0.031      0.860   8716.958 
+  wrkbehave, workbeh5                -0.009      0.045     -0.098      0.079      0.044      0.833   8042.674 
+  wrkbehave, workbeh6                -0.008      0.046     -0.097      0.080      0.031      0.861   8187.610 
+  conscient, consci1                  0.000      0.047     -0.091      0.093      0.000      0.996  10176.172 
+  conscient, consci2                  0.001      0.047     -0.090      0.093      0.000      0.985  10352.526 
+  conscient, consci3                  0.000      0.047     -0.088      0.093      0.000      0.997  10263.762 
+  conscient, consci4                 -0.000      0.046     -0.089      0.090      0.000      0.999   9384.769 
+  conscient, consci5                  0.001      0.046     -0.090      0.090      0.000      0.995   9862.035 
+  conscient, consci6                  0.000      0.047     -0.092      0.093      0.000      0.994   9821.440 
+  conscient, orgcon1                 -0.022      0.041     -0.102      0.059      0.290      0.590   7003.204 
+  conscient, orgcon2                 -0.001      0.041     -0.080      0.078      0.000      0.983   6337.811 
+  conscient, orgcon3                 -0.003      0.040     -0.081      0.076      0.005      0.945   6278.297 
+  conscient, orgcon4                 -0.006      0.040     -0.085      0.071      0.019      0.892   6344.750 
+  conscient, orgcon5                 -0.029      0.040     -0.107      0.049      0.500      0.480   6162.518 
+  conscient, orgcon6                  0.051      0.040     -0.027      0.130      1.652      0.199   6822.085 
+  conscient, workbeh1                 0.007      0.042     -0.076      0.088      0.027      0.871   5587.330 
+  conscient, workbeh2                 0.011      0.042     -0.070      0.095      0.081      0.776   5218.557 
+  conscient, workbeh3                -0.024      0.042     -0.107      0.058      0.321      0.571   5340.989 
+  conscient, workbeh4                -0.008      0.043     -0.091      0.076      0.033      0.855   6010.692 
+  conscient, workbeh5                -0.002      0.043     -0.085      0.082      0.002      0.963   6118.931 
+  conscient, workbeh6                 0.016      0.043     -0.069      0.098      0.126      0.723   6122.357 
+  orgconstr, consci1                  0.017      0.041     -0.064      0.097      0.169      0.681   6538.843 
+  orgconstr, consci2                 -0.010      0.040     -0.089      0.068      0.066      0.797   6331.100 
+  orgconstr, consci3                  0.006      0.041     -0.073      0.085      0.025      0.874   6459.652 
+  orgconstr, consci4                 -0.010      0.040     -0.089      0.068      0.067      0.796   6456.671 
+  orgconstr, consci5                  0.001      0.040     -0.077      0.080      0.001      0.979   6316.601 
+  orgconstr, consci6                  0.001      0.041     -0.080      0.081      0.000      0.988   6159.838 
+  orgconstr, orgcon1                 -0.000      0.047     -0.092      0.092      0.000      1.000   9638.243 
+  orgconstr, orgcon2                 -0.001      0.047     -0.092      0.093      0.000      0.994   9747.755 
+  orgconstr, orgcon3                 -0.000      0.047     -0.092      0.091      0.000      0.994   9776.305 
+  orgconstr, orgcon4                 -0.001      0.047     -0.091      0.091      0.000      0.990  10159.406 
+  orgconstr, orgcon5                  0.000      0.046     -0.092      0.090      0.000      0.995   9903.267 
+  orgconstr, orgcon6                 -0.000      0.047     -0.093      0.093      0.000      0.998  10259.931 
+  orgconstr, workbeh1                -0.006      0.044     -0.090      0.080      0.014      0.904   5321.983 
+  orgconstr, workbeh2                -0.015      0.044     -0.102      0.072      0.119      0.730   6936.017 
+  orgconstr, workbeh3                -0.009      0.044     -0.095      0.077      0.044      0.834   7518.837 
+  orgconstr, workbeh4                -0.012      0.044     -0.097      0.076      0.066      0.797   5927.151 
+  orgconstr, workbeh5                 0.017      0.045     -0.071      0.105      0.146      0.703   7576.088 
+  orgconstr, workbeh6                 0.027      0.044     -0.061      0.112      0.354      0.552   7734.162 
+  consci1, consci2                   -0.004      0.043     -0.089      0.079      0.012      0.914   2709.972 
+  consci1, consci3                    0.005      0.042     -0.077      0.087      0.017      0.897   3255.476 
+  consci1, consci4                   -0.026      0.042     -0.109      0.056      0.377      0.539   4102.604 
+  consci1, consci5                    0.027      0.042     -0.056      0.110      0.402      0.526   3234.595 
+  consci1, consci6                    0.006      0.043     -0.079      0.091      0.020      0.886   1752.999 
+  consci1, orgcon1                    0.017      0.041     -0.065      0.098      0.169      0.681   5450.539 
+  consci1, orgcon2                   -0.006      0.042     -0.089      0.076      0.018      0.893   6300.302 
+  consci1, orgcon3                    0.025      0.041     -0.055      0.106      0.387      0.534   5630.563 
+  consci1, orgcon4                   -0.053      0.041     -0.132      0.029      1.640      0.200   6292.696 
+  consci1, orgcon5                    0.021      0.042     -0.062      0.103      0.260      0.610   6127.548 
+  consci1, orgcon6                   -0.002      0.042     -0.083      0.080      0.001      0.976   6698.995 
+  consci1, workbeh1                   0.012      0.042     -0.070      0.094      0.085      0.770   6271.141 
+  consci1, workbeh2                  -0.010      0.042     -0.091      0.073      0.052      0.820   5599.069 
+  consci1, workbeh3                   0.018      0.042     -0.066      0.102      0.175      0.676   5382.025 
+  consci1, workbeh4                  -0.008      0.043     -0.091      0.077      0.033      0.856   5793.281 
+  consci1, workbeh5                  -0.005      0.043     -0.089      0.080      0.013      0.911   6308.186 
+  consci1, workbeh6                   0.003      0.043     -0.082      0.085      0.004      0.948   6616.347 
+  consci2, consci3                    0.010      0.042     -0.073      0.093      0.058      0.810   3257.897 
+  consci2, consci4                    0.041      0.042     -0.043      0.123      0.932      0.334   1922.605 
+  consci2, consci5                   -0.030      0.042     -0.113      0.053      0.491      0.484   3867.592 
+  consci2, consci6                   -0.001      0.042     -0.084      0.083      0.000      0.983   3181.512 
+  consci2, orgcon1                   -0.009      0.041     -0.088      0.072      0.047      0.828   6151.141 
+  consci2, orgcon2                    0.009      0.042     -0.073      0.090      0.052      0.820   6998.171 
+  consci2, orgcon3                   -0.007      0.041     -0.087      0.074      0.029      0.865   6604.838 
+  consci2, orgcon4                   -0.007      0.041     -0.087      0.074      0.031      0.860   6257.108 
+  consci2, orgcon5                    0.002      0.041     -0.078      0.083      0.002      0.963   6700.397 
+  consci2, orgcon6                   -0.020      0.042     -0.102      0.061      0.236      0.627   6566.143 
+  consci2, workbeh1                  -0.002      0.042     -0.086      0.082      0.003      0.956   4771.231 
+  consci2, workbeh2                   0.001      0.041     -0.080      0.083      0.001      0.974   5620.617 
+  consci2, workbeh3                  -0.001      0.042     -0.083      0.081      0.000      0.987   5529.965 
+  consci2, workbeh4                   0.018      0.043     -0.065      0.100      0.181      0.671   5943.352 
+  consci2, workbeh5                   0.008      0.044     -0.077      0.094      0.036      0.849   5819.169 
+  consci2, workbeh6                   0.006      0.042     -0.077      0.088      0.019      0.891   5631.602 
+  consci3, consci4                    0.008      0.042     -0.075      0.089      0.032      0.858   3361.390 
+  consci3, consci5                   -0.006      0.042     -0.089      0.076      0.023      0.880   3016.985 
+  consci3, consci6                   -0.000      0.043     -0.084      0.085      0.000      0.999   3219.880 
+  consci3, orgcon1                   -0.024      0.041     -0.103      0.055      0.346      0.556   6093.462 
+  consci3, orgcon2                    0.051      0.041     -0.031      0.131      1.485      0.223   5366.139 
+  consci3, orgcon3                   -0.028      0.041     -0.109      0.053      0.454      0.501   5855.811 
+  consci3, orgcon4                    0.014      0.040     -0.065      0.093      0.126      0.723   6466.964 
+  consci3, orgcon5                   -0.003      0.041     -0.084      0.075      0.007      0.934   6282.177 
+  consci3, orgcon6                   -0.010      0.041     -0.087      0.072      0.051      0.822   6877.199 
+  consci3, workbeh1                  -0.001      0.043     -0.086      0.082      0.001      0.973   5000.252 
+  consci3, workbeh2                   0.032      0.042     -0.051      0.115      0.598      0.439   6156.771 
+  consci3, workbeh3                  -0.038      0.042     -0.121      0.044      0.825      0.364   5977.494 
+  consci3, workbeh4                   0.005      0.043     -0.078      0.088      0.014      0.905   5931.938 
+  consci3, workbeh5                   0.001      0.043     -0.083      0.086      0.001      0.975   6525.598 
+  consci3, workbeh6                   0.019      0.042     -0.064      0.102      0.195      0.659   5472.926 
+  consci4, consci5                   -0.013      0.042     -0.096      0.069      0.099      0.754   3083.948 
+  consci4, consci6                   -0.029      0.042     -0.111      0.053      0.461      0.497   3960.418 
+  consci4, orgcon1                    0.024      0.041     -0.055      0.104      0.340      0.560   6740.521 
+  consci4, orgcon2                    0.013      0.041     -0.069      0.093      0.100      0.752   6559.615 
+  consci4, orgcon3                   -0.016      0.041     -0.095      0.064      0.155      0.694   6075.191 
+  consci4, orgcon4                   -0.015      0.040     -0.094      0.064      0.139      0.709   6047.081 
+  consci4, orgcon5                   -0.047      0.041     -0.127      0.036      1.264      0.261   6071.827 
+  consci4, orgcon6                    0.037      0.041     -0.044      0.117      0.817      0.366   6993.580 
+  consci4, workbeh1                  -0.003      0.042     -0.084      0.080      0.005      0.946   5798.109 
+  consci4, workbeh2                  -0.025      0.042     -0.107      0.055      0.379      0.538   5814.493 
+  consci4, workbeh3                   0.013      0.043     -0.072      0.095      0.080      0.777   5526.138 
+  consci4, workbeh4                  -0.010      0.043     -0.095      0.075      0.056      0.813   6351.865 
+  consci4, workbeh5                   0.012      0.043     -0.073      0.096      0.072      0.788   6754.456 
+  consci4, workbeh6                  -0.016      0.043     -0.101      0.066      0.155      0.694   6082.352 
+  consci5, consci6                    0.009      0.043     -0.075      0.094      0.044      0.834   2129.284 
+  consci5, orgcon1                   -0.021      0.041     -0.102      0.059      0.267      0.605   6575.562 
+  consci5, orgcon2                   -0.039      0.041     -0.120      0.041      0.930      0.335   6780.654 
+  consci5, orgcon3                   -0.018      0.041     -0.100      0.060      0.217      0.641   6168.197 
+  consci5, orgcon4                    0.055      0.041     -0.026      0.134      1.786      0.181   6604.413 
+  consci5, orgcon5                   -0.017      0.041     -0.098      0.064      0.162      0.687   6379.434 
+  consci5, orgcon6                    0.042      0.042     -0.038      0.124      1.028      0.311   6151.444 
+  consci5, workbeh1                  -0.021      0.043     -0.105      0.063      0.231      0.630   5670.436 
+  consci5, workbeh2                   0.029      0.042     -0.055      0.111      0.475      0.491   5806.395 
+  consci5, workbeh3                  -0.014      0.042     -0.095      0.070      0.104      0.747   5744.016 
+  consci5, workbeh4                   0.008      0.043     -0.077      0.090      0.030      0.862   5739.589 
+  consci5, workbeh5                  -0.001      0.044     -0.084      0.087      0.000      0.993   6268.698 
+  consci5, workbeh6                   0.003      0.043     -0.083      0.087      0.005      0.944   6292.734 
+  consci6, orgcon1                   -0.016      0.042     -0.098      0.065      0.152      0.696   6741.987 
+  consci6, orgcon2                   -0.029      0.042     -0.111      0.052      0.488      0.485   6545.463 
+  consci6, orgcon3                    0.039      0.041     -0.041      0.120      0.922      0.337   5835.714 
+  consci6, orgcon4                    0.008      0.042     -0.075      0.089      0.033      0.855   6207.361 
+  consci6, orgcon5                    0.006      0.041     -0.074      0.087      0.020      0.886   6563.668 
+  consci6, orgcon6                    0.018      0.042     -0.065      0.098      0.181      0.670   6431.928 
+  consci6, workbeh1                   0.025      0.043     -0.059      0.108      0.337      0.562   5588.606 
+  consci6, workbeh2                  -0.019      0.044     -0.106      0.066      0.205      0.651   5782.417 
+  consci6, workbeh3                  -0.003      0.043     -0.085      0.083      0.003      0.959   6089.075 
+  consci6, workbeh4                  -0.019      0.043     -0.105      0.066      0.184      0.668   6282.758 
+  consci6, workbeh5                  -0.018      0.044     -0.104      0.068      0.161      0.688   6663.505 
+  consci6, workbeh6                   0.004      0.043     -0.080      0.088      0.010      0.922   5695.545 
+  orgcon1, orgcon2                   -0.008      0.042     -0.090      0.076      0.034      0.854   3028.692 
+  orgcon1, orgcon3                    0.013      0.041     -0.070      0.094      0.093      0.760   1907.591 
+  orgcon1, orgcon4                   -0.036      0.041     -0.116      0.045      0.744      0.388   1959.148 
+  orgcon1, orgcon5                    0.005      0.042     -0.079      0.089      0.017      0.897   3019.011 
+  orgcon1, orgcon6                    0.017      0.042     -0.066      0.099      0.159      0.690   2662.060 
+  orgcon1, workbeh1                   0.021      0.042     -0.060      0.104      0.246      0.620   5674.931 
+  orgcon1, workbeh2                   0.014      0.042     -0.067      0.096      0.117      0.733   5119.558 
+  orgcon1, workbeh3                  -0.017      0.042     -0.100      0.063      0.170      0.680   6332.987 
+  orgcon1, workbeh4                  -0.023      0.043     -0.107      0.061      0.293      0.588   6231.949 
+  orgcon1, workbeh5                   0.001      0.042     -0.081      0.084      0.002      0.969   6571.190 
+  orgcon1, workbeh6                   0.001      0.042     -0.081      0.084      0.001      0.975   5616.015 
+  orgcon2, orgcon3                    0.002      0.041     -0.077      0.082      0.003      0.957   3660.888 
+  orgcon2, orgcon4                   -0.014      0.041     -0.095      0.066      0.118      0.732   3536.607 
+  orgcon2, orgcon5                    0.003      0.042     -0.080      0.086      0.005      0.945   2849.863 
+  orgcon2, orgcon6                    0.002      0.042     -0.082      0.082      0.001      0.972   3583.485 
+  orgcon2, workbeh1                   0.004      0.042     -0.079      0.088      0.011      0.917   6512.854 
+  orgcon2, workbeh2                  -0.013      0.042     -0.096      0.070      0.092      0.761   5792.344 
+  orgcon2, workbeh3                   0.008      0.043     -0.077      0.092      0.033      0.856   5588.954 
+  orgcon2, workbeh4                   0.038      0.043     -0.045      0.122      0.801      0.371   6402.616 
+  orgcon2, workbeh5                  -0.016      0.043     -0.100      0.069      0.131      0.718   6933.352 
+  orgcon2, workbeh6                  -0.010      0.043     -0.094      0.074      0.055      0.814   6734.013 
+  orgcon3, orgcon4                    0.008      0.041     -0.071      0.090      0.044      0.834   1819.295 
+  orgcon3, orgcon5                   -0.011      0.042     -0.093      0.070      0.074      0.786   2612.291 
+  orgcon3, orgcon6                   -0.011      0.042     -0.093      0.072      0.065      0.799   2960.340 
+  orgcon3, workbeh1                  -0.015      0.041     -0.093      0.068      0.120      0.729   5946.738 
+  orgcon3, workbeh2                  -0.003      0.042     -0.086      0.080      0.006      0.937   5900.246 
+  orgcon3, workbeh3                  -0.006      0.042     -0.088      0.078      0.018      0.893   5264.288 
+  orgcon3, workbeh4                  -0.000      0.043     -0.084      0.083      0.000      0.996   6142.842 
+  orgcon3, workbeh5                   0.003      0.043     -0.081      0.085      0.007      0.932   6552.399 
+  orgcon3, workbeh6                  -0.005      0.043     -0.090      0.078      0.019      0.891   6141.994 
+  orgcon4, orgcon5                    0.046      0.042     -0.036      0.128      1.227      0.268   3659.333 
+  orgcon4, orgcon6                   -0.003      0.042     -0.086      0.077      0.007      0.935   3358.414 
+  orgcon4, workbeh1                   0.031      0.042     -0.052      0.114      0.535      0.464   5235.470 
+  orgcon4, workbeh2                  -0.015      0.041     -0.097      0.066      0.141      0.707   5704.345 
+  orgcon4, workbeh3                  -0.020      0.041     -0.101      0.061      0.224      0.636   5585.561 
+  orgcon4, workbeh4                  -0.009      0.043     -0.092      0.078      0.040      0.841   5755.228 
+  orgcon4, workbeh5                   0.001      0.043     -0.083      0.082      0.000      0.995   6464.572 
+  orgcon4, workbeh6                   0.018      0.043     -0.068      0.099      0.155      0.694   6803.333 
+  orgcon5, orgcon6                   -0.028      0.042     -0.109      0.056      0.450      0.502   4063.488 
+  orgcon5, workbeh1                  -0.022      0.042     -0.101      0.061      0.265      0.607   6025.907 
+  orgcon5, workbeh2                  -0.011      0.042     -0.094      0.071      0.073      0.787   5784.090 
+  orgcon5, workbeh3                   0.018      0.042     -0.065      0.103      0.194      0.660   4596.776 
+  orgcon5, workbeh4                  -0.031      0.043     -0.115      0.054      0.516      0.472   5605.930 
+  orgcon5, workbeh5                  -0.002      0.043     -0.086      0.083      0.003      0.957   7007.157 
+  orgcon5, workbeh6                   0.016      0.043     -0.068      0.101      0.133      0.715   6389.489 
+  orgcon6, workbeh1                  -0.022      0.042     -0.105      0.059      0.291      0.589   5499.543 
+  orgcon6, workbeh2                   0.010      0.042     -0.072      0.093      0.056      0.812   6084.117 
+  orgcon6, workbeh3                   0.002      0.042     -0.082      0.083      0.001      0.972   6300.314 
+  orgcon6, workbeh4                   0.006      0.043     -0.077      0.089      0.022      0.883   6150.214 
+  orgcon6, workbeh5                   0.037      0.043     -0.049      0.121      0.709      0.400   6011.987 
+  orgcon6, workbeh6                   0.018      0.043     -0.067      0.102      0.168      0.682   5958.285 
+  workbeh1, workbeh2                 -0.011      0.043     -0.096      0.072      0.060      0.806   4662.468 
+  workbeh1, workbeh3                 -0.000      0.044     -0.086      0.086      0.000      0.995   3989.505 
+  workbeh1, workbeh4                  0.035      0.044     -0.053      0.121      0.623      0.430   3483.639 
+  workbeh1, workbeh5                 -0.017      0.044     -0.102      0.069      0.151      0.697   3993.655 
+  workbeh1, workbeh6                 -0.009      0.044     -0.094      0.075      0.041      0.839   4073.674 
+  workbeh2, workbeh3                  0.000      0.043     -0.083      0.085      0.000      0.993   3859.513 
+  workbeh2, workbeh4                  0.004      0.044     -0.080      0.091      0.007      0.932   3359.176 
+  workbeh2, workbeh5                 -0.002      0.044     -0.088      0.083      0.003      0.954   4459.731 
+  workbeh2, workbeh6                  0.025      0.044     -0.061      0.109      0.323      0.570   3408.450 
+  workbeh3, workbeh4                 -0.023      0.044     -0.108      0.063      0.274      0.601   5187.143 
+  workbeh3, workbeh5                  0.020      0.044     -0.065      0.107      0.223      0.637   4110.858 
+  workbeh3, workbeh6                 -0.010      0.044     -0.096      0.074      0.058      0.809   4763.879 
+  workbeh4, workbeh5                 -0.007      0.044     -0.093      0.081      0.022      0.882   6252.904 
+  workbeh4, workbeh6                 -0.003      0.044     -0.088      0.083      0.005      0.941   5822.575 
+  workbeh5, workbeh6                 -0.010      0.044     -0.097      0.075      0.052      0.819   5051.887 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  structural block:
+
+Latent Variable:   wrkbehave  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Coefficients:                   
+  orgconstr                           0.772      0.061      0.658      0.895    162.643      0.000    689.541 
+  conscient                          -0.258      0.051     -0.355     -0.157     25.615      0.000   1463.907 
+  orgconstr*conscient                -0.338      0.062     -0.462     -0.222     29.775      0.000    821.085 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.568      0.029      0.507      0.625    370.873      0.000    838.424 
+  conscient                          -0.190      0.036     -0.258     -0.117     27.590      0.000   1482.206 
+  orgconstr*conscient                -0.235      0.039     -0.309     -0.159     36.089      0.000    906.236 
+
+Proportion Variance Explained   
+  by Coefficients                     0.452      0.033      0.388      0.514        ---        ---    615.754 
+  by Residual Variation               0.548      0.033      0.486      0.612        ---        ---    615.754 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Conditional Effects                Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+  orgconstr |                                                                                                 
+         conscient @ Mean + 1 SD                                                                              
+    Intercept                        -0.257      0.051     -0.357     -0.156     25.108      0.000   1336.591 
+    Slope                             0.434      0.076      0.290      0.586     33.064      0.000   1225.683 
+                                                                                                              
+  orgconstr | conscient @ Mean                                                                                
+    Intercept                        -0.000      0.009     -0.018      0.016      0.006      0.940    695.997 
+    Slope                             0.771      0.060      0.660      0.893    167.130      0.000    712.795 
+                                                                                                              
+  orgconstr |                                                                                                 
+         conscient @ Mean - 1 SD                                                                              
+    Intercept                         0.256      0.051      0.156      0.353     25.580      0.000   1494.890 
+    Slope                             1.108      0.095      0.931      1.301    137.382      0.000    614.640 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+                                NOTE: Intercepts are computed by setting all predictors
+                                      not involved in the conditional effect to zero.
+
+
+  predictor block:
+
+Latent Variable:   conscient  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   orgconstr  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: conscient orgconstr
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(conscient,orgconstr)           -0.146      0.040     -0.221     -0.067     13.440      0.000   3609.172 
+
+Correlations:                   
+  Cor(conscient,orgconstr)           -0.146      0.040     -0.221     -0.067     13.440      0.000   3609.172 
+
+                                ------------------------------------------------------------------------------
+
+
+  measurement block:
+
+Outcome Variable:  consci1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.952      0.097      1.756      2.150    404.916      0.000     95.524 
+  conscient                           0.996      0.070      0.863      1.139    201.066      0.000    202.096 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.697      0.069      0.562      0.834        ---        ---    123.998 
+  Tau 3                               1.326      0.084      1.152      1.492        ---        ---     87.395 
+  Tau 4                               2.281      0.103      2.057      2.491        ---        ---     71.950 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.704      0.023      0.656      0.747    912.277      0.000    198.056 
+
+Proportion Variance Explained   
+  by Coefficients                     0.496      0.033      0.431      0.559        ---        ---    197.773 
+  by Residual Variation               0.504      0.033      0.441      0.569        ---        ---    197.773 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.175      0.099      1.977      2.371    484.890      0.000    115.054 
+  conscient                           0.976      0.065      0.849      1.110    222.716      0.000    288.081 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.827      0.072      0.684      0.974        ---        ---    151.310 
+  Tau 3                               1.524      0.085      1.355      1.699        ---        ---    116.450 
+  Tau 4                               2.535      0.104      2.319      2.738        ---        ---    105.179 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.697      0.023      0.647      0.738    917.619      0.000    247.250 
+
+Proportion Variance Explained   
+  by Coefficients                     0.486      0.032      0.418      0.545        ---        ---    247.088 
+  by Residual Variation               0.514      0.032      0.455      0.582        ---        ---    247.088 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.139      0.096      1.964      2.337    499.963      0.000    126.700 
+  conscient                           0.989      0.066      0.863      1.121    225.231      0.000    375.651 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.743      0.071      0.606      0.888        ---        ---    138.213 
+  Tau 3                               1.478      0.086      1.316      1.645        ---        ---    114.494 
+  Tau 4                               2.534      0.102      2.338      2.733        ---        ---    111.573 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.701      0.022      0.655      0.742    989.613      0.000    339.617 
+
+Proportion Variance Explained   
+  by Coefficients                     0.492      0.031      0.429      0.551        ---        ---    336.332 
+  by Residual Variation               0.508      0.031      0.449      0.571        ---        ---    336.332 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.068      0.091      1.897      2.268    517.243      0.000    136.687 
+  conscient                           0.913      0.062      0.797      1.040    220.082      0.000    373.314 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.675      0.067      0.552      0.818        ---        ---    180.442 
+  Tau 3                               1.482      0.082      1.323      1.654        ---        ---    134.997 
+  Tau 4                               2.489      0.099      2.302      2.700        ---        ---    129.059 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.673      0.023      0.625      0.716    821.660      0.000    304.923 
+
+Proportion Variance Explained   
+  by Coefficients                     0.453      0.031      0.390      0.513        ---        ---    301.565 
+  by Residual Variation               0.547      0.031      0.487      0.610        ---        ---    301.565 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci5    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.214      0.105      2.008      2.429    444.606      0.000    100.832 
+  conscient                           1.022      0.067      0.896      1.157    234.154      0.000    245.912 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.728      0.074      0.584      0.883        ---        ---    126.022 
+  Tau 3                               1.495      0.092      1.321      1.675        ---        ---     97.038 
+  Tau 4                               2.686      0.114      2.467      2.910        ---        ---     92.811 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.713      0.022      0.668      0.753   1083.621      0.000    235.628 
+
+Proportion Variance Explained   
+  by Coefficients                     0.509      0.031      0.446      0.566        ---        ---    234.847 
+  by Residual Variation               0.491      0.031      0.434      0.554        ---        ---    234.847 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  consci6    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           2.117      0.105      1.932      2.340    410.683      0.000     85.529 
+  conscient                           1.051      0.076      0.912      1.210    191.306      0.000    147.723 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               0.609      0.068      0.491      0.753        ---        ---    130.220 
+  Tau 3                               1.373      0.086      1.227      1.566        ---        ---     84.412 
+  Tau 4                               2.323      0.107      2.135      2.553        ---        ---     66.884 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  conscient                           0.723      0.024      0.675      0.767    936.399      0.000    145.126 
+
+Proportion Variance Explained   
+  by Coefficients                     0.523      0.034      0.455      0.588        ---        ---    144.079 
+  by Residual Variation               0.477      0.034      0.412      0.545        ---        ---    144.079 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon1    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.398      0.077      1.252      1.557    330.004      0.000    113.298 
+  orgconstr                           1.056      0.069      0.935      1.204    237.840      0.000    145.968 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.397      0.076      1.260      1.565        ---        ---     78.781 
+  Tau 3                               2.168      0.093      2.003      2.381        ---        ---     69.648 
+  Tau 4                               2.774      0.108      2.587      3.023        ---        ---     72.581 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.724      0.020      0.684      0.765   1252.872      0.000    132.474 
+
+Proportion Variance Explained   
+  by Coefficients                     0.525      0.030      0.468      0.585        ---        ---    130.897 
+  by Residual Variation               0.475      0.030      0.415      0.532        ---        ---    130.897 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon2    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.362      0.072      1.217      1.502    354.590      0.000    155.356 
+  orgconstr                           0.995      0.063      0.872      1.120    251.158      0.000    304.100 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.344      0.072      1.209      1.479        ---        ---    142.167 
+  Tau 3                               2.131      0.087      1.968      2.303        ---        ---    122.356 
+  Tau 4                               2.844      0.104      2.652      3.056        ---        ---    119.402 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.703      0.021      0.659      0.742   1105.279      0.000    262.778 
+
+Proportion Variance Explained   
+  by Coefficients                     0.495      0.030      0.434      0.550        ---        ---    263.288 
+  by Residual Variation               0.505      0.030      0.450      0.566        ---        ---    263.288 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon3    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.392      0.071      1.263      1.538    391.489      0.000    164.811 
+  orgconstr                           0.966      0.061      0.851      1.091    251.032      0.000    257.195 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.445      0.071      1.319      1.604        ---        ---    131.242 
+  Tau 3                               2.162      0.086      2.003      2.339        ---        ---    114.108 
+  Tau 4                               2.802      0.101      2.615      3.011        ---        ---    111.414 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.693      0.021      0.650      0.733   1067.172      0.000    226.013 
+
+Proportion Variance Explained   
+  by Coefficients                     0.480      0.029      0.422      0.537        ---        ---    225.150 
+  by Residual Variation               0.520      0.029      0.463      0.578        ---        ---    225.150 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon4    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.371      0.075      1.230      1.517    338.758      0.000    100.795 
+  orgconstr                           0.969      0.063      0.851      1.098    234.817      0.000    180.053 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.425      0.074      1.281      1.566        ---        ---     84.912 
+  Tau 3                               2.077      0.090      1.905      2.257        ---        ---     74.819 
+  Tau 4                               2.749      0.104      2.556      2.967        ---        ---     76.005 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.694      0.022      0.650      0.734   1025.934      0.000    166.179 
+
+Proportion Variance Explained   
+  by Coefficients                     0.482      0.030      0.422      0.539        ---        ---    165.547 
+  by Residual Variation               0.518      0.030      0.461      0.578        ---        ---    165.547 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon5    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.406      0.074      1.267      1.558    363.333      0.000    115.872 
+  orgconstr                           0.952      0.060      0.841      1.075    254.477      0.000    278.613 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.446      0.075      1.308      1.604        ---        ---     81.888 
+  Tau 3                               2.183      0.089      2.018      2.365        ---        ---     85.735 
+  Tau 4                               2.989      0.108      2.789      3.200        ---        ---     93.560 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.688      0.021      0.644      0.728   1024.415      0.000    214.574 
+
+Proportion Variance Explained   
+  by Coefficients                     0.473      0.029      0.414      0.530        ---        ---    214.553 
+  by Residual Variation               0.527      0.029      0.470      0.586        ---        ---    214.553 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  orgcon6    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                           1.413      0.078      1.274      1.574    332.973      0.000     79.407 
+  orgconstr                           1.016      0.066      0.894      1.152    241.319      0.000     87.731 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.534      0.079      1.398      1.697        ---        ---     63.435 
+  Tau 3                               2.144      0.093      1.989      2.338        ---        ---     46.936 
+  Tau 4                               2.771      0.110      2.589      2.999        ---        ---     40.873 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  orgconstr                           0.711      0.021      0.667      0.751   1105.857      0.000     72.292 
+
+Proportion Variance Explained   
+  by Coefficients                     0.506      0.030      0.445      0.563        ---        ---     71.742 
+  by Residual Variation               0.494      0.030      0.437      0.555        ---        ---     71.742 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh1   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.077      0.060     -0.193      0.041      1.629      0.202    562.952 
+  wrkbehave                           0.806      0.060      0.692      0.927    181.413      0.000    294.315 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.374      0.078      1.230      1.533        ---        ---    307.106 
+  Tau 3                               2.859      0.156      2.574      3.187        ---        ---    175.245 
+  Tau 4                               3.361      0.200      2.993      3.779        ---        ---    138.090 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.735      0.022      0.689      0.777   1087.956      0.000    280.780 
+
+Proportion Variance Explained   
+  by Coefficients                     0.541      0.033      0.474      0.603        ---        ---    280.558 
+  by Residual Variation               0.459      0.033      0.397      0.526        ---        ---    280.558 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh2   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.031      0.059     -0.148      0.084      0.283      0.595    558.535 
+  wrkbehave                           0.756      0.056      0.651      0.872    180.319      0.000    260.068 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.431      0.077      1.284      1.586        ---        ---    252.303 
+  Tau 3                               2.791      0.141      2.519      3.066        ---        ---    136.789 
+  Tau 4                               3.234      0.175      2.891      3.597        ---        ---    113.619 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.714      0.023      0.666      0.756    951.455      0.000    250.431 
+
+Proportion Variance Explained   
+  by Coefficients                     0.510      0.033      0.443      0.572        ---        ---    249.293 
+  by Residual Variation               0.490      0.033      0.428      0.557        ---        ---    249.293 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh3   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.140      0.061     -0.259     -0.018      5.230      0.022    689.653 
+  wrkbehave                           0.789      0.060      0.684      0.920    172.334      0.000    229.012 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.395      0.080      1.246      1.559        ---        ---    232.959 
+  Tau 3                               2.691      0.154      2.410      3.013        ---        ---     82.073 
+  Tau 4                               3.053      0.178      2.735      3.414        ---        ---    102.410 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.729      0.023      0.684      0.772   1018.845      0.000    206.546 
+
+Proportion Variance Explained   
+  by Coefficients                     0.531      0.033      0.468      0.597        ---        ---    205.248 
+  by Residual Variation               0.469      0.033      0.403      0.532        ---        ---    205.248 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh4   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.113      0.065     -0.241      0.014      3.045      0.081    523.889 
+  wrkbehave                           0.843      0.067      0.722      0.988    160.290      0.000    224.821 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.570      0.097      1.388      1.775        ---        ---    286.288 
+  Tau 3                               3.010      0.170      2.696      3.370        ---        ---    141.789 
+  Tau 4                               3.443      0.228      3.067      3.983        ---        ---    115.854 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.751      0.023      0.702      0.794   1021.908      0.000    223.687 
+
+Proportion Variance Explained   
+  by Coefficients                     0.564      0.035      0.492      0.631        ---        ---    221.699 
+  by Residual Variation               0.436      0.035      0.369      0.508        ---        ---    221.699 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh5   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.168      0.067     -0.299     -0.034      6.200      0.013    553.476 
+  wrkbehave                           0.956      0.070      0.824      1.102    187.291      0.000    232.228 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.436      0.090      1.271      1.624        ---        ---    220.847 
+  Tau 3                               2.909      0.164      2.606      3.244        ---        ---    152.570 
+  Tau 4                               3.474      0.202      3.121      3.889        ---        ---    111.794 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.789      0.020      0.749      0.827   1539.697      0.000    215.493 
+
+Proportion Variance Explained   
+  by Coefficients                     0.623      0.032      0.560      0.684        ---        ---    214.727 
+  by Residual Variation               0.377      0.032      0.316      0.440        ---        ---    214.727 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  workbeh6   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Coefficients:                   
+  Intercept                          -0.148      0.064     -0.274     -0.022      5.386      0.020    582.338 
+  wrkbehave                           0.796      0.060      0.679      0.919    173.511      0.000    325.328 
+
+Thresholds:                     
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+  Tau 2                               1.465      0.086      1.300      1.644        ---        ---    189.798 
+  Tau 3                               3.046      0.187      2.675      3.438        ---        ---     92.698 
+  Tau 4                               3.354      0.211      2.915      3.756        ---        ---    104.164 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Standardized Coefficients:      
+  wrkbehave                           0.731      0.024      0.680      0.776    920.363      0.000    227.521 
+
+Proportion Variance Explained   
+  by Coefficients                     0.535      0.035      0.462      0.602        ---        ---    227.994 
+  by Residual Variation               0.465      0.035      0.398      0.538        ---        ---    227.994 
+
+                                ------------------------------------------------------------------------------
+
+
+
+pdf 
+  2 
+pdf 
+  2 
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.8.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.8.png

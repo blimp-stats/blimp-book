@@ -1,0 +1,2646 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:38:36 2026
+  Chain 4 burn-in started on Aug 15 19:38:36 2026
+  Chain 3 burn-in started on Aug 15 19:38:36 2026
+  Chain 2 burn-in started on Aug 15 19:38:36 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 19:38:36 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 19:38:36 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 19:38:36 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 19:38:36 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:38:36 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:38:36 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:38:36 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:38:36 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 19:38:37 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 19:38:37 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 19:38:37 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 19:38:37 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:38:37 2026
+  Chain 2 completed burn-in on Aug 15 19:38:37 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:38:37 2026
+  Chain 3 completed burn-in on Aug 15 19:38:37 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:38:37 2026
+  Chain 1 completed burn-in on Aug 15 19:38:37 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:38:37 2026
+  Chain 4 completed burn-in on Aug 15 19:38:37 2026
+  Chain 2 completed iteration 625 on Aug 15 19:38:38 2026
+  Chain 4 completed iteration 625 on Aug 15 19:38:38 2026
+  Chain 3 completed iteration 625 on Aug 15 19:38:38 2026
+  Chain 1 completed iteration 625 on Aug 15 19:38:38 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:38:40 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:38:40 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:38:40 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:38:40 2026
+  Chain 1 completed iteration 1875 on Aug 15 19:38:41 2026
+  Chain 2 completed iteration 1875 on Aug 15 19:38:41 2026
+  Chain 4 completed iteration 1875 on Aug 15 19:38:41 2026
+  Chain 3 completed iteration 1875 on Aug 15 19:38:41 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:38:42 2026
+  Chain 1 finished on Aug 15 19:38:42 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:38:42 2026
+  Chain 2 finished on Aug 15 19:38:42 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:38:42 2026
+  Chain 4 finished on Aug 15 19:38:42 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:38:42 2026
+  Chain 3 finished on Aug 15 19:38:42 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.336            11  
+                          501 to 1000            1.131             3  
+                          751 to 1500            1.058            11  
+                         1001 to 2000            1.053            11  
+                         1251 to 2500            1.041            11  
+                         1501 to 3000            1.041             3  
+                         1751 to 3500            1.032            11  
+                         2001 to 4000            1.016            11  
+                         2251 to 4500            1.009             3  
+                         2501 to 5000            1.018            11  
+                         2751 to 5500            1.016            11  
+                         3001 to 6000            1.017            11  
+                         3251 to 6500            1.038            11  
+                         3501 to 7000            1.016            11  
+                         3751 to 7500            1.014             3  
+                         4001 to 8000            1.022             3  
+                         4251 to 8500            1.016             3  
+                         4501 to 9000            1.012             3  
+                         4751 to 9500            1.012            11  
+                         5001 to 10000           1.011            11  
+
+
+DATA INFORMATION:
+
+  Level-2 identifier:       person
+  Sample Size:              2640
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3
+                          miss % --------------------
+                     pain =  7.5       -     -     M  
+                   posaff =  7.6       -     M     -  
+                                 --------------------
+                                 %  84.8   7.6   7.5
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       0
+
+  MODELS
+    [1]  pain ~ Intercept
+    [2]  posaff ~ Intercept
+
+
+ WARNING MESSAGES:
+
+  WARNING: 2 observations have all variables in the imputation
+           model missing. They have been dropped from data set.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Marginal Likelihood
+      DIC2                  19229.382
+      WAIC                  19384.055
+
+    Conditional Likelihood
+      DIC2                  18461.550
+      WAIC                  18717.645
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  pain                                3.554      2.208      2.000      3.000      5.000     -1.992     10.442 
+  posaff                              5.436      1.844      4.250      5.500      6.750     -0.154     10.337 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+   Level-1:
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  pain, posaff                       -0.078      0.021     -0.120     -0.037     13.548      0.000   9490.612 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 2.753      0.370      2.135      3.573        ---        ---   7488.057 
+  Residual Var.                       2.242      0.066      2.120      2.376        ---        ---   8107.708 
+
+Coefficients:                   
+  Intercept                           3.543      0.153      3.255      3.855    540.378      0.000    167.520 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  1.659      0.110      1.461      1.890        ---        ---   7476.949 
+  Residual SD                         1.497      0.022      1.456      1.541        ---        ---   8109.913 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Level-2 Random Intercepts        0.551      0.033      0.486      0.616        ---        ---   7424.195 
+  by Level-1 Residual Variation       0.449      0.033      0.384      0.514        ---        ---   7424.195 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  L2 : Var(Intercept)                 1.912      0.256      1.489      2.489        ---        ---   8111.461 
+  Residual Var.                       1.537      0.046      1.450      1.631        ---        ---   8090.549 
+
+Coefficients:                   
+  Intercept                           5.423      0.117      5.188      5.645   2157.125      0.000    136.125 
+
+Standard Deviations:            
+  L2 : SD(Intercept)                  1.383      0.091      1.220      1.578        ---        ---   8108.764 
+  Residual SD                         1.240      0.018      1.204      1.277        ---        ---   8094.668 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Level-2 Random Intercepts        0.554      0.033      0.492      0.619        ---        ---   8163.536 
+  by Level-1 Residual Variation       0.446      0.033      0.381      0.508        ---        ---   8163.536 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Aug 15 19:38:44 2026
+  Chain 3 burn-in started on Aug 15 19:38:44 2026
+  Chain 1 burn-in started on Aug 15 19:38:44 2026
+  Chain 4 burn-in started on Aug 15 19:38:44 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:39:07 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:39:07 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:39:07 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:39:07 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:39:31 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:39:31 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:39:31 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:39:31 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:39:54 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:39:54 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:39:54 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:39:54 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:40:18 2026
+  Chain 4 completed burn-in on Aug 15 19:40:18 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:40:18 2026
+  Chain 1 completed burn-in on Aug 15 19:40:18 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:40:18 2026
+  Chain 3 completed burn-in on Aug 15 19:40:18 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:40:18 2026
+  Chain 2 completed burn-in on Aug 15 19:40:18 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:40:25 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:40:25 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:40:25 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:40:25 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:40:33 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:40:33 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:40:33 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:40:33 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:40:40 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:40:40 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:40:40 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:40:40 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:40:48 2026
+  Chain 1 finished on Aug 15 19:40:48 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:40:48 2026
+  Chain 2 finished on Aug 15 19:40:48 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:40:48 2026
+  Chain 4 finished on Aug 15 19:40:48 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:40:48 2026
+  Chain 3 finished on Aug 15 19:40:48 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.127            26  
+                         1001 to 2000            1.088            57  
+                         1501 to 3000            1.070            26  
+                         2001 to 4000            1.051            26  
+                         2501 to 5000            1.029            50  
+                         3001 to 6000            1.047            26  
+                         3501 to 7000            1.025            60  
+                         4001 to 8000            1.023            26  
+                         4501 to 9000            1.025            26  
+                         5001 to 10000           1.029            60  
+                         5501 to 11000           1.032            60  
+                         6001 to 12000           1.012            60  
+                         6501 to 13000           1.011            60  
+                         7001 to 14000           1.013            60  
+                         7501 to 15000           1.009            57  
+                         8001 to 16000           1.009            57  
+                         8501 to 17000           1.006            21  
+                         9001 to 18000           1.009            26  
+                         9501 to 19000           1.009            26  
+                        10001 to 20000           1.010            26  
+
+
+DATA INFORMATION:
+
+  Time identifier:          day
+  Level-2 identifier:       person
+  Sample Size:              2701
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                     pain =  9.6       -     -     -     -     M     -     M     -     M     M  
+                   posaff =  9.7       -     M     -     -     -     -     -     M     M     -  
+                pain.lag1 = 13.9       -     -     -     M     -     M     M     -     M     M  
+              posaff.lag1 = 14.2       -     -     M     M     -     -     -     M     M     M  
+                                 --------------------------------------------------------------
+                                 %  68.3   5.3   5.1   4.9   4.7   4.6   1.3   1.1   0.9   0.8
+
+  NOTE: Suppressing printing of 6 missing data patterns.
+        These patterns consist of 3.1% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         30
+    Generated Parameters:   4
+    Predictor Models:       0
+
+  FACTORS
+    Level-2:                b0c b1c b2c a0c a1c a2c
+
+  DEFINED VARIABLES
+    [1]  lag_posaff = posaff.lag - b0c 
+    [2]  lag_pain = pain.lag - a0c 
+
+  MODELS
+
+   level2:
+    [1]  a0c ~ Intercept
+    [2]  a1c ~ Intercept
+    [3]  a2c ~ Intercept@a2_mean
+    [4]  b0c ~ Intercept
+    [5]  b1c ~ Intercept
+    [6]  b2c ~ Intercept@b2_mean
+    [7]  a0c a1c a2c b0c b1c b2c <-> a0c a1c a2c b0c b1c b2c 
+
+   level1:
+    [8]  pain ~ a0c@1 (lag_pain)*a1c@1 (lag_posaff)*a2c@1
+    [9]  posaff ~ b0c@1 (lag_posaff)*b1c@1 (lag_pain)*b2c@1
+   [10]  pain <-> posaff
+
+  GENERATED PARAMETERS
+    [1]  sdw_pain = sqrt(pain.totalvar)
+    [2]  sdw_posaff = sqrt(posaff.totalvar)
+    [3]  b2_std = b2_mean*sdw_pain/sdw_posaff
+    [4]  a2_std = a2_mean*sdw_posaff/sdw_pain
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using the TIMEID command with a '.lag' variable results
+           in additional incomplete observations added and sorting
+           the data set by cluster identifier and time identifier.
+  WARNING: 6 observations are being dropped.
+           These observations no observed information at level-1
+           and are at the end of the time sequence.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  19230.432
+      WAIC                  19707.583
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  a0c                                 3.499      1.546      2.375      3.455      4.556     -0.073      7.422 
+  a1c                                 0.241      0.313      0.019      0.231      0.453     -0.510      1.010 
+  a2c                                -0.044      0.208     -0.182     -0.045      0.092     -0.588      0.539 
+  b0c                                 5.418      1.351      4.519      5.432      6.366      2.138      8.764 
+  b1c                                 0.175      0.199      0.039      0.170      0.304     -0.319      0.741 
+  b2c                                -0.019      0.111     -0.093     -0.019      0.055     -0.313      0.269 
+  pain                                3.565      2.228      2.000      3.000      5.000     -2.220     10.781 
+  posaff                              5.434      1.842      4.250      5.500      6.750     -0.219     10.296 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   a0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.652      0.423      1.960      3.614        ---        ---   3923.965 
+
+Coefficients:                   
+  Intercept                           3.497      0.163      3.176      3.818    462.467      0.000   4064.101 
+
+Standard Deviations:            
+  Residual SD                         1.628      0.128      1.400      1.901        ---        ---   3901.603 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.108      0.023      0.071      0.161        ---        ---   2871.990 
+
+Coefficients:                   
+  Intercept                           0.240      0.041      0.160      0.321     34.885      0.000   2398.683 
+
+Standard Deviations:            
+  Residual SD                         0.329      0.034      0.267      0.401        ---        ---   2801.497 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.048      0.018      0.020      0.089        ---        ---    730.651 
+
+Coefficients:                   
+  Intercept                          -0.045      0.036     -0.115      0.027      1.511      0.219   1229.500 
+
+Standard Deviations:            
+  Residual SD                         0.219      0.040      0.140      0.299        ---        ---    640.078 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.025      0.302      1.534      2.719        ---        ---   7805.081 
+
+Coefficients:                   
+  Intercept                           5.420      0.133      5.156      5.688   1658.943      0.000   2419.281 
+
+Standard Deviations:            
+  Residual SD                         1.423      0.104      1.239      1.649        ---        ---   7652.569 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.044      0.014      0.022      0.076        ---        ---   1051.798 
+
+Coefficients:                   
+  Intercept                           0.174      0.033      0.111      0.240     27.699      0.000    918.164 
+
+Standard Deviations:            
+  Residual SD                         0.209      0.033      0.148      0.277        ---        ---    951.324 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.013      0.008      0.004      0.035        ---        ---    152.270 
+
+Coefficients:                   
+  Intercept                          -0.020      0.025     -0.065      0.031      0.583      0.445    276.362 
+
+Standard Deviations:            
+  Residual SD                         0.115      0.032      0.060      0.186        ---        ---    123.919 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: a0c a1c a2c b0c b1c b2c
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(a0c,a1c)                       -0.053      0.091     -0.242      0.120      0.364      0.546   2335.565 
+  Cov(a0c,a2c)                       -0.049      0.067     -0.186      0.077      0.574      0.449   1913.206 
+  Cov(a0c,b0c)                       -0.608      0.260     -1.153     -0.130      5.644      0.018   5827.232 
+  Cov(a0c,b1c)                       -0.034      0.061     -0.158      0.082      0.323      0.570   1780.919 
+  Cov(a0c,b2c)                       -0.013      0.046     -0.105      0.079      0.079      0.779    755.715 
+  Cov(a1c,a2c)                       -0.003      0.015     -0.034      0.028      0.036      0.849   1132.978 
+  Cov(a1c,b0c)                        0.029      0.064     -0.093      0.157      0.220      0.639   4339.223 
+  Cov(a1c,b1c)                       -0.006      0.015     -0.036      0.023      0.168      0.682   1036.321 
+  Cov(a1c,b2c)                       -0.004      0.009     -0.023      0.015      0.168      0.682    804.435 
+  Cov(a2c,b0c)                       -0.036      0.058     -0.154      0.075      0.386      0.535   1899.984 
+  Cov(a2c,b1c)                        0.011      0.011     -0.011      0.033      1.019      0.313    916.755 
+  Cov(a2c,b2c)                        0.001      0.007     -0.013      0.016      0.035      0.853    604.606 
+  Cov(b0c,b1c)                        0.022      0.058     -0.091      0.137      0.153      0.695   1163.430 
+  Cov(b0c,b2c)                        0.046      0.037     -0.026      0.122      1.523      0.217    499.161 
+  Cov(b1c,b2c)                       -0.003      0.007     -0.017      0.012      0.149      0.700    483.950 
+
+Correlations:                   
+  Cor(a0c,a1c)                       -0.100      0.162     -0.413      0.221      0.377      0.539   2281.114 
+  Cor(a0c,a2c)                       -0.141      0.179     -0.486      0.208      0.617      0.432   1561.909 
+  Cor(a0c,b0c)                       -0.267      0.101     -0.451     -0.058      6.812      0.009   4285.332 
+  Cor(a0c,b1c)                       -0.102      0.174     -0.438      0.241      0.336      0.562   1586.514 
+  Cor(a0c,b2c)                       -0.075      0.242     -0.526      0.419      0.083      0.773    523.063 
+  Cor(a1c,a2c)                       -0.042      0.212     -0.465      0.363      0.043      0.837    959.176 
+  Cor(a1c,b0c)                        0.064      0.132     -0.196      0.314      0.223      0.637   4285.486 
+  Cor(a1c,b1c)                       -0.090      0.211     -0.507      0.313      0.186      0.666    863.681 
+  Cor(a1c,b2c)                       -0.107      0.240     -0.562      0.377      0.182      0.670    602.191 
+  Cor(a2c,b0c)                       -0.118      0.183     -0.474      0.238      0.409      0.522   1658.877 
+  Cor(a2c,b1c)                        0.253      0.236     -0.219      0.701      1.124      0.289    543.138 
+  Cor(a2c,b2c)                        0.057      0.283     -0.543      0.561      0.024      0.876    401.122 
+  Cor(b0c,b1c)                        0.076      0.186     -0.307      0.410      0.144      0.704   1145.706 
+  Cor(b0c,b2c)                        0.286      0.232     -0.160      0.740      1.572      0.210    256.605 
+  Cor(b1c,b2c)                       -0.125      0.288     -0.659      0.463      0.168      0.682    367.393 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.982      0.063      1.865      2.109        ---        ---   6846.360 
+
+Coefficients:                   
+  a0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*a1c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*a2c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.408      0.022      1.366      1.452        ---        ---   6853.905 
+
+Standardized Coefficients:      
+  (lag_pain)*a1c                      0.526      0.062      0.399      0.638     71.691      0.000   1081.919 
+  (lag_posaff)*a2c                    0.170      0.028      0.112      0.224     36.047      0.000    665.348 
+
+Proportion Variance Explained   
+  by Coefficients                     0.309      0.063      0.192      0.434        ---        ---   1077.528 
+  by Residual Variation               0.691      0.063      0.566      0.808        ---        ---   1077.528 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.459      0.045      1.372      1.551        ---        ---   4480.203 
+
+Coefficients:                   
+  b0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*b1c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*b2c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.208      0.019      1.171      1.245        ---        ---   4478.128 
+
+Standardized Coefficients:      
+  (lag_posaff)*b1c                    0.290      0.038      0.230      0.382     60.154      0.000    945.780 
+  (lag_pain)*b2c                      0.146      0.036      0.085      0.224     16.490      0.000    136.551 
+
+Proportion Variance Explained   
+  by Coefficients                     0.111      0.027      0.074      0.180        ---        ---    805.803 
+  by Residual Variation               0.889      0.027      0.820      0.926        ---        ---    805.803 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: pain posaff
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(pain,posaff)                   -0.177      0.040     -0.256     -0.100     19.802      0.000   6523.832 
+
+Correlations:                   
+  Cor(pain,posaff)                   -0.104      0.023     -0.149     -0.059     20.430      0.000   6575.291 
+
+                                ------------------------------------------------------------------------------
+
+
+
+GENERATED PARAMETERS:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  sdw_pain                            1.694      0.081      1.561      1.876    439.782      0.000   1194.762 
+  sdw_posaff                          1.282      0.026      1.239      1.342   2433.907      0.000   1713.843 
+  b2_std                             -0.026      0.032     -0.086      0.040      0.585      0.444    279.683 
+  a2_std                             -0.034      0.028     -0.087      0.020      1.500      0.221   1191.926 
+
+                                ------------------------------------------------------------------------------
+
+
+ITERATION HISTORY:
+
+  Chain 3 burn-in started on Aug 15 19:41:13 2026
+  Chain 2 burn-in started on Aug 15 19:41:13 2026
+  Chain 4 burn-in started on Aug 15 19:41:13 2026
+  Chain 1 burn-in started on Aug 15 19:41:13 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:41:17 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:41:17 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:41:17 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:41:17 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:41:22 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:41:22 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:41:22 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:41:22 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:41:26 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:41:26 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:41:26 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:41:26 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:41:30 2026
+  Chain 1 completed burn-in on Aug 15 19:41:30 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:41:30 2026
+  Chain 2 completed burn-in on Aug 15 19:41:30 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:41:30 2026
+  Chain 3 completed burn-in on Aug 15 19:41:30 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:41:30 2026
+  Chain 4 completed burn-in on Aug 15 19:41:30 2026
+  Chain 1 saved imputation 1 on Aug 15 19:41:32 2026
+  Chain 3 saved imputation 3 on Aug 15 19:41:32 2026
+  Chain 4 saved imputation 4 on Aug 15 19:41:32 2026
+  Chain 2 saved imputation 2 on Aug 15 19:41:32 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:41:33 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:41:33 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:41:33 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:41:33 2026
+  Chain 1 saved imputation 5 on Aug 15 19:41:34 2026
+  Chain 4 saved imputation 8 on Aug 15 19:41:34 2026
+  Chain 3 saved imputation 7 on Aug 15 19:41:34 2026
+  Chain 2 saved imputation 6 on Aug 15 19:41:34 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:41:35 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:41:35 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:41:35 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:41:35 2026
+  Chain 1 saved imputation 9 on Aug 15 19:41:36 2026
+  Chain 4 saved imputation 12 on Aug 15 19:41:36 2026
+  Chain 3 saved imputation 11 on Aug 15 19:41:36 2026
+  Chain 2 saved imputation 10 on Aug 15 19:41:36 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:41:37 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:41:38 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:41:38 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:41:38 2026
+  Chain 1 saved imputation 13 on Aug 15 19:41:38 2026
+  Chain 4 saved imputation 16 on Aug 15 19:41:38 2026
+  Chain 3 saved imputation 15 on Aug 15 19:41:38 2026
+  Chain 2 saved imputation 14 on Aug 15 19:41:38 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:41:40 2026
+  Chain 1 saved imputation 17 on Aug 15 19:41:40 2026
+  Chain 1 finished on Aug 15 19:41:40 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:41:40 2026
+  Chain 4 saved imputation 20 on Aug 15 19:41:40 2026
+  Chain 4 finished on Aug 15 19:41:40 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:41:40 2026
+  Chain 3 saved imputation 19 on Aug 15 19:41:40 2026
+  Chain 3 finished on Aug 15 19:41:40 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:41:40 2026
+  Chain 2 saved imputation 18 on Aug 15 19:41:40 2026
+  Chain 2 finished on Aug 15 19:41:40 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.135            16  
+                         1001 to 2000            1.087            18  
+                         1501 to 3000            1.123            16  
+                         2001 to 4000            1.027            16  
+                         2501 to 5000            1.043            16  
+                         3001 to 6000            1.022            29  
+                         3501 to 7000            1.015            16  
+                         4001 to 8000            1.016            29  
+                         4501 to 9000            1.017            44  
+                         5001 to 10000           1.013            44  
+                         5501 to 11000           1.025            44  
+                         6001 to 12000           1.022            16  
+                         6501 to 13000           1.009            16  
+                         7001 to 14000           1.012            16  
+                         7501 to 15000           1.014            44  
+                         8001 to 16000           1.015            16  
+                         8501 to 17000           1.016            16  
+                         9001 to 18000           1.014            16  
+                         9501 to 19000           1.004            29  
+                        10001 to 20000           1.005            32  
+
+
+DATA INFORMATION:
+
+  Time identifier:          day
+  Level-2 identifier:       person
+  Sample Size:              2701
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                     pain =  9.6       -     -     -     -     M     -     M     -     M     M  
+                   posaff =  9.7       -     M     -     -     -     -     -     M     M     -  
+                pain.lag1 = 13.9       -     -     -     M     -     M     M     -     M     M  
+              posaff.lag1 = 14.2       -     -     M     M     -     -     -     M     M     M  
+                                 --------------------------------------------------------------
+                                 %  68.3   5.3   5.1   4.9   4.7   4.6   1.3   1.1   0.9   0.8
+
+  NOTE: Suppressing printing of 6 missing data patterns.
+        These patterns consist of 3.1% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         16
+    Predictor Models:       0
+
+  FACTORS
+    Level-2:                b0c b1c b2c a0c
+
+  DEFINED VARIABLES
+    [1]  lag_posaff = posaff.lag - b0c 
+    [2]  lag_pain = pain.lag - a0c 
+
+  MODELS
+
+   level2:
+    [1]  a0c ~ Intercept
+    [2]  b0c ~ Intercept
+    [3]  b1c ~ Intercept
+    [4]  b2c ~ Intercept
+    [5]  a0c b0c b1c b2c <-> a0c b0c b1c b2c 
+
+   level1:
+    [6]  pain ~ a0c@1
+    [7]  posaff ~ b0c@1 (lag_posaff)*b1c@1 (lag_pain)*b2c@1
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using the TIMEID command with a '.lag' variable results
+           in additional incomplete observations added and sorting
+           the data set by cluster identifier and time identifier.
+  WARNING: 6 observations are being dropped.
+           These observations no observed information at level-1
+           and are at the end of the time sequence.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  19514.221
+      WAIC                  19895.918
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  a0c                                 3.541      1.640      2.332      3.485      4.624      0.017      8.436 
+  b0c                                 5.423      1.349      4.521      5.430      6.373      2.183      8.774 
+  b1c                                 0.169      0.189      0.041      0.166      0.293     -0.308      0.703 
+  b2c                                -0.018      0.107     -0.089     -0.017      0.054     -0.300      0.262 
+  pain                                3.553      2.213      2.000      3.000      5.000     -2.215     10.661 
+  posaff                              5.435      1.840      4.250      5.500      6.750     -0.173     10.308 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+   Level-1:
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  pain, posaff                       -0.070      0.022     -0.112     -0.026     10.160      0.001  18882.643 
+
+                                ------------------------------------------------------------------------------
+
+
+   No residual correlations at Level-2.
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   a0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.885      0.401      2.236      3.801        ---        ---  14484.692 
+
+Coefficients:                   
+  Intercept                           3.543      0.153      3.240      3.839    539.217      0.000  12430.943 
+
+Standard Deviations:            
+  Residual SD                         1.698      0.116      1.495      1.950        ---        ---  14474.035 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.956      0.275      1.500      2.578        ---        ---  12620.869 
+
+Coefficients:                   
+  Intercept                           5.423      0.128      5.172      5.674   1798.140      0.000   8622.249 
+
+Standard Deviations:            
+  Residual SD                         1.399      0.097      1.225      1.606        ---        ---  12491.921 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.038      0.013      0.018      0.070        ---        ---   1037.736 
+
+Coefficients:                   
+  Intercept                           0.168      0.032      0.106      0.232     27.764      0.000   2049.944 
+
+Standard Deviations:            
+  Residual SD                         0.195      0.033      0.134      0.264        ---        ---    963.544 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.012      0.008      0.002      0.034        ---        ---    100.663 
+
+Coefficients:                   
+  Intercept                          -0.018      0.022     -0.061      0.027      0.640      0.424    964.706 
+
+Standard Deviations:            
+  Residual SD                         0.109      0.036      0.045      0.185        ---        ---     77.869 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: a0c b0c b1c b2c
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(a0c,b0c)                       -0.476      0.238     -0.971     -0.038      4.143      0.042  14456.420 
+  Cov(a0c,b1c)                       -0.030      0.063     -0.160      0.088      0.256      0.613   2084.328 
+  Cov(a0c,b2c)                       -0.001      0.045     -0.090      0.088      0.000      0.988   1110.121 
+  Cov(b0c,b1c)                        0.021      0.054     -0.083      0.130      0.161      0.689   1752.790 
+  Cov(b0c,b2c)                        0.043      0.035     -0.024      0.114      1.544      0.214   1226.958 
+  Cov(b1c,b2c)                       -0.001      0.007     -0.014      0.013      0.005      0.941    510.372 
+
+Correlations:                   
+  Cor(a0c,b0c)                       -0.203      0.092     -0.375     -0.016      4.776      0.029  14067.876 
+  Cor(a0c,b1c)                       -0.094      0.181     -0.441      0.264      0.259      0.611   1965.081 
+  Cor(a0c,b2c)                       -0.004      0.242     -0.480      0.482      0.000      0.993    758.545 
+  Cor(b0c,b1c)                        0.079      0.189     -0.310      0.430      0.152      0.696   1712.827 
+  Cor(b0c,b2c)                        0.298      0.240     -0.155      0.805      1.596      0.207    344.025 
+  Cor(b1c,b2c)                       -0.026      0.319     -0.601      0.662      0.003      0.959    299.148 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.242      0.066      2.117      2.376        ---        ---  14572.390 
+
+Coefficients:                   
+  a0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.497      0.022      1.455      1.541        ---        ---  14577.432 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.456      0.045      1.371      1.547        ---        ---   4434.206 
+
+Coefficients:                   
+  b0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*b1c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*b2c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.207      0.019      1.171      1.244        ---        ---   4429.720 
+
+Standardized Coefficients:      
+  (lag_posaff)*b1c                    0.276      0.040      0.215      0.374     49.585      0.000   1123.319 
+  (lag_pain)*b2c                      0.125      0.037      0.055      0.201     11.491      0.001     77.285 
+
+Proportion Variance Explained   
+  by Coefficients                     0.095      0.025      0.061      0.158        ---        ---    961.545 
+  by Residual Variation               0.905      0.025      0.842      0.939        ---        ---    961.545 
+
+                                ------------------------------------------------------------------------------
+
+
+
+pdf 
+  2 
+pdf 
+  2 
+
+ITERATION HISTORY:
+
+  Chain 3 burn-in started on Aug 15 19:42:27 2026
+  Chain 1 burn-in started on Aug 15 19:42:27 2026
+  Chain 2 burn-in started on Aug 15 19:42:27 2026
+  Chain 4 burn-in started on Aug 15 19:42:27 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:43:07 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:43:07 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:43:07 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:43:07 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:43:47 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:43:47 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:43:47 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:43:47 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:44:26 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:44:27 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:44:27 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:44:28 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:45:05 2026
+  Chain 1 completed burn-in on Aug 15 19:45:05 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:45:06 2026
+  Chain 4 completed burn-in on Aug 15 19:45:06 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:45:07 2026
+  Chain 2 completed burn-in on Aug 15 19:45:07 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:45:07 2026
+  Chain 3 completed burn-in on Aug 15 19:45:07 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:45:17 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:45:18 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:45:19 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:45:19 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:45:29 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:45:30 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:45:31 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:45:31 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:45:41 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:45:42 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:45:43 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:45:43 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:45:53 2026
+  Chain 1 finished on Aug 15 19:45:53 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:45:54 2026
+  Chain 4 finished on Aug 15 19:45:54 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:45:55 2026
+  Chain 3 finished on Aug 15 19:45:55 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:45:55 2026
+  Chain 2 finished on Aug 15 19:45:55 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.207            83  
+                         1001 to 2000            1.246            85  
+                         1501 to 3000            1.073            11  
+                         2001 to 4000            1.074            85  
+                         2501 to 5000            1.049            85  
+                         3001 to 6000            1.046            91  
+                         3501 to 7000            1.041            83  
+                         4001 to 8000            1.033            11  
+                         4501 to 9000            1.035            11  
+                         5001 to 10000           1.021            11  
+                         5501 to 11000           1.034            26  
+                         6001 to 12000           1.029            26  
+                         6501 to 13000           1.029            26  
+                         7001 to 14000           1.021            86  
+                         7501 to 15000           1.026            11  
+                         8001 to 16000           1.029            26  
+                         8501 to 17000           1.032            11  
+                         9001 to 18000           1.027            26  
+                         9501 to 19000           1.028            26  
+                        10001 to 20000           1.024            26  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    lnvar_paff                    latent imp          0.485          0.500 
+    lnvar_pain                    latent imp          0.457          0.500 
+    CovMat(pain posaff)            parameter          0.497          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Time identifier:          day
+  Level-2 identifier:       person
+  Sample Size:              2701
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                     pain =  9.6       -     -     -     -     M     -     M     -     M     M  
+                   posaff =  9.7       -     M     -     -     -     -     -     M     M     -  
+                pain.lag1 = 13.9       -     -     -     M     -     M     M     -     M     M  
+              posaff.lag1 = 14.2       -     -     M     M     -     -     -     M     M     M  
+                                 --------------------------------------------------------------
+                                 %  68.3   5.3   5.1   4.9   4.7   4.6   1.3   1.1   0.9   0.8
+
+  NOTE: Suppressing printing of 6 missing data patterns.
+        These patterns consist of 3.1% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         45
+    Predictor Models:       0
+
+  FACTORS
+    Level-2:                b0c b1c b2c lnvar_paff a0c a1c a2c lnvar_pain
+
+  DEFINED VARIABLES
+    [1]  lag_posaff = posaff.lag - b0c 
+    [2]  lag_pain = pain.lag - a0c 
+
+  MODELS
+
+   level2:
+    [1]  a0c ~ Intercept
+    [2]  a1c ~ Intercept
+    [3]  a2c ~ Intercept
+    [4]  b0c ~ Intercept
+    [5]  b1c ~ Intercept
+    [6]  b2c ~ Intercept
+    [7]  lnvar_paff ~ Intercept
+    [8]  lnvar_pain ~ Intercept
+    [9]  a0c a1c a2c b0c b1c b2c lnvar_paff lnvar_pain <-> a0c a1c a2c b0c 
+                 b1c b2c lnvar_paff lnvar_pain 
+
+   level1:
+   [10]  pain ~ a0c@1 (lag_pain)*a1c@1 (lag_posaff)*a2c@1
+   [11]  var(pain) ~ lnvar_pain@1
+   [12]  posaff ~ b0c@1 (lag_posaff)*b1c@1 (lag_pain)*b2c@1
+   [13]  var(posaff) ~ lnvar_paff@1
+   [14]  pain <-> posaff
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using the TIMEID command with a '.lag' variable results
+           in additional incomplete observations added and sorting
+           the data set by cluster identifier and time identifier.
+  WARNING: 6 observations are being dropped.
+           These observations no observed information at level-1
+           and are at the end of the time sequence.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  36506.158
+      WAIC                  40713.871
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  a0c                                 3.515      1.583      2.348      3.482      4.608     -0.040      7.377 
+  a1c                                 0.233      0.295      0.028      0.221      0.427     -0.475      1.006 
+  a2c                                -0.031      0.155     -0.134     -0.030      0.073     -0.453      0.380 
+  b0c                                 5.420      1.358      4.486      5.402      6.355      2.176      9.027 
+  b1c                                 0.148      0.176      0.029      0.146      0.264     -0.308      0.632 
+  b2c                                -0.003      0.106     -0.074     -0.004      0.067     -0.279      0.280 
+  lnvar_paff                          0.100      0.993     -0.426      0.216      0.751     -5.667      2.133 
+  lnvar_pain                          0.472      0.728      0.019      0.494      0.938     -1.911      2.403 
+  pain                                3.568      2.228      2.000      3.000      5.000     -2.600     10.833 
+  posaff                              5.433      1.850      4.250      5.500      6.750     -1.319     10.480 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   a0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.872      0.442      2.164      3.900        ---        ---   6997.421 
+
+Coefficients:                   
+  Intercept                           3.515      0.162      3.198      3.833    468.282      0.000   4701.894 
+
+Standard Deviations:            
+  Residual SD                         1.695      0.128      1.471      1.975        ---        ---   6942.697 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.100      0.020      0.066      0.145        ---        ---   1959.808 
+
+Coefficients:                   
+  Intercept                           0.232      0.038      0.158      0.308     36.891      0.000   1889.992 
+
+Standard Deviations:            
+  Residual SD                         0.316      0.032      0.257      0.381        ---        ---   1905.070 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.027      0.013      0.010      0.060        ---        ---    349.361 
+
+Coefficients:                   
+  Intercept                          -0.031      0.035     -0.101      0.038      0.822      0.365    277.900 
+
+Standard Deviations:            
+  Residual SD                         0.165      0.037      0.101      0.244        ---        ---    319.073 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.114      0.310      1.619      2.826        ---        ---   8450.101 
+
+Coefficients:                   
+  Intercept                           5.420      0.134      5.156      5.684   1631.494      0.000   4380.424 
+
+Standard Deviations:            
+  Residual SD                         1.454      0.105      1.272      1.681        ---        ---   8415.934 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.035      0.014      0.015      0.068        ---        ---    519.110 
+
+Coefficients:                   
+  Intercept                           0.147      0.030      0.088      0.208     23.812      0.000    635.456 
+
+Standard Deviations:            
+  Residual SD                         0.188      0.035      0.121      0.261        ---        ---    466.961 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.013      0.007      0.004      0.030        ---        ---    429.207 
+
+Coefficients:                   
+  Intercept                          -0.003      0.022     -0.050      0.039      0.022      0.882    571.999 
+
+Standard Deviations:            
+  Residual SD                         0.113      0.028      0.063      0.173        ---        ---    386.300 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   lnvar_paff 
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.132      0.178      0.839      1.534        ---        ---   4856.397 
+
+Coefficients:                   
+  Intercept                           0.103      0.099     -0.093      0.295      1.078      0.299   2474.476 
+
+Standard Deviations:            
+  Residual SD                         1.064      0.083      0.916      1.238        ---        ---   4724.912 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   lnvar_pain 
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.604      0.110      0.434      0.864        ---        ---   1786.168 
+
+Coefficients:                   
+  Intercept                           0.474      0.078      0.322      0.630     37.044      0.000   1940.309 
+
+Standard Deviations:            
+  Residual SD                         0.777      0.069      0.658      0.930        ---        ---   1765.616 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: a0c a1c a2c b0c b1c b2c lnvar_paff lnvar_pain
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(a0c,a1c)                       -0.004      0.085     -0.177      0.161      0.004      0.949   1629.938 
+  Cov(a0c,a2c)                       -0.052      0.059     -0.171      0.063      0.800      0.371    674.302 
+  Cov(a0c,b0c)                       -0.685      0.273     -1.260     -0.191      6.499      0.011   7485.329 
+  Cov(a0c,b1c)                       -0.018      0.058     -0.136      0.095      0.102      0.749   1526.334 
+  Cov(a0c,b2c)                       -0.001      0.042     -0.090      0.077      0.003      0.953    715.289 
+  Cov(a0c,lnvar_paff)                 0.450      0.199      0.089      0.878      5.291      0.021   6726.893 
+  Cov(a0c,lnvar_pain)                 0.356      0.161      0.065      0.695      5.017      0.025   3026.002 
+  Cov(a1c,a2c)                       -0.009      0.013     -0.036      0.016      0.513      0.474    528.703 
+  Cov(a1c,b0c)                        0.006      0.060     -0.115      0.125      0.010      0.922   3389.632 
+  Cov(a1c,b1c)                        0.009      0.014     -0.017      0.036      0.468      0.494    646.320 
+  Cov(a1c,b2c)                       -0.003      0.008     -0.020      0.012      0.171      0.679    737.517 
+  Cov(a1c,lnvar_paff)                -0.011      0.045     -0.101      0.077      0.062      0.803   3616.841 
+  Cov(a1c,lnvar_pain)                -0.056      0.037     -0.133      0.015      2.344      0.126   2041.696 
+  Cov(a2c,b0c)                        0.003      0.056     -0.104      0.116      0.005      0.941    668.406 
+  Cov(a2c,b1c)                        0.003      0.009     -0.015      0.022      0.128      0.721    417.234 
+  Cov(a2c,b2c)                        0.002      0.006     -0.010      0.015      0.132      0.717    345.122 
+  Cov(a2c,lnvar_paff)                -0.006      0.051     -0.106      0.096      0.011      0.917    372.748 
+  Cov(a2c,lnvar_pain)                -0.026      0.029     -0.087      0.030      0.814      0.367    546.583 
+  Cov(b0c,b1c)                       -0.004      0.052     -0.106      0.103      0.005      0.943   1218.256 
+  Cov(b0c,b2c)                        0.026      0.032     -0.034      0.092      0.712      0.399    980.156 
+  Cov(b0c,lnvar_paff)                -0.765      0.182     -1.174     -0.460     18.350      0.000   9012.077 
+  Cov(b0c,lnvar_pain)                -0.347      0.132     -0.632     -0.112      7.125      0.008   4477.811 
+  Cov(b1c,b2c)                       -0.004      0.006     -0.017      0.008      0.464      0.496    272.767 
+  Cov(b1c,lnvar_paff)                 0.017      0.044     -0.082      0.099      0.119      0.730    650.849 
+  Cov(b1c,lnvar_pain)                 0.017      0.029     -0.039      0.076      0.367      0.545   1072.087 
+  Cov(b2c,lnvar_paff)                -0.017      0.019     -0.056      0.019      0.832      0.362   1725.052 
+  Cov(b2c,lnvar_pain)                -0.021      0.020     -0.064      0.016      1.183      0.277    696.698 
+  Cov(lnvar_paff,lnvar_pain)          0.401      0.102      0.227      0.630     15.891      0.000   4593.141 
+
+Correlations:                   
+  Cor(a0c,a1c)                       -0.007      0.154     -0.310      0.290      0.003      0.955   1608.482 
+  Cor(a0c,a2c)                       -0.192      0.202     -0.580      0.218      0.855      0.355    594.124 
+  Cor(a0c,b0c)                       -0.281      0.098     -0.460     -0.079      8.076      0.004   5889.507 
+  Cor(a0c,b1c)                       -0.056      0.179     -0.411      0.292      0.102      0.749   1245.954 
+  Cor(a0c,b2c)                       -0.006      0.215     -0.415      0.418      0.000      0.984    560.004 
+  Cor(a0c,lnvar_paff)                 0.253      0.099      0.051      0.438      6.378      0.012   5768.114 
+  Cor(a0c,lnvar_pain)                 0.274      0.110      0.048      0.476      6.048      0.014   2496.015 
+  Cor(a1c,a2c)                       -0.187      0.243     -0.619      0.320      0.545      0.460    465.333 
+  Cor(a1c,b0c)                        0.014      0.128     -0.241      0.260      0.010      0.921   3235.355 
+  Cor(a1c,b1c)                        0.158      0.222     -0.281      0.581      0.492      0.483    533.211 
+  Cor(a1c,b2c)                       -0.090      0.217     -0.489      0.365      0.146      0.702    629.868 
+  Cor(a1c,lnvar_paff)                -0.034      0.130     -0.282      0.223      0.062      0.803   3534.621 
+  Cor(a1c,lnvar_pain)                -0.230      0.139     -0.489      0.063      2.645      0.104   1958.734 
+  Cor(a2c,b0c)                        0.013      0.227     -0.418      0.459      0.005      0.942    602.286 
+  Cor(a2c,b1c)                        0.114      0.292     -0.482      0.665      0.136      0.713    270.399 
+  Cor(a2c,b2c)                        0.113      0.299     -0.502      0.659      0.131      0.717    261.650 
+  Cor(a2c,lnvar_paff)                -0.035      0.275     -0.562      0.495      0.013      0.908    335.581 
+  Cor(a2c,lnvar_pain)                -0.205      0.215     -0.599      0.242      0.879      0.348    464.721 
+  Cor(b0c,b1c)                       -0.016      0.188     -0.376      0.357      0.006      0.939   1098.315 
+  Cor(b0c,b2c)                        0.165      0.186     -0.226      0.510      0.726      0.394    883.853 
+  Cor(b0c,lnvar_paff)                -0.499      0.080     -0.639     -0.327     38.418      0.000   7262.135 
+  Cor(b0c,lnvar_pain)                -0.310      0.100     -0.495     -0.103      9.352      0.002   4123.310 
+  Cor(b1c,b2c)                       -0.224      0.286     -0.702      0.394      0.516      0.472    184.307 
+  Cor(b1c,lnvar_paff)                 0.090      0.214     -0.378      0.471      0.135      0.713    567.661 
+  Cor(b1c,lnvar_pain)                 0.123      0.194     -0.260      0.490      0.391      0.532    875.339 
+  Cor(b2c,lnvar_paff)                -0.147      0.149     -0.425      0.158      0.928      0.335   1150.650 
+  Cor(b2c,lnvar_pain)                -0.252      0.215     -0.644      0.194      1.303      0.254    530.583 
+  Cor(lnvar_paff,lnvar_pain)          0.490      0.088      0.300      0.645     30.401      0.000   3081.399 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Q25% Residual Var.                  1.018      0.062      0.904      1.146        ---        ---   2031.864 
+  Q50% Residual Var.                  1.630      0.084      1.475      1.805        ---        ---   2352.027 
+  Mean Residual Var.                  2.045      0.083      1.894      2.218        ---        ---   1292.556 
+  Q75% Residual Var.                  2.538      0.147      2.274      2.849        ---        ---   2216.655 
+
+Coefficients:                   
+  a0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*a1c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*a2c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standardized Coefficients:      
+  (lag_pain)*a1c                      0.506      0.056      0.388      0.611     80.556      0.000    900.795 
+  (lag_posaff)*a2c                    0.119      0.025      0.074      0.172     22.751      0.000    411.520 
+
+Proportion Variance Explained   
+  by Coefficients                     0.276      0.056      0.170      0.391        ---        ---    932.811 
+  by Residual Variation               0.724      0.056      0.609      0.830        ---        ---    932.811 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  var(pain)  
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Coefficients:                   
+  lnvar_pain                        @ 1.000        ---        ---        ---        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Q25% Residual Var.                  0.650      0.045      0.566      0.742        ---        ---   3026.941 
+  Q50% Residual Var.                  1.233      0.071      1.102      1.383        ---        ---   3557.348 
+  Mean Residual Var.                  1.565      0.067      1.445      1.707        ---        ---   1351.984 
+  Q75% Residual Var.                  2.106      0.127      1.873      2.370        ---        ---   2422.311 
+
+Coefficients:                   
+  b0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*b1c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*b2c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standardized Coefficients:      
+  (lag_posaff)*b1c                    0.246      0.038      0.180      0.330     43.051      0.000    573.694 
+  (lag_pain)*b2c                      0.134      0.030      0.079      0.197     19.829      0.000    419.426 
+
+Proportion Variance Explained   
+  by Coefficients                     0.085      0.021      0.051      0.136        ---        ---    671.156 
+  by Residual Variation               0.915      0.021      0.864      0.949        ---        ---    671.156 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  var(posaff)
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Coefficients:                   
+  lnvar_paff                        @ 1.000        ---        ---        ---        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: pain posaff
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Average Covariances:            
+  Cov(pain,posaff)                   -0.263      0.080     -0.427     -0.112     10.860      0.001   2164.667 
+
+Correlations:                   
+  Cor(pain,posaff)                   -0.083      0.024     -0.129     -0.035     11.536      0.001   2133.288 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:46:24 2026
+  Chain 3 burn-in started on Aug 15 19:46:24 2026
+  Chain 4 burn-in started on Aug 15 19:46:24 2026
+  Chain 2 burn-in started on Aug 15 19:46:24 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:46:48 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:46:48 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:46:48 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:46:48 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:47:11 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:47:11 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:47:11 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:47:11 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:47:34 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:47:35 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:47:35 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:47:35 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:47:58 2026
+  Chain 1 completed burn-in on Aug 15 19:47:58 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:47:58 2026
+  Chain 4 completed burn-in on Aug 15 19:47:58 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:47:58 2026
+  Chain 3 completed burn-in on Aug 15 19:47:58 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:47:59 2026
+  Chain 2 completed burn-in on Aug 15 19:47:59 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:48:06 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:48:06 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:48:06 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:48:06 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:48:14 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:48:14 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:48:14 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:48:14 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:48:21 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:48:21 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:48:21 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:48:21 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:48:29 2026
+  Chain 2 finished on Aug 15 19:48:29 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:48:29 2026
+  Chain 3 finished on Aug 15 19:48:29 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:48:29 2026
+  Chain 1 finished on Aug 15 19:48:29 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:48:29 2026
+  Chain 4 finished on Aug 15 19:48:29 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.130            36  
+                         1001 to 2000            1.054            62  
+                         1501 to 3000            1.110            36  
+                         2001 to 4000            1.090            88  
+                         2501 to 5000            1.122            36  
+                         3001 to 6000            1.033            36  
+                         3501 to 7000            1.026            71  
+                         4001 to 8000            1.026            36  
+                         4501 to 9000            1.021            62  
+                         5001 to 10000           1.024            36  
+                         5501 to 11000           1.030            36  
+                         6001 to 12000           1.021            36  
+                         6501 to 13000           1.025            36  
+                         7001 to 14000           1.024            36  
+                         7501 to 15000           1.023            36  
+                         8001 to 16000           1.017            36  
+                         8501 to 17000           1.009            72  
+                         9001 to 18000           1.013            36  
+                         9501 to 19000           1.007            69  
+                        10001 to 20000           1.008            36  
+
+
+DATA INFORMATION:
+
+  Time identifier:          day
+  Level-2 identifier:       person
+  Sample Size:              2701
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                     pain =  9.6       -     -     -     -     M     -     M     -     M     M  
+                   posaff =  9.7       -     M     -     -     -     -     -     M     M     -  
+                   female =  0.0       -     -     -     -     -     -     -     -     -     -  
+                pain.lag1 = 13.9       -     -     -     M     -     M     M     -     M     M  
+              posaff.lag1 = 14.2       -     -     M     M     -     -     -     M     M     M  
+                                 --------------------------------------------------------------
+                                 %  68.3   5.3   5.1   4.9   4.7   4.6   1.3   1.1   0.9   0.8
+
+  NOTE: Suppressing printing of 6 missing data patterns.
+        These patterns consist of 3.1% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         36
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        female
+
+  FACTORS
+    Level-2:                b0c b1c b2c a0c a1c a2c
+
+  DEFINED VARIABLES
+    [1]  lag_posaff = posaff.lag - b0c 
+    [2]  lag_pain = pain.lag - a0c 
+
+  MODELS
+
+   level2:
+    [1]  a0c ~ Intercept female
+    [2]  a1c ~ Intercept female
+    [3]  a2c ~ Intercept female
+    [4]  b0c ~ Intercept female
+    [5]  b1c ~ Intercept female
+    [6]  b2c ~ Intercept female
+    [7]  a0c a1c a2c b0c b1c b2c <-> a0c a1c a2c b0c b1c b2c 
+
+   level1:
+    [8]  pain ~ a0c@1 (lag_pain)*a1c@1 (lag_posaff)*a2c@1
+    [9]  posaff ~ b0c@1 (lag_posaff)*b1c@1 (lag_pain)*b2c@1
+   [10]  pain <-> posaff
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using the TIMEID command with a '.lag' variable results
+           in additional incomplete observations added and sorting
+           the data set by cluster identifier and time identifier.
+  WARNING: 6 observations are being dropped.
+           These observations no observed information at level-1
+           and are at the end of the time sequence.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  19201.400
+      WAIC                  19696.076
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  a0c                                 3.498      1.539      2.379      3.453      4.550     -0.086      7.297 
+  a1c                                 0.244      0.317      0.019      0.234      0.459     -0.519      1.023 
+  a2c                                -0.043      0.213     -0.184     -0.043      0.097     -0.599      0.556 
+  b0c                                 5.413      1.340      4.518      5.433      6.358      2.135      8.702 
+  b1c                                 0.175      0.203      0.037      0.172      0.307     -0.330      0.751 
+  b2c                                -0.017      0.124     -0.101     -0.018      0.066     -0.345      0.306 
+  pain                                3.566      2.229      2.000      3.000      5.000     -2.229     10.759 
+  posaff                              5.435      1.842      4.250      5.500      6.750     -0.193     10.298 
+  female                              0.618      0.488      0.000      1.000      1.000      0.000      1.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   a0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.461      0.400      1.818      3.376        ---        ---   5114.744 
+
+Coefficients:                   
+  Intercept                           2.986      0.250      2.498      3.477    142.221      0.000   5029.513 
+  female                              0.831      0.312      0.223      1.447      7.071      0.008   5946.530 
+
+Standard Deviations:            
+  Residual SD                         1.569      0.125      1.348      1.837        ---        ---   5041.803 
+
+Standardized Coefficients:      
+  female                              0.250      0.089      0.067      0.413      7.713      0.005   5795.274 
+
+Proportion Variance Explained   
+  by Coefficients                     0.063      0.044      0.005      0.172        ---        ---   5827.315 
+  by Residual Variation               0.937      0.044      0.828      0.995        ---        ---   5827.315 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.111      0.023      0.075      0.164        ---        ---   3493.395 
+
+Coefficients:                   
+  Intercept                           0.247      0.066      0.119      0.375     14.073      0.000   2399.871 
+  female                             -0.005      0.082     -0.166      0.152      0.004      0.949   2695.150 
+
+Standard Deviations:            
+  Residual SD                         0.333      0.033      0.274      0.405        ---        ---   3407.925 
+
+Standardized Coefficients:      
+  female                             -0.007      0.117     -0.236      0.217      0.004      0.947   2655.728 
+
+Proportion Variance Explained   
+  by Coefficients                     0.007      0.018      0.000      0.067        ---        ---   7289.425 
+  by Residual Variation               0.993      0.018      0.933      1.000        ---        ---   7289.425 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.049      0.018      0.023      0.092        ---        ---    834.970 
+
+Coefficients:                   
+  Intercept                          -0.052      0.060     -0.167      0.066      0.758      0.384   1043.948 
+  female                              0.015      0.074     -0.128      0.157      0.039      0.843   1214.903 
+
+Standard Deviations:            
+  Residual SD                         0.222      0.039      0.151      0.303        ---        ---    749.386 
+
+Standardized Coefficients:      
+  female                              0.033      0.159     -0.273      0.341      0.041      0.840   1164.714 
+
+Proportion Variance Explained   
+  by Coefficients                     0.013      0.036      0.000      0.126        ---        ---   2423.826 
+  by Residual Variation               0.987      0.036      0.874      1.000        ---        ---   2423.826 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.002      0.296      1.519      2.674        ---        ---   8482.880 
+
+Coefficients:                   
+  Intercept                           5.341      0.211      4.930      5.759    642.800      0.000   4580.241 
+  female                              0.114      0.267     -0.419      0.632      0.169      0.681   5028.037 
+
+Standard Deviations:            
+  Residual SD                         1.415      0.103      1.232      1.635        ---        ---   8383.065 
+
+Standardized Coefficients:      
+  female                              0.040      0.090     -0.141      0.212      0.172      0.678   5012.155 
+
+Proportion Variance Explained   
+  by Coefficients                     0.005      0.013      0.000      0.047        ---        ---   7186.403 
+  by Residual Variation               0.995      0.013      0.953      1.000        ---        ---   7186.403 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.042      0.014      0.021      0.076        ---        ---   1085.725 
+
+Coefficients:                   
+  Intercept                           0.241      0.054      0.133      0.343     20.016      0.000   1401.381 
+  female                             -0.107      0.066     -0.237      0.027      2.538      0.111   1380.102 
+
+Standard Deviations:            
+  Residual SD                         0.205      0.033      0.144      0.276        ---        ---   1068.243 
+
+Standardized Coefficients:      
+  female                             -0.246      0.146     -0.514      0.062      2.713      0.100   1310.330 
+
+Proportion Variance Explained   
+  by Coefficients                     0.061      0.073      0.000      0.263        ---        ---   1371.379 
+  by Residual Variation               0.939      0.073      0.737      1.000        ---        ---   1371.379 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.014      0.008      0.004      0.035        ---        ---    256.608 
+
+Coefficients:                   
+  Intercept                           0.041      0.040     -0.035      0.119      1.049      0.306    448.362 
+  female                             -0.094      0.048     -0.185     -0.005      3.843      0.050    525.942 
+
+Standard Deviations:            
+  Residual SD                         0.119      0.032      0.062      0.186        ---        ---    217.856 
+
+Standardized Coefficients:      
+  female                             -0.359      0.167     -0.662     -0.019      4.471      0.034    531.590 
+
+Proportion Variance Explained   
+  by Coefficients                     0.129      0.120      0.002      0.441        ---        ---    484.169 
+  by Residual Variation               0.871      0.120      0.559      0.998        ---        ---    484.169 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: a0c a1c a2c b0c b1c b2c
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(a0c,a1c)                       -0.059      0.089     -0.241      0.111      0.454      0.501   2334.954 
+  Cov(a0c,a2c)                       -0.055      0.065     -0.189      0.070      0.740      0.390   1773.453 
+  Cov(a0c,b0c)                       -0.651      0.252     -1.189     -0.195      6.898      0.009   6471.369 
+  Cov(a0c,b1c)                       -0.014      0.061     -0.136      0.103      0.060      0.806   1493.176 
+  Cov(a0c,b2c)                       -0.005      0.043     -0.089      0.081      0.010      0.920    825.836 
+  Cov(a1c,a2c)                       -0.001      0.015     -0.031      0.030      0.001      0.969   1237.038 
+  Cov(a1c,b0c)                        0.026      0.063     -0.098      0.150      0.172      0.678   3324.351 
+  Cov(a1c,b1c)                       -0.006      0.016     -0.037      0.025      0.131      0.717    847.357 
+  Cov(a1c,b2c)                       -0.003      0.010     -0.022      0.016      0.099      0.753    452.556 
+  Cov(a2c,b0c)                       -0.029      0.058     -0.143      0.086      0.242      0.623   1814.472 
+  Cov(a2c,b1c)                        0.012      0.011     -0.009      0.035      1.282      0.257   1047.681 
+  Cov(a2c,b2c)                        0.001      0.007     -0.013      0.016      0.017      0.895    357.574 
+  Cov(b0c,b1c)                        0.026      0.054     -0.081      0.135      0.236      0.627   1420.505 
+  Cov(b0c,b2c)                        0.054      0.037     -0.017      0.131      2.182      0.140    722.808 
+  Cov(b1c,b2c)                       -0.004      0.007     -0.018      0.010      0.301      0.583    533.109 
+
+Correlations:                   
+  Cor(a0c,a1c)                       -0.114      0.162     -0.422      0.209      0.475      0.490   2294.758 
+  Cor(a0c,a2c)                       -0.163      0.178     -0.492      0.199      0.791      0.374   1711.447 
+  Cor(a0c,b0c)                       -0.297      0.099     -0.478     -0.092      8.767      0.003   5525.961 
+  Cor(a0c,b1c)                       -0.046      0.182     -0.394      0.313      0.059      0.808   1377.155 
+  Cor(a0c,b2c)                       -0.025      0.228     -0.474      0.417      0.014      0.907    555.558 
+  Cor(a1c,a2c)                       -0.009      0.203     -0.395      0.392      0.001      0.974   1092.410 
+  Cor(a1c,b0c)                        0.056      0.130     -0.203      0.301      0.175      0.675   3277.631 
+  Cor(a1c,b1c)                       -0.084      0.220     -0.512      0.336      0.147      0.702    713.151 
+  Cor(a1c,b2c)                       -0.076      0.240     -0.550      0.393      0.105      0.746    223.429 
+  Cor(a2c,b0c)                       -0.094      0.183     -0.447      0.264      0.259      0.611   1506.039 
+  Cor(a2c,b1c)                        0.279      0.226     -0.184      0.691      1.447      0.229    710.075 
+  Cor(a2c,b2c)                        0.028      0.273     -0.514      0.538      0.008      0.930    243.309 
+  Cor(b0c,b1c)                        0.092      0.178     -0.282      0.414      0.230      0.632   1362.590 
+  Cor(b0c,b2c)                        0.336      0.218     -0.100      0.745      2.336      0.126    101.971 
+  Cor(b1c,b2c)                       -0.163      0.282     -0.693      0.404      0.316      0.574    333.506 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.981      0.062      1.863      2.105        ---        ---   7133.609 
+
+Coefficients:                   
+  a0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*a1c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*a2c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.407      0.022      1.365      1.451        ---        ---   7120.012 
+
+Standardized Coefficients:      
+  (lag_pain)*a1c                      0.549      0.054      0.432      0.644    103.511      0.000   1568.814 
+  (lag_posaff)*a2c                    0.172      0.027      0.119      0.225     40.350      0.000    786.214 
+
+Proportion Variance Explained   
+  by Coefficients                     0.332      0.056      0.220      0.441        ---        ---   1599.317 
+  by Residual Variation               0.668      0.056      0.559      0.780        ---        ---   1599.317 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.455      0.045      1.369      1.545        ---        ---   5229.221 
+
+Coefficients:                   
+  b0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*b1c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*b2c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.206      0.019      1.170      1.243        ---        ---   5217.263 
+
+Standardized Coefficients:      
+  (lag_posaff)*b1c                    0.293      0.040      0.233      0.393     55.455      0.000   1068.164 
+  (lag_pain)*b2c                      0.167      0.038      0.097      0.245     19.794      0.000    250.908 
+
+Proportion Variance Explained   
+  by Coefficients                     0.121      0.031      0.080      0.201        ---        ---    663.879 
+  by Residual Variation               0.879      0.031      0.799      0.920        ---        ---    663.879 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: pain posaff
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(pain,posaff)                   -0.175      0.040     -0.253     -0.097     19.445      0.000   7205.369 
+
+Correlations:                   
+  Cor(pain,posaff)                   -0.103      0.023     -0.148     -0.058     19.988      0.000   7271.082 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 19:49:01 2026
+  Chain 3 burn-in started on Aug 15 19:49:01 2026
+  Chain 2 burn-in started on Aug 15 19:49:01 2026
+  Chain 4 burn-in started on Aug 15 19:49:01 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 19:49:27 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 19:49:27 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 19:49:27 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 19:49:28 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 19:49:54 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 19:49:54 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 19:49:54 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 19:49:54 2026
+  Chain 3 burn-in iteration 15000 completed on Aug 15 19:50:20 2026
+  Chain 4 burn-in iteration 15000 completed on Aug 15 19:50:20 2026
+  Chain 1 burn-in iteration 15000 completed on Aug 15 19:50:20 2026
+  Chain 2 burn-in iteration 15000 completed on Aug 15 19:50:20 2026
+  Chain 3 burn-in iteration 20000 completed on Aug 15 19:50:46 2026
+  Chain 3 completed burn-in on Aug 15 19:50:46 2026
+  Chain 4 burn-in iteration 20000 completed on Aug 15 19:50:46 2026
+  Chain 4 completed burn-in on Aug 15 19:50:46 2026
+  Chain 2 burn-in iteration 20000 completed on Aug 15 19:50:46 2026
+  Chain 2 completed burn-in on Aug 15 19:50:46 2026
+  Chain 1 burn-in iteration 20000 completed on Aug 15 19:50:46 2026
+  Chain 1 completed burn-in on Aug 15 19:50:46 2026
+  Chain 4 completed iteration 1250 on Aug 15 19:50:55 2026
+  Chain 3 completed iteration 1250 on Aug 15 19:50:55 2026
+  Chain 2 completed iteration 1250 on Aug 15 19:50:55 2026
+  Chain 1 completed iteration 1250 on Aug 15 19:50:55 2026
+  Chain 4 completed iteration 2500 on Aug 15 19:51:03 2026
+  Chain 2 completed iteration 2500 on Aug 15 19:51:03 2026
+  Chain 3 completed iteration 2500 on Aug 15 19:51:03 2026
+  Chain 1 completed iteration 2500 on Aug 15 19:51:03 2026
+  Chain 4 completed iteration 3750 on Aug 15 19:51:11 2026
+  Chain 2 completed iteration 3750 on Aug 15 19:51:11 2026
+  Chain 3 completed iteration 3750 on Aug 15 19:51:11 2026
+  Chain 1 completed iteration 3750 on Aug 15 19:51:11 2026
+  Chain 4 completed iteration 5000 on Aug 15 19:51:19 2026
+  Chain 4 finished on Aug 15 19:51:19 2026
+  Chain 2 completed iteration 5000 on Aug 15 19:51:19 2026
+  Chain 2 finished on Aug 15 19:51:19 2026
+  Chain 1 completed iteration 5000 on Aug 15 19:51:20 2026
+  Chain 1 finished on Aug 15 19:51:20 2026
+  Chain 3 completed iteration 5000 on Aug 15 19:51:20 2026
+  Chain 3 finished on Aug 15 19:51:20 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Zero matrix, df = -(p + 1) (PRIOR2)
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          501 to 1000            1.091            54  
+                         1001 to 2000            1.153            26  
+                         1501 to 3000            1.129            26  
+                         2001 to 4000            1.040            26  
+                         2501 to 5000            1.037            60  
+                         3001 to 6000            1.018            26  
+                         3501 to 7000            1.021            54  
+                         4001 to 8000            1.021            26  
+                         4501 to 9000            1.017            54  
+                         5001 to 10000           1.015            54  
+                         5501 to 11000           1.016            50  
+                         6001 to 12000           1.024            57  
+                         6501 to 13000           1.011            54  
+                         7001 to 14000           1.012            26  
+                         7501 to 15000           1.014            26  
+                         8001 to 16000           1.016            26  
+                         8501 to 17000           1.022            26  
+                         9001 to 18000           1.013            26  
+                         9501 to 19000           1.013            26  
+                        10001 to 20000           1.015            26  
+
+
+DATA INFORMATION:
+
+  Time identifier:          day
+  Level-2 identifier:       person
+  Sample Size:              2701
+  Level-2 Clusters:         131
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                     pain =  9.6       -     -     -     -     M     -     M     -     M     M  
+                   posaff =  9.7       -     M     -     -     -     -     -     M     M     -  
+                pain.lag1 = 13.9       -     -     -     M     -     M     M     -     M     M  
+              posaff.lag1 = 14.2       -     -     M     M     -     -     -     M     M     M  
+                                 --------------------------------------------------------------
+                                 %  68.3   5.3   5.1   4.9   4.7   4.6   1.3   1.1   0.9   0.8
+
+  NOTE: Suppressing printing of 6 missing data patterns.
+        These patterns consist of 3.1% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         32
+    Predictor Models:       0
+
+  FACTORS
+    Level-2:                b0c b1c b2c a0c a1c a2c
+
+  DEFINED VARIABLES
+    [1]  lag_posaff = posaff.lag - b0c 
+    [2]  lag_pain = pain.lag - a0c 
+
+  MODELS
+
+   level2:
+    [1]  a0c ~ Intercept
+    [2]  a1c ~ Intercept
+    [3]  a2c ~ Intercept
+    [4]  b0c ~ Intercept
+    [5]  b1c ~ Intercept
+    [6]  b2c ~ Intercept
+    [7]  a0c a1c a2c b0c b1c b2c <-> a0c a1c a2c b0c b1c b2c 
+
+   level1:
+    [8]  pain ~ a0c@1 (lag_pain)*a1c@1 (lag_posaff)*a2c@1 lag_pain*lag_posaff
+    [9]  posaff ~ b0c@1 (lag_posaff)*b1c@1 (lag_pain)*b2c@1 lag_posaff*lag_pain
+   [10]  pain <-> posaff
+
+
+ WARNING MESSAGES:
+
+  WARNING: Using the TIMEID command with a '.lag' variable results
+           in additional incomplete observations added and sorting
+           the data set by cluster identifier and time identifier.
+  WARNING: 6 observations are being dropped.
+           These observations no observed information at level-1
+           and are at the end of the time sequence.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  19203.105
+      WAIC                  19710.683
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 20000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  a0c                                 3.515      1.554      2.390      3.464      4.578     -0.074      7.448 
+  a1c                                 0.243      0.310      0.024      0.232      0.453     -0.508      1.007 
+  a2c                                -0.050      0.207     -0.187     -0.050      0.087     -0.592      0.524 
+  b0c                                 5.414      1.349      4.514      5.428      6.361      2.126      8.757 
+  b1c                                 0.175      0.200      0.039      0.171      0.304     -0.321      0.747 
+  b2c                                -0.022      0.111     -0.096     -0.021      0.053     -0.319      0.267 
+  pain                                3.566      2.229      2.000      3.000      5.000     -2.247     10.802 
+  posaff                              5.434      1.842      4.250      5.500      6.750     -0.214     10.312 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 20000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  level2 block:
+
+Latent Variable:   a0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.673      0.432      1.972      3.669        ---        ---   4652.350 
+
+Coefficients:                   
+  Intercept                           3.513      0.161      3.204      3.831    479.216      0.000   4623.839 
+
+Standard Deviations:            
+  Residual SD                         1.635      0.130      1.404      1.915        ---        ---   4610.865 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.106      0.022      0.070      0.157        ---        ---   3050.068 
+
+Coefficients:                   
+  Intercept                           0.243      0.040      0.163      0.322     36.032      0.000   2822.965 
+
+Standard Deviations:            
+  Residual SD                         0.326      0.033      0.265      0.396        ---        ---   2991.702 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   a2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.047      0.018      0.021      0.089        ---        ---    811.344 
+
+Coefficients:                   
+  Intercept                          -0.049      0.036     -0.120      0.022      1.902      0.168   1168.127 
+
+Standard Deviations:            
+  Residual SD                         0.217      0.039      0.145      0.299        ---        ---    757.466 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b0c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       2.013      0.296      1.533      2.691        ---        ---  10166.646 
+
+Coefficients:                   
+  Intercept                           5.412      0.130      5.155      5.667   1731.259      0.000   5439.211 
+
+Standard Deviations:            
+  Residual SD                         1.419      0.103      1.238      1.641        ---        ---  10005.671 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b1c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.044      0.014      0.022      0.078        ---        ---   1068.977 
+
+Coefficients:                   
+  Intercept                           0.175      0.034      0.110      0.241     27.157      0.000   1040.908 
+
+Standard Deviations:            
+  Residual SD                         0.209      0.033      0.150      0.280        ---        ---   1037.750 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Latent Variable:   b2c        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.013      0.008      0.003      0.035        ---        ---    273.841 
+
+Coefficients:                   
+  Intercept                          -0.022      0.023     -0.067      0.025      0.889      0.346    724.877 
+
+Standard Deviations:            
+  Residual SD                         0.115      0.033      0.057      0.186        ---        ---    221.471 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: a0c a1c a2c b0c b1c b2c
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(a0c,a1c)                       -0.053      0.092     -0.238      0.125      0.353      0.552   2140.765 
+  Cov(a0c,a2c)                       -0.066      0.068     -0.204      0.066      0.937      0.333   1864.142 
+  Cov(a0c,b0c)                       -0.597      0.260     -1.144     -0.120      5.451      0.020   5468.393 
+  Cov(a0c,b1c)                       -0.032      0.064     -0.162      0.091      0.277      0.598   1433.980 
+  Cov(a0c,b2c)                       -0.017      0.047     -0.115      0.073      0.144      0.705    563.877 
+  Cov(a1c,a2c)                       -0.005      0.015     -0.035      0.025      0.098      0.755   1369.962 
+  Cov(a1c,b0c)                        0.023      0.063     -0.101      0.149      0.134      0.714   3963.152 
+  Cov(a1c,b1c)                       -0.004      0.015     -0.034      0.026      0.083      0.773   1099.918 
+  Cov(a1c,b2c)                       -0.003      0.009     -0.022      0.015      0.112      0.738    534.536 
+  Cov(a2c,b0c)                       -0.030      0.058     -0.145      0.085      0.257      0.612   1660.712 
+  Cov(a2c,b1c)                        0.011      0.011     -0.010      0.032      1.124      0.289    824.479 
+  Cov(a2c,b2c)                        0.001      0.008     -0.014      0.017      0.018      0.892    539.435 
+  Cov(b0c,b1c)                        0.021      0.055     -0.085      0.134      0.155      0.694   1623.718 
+  Cov(b0c,b2c)                        0.049      0.036     -0.019      0.124      1.888      0.169    797.371 
+  Cov(b1c,b2c)                       -0.004      0.007     -0.017      0.010      0.273      0.601    466.796 
+
+Correlations:                   
+  Cor(a0c,a1c)                       -0.102      0.165     -0.414      0.230      0.365      0.546   2106.447 
+  Cor(a0c,a2c)                       -0.191      0.184     -0.527      0.188      1.007      0.316   1661.310 
+  Cor(a0c,b0c)                       -0.260      0.101     -0.445     -0.054      6.558      0.010   4105.647 
+  Cor(a0c,b1c)                       -0.098      0.180     -0.439      0.258      0.292      0.589   1348.203 
+  Cor(a0c,b2c)                       -0.095      0.248     -0.566      0.396      0.138      0.710    413.516 
+  Cor(a1c,a2c)                       -0.067      0.211     -0.478      0.342      0.102      0.749   1164.259 
+  Cor(a1c,b0c)                        0.050      0.132     -0.214      0.301      0.134      0.714   3870.953 
+  Cor(a1c,b1c)                       -0.068      0.210     -0.467      0.340      0.097      0.756   1037.524 
+  Cor(a1c,b2c)                       -0.083      0.247     -0.556      0.411      0.107      0.744    408.543 
+  Cor(a2c,b0c)                       -0.099      0.184     -0.451      0.271      0.271      0.603   1464.743 
+  Cor(a2c,b1c)                        0.260      0.225     -0.193      0.667      1.268      0.260    619.035 
+  Cor(a2c,b2c)                        0.034      0.291     -0.566      0.558      0.006      0.936    407.744 
+  Cor(b0c,b1c)                        0.071      0.178     -0.286      0.408      0.148      0.700   1597.354 
+  Cor(b0c,b2c)                        0.309      0.214     -0.118      0.711      2.061      0.151    367.901 
+  Cor(b1c,b2c)                       -0.161      0.277     -0.674      0.411      0.310      0.577    324.392 
+
+                                ------------------------------------------------------------------------------
+
+
+  level1 block:
+
+Outcome Variable:  pain       
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.977      0.062      1.862      2.106        ---        ---   9160.499 
+
+Coefficients:                   
+  a0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*a1c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*a2c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  lag_pain*lag_posaff                 0.038      0.017      0.006      0.071      5.173      0.023   4133.334 
+
+Standard Deviations:            
+  Residual SD                         1.406      0.022      1.365      1.451        ---        ---   9161.231 
+
+Standardized Coefficients:      
+  (lag_pain)*a1c                      0.517      0.060      0.397      0.627     74.696      0.000   1224.324 
+  (lag_posaff)*a2c                    0.170      0.028      0.116      0.225     37.950      0.000    673.647 
+  lag_pain*lag_posaff                 0.057      0.026      0.008      0.107      4.849      0.028   3200.743 
+
+Proportion Variance Explained   
+  by Coefficients                     0.304      0.061      0.193      0.428        ---        ---   1093.268 
+  by Residual Variation               0.696      0.061      0.572      0.807        ---        ---   1093.268 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  posaff     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.458      0.045      1.374      1.550        ---        ---   6279.521 
+
+Coefficients:                   
+  b0c                               @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_posaff)*b1c                  @ 1.000        ---        ---        ---        ---        ---        --- 
+  (lag_pain)*b2c                    @ 1.000        ---        ---        ---        ---        ---        --- 
+  lag_posaff*lag_pain                -0.012      0.014     -0.039      0.016      0.687      0.407   3202.154 
+
+Standard Deviations:            
+  Residual SD                         1.208      0.019      1.172      1.245        ---        ---   6250.760 
+
+Standardized Coefficients:      
+  (lag_posaff)*b1c                    0.292      0.038      0.230      0.385     59.215      0.000    906.889 
+  (lag_pain)*b2c                      0.148      0.037      0.083      0.228     16.637      0.000    243.322 
+  lag_posaff*lag_pain                -0.023      0.028     -0.077      0.032      0.672      0.412   2801.932 
+
+Proportion Variance Explained   
+  by Coefficients                     0.114      0.029      0.076      0.191        ---        ---    596.435 
+  by Residual Variation               0.886      0.029      0.809      0.924        ---        ---    596.435 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Covariance Matrix: pain posaff
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Covariances:                    
+  Cov(pain,posaff)                   -0.176      0.040     -0.254     -0.097     19.470      0.000   7299.546 
+
+Correlations:                   
+  Cor(pain,posaff)                   -0.104      0.023     -0.148     -0.058     20.038      0.000   7418.593 
+
+                                ------------------------------------------------------------------------------
+
+
+

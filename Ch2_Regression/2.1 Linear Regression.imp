@@ -5,7 +5,7 @@ DATA: ../data/inflammation.csv;       	    # data with names in first row
 # inflam_ifn inflam dpdd hdd;  
 MISSING: NA;           						# missing value code
 ORDINAL: els female;         				# binary and ordinal variables         
-CENTER: inflam els female age; 			    # center predictors  
+CENTER: inflam age; 			    # center predictors  
 MODEL: dpdd ~ inflam els female age;	    # regression model
 SEED: 90291;                  				# random number seed
 BURN: 10000;                  				# warm-up iterations

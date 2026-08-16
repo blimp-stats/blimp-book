@@ -147,27 +147,27 @@ save_fig <- function(plot, name, width = 8.5, height = 11,
 }
 
 #------------------------------------------------------------------------------#
-# FIGURE 4.5 ----
+# FIGURE 4.6 ----
 #------------------------------------------------------------------------------#
 
 # make the plots
-fig4_5 <- simple_plot(inflam ~ els | female, mod1)
+fig4_6 <- simple_plot(inflam ~ els | female, mod1)
 
 # linetype by moderator level on the line layers only
-for (i in which(vapply(fig4_5$layers,
+for (i in which(vapply(fig4_6$layers,
                        function(l) inherits(l$geom, "GeomLine"), logical(1)))) {
-  q <- fig4_5$layers[[i]]$mapping[["colour"]]
-  if (is.null(q)) q <- fig4_5$mapping[["colour"]]
-  fig4_5$layers[[i]]$mapping[["linetype"]] <- q
+  q <- fig4_6$layers[[i]]$mapping[["colour"]]
+  if (is.null(q)) q <- fig4_6$mapping[["colour"]]
+  fig4_6$layers[[i]]$mapping[["linetype"]] <- q
 }
 
 # make the two CI ribbons a bit more visible
-for (i in which(vapply(fig4_5$layers,
+for (i in which(vapply(fig4_6$layers,
                        function(l) inherits(l$geom, "GeomRibbon"), logical(1)))) {
-  fig4_5$layers[[i]]$aes_params$alpha <- 0.35
+  fig4_6$layers[[i]]$aes_params$alpha <- 0.35
 }
 
-fig4_5 <- fig4_5 +
+fig4_6 <- fig4_6 +
   scale_colour_manual(values = c("black", "black"), guide = "none") +
   scale_fill_manual(values = c("grey70", "grey30"), guide = "none") +  # @0 light, @1 dark; no swatch in legend
   scale_linetype_manual(
@@ -187,4 +187,4 @@ fig4_5 <- fig4_5 +
     legend.position  = "bottom"
   )
 
-save_fig(fig4_5, "Figure 4.5", width = 11, height = 8.5)
+save_fig(fig4_6, "Figure 4.6", width = 11, height = 8.5)
