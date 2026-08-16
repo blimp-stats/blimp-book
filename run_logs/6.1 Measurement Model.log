@@ -1,0 +1,1042 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 17:52:02 2026
+  Chain 2 burn-in started on Aug 15 17:52:02 2026
+  Chain 3 burn-in started on Aug 15 17:52:02 2026
+  Chain 4 burn-in started on Aug 15 17:52:02 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:52:03 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:52:03 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:52:03 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:52:03 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:52:03 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:52:03 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:52:03 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:52:03 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:52:03 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:52:03 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:52:03 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:52:03 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:52:03 2026
+  Chain 1 completed burn-in on Aug 15 17:52:03 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:52:03 2026
+  Chain 2 completed burn-in on Aug 15 17:52:03 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:52:03 2026
+  Chain 3 completed burn-in on Aug 15 17:52:03 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:52:03 2026
+  Chain 4 completed burn-in on Aug 15 17:52:03 2026
+  Chain 1 completed iteration 625 on Aug 15 17:52:03 2026
+  Chain 2 completed iteration 625 on Aug 15 17:52:03 2026
+  Chain 3 completed iteration 625 on Aug 15 17:52:03 2026
+  Chain 4 completed iteration 625 on Aug 15 17:52:03 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:52:03 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:52:03 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:52:03 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:52:03 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:52:03 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:52:03 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:52:03 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:52:03 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:52:03 2026
+  Chain 1 finished on Aug 15 17:52:03 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:52:03 2026
+  Chain 2 finished on Aug 15 17:52:03 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:52:03 2026
+  Chain 3 finished on Aug 15 17:52:03 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:52:03 2026
+  Chain 4 finished on Aug 15 17:52:03 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.055            30  
+                          501 to 1000            1.015            26  
+                          751 to 1500            1.007            16  
+                         1001 to 2000            1.010            16  
+                         1251 to 2500            1.006            14  
+                         1501 to 3000            1.007            12  
+                         1751 to 3500            1.007            14  
+                         2001 to 4000            1.004            30  
+                         2251 to 4500            1.004            12  
+                         2501 to 5000            1.003            30  
+                         2751 to 5500            1.004            30  
+                         3001 to 6000            1.002            28  
+                         3251 to 6500            1.004            16  
+                         3501 to 7000            1.004            12  
+                         3751 to 7500            1.004            30  
+                         4001 to 8000            1.003            30  
+                         4251 to 8500            1.004            30  
+                         4501 to 9000            1.003            30  
+                         4751 to 9500            1.004            30  
+                         5001 to 10000           1.003            30  
+
+
+DATA INFORMATION:
+
+  Sample Size:              279
+  Missing Data Info:
+
+                      Pattern #:       1
+                          miss % --------
+                      crp =  0.0       -  
+                      il6 =  0.0       -  
+                      tnf =  0.0       -  
+                      ifn =  0.0       -  
+                                 --------
+                                 % 100.0
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         12
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                inflammation
+
+  MODELS
+    [1]  inflammation ~ Intercept@0
+    [2]  crp ~ Intercept inflammation@load1
+    [3]  ifn ~ Intercept inflammation
+    [4]  il6 ~ Intercept inflammation
+    [5]  tnf ~ Intercept inflammation
+
+
+ WARNING MESSAGES:
+
+  WARNING: 18 observations have all variables in the imputation
+           model missing. They have been dropped from data set.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  3435.136
+      WAIC                  3545.381
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  inflammation                       -0.001      0.990     -0.687     -0.076      0.597     -2.374      3.900 
+  crp                                 0.235      1.328     -0.504     -0.120      0.540     -1.193      9.727 
+  ifn                                 0.305      0.773     -0.240      0.112      0.666     -0.991      3.206 
+  il6                                -0.203      0.775     -0.697     -0.318      0.044     -1.677      4.806 
+  tnf                                 0.528      0.938     -0.148      0.452      1.184     -1.669      3.260 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  inflammation, crp                   0.001      0.085     -0.169      0.167      0.000      0.994   9743.502 
+  inflammation, ifn                  -0.002      0.085     -0.167      0.166      0.001      0.980   9624.579 
+  inflammation, il6                   0.001      0.086     -0.168      0.165      0.000      0.993   9485.805 
+  inflammation, tnf                   0.001      0.086     -0.164      0.168      0.000      0.988  10237.009 
+  crp, ifn                           -0.005      0.080     -0.161      0.150      0.004      0.948   4027.116 
+  crp, il6                            0.047      0.073     -0.097      0.186      0.419      0.517   4531.852 
+  crp, tnf                           -0.010      0.080     -0.169      0.143      0.018      0.893   2872.297 
+  ifn, il6                           -0.014      0.079     -0.167      0.138      0.031      0.860   4603.881 
+  ifn, tnf                            0.024      0.086     -0.145      0.187      0.075      0.784   3446.779 
+  il6, tnf                           -0.008      0.076     -0.154      0.139      0.011      0.915   3903.482 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Latent Variable:   inflammation
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  crp        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.293      0.138      1.045      1.583        ---        ---   3355.705 
+
+Coefficients:                   
+  Intercept                           0.235      0.080      0.075      0.390      8.640      0.003   3573.282 
+  inflammation                        0.703      0.097      0.521      0.891     53.112      0.000   2648.627 
+
+Standard Deviations:            
+  Residual SD                         1.137      0.060      1.022      1.258        ---        ---   3305.005 
+
+Standardized Coefficients:      
+  inflammation                        0.522      0.060      0.398      0.632     74.547      0.000   2393.932 
+
+Proportion Variance Explained   
+  by Coefficients                     0.272      0.062      0.159      0.400        ---        ---   2358.161 
+  by Residual Variation               0.728      0.062      0.600      0.841        ---        ---   2358.161 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  ifn        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.325      0.052      0.222      0.426        ---        ---    999.388 
+
+Coefficients:                   
+  Intercept                           0.306      0.047      0.213      0.395     42.617      0.000   2417.377 
+  inflammation                        0.532      0.058      0.421      0.650     83.757      0.000   1174.273 
+
+Standard Deviations:            
+  Residual SD                         0.570      0.046      0.471      0.653        ---        ---    938.590 
+
+Standardized Coefficients:      
+  inflammation                        0.678      0.059      0.559      0.794    130.956      0.000    935.795 
+
+Proportion Variance Explained   
+  by Coefficients                     0.459      0.080      0.313      0.631        ---        ---    892.762 
+  by Residual Variation               0.541      0.080      0.369      0.687        ---        ---    892.762 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  il6        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.483      0.048      0.397      0.585        ---        ---   4445.371 
+
+Coefficients:                   
+  Intercept                          -0.202      0.047     -0.293     -0.111     18.820      0.000   4216.679 
+  inflammation                        0.357      0.056      0.246      0.468     40.139      0.000   3410.548 
+
+Standard Deviations:            
+  Residual SD                         0.695      0.034      0.630      0.765        ---        ---   4423.712 
+
+Standardized Coefficients:      
+  inflammation                        0.454      0.062      0.321      0.565     52.089      0.000   3210.432 
+
+Proportion Variance Explained   
+  by Coefficients                     0.206      0.056      0.103      0.320        ---        ---   3224.030 
+  by Residual Variation               0.794      0.056      0.680      0.897        ---        ---   3224.030 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  tnf        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.543      0.071      0.410      0.691        ---        ---   1743.626 
+
+Coefficients:                   
+  Intercept                           0.531      0.056      0.421      0.641     90.335      0.000   2667.200 
+  inflammation                        0.592      0.067      0.459      0.724     77.722      0.000   1747.360 
+
+Standard Deviations:            
+  Residual SD                         0.737      0.048      0.640      0.831        ---        ---   1702.229 
+
+Standardized Coefficients:      
+  inflammation                        0.622      0.058      0.502      0.728    114.803      0.000   1424.524 
+
+Proportion Variance Explained   
+  by Coefficients                     0.387      0.071      0.252      0.530        ---        ---   1387.911 
+  by Residual Variation               0.613      0.071      0.470      0.748        ---        ---   1387.911 
+
+                                ------------------------------------------------------------------------------
+
+
+
+                                  Estimate   StdDev     2.5%    97.5%    ChiSq
+crp ~ inflammation (standardized)    0.522    0.060    0.398    0.632   74.547
+ifn ~ inflammation (standardized)    0.678    0.059    0.559    0.794  130.956
+il6 ~ inflammation (standardized)    0.454    0.062    0.321    0.565   52.089
+tnf ~ inflammation (standardized)    0.622    0.058    0.501    0.728  114.803
+                                    PValue    N_Eff
+crp ~ inflammation (standardized)        0 2393.932
+ifn ~ inflammation (standardized)        0  935.795
+il6 ~ inflammation (standardized)        0 3210.432
+tnf ~ inflammation (standardized)        0 1424.524
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 17:52:09 2026
+  Chain 2 burn-in started on Aug 15 17:52:09 2026
+  Chain 3 burn-in started on Aug 15 17:52:09 2026
+  Chain 4 burn-in started on Aug 15 17:52:09 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:52:09 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:52:09 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:52:09 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:52:09 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:52:09 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:52:09 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:52:09 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:52:09 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:52:09 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:52:09 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:52:09 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:52:09 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:52:09 2026
+  Chain 3 completed burn-in on Aug 15 17:52:09 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:52:09 2026
+  Chain 4 completed burn-in on Aug 15 17:52:09 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:52:09 2026
+  Chain 1 completed burn-in on Aug 15 17:52:09 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:52:09 2026
+  Chain 2 completed burn-in on Aug 15 17:52:09 2026
+  Chain 3 completed iteration 625 on Aug 15 17:52:09 2026
+  Chain 4 completed iteration 625 on Aug 15 17:52:10 2026
+  Chain 2 completed iteration 625 on Aug 15 17:52:10 2026
+  Chain 1 completed iteration 625 on Aug 15 17:52:10 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:52:10 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:52:10 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:52:10 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:52:10 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:52:10 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:52:10 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:52:10 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:52:10 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:52:10 2026
+  Chain 3 finished on Aug 15 17:52:10 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:52:10 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:52:10 2026
+  Chain 4 finished on Aug 15 17:52:10 2026
+  Chain 2 finished on Aug 15 17:52:10 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:52:10 2026
+  Chain 1 finished on Aug 15 17:52:10 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.148             1  
+                          501 to 1000            1.061            14  
+                          751 to 1500            1.126             1  
+                         1001 to 2000            1.042             1  
+                         1251 to 2500            1.054             1  
+                         1501 to 3000            1.066             9  
+                         1751 to 3500            1.026             1  
+                         2001 to 4000            1.024             9  
+                         2251 to 4500            1.012             1  
+                         2501 to 5000            1.019             9  
+                         2751 to 5500            1.012             1  
+                         3001 to 6000            1.028             1  
+                         3251 to 6500            1.014             1  
+                         3501 to 7000            1.005             9  
+                         3751 to 7500            1.015             9  
+                         4001 to 8000            1.012             1  
+                         4251 to 8500            1.012             1  
+                         4501 to 9000            1.013             1  
+                         4751 to 9500            1.013             1  
+                         5001 to 10000           1.015             1  
+
+
+DATA INFORMATION:
+
+  Sample Size:              279
+  Missing Data Info:
+
+                      Pattern #:       1
+                          miss % --------
+                      crp =  0.0       -  
+                      il6 =  0.0       -  
+                      tnf =  0.0       -  
+                      ifn =  0.0       -  
+                                 --------
+                                 % 100.0
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         12
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                inflammation
+
+  MODELS
+    [1]  inflammation ~ Intercept
+    [2]  crp ~ inflammation@1
+    [3]  ifn ~ Intercept inflammation
+    [4]  il6 ~ Intercept inflammation
+    [5]  tnf ~ Intercept inflammation
+
+
+ WARNING MESSAGES:
+
+  WARNING: 18 observations have all variables in the imputation
+           model missing. They have been dropped from data set.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  3214.522
+      WAIC                  3324.468
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  inflammation                        0.238      0.664     -0.222      0.188      0.640     -1.357      2.828 
+  crp                                 0.235      1.328     -0.504     -0.120      0.540     -1.193      9.727 
+  ifn                                 0.305      0.773     -0.240      0.112      0.666     -0.991      3.206 
+  il6                                -0.203      0.775     -0.697     -0.318      0.044     -1.677      4.806 
+  tnf                                 0.528      0.938     -0.148      0.452      1.184     -1.669      3.260 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  inflammation, crp                   0.017      0.085     -0.150      0.185      0.043      0.835    943.934 
+  inflammation, ifn                  -0.001      0.086     -0.171      0.167      0.000      0.994  10225.674 
+  inflammation, il6                   0.001      0.086     -0.164      0.171      0.000      0.982  10091.390 
+  inflammation, tnf                   0.002      0.086     -0.170      0.168      0.000      0.988  10188.013 
+  crp, ifn                            0.004      0.081     -0.154      0.157      0.001      0.970   2243.923 
+  crp, il6                            0.052      0.071     -0.089      0.189      0.536      0.464   2628.545 
+  crp, tnf                           -0.002      0.077     -0.156      0.145      0.002      0.964   2025.946 
+  ifn, il6                           -0.015      0.079     -0.170      0.138      0.036      0.850   4283.958 
+  ifn, tnf                            0.019      0.083     -0.148      0.180      0.055      0.814   2512.492 
+  il6, tnf                           -0.009      0.075     -0.158      0.141      0.015      0.903   3756.283 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Latent Variable:   inflammation
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.446      0.125      0.240      0.721        ---        ---    259.444 
+
+Coefficients:                   
+  Intercept                           0.237      0.079      0.085      0.392      9.184      0.002    668.347 
+
+Standard Deviations:            
+  Residual SD                         0.667      0.093      0.490      0.849        ---        ---    247.010 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  crp        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.313      0.137      1.065      1.601        ---        ---   1496.197 
+
+Coefficients:                   
+  inflammation                      @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.146      0.060      1.032      1.265        ---        ---   1478.715 
+
+Standardized Coefficients:      
+  inflammation                        0.501      0.060      0.381      0.614     70.252      0.000    248.838 
+
+Proportion Variance Explained   
+  by Coefficients                     0.251      0.059      0.145      0.376        ---        ---    260.217 
+  by Residual Variation               0.749      0.059      0.624      0.855        ---        ---    260.217 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  ifn        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.323      0.050      0.226      0.422        ---        ---   1080.284 
+
+Coefficients:                   
+  Intercept                           0.116      0.073     -0.043      0.247      2.362      0.124    548.536 
+  inflammation                        0.794      0.146      0.574      1.132     30.814      0.000    257.980 
+
+Standard Deviations:            
+  Residual SD                         0.568      0.044      0.475      0.650        ---        ---   1024.266 
+
+Standardized Coefficients:      
+  inflammation                        0.679      0.057      0.562      0.786    139.521      0.000   1024.732 
+
+Proportion Variance Explained   
+  by Coefficients                     0.462      0.078      0.316      0.618        ---        ---    971.309 
+  by Residual Variation               0.538      0.078      0.382      0.684        ---        ---    971.309 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  il6        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.482      0.048      0.397      0.585        ---        ---   4505.511 
+
+Coefficients:                   
+  Intercept                          -0.329      0.061     -0.455     -0.216     29.298      0.000    911.816 
+  inflammation                        0.530      0.109      0.351      0.779     24.479      0.000    475.544 
+
+Standard Deviations:            
+  Residual SD                         0.694      0.034      0.630      0.765        ---        ---   4432.873 
+
+Standardized Coefficients:      
+  inflammation                        0.453      0.062      0.323      0.566     53.123      0.000   3118.936 
+
+Proportion Variance Explained   
+  by Coefficients                     0.205      0.055      0.105      0.320        ---        ---   3121.985 
+  by Residual Variation               0.795      0.055      0.680      0.895        ---        ---   3121.985 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  tnf        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.541      0.072      0.407      0.693        ---        ---   1540.109 
+
+Coefficients:                   
+  Intercept                           0.318      0.086      0.133      0.474     13.460      0.000    585.365 
+  inflammation                        0.887      0.165      0.632      1.271     29.864      0.000    317.475 
+
+Standard Deviations:            
+  Residual SD                         0.736      0.049      0.638      0.832        ---        ---   1498.490 
+
+Standardized Coefficients:      
+  inflammation                        0.624      0.058      0.506      0.729    116.197      0.000   1470.631 
+
+Proportion Variance Explained   
+  by Coefficients                     0.389      0.071      0.256      0.532        ---        ---   1413.824 
+  by Residual Variation               0.611      0.071      0.468      0.744        ---        ---   1413.824 
+
+                                ------------------------------------------------------------------------------
+
+
+
+                                  Estimate   StdDev     2.5%    97.5%    ChiSq
+crp ~ inflammation (standardized)    0.501    0.060    0.381    0.614   70.252
+ifn ~ inflammation (standardized)    0.679    0.057    0.562    0.786  139.521
+il6 ~ inflammation (standardized)    0.453    0.062    0.323    0.566   53.123
+tnf ~ inflammation (standardized)    0.624    0.058    0.506    0.730  116.197
+                                    PValue    N_Eff
+crp ~ inflammation (standardized)        0  248.838
+ifn ~ inflammation (standardized)        0 1024.732
+il6 ~ inflammation (standardized)        0 3118.936
+tnf ~ inflammation (standardized)        0 1470.631
+
+ITERATION HISTORY:
+
+  Chain 2 burn-in started on Aug 15 17:52:15 2026
+  Chain 4 burn-in started on Aug 15 17:52:15 2026
+  Chain 3 burn-in started on Aug 15 17:52:15 2026
+  Chain 1 burn-in started on Aug 15 17:52:15 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:52:15 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:52:15 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:52:15 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:52:15 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:52:16 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:52:16 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:52:16 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:52:16 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:52:16 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:52:16 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:52:16 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:52:16 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:52:16 2026
+  Chain 1 completed burn-in on Aug 15 17:52:16 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:52:16 2026
+  Chain 4 completed burn-in on Aug 15 17:52:16 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:52:16 2026
+  Chain 3 completed burn-in on Aug 15 17:52:16 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:52:16 2026
+  Chain 2 completed burn-in on Aug 15 17:52:16 2026
+  Chain 1 saved imputation 1 on Aug 15 17:52:16 2026
+  Chain 4 saved imputation 4 on Aug 15 17:52:16 2026
+  Chain 3 saved imputation 3 on Aug 15 17:52:16 2026
+  Chain 2 saved imputation 2 on Aug 15 17:52:16 2026
+  Chain 1 completed iteration 625 on Aug 15 17:52:16 2026
+  Chain 4 completed iteration 625 on Aug 15 17:52:16 2026
+  Chain 3 completed iteration 625 on Aug 15 17:52:16 2026
+  Chain 2 completed iteration 625 on Aug 15 17:52:16 2026
+  Chain 4 saved imputation 8 on Aug 15 17:52:16 2026
+  Chain 1 saved imputation 5 on Aug 15 17:52:16 2026
+  Chain 2 saved imputation 6 on Aug 15 17:52:16 2026
+  Chain 3 saved imputation 7 on Aug 15 17:52:16 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:52:16 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:52:16 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:52:16 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:52:16 2026
+  Chain 4 saved imputation 12 on Aug 15 17:52:16 2026
+  Chain 3 saved imputation 11 on Aug 15 17:52:16 2026
+  Chain 1 saved imputation 9 on Aug 15 17:52:16 2026
+  Chain 2 saved imputation 10 on Aug 15 17:52:16 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:52:16 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:52:16 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:52:16 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:52:16 2026
+  Chain 3 saved imputation 15 on Aug 15 17:52:16 2026
+  Chain 4 saved imputation 16 on Aug 15 17:52:16 2026
+  Chain 1 saved imputation 13 on Aug 15 17:52:16 2026
+  Chain 2 saved imputation 14 on Aug 15 17:52:16 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:52:16 2026
+  Chain 3 saved imputation 19 on Aug 15 17:52:16 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:52:16 2026
+  Chain 4 saved imputation 20 on Aug 15 17:52:16 2026
+  Chain 3 finished on Aug 15 17:52:16 2026
+  Chain 4 finished on Aug 15 17:52:16 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:52:16 2026
+  Chain 1 saved imputation 17 on Aug 15 17:52:16 2026
+  Chain 1 finished on Aug 15 17:52:16 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:52:16 2026
+  Chain 2 saved imputation 18 on Aug 15 17:52:16 2026
+  Chain 2 finished on Aug 15 17:52:16 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.055            30  
+                          501 to 1000            1.015            26  
+                          751 to 1500            1.007            16  
+                         1001 to 2000            1.010            16  
+                         1251 to 2500            1.006            14  
+                         1501 to 3000            1.007            12  
+                         1751 to 3500            1.007            14  
+                         2001 to 4000            1.004            30  
+                         2251 to 4500            1.004            12  
+                         2501 to 5000            1.003            30  
+                         2751 to 5500            1.004            30  
+                         3001 to 6000            1.002            28  
+                         3251 to 6500            1.004            16  
+                         3501 to 7000            1.004            12  
+                         3751 to 7500            1.004            30  
+                         4001 to 8000            1.003            30  
+                         4251 to 8500            1.004            30  
+                         4501 to 9000            1.003            30  
+                         4751 to 9500            1.004            30  
+                         5001 to 10000           1.003            30  
+
+
+DATA INFORMATION:
+
+  Sample Size:              279
+  Missing Data Info:
+
+                      Pattern #:       1
+                          miss % --------
+                      crp =  0.0       -  
+                      il6 =  0.0       -  
+                      tnf =  0.0       -  
+                      ifn =  0.0       -  
+                                 --------
+                                 % 100.0
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         12
+    Predictor Models:       0
+
+  FACTORS
+    Level-1:                inflammation
+
+  MODELS
+    [1]  inflammation ~ Intercept@0
+    [2]  crp ~ Intercept inflammation@load1
+    [3]  ifn ~ Intercept inflammation
+    [4]  il6 ~ Intercept inflammation
+    [5]  tnf ~ Intercept inflammation
+
+
+ WARNING MESSAGES:
+
+  WARNING: 18 observations have all variables in the imputation
+           model missing. They have been dropped from data set.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  3435.136
+      WAIC                  3545.381
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  inflammation                       -0.001      0.990     -0.687     -0.076      0.597     -2.374      3.900 
+  crp                                 0.235      1.328     -0.504     -0.120      0.540     -1.193      9.727 
+  ifn                                 0.305      0.773     -0.240      0.112      0.666     -0.991      3.206 
+  il6                                -0.203      0.775     -0.697     -0.318      0.044     -1.677      4.806 
+  tnf                                 0.528      0.938     -0.148      0.452      1.184     -1.669      3.260 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  inflammation, crp                   0.001      0.085     -0.169      0.167      0.000      0.994   9743.502 
+  inflammation, ifn                  -0.002      0.085     -0.167      0.166      0.001      0.980   9624.579 
+  inflammation, il6                   0.001      0.086     -0.168      0.165      0.000      0.993   9485.805 
+  inflammation, tnf                   0.001      0.086     -0.164      0.168      0.000      0.988  10237.009 
+  crp, ifn                           -0.005      0.080     -0.161      0.150      0.004      0.948   4027.116 
+  crp, il6                            0.047      0.073     -0.097      0.186      0.419      0.517   4531.852 
+  crp, tnf                           -0.010      0.080     -0.169      0.143      0.018      0.893   2872.297 
+  ifn, il6                           -0.014      0.079     -0.167      0.138      0.031      0.860   4603.881 
+  ifn, tnf                            0.024      0.086     -0.145      0.187      0.075      0.784   3446.779 
+  il6, tnf                           -0.008      0.076     -0.154      0.139      0.011      0.915   3903.482 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Latent Variable:   inflammation
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                     @ 1.000        ---        ---        ---        ---        ---        --- 
+
+Standard Deviations:            
+  Residual SD                         1.000      0.000      1.000      1.000        ---        ---        --- 
+
+Proportion Variance Explained   
+  by Coefficients                     0.000      0.000      0.000      0.000        ---        ---        --- 
+  by Residual Variation               1.000      0.000      1.000      1.000        ---        ---        --- 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  crp        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       1.293      0.138      1.045      1.583        ---        ---   3355.705 
+
+Coefficients:                   
+  Intercept                           0.235      0.080      0.075      0.390      8.640      0.003   3573.282 
+  inflammation                        0.703      0.097      0.521      0.891     53.112      0.000   2648.627 
+
+Standard Deviations:            
+  Residual SD                         1.137      0.060      1.022      1.258        ---        ---   3305.005 
+
+Standardized Coefficients:      
+  inflammation                        0.522      0.060      0.398      0.632     74.547      0.000   2393.932 
+
+Proportion Variance Explained   
+  by Coefficients                     0.272      0.062      0.159      0.400        ---        ---   2358.161 
+  by Residual Variation               0.728      0.062      0.600      0.841        ---        ---   2358.161 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  ifn        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.325      0.052      0.222      0.426        ---        ---    999.388 
+
+Coefficients:                   
+  Intercept                           0.306      0.047      0.213      0.395     42.617      0.000   2417.377 
+  inflammation                        0.532      0.058      0.421      0.650     83.757      0.000   1174.273 
+
+Standard Deviations:            
+  Residual SD                         0.570      0.046      0.471      0.653        ---        ---    938.590 
+
+Standardized Coefficients:      
+  inflammation                        0.678      0.059      0.559      0.794    130.956      0.000    935.795 
+
+Proportion Variance Explained   
+  by Coefficients                     0.459      0.080      0.313      0.631        ---        ---    892.762 
+  by Residual Variation               0.541      0.080      0.369      0.687        ---        ---    892.762 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  il6        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.483      0.048      0.397      0.585        ---        ---   4445.371 
+
+Coefficients:                   
+  Intercept                          -0.202      0.047     -0.293     -0.111     18.820      0.000   4216.679 
+  inflammation                        0.357      0.056      0.246      0.468     40.139      0.000   3410.548 
+
+Standard Deviations:            
+  Residual SD                         0.695      0.034      0.630      0.765        ---        ---   4423.712 
+
+Standardized Coefficients:      
+  inflammation                        0.454      0.062      0.321      0.565     52.089      0.000   3210.432 
+
+Proportion Variance Explained   
+  by Coefficients                     0.206      0.056      0.103      0.320        ---        ---   3224.030 
+  by Residual Variation               0.794      0.056      0.680      0.897        ---        ---   3224.030 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  tnf        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.543      0.071      0.410      0.691        ---        ---   1743.626 
+
+Coefficients:                   
+  Intercept                           0.531      0.056      0.421      0.641     90.335      0.000   2667.200 
+  inflammation                        0.592      0.067      0.459      0.724     77.722      0.000   1747.360 
+
+Standard Deviations:            
+  Residual SD                         0.737      0.048      0.640      0.831        ---        ---   1702.229 
+
+Standardized Coefficients:      
+  inflammation                        0.622      0.058      0.502      0.728    114.803      0.000   1424.524 
+
+Proportion Variance Explained   
+  by Coefficients                     0.387      0.071      0.252      0.530        ---        ---   1387.911 
+  by Residual Variation               0.613      0.071      0.470      0.748        ---        ---   1387.911 
+
+                                ------------------------------------------------------------------------------
+
+
+
+                                  Estimate   StdDev     2.5%    97.5%    ChiSq
+crp ~ inflammation (standardized)    0.522    0.060    0.398    0.632   74.547
+ifn ~ inflammation (standardized)    0.678    0.059    0.559    0.794  130.956
+il6 ~ inflammation (standardized)    0.454    0.062    0.321    0.565   52.089
+tnf ~ inflammation (standardized)    0.622    0.058    0.501    0.728  114.803
+                                    PValue    N_Eff
+crp ~ inflammation (standardized)        0 2393.932
+ifn ~ inflammation (standardized)        0  935.795
+il6 ~ inflammation (standardized)        0 3210.432
+tnf ~ inflammation (standardized)        0 1424.524
+pdf 
+  2 
+pdf 
+  2 
+Wrote:
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.2.pdf
+  /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 6.2.png

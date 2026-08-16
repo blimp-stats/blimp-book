@@ -3,76 +3,76 @@
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:09 2026
-  Chain 3 burn-in started on Jun 17 18:23:09 2026
-  Chain 4 burn-in started on Jun 17 18:23:09 2026
-  Chain 2 burn-in started on Jun 17 18:23:09 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:09 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:09 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:09 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:09 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:09 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:09 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:09 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:09 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:09 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:10 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:10 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:10 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:10 2026
-  Chain 2 completed burn-in on Jun 17 18:23:10 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:10 2026
-  Chain 1 completed burn-in on Jun 17 18:23:10 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:10 2026
-  Chain 3 completed burn-in on Jun 17 18:23:10 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:10 2026
-  Chain 4 completed burn-in on Jun 17 18:23:10 2026
-  Chain 2 saved imputation 2 on Jun 17 18:23:10 2026
-  Chain 1 saved imputation 1 on Jun 17 18:23:10 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:10 2026
-  Chain 3 saved imputation 3 on Jun 17 18:23:10 2026
-  Chain 4 saved imputation 4 on Jun 17 18:23:10 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:10 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:10 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:10 2026
-  Chain 2 saved imputation 6 on Jun 17 18:23:10 2026
-  Chain 1 saved imputation 5 on Jun 17 18:23:10 2026
-  Chain 3 saved imputation 7 on Jun 17 18:23:10 2026
-  Chain 4 saved imputation 8 on Jun 17 18:23:10 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:10 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:10 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:10 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:10 2026
-  Chain 2 saved imputation 10 on Jun 17 18:23:10 2026
-  Chain 1 saved imputation 9 on Jun 17 18:23:10 2026
-  Chain 3 saved imputation 11 on Jun 17 18:23:10 2026
-  Chain 4 saved imputation 12 on Jun 17 18:23:10 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:10 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:10 2026
-  Chain 2 saved imputation 14 on Jun 17 18:23:10 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:10 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:10 2026
-  Chain 1 saved imputation 13 on Jun 17 18:23:10 2026
-  Chain 3 saved imputation 15 on Jun 17 18:23:10 2026
-  Chain 4 saved imputation 16 on Jun 17 18:23:10 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:10 2026
-  Chain 2 saved imputation 18 on Jun 17 18:23:10 2026
-  Chain 2 finished on Jun 17 18:23:10 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:10 2026
-  Chain 1 saved imputation 17 on Jun 17 18:23:10 2026
-  Chain 1 finished on Jun 17 18:23:10 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:10 2026
-  Chain 3 saved imputation 19 on Jun 17 18:23:10 2026
-  Chain 3 finished on Jun 17 18:23:10 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:10 2026
-  Chain 4 saved imputation 20 on Jun 17 18:23:10 2026
-  Chain 4 finished on Jun 17 18:23:10 2026
+  Chain 2 burn-in started on Aug 15 17:44:08 2026
+  Chain 1 burn-in started on Aug 15 17:44:08 2026
+  Chain 4 burn-in started on Aug 15 17:44:08 2026
+  Chain 3 burn-in started on Aug 15 17:44:08 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:08 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:08 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:08 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:08 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:08 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:08 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:08 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:08 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:08 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:08 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:08 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:08 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:09 2026
+  Chain 1 completed burn-in on Aug 15 17:44:09 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:09 2026
+  Chain 3 completed burn-in on Aug 15 17:44:09 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:09 2026
+  Chain 4 completed burn-in on Aug 15 17:44:09 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:09 2026
+  Chain 2 completed burn-in on Aug 15 17:44:09 2026
+  Chain 1 saved imputation 1 on Aug 15 17:44:09 2026
+  Chain 3 saved imputation 3 on Aug 15 17:44:09 2026
+  Chain 4 saved imputation 4 on Aug 15 17:44:09 2026
+  Chain 2 saved imputation 2 on Aug 15 17:44:09 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:09 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:09 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:09 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:09 2026
+  Chain 3 saved imputation 7 on Aug 15 17:44:09 2026
+  Chain 1 saved imputation 5 on Aug 15 17:44:09 2026
+  Chain 4 saved imputation 8 on Aug 15 17:44:09 2026
+  Chain 2 saved imputation 6 on Aug 15 17:44:09 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:09 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:09 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:09 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:09 2026
+  Chain 3 saved imputation 11 on Aug 15 17:44:09 2026
+  Chain 1 saved imputation 9 on Aug 15 17:44:09 2026
+  Chain 4 saved imputation 12 on Aug 15 17:44:09 2026
+  Chain 2 saved imputation 10 on Aug 15 17:44:09 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:09 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:09 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:09 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:09 2026
+  Chain 3 saved imputation 15 on Aug 15 17:44:09 2026
+  Chain 1 saved imputation 13 on Aug 15 17:44:09 2026
+  Chain 4 saved imputation 16 on Aug 15 17:44:09 2026
+  Chain 2 saved imputation 14 on Aug 15 17:44:09 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:09 2026
+  Chain 3 saved imputation 19 on Aug 15 17:44:09 2026
+  Chain 3 finished on Aug 15 17:44:09 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:09 2026
+  Chain 1 saved imputation 17 on Aug 15 17:44:09 2026
+  Chain 1 finished on Aug 15 17:44:09 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:09 2026
+  Chain 4 saved imputation 20 on Aug 15 17:44:09 2026
+  Chain 4 finished on Aug 15 17:44:09 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:09 2026
+  Chain 2 saved imputation 18 on Aug 15 17:44:09 2026
+  Chain 2 finished on Aug 15 17:44:09 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -346,56 +346,56 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:16 2026
-  Chain 4 burn-in started on Jun 17 18:23:16 2026
-  Chain 2 burn-in started on Jun 17 18:23:16 2026
-  Chain 3 burn-in started on Jun 17 18:23:16 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:16 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:16 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:16 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:16 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:16 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:16 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:16 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:16 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:17 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:17 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:17 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:17 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:17 2026
-  Chain 4 completed burn-in on Jun 17 18:23:17 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:17 2026
-  Chain 2 completed burn-in on Jun 17 18:23:17 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:17 2026
-  Chain 1 completed burn-in on Jun 17 18:23:17 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:17 2026
-  Chain 3 completed burn-in on Jun 17 18:23:17 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:17 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:17 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:17 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:17 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:17 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:17 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:17 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:17 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:17 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:18 2026
-  Chain 4 finished on Jun 17 18:23:18 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:18 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:18 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:18 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:18 2026
-  Chain 2 finished on Jun 17 18:23:18 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:18 2026
-  Chain 1 finished on Jun 17 18:23:18 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:18 2026
-  Chain 3 finished on Jun 17 18:23:18 2026
+  Chain 3 burn-in started on Aug 15 17:44:15 2026
+  Chain 2 burn-in started on Aug 15 17:44:15 2026
+  Chain 1 burn-in started on Aug 15 17:44:15 2026
+  Chain 4 burn-in started on Aug 15 17:44:15 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:15 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:15 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:15 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:15 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:16 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:16 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:16 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:16 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:16 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:16 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:16 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:16 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:17 2026
+  Chain 4 completed burn-in on Aug 15 17:44:17 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:17 2026
+  Chain 1 completed burn-in on Aug 15 17:44:17 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:17 2026
+  Chain 2 completed burn-in on Aug 15 17:44:17 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:17 2026
+  Chain 3 completed burn-in on Aug 15 17:44:17 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:17 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:17 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:17 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:17 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:17 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:17 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:17 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:17 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:17 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:17 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:17 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:17 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:17 2026
+  Chain 4 finished on Aug 15 17:44:17 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:17 2026
+  Chain 1 finished on Aug 15 17:44:17 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:17 2026
+  Chain 2 finished on Aug 15 17:44:17 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:17 2026
+  Chain 3 finished on Aug 15 17:44:17 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -437,26 +437,26 @@ BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
         convergence detection across all chains.
 
   Comparing iterations across 4 chains     Highest Rhat   Parameter #  
-                          251 to 500             1.050             7  
-                          501 to 1000            1.024             7  
-                          751 to 1500            1.013             7  
-                         1001 to 2000            1.011             7  
-                         1251 to 2500            1.007             7  
-                         1501 to 3000            1.005             7  
-                         1751 to 3500            1.008             7  
-                         2001 to 4000            1.004             7  
-                         2251 to 4500            1.003            17  
-                         2501 to 5000            1.004             7  
-                         2751 to 5500            1.002            32  
-                         3001 to 6000            1.002            27  
-                         3251 to 6500            1.003            27  
-                         3501 to 7000            1.002            21  
-                         3751 to 7500            1.003            21  
+                          251 to 500             1.017            30  
+                          501 to 1000            1.013            22  
+                          751 to 1500            1.011             7  
+                         1001 to 2000            1.012            32  
+                         1251 to 2500            1.006             7  
+                         1501 to 3000            1.005            32  
+                         1751 to 3500            1.007            32  
+                         2001 to 4000            1.004            32  
+                         2251 to 4500            1.003            32  
+                         2501 to 5000            1.004            32  
+                         2751 to 5500            1.003            32  
+                         3001 to 6000            1.002             7  
+                         3251 to 6500            1.002            32  
+                         3501 to 7000            1.001            32  
+                         3751 to 7500            1.002             7  
                          4001 to 8000            1.002             7  
                          4251 to 8500            1.002             7  
                          4501 to 9000            1.002             7  
                          4751 to 9500            1.002             7  
-                         5001 to 10000           1.002             7  
+                         5001 to 10000           1.001             7  
 
 
 METROPOLIS-HASTINGS ACCEPTANCE RATES:
@@ -464,11 +464,11 @@ METROPOLIS-HASTINGS ACCEPTANCE RATES:
   Chain 1:
 
     Variable                            Type    Probability   Target Value 
-    yjt(dpddcent)                  parameter          0.476          0.500 
-    els                           imputation          0.512          0.500 
-    age                            parameter          0.488          0.500 
-    inflam                        imputation          0.497          0.500 
-    inflam                         parameter          0.542          0.500 
+    yjt(dpdd-6)                    parameter          0.473          0.500 
+    els                           imputation          0.510          0.500 
+    age                            parameter          0.517          0.500 
+    inflam                        imputation          0.506          0.500 
+    inflam                         parameter          0.451          0.500 
 
   NOTE: Suppressing printing of 3 chains.
         Use keyword 'tuneinfo' in options to override.
@@ -481,7 +481,7 @@ DATA INFORMATION:
 
                       Pattern #:       1     2     3     4     5
                           miss % --------------------------------
-                 dpddcent = 12.1       -     M     -     -     M  
+                     dpdd = 12.1       -     M     -     -     M  
                    female =  0.0       -     -     -     -     -  
                       els =  4.0       -     -     -     M     M  
                       age =  0.0       -     -     -     -     -  
@@ -506,7 +506,7 @@ MODEL INFORMATION:
     Grand Mean Centered:    age inflam
 
   MODELS
-    [1]  yjt(dpddcent) ~ Intercept inflam els female age
+    [1]  yjt(dpdd-6) ~ Intercept inflam els female age
 
 
  WARNING MESSAGES:
@@ -520,8 +520,8 @@ MODEL FIT:
   INFORMATION CRITERIA
 
     Conditional Likelihood
-      DIC2                  1633.429
-      WAIC                  1647.930
+      DIC2                  1671.986
+      WAIC                  1686.577
 
 
 IMPUTED DATA SUMMARIES:
@@ -532,11 +532,12 @@ IMPUTED DATA SUMMARIES:
 Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
                                 ------------------------------------------------------------------------------
 
-  dpddcent                            0.788      4.505     -2.053     -0.016      2.646     -5.916     23.870 
+  dpdd                                6.165      4.507      3.328      5.365      8.014     -0.591     29.306 
+  dpdd.yjt                           -0.934      4.028     -3.421     -0.691      1.658    -10.057     11.792 
   female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
-  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.388      0.488      0.000      0.000      1.000      0.000      1.000 
   age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
-  inflam                              0.026      2.849     -1.900     -0.447      1.631     -5.865     15.157 
+  inflam                              0.026      2.848     -1.900     -0.447      1.632     -5.874     15.157 
 
                                 ------------------------------------------------------------------------------
 
@@ -554,7 +555,7 @@ OUTCOME MODEL ESTIMATES:
   NOTE: Estimate column based on posterior median.
 
 
-Outcome Variable:  yjt(dpddcent)
+Outcome Variable:  yjt(dpdd-6)
 
 Grand Mean Centered: age inflam
 
@@ -562,30 +563,30 @@ Grand Mean Centered: age inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 Variances:                      
-  Residual Var.                      13.514      1.220     11.383     16.152        ---        ---   6302.530 
+  Residual Var.                      15.398      1.405     12.916     18.431        ---        ---   6618.879 
 
 Coefficients:                   
-  Intercept                          -0.046      0.365     -0.745      0.681      0.013      0.908   3976.749 
-  inflam                              0.349      0.082      0.185      0.510     17.901      0.000   5634.549 
-  els                                -0.336      0.482     -1.272      0.623      0.472      0.492   6437.266 
-  female                             -0.239      0.477     -1.175      0.693      0.248      0.618   7951.495 
-  age                                 0.006      0.042     -0.076      0.088      0.017      0.895   7153.834 
+  Intercept                          -0.693      0.392     -1.470      0.071      3.148      0.076   4097.152 
+  inflam                              0.371      0.088      0.200      0.547     17.936      0.000   6140.322 
+  els                                -0.379      0.520     -1.392      0.633      0.518      0.472   7357.808 
+  female                             -0.254      0.514     -1.272      0.760      0.251      0.616   7522.158 
+  age                                 0.007      0.045     -0.084      0.096      0.022      0.881   6815.390 
 
 Transformation:                 
-  Yeo-Johnson (lambda)                0.693      0.036      0.623      0.764        ---        ---   1203.833 
+  Yeo-Johnson (lambda)                0.695      0.036      0.622      0.764        ---        ---   1182.954 
 
 Standard Deviations:            
-  Residual SD                         3.676      0.165      3.374      4.019        ---        ---   6313.815 
+  Residual SD                         3.924      0.178      3.594      4.293        ---        ---   6660.543 
 
 Standardized Coefficients:      
-  inflam                              0.259      0.058      0.139      0.369     19.543      0.000   5531.387 
-  els                                -0.043      0.061     -0.161      0.078      0.476      0.490   6410.007 
-  female                             -0.030      0.060     -0.146      0.087      0.250      0.617   7962.466 
-  age                                 0.009      0.062     -0.112      0.129      0.017      0.895   7167.851 
+  inflam                              0.259      0.058      0.141      0.369     19.616      0.000   5855.610 
+  els                                -0.045      0.062     -0.165      0.075      0.522      0.470   7356.567 
+  female                             -0.030      0.060     -0.148      0.089      0.253      0.615   7530.844 
+  age                                 0.009      0.062     -0.115      0.131      0.023      0.880   6826.659 
 
 Proportion Variance Explained   
-  by Coefficients                     0.079      0.030      0.029      0.147        ---        ---   5956.921 
-  by Residual Variation               0.921      0.030      0.853      0.971        ---        ---   5956.921 
+  by Coefficients                     0.080      0.031      0.029      0.148        ---        ---   6263.274 
+  by Residual Variation               0.920      0.031      0.852      0.971        ---        ---   6263.274 
 
                                 ------------------------------------------------------------------------------
 
@@ -604,12 +605,12 @@ Complete predictor: female
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.355      0.076     -0.504     -0.208     22.054      0.000   3668.960 
+Grand Mean                           -0.354      0.076     -0.505     -0.205     21.624      0.000   4140.924 
 
 Level 1:                                                                                                      
-  els                                 0.044      0.093     -0.137      0.224      0.222      0.637   2460.625 
-  age                                -0.028      0.014     -0.055     -0.002      4.384      0.036   4094.895 
-  inflam                              0.013      0.027     -0.042      0.066      0.212      0.646   4000.285 
+  els                                 0.044      0.090     -0.131      0.220      0.237      0.627   2306.089 
+  age                                -0.028      0.014     -0.056     -0.001      4.181      0.041   4248.659 
+  inflam                              0.012      0.028     -0.042      0.066      0.201      0.654   3807.435 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -623,12 +624,12 @@ Missing predictor:  els
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.296      0.078     -0.447     -0.144     14.359      0.000   3122.357 
+Grand Mean                           -0.296      0.078     -0.450     -0.144     14.253      0.000   3550.668 
 
 Level 1:                                                                                                      
-  female                              0.043      0.092     -0.136      0.225      0.217      0.641   2242.739 
-  age                                -0.038      0.014     -0.066     -0.010      6.892      0.009   3731.991 
-  inflam                              0.046      0.028     -0.009      0.100      2.760      0.097   3391.348 
+  female                              0.045      0.092     -0.137      0.228      0.232      0.630   2208.115 
+  age                                -0.037      0.014     -0.065     -0.010      7.188      0.007   3623.340 
+  inflam                              0.046      0.028     -0.008      0.100      2.788      0.095   3298.082 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -642,13 +643,13 @@ Complete predictor: age
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           45.595      0.330     44.934     46.217  19115.153      0.000   1996.882 
+Grand Mean                           45.580      0.330     44.952     46.244  19133.085      0.000   1976.279 
 
 Level 1:                                                                                                      
-  female                             -0.837      0.398     -1.614     -0.053      4.415      0.036   6596.718 
-  els                                -1.104      0.402     -1.878     -0.302      7.537      0.006   5939.983 
-  inflam                              0.187      0.120     -0.051      0.424      2.417      0.120   7214.132 
-  Residual Var.                      29.714      2.568     25.237     35.203        ---        ---   7932.094 
+  female                             -0.830      0.406     -1.603     -0.012      4.146      0.042   5487.815 
+  els                                -1.108      0.403     -1.877     -0.315      7.543      0.006   5806.417 
+  inflam                              0.187      0.120     -0.044      0.428      2.476      0.116   6316.952 
+  Residual Var.                      29.766      2.621     25.248     35.394        ---        ---   8457.155 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -659,13 +660,13 @@ Missing predictor:  inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                            0.034      0.173     -0.300      0.371      0.032      0.857   1660.051 
+Grand Mean                            0.026      0.170     -0.306      0.369      0.032      0.858   1879.399 
 
 Level 1:                                                                                                      
-  female                              0.098      0.218     -0.333      0.520      0.208      0.648   5299.721 
-  els                                 0.360      0.213     -0.070      0.769      2.832      0.092   4479.413 
-  age                                 0.051      0.032     -0.013      0.113      2.462      0.117   6526.028 
-  Residual Var.                       7.942      0.682      6.721      9.411        ---        ---   7509.002 
+  female                              0.102      0.220     -0.340      0.522      0.201      0.654   5281.368 
+  els                                 0.360      0.215     -0.070      0.777      2.795      0.095   5060.179 
+  age                                 0.050      0.032     -0.013      0.113      2.420      0.120   6363.556 
+  Residual Var.                       7.932      0.691      6.752      9.444        ---        ---   6554.356 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -673,76 +674,76 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:22 2026
-  Chain 2 burn-in started on Jun 17 18:23:22 2026
-  Chain 4 burn-in started on Jun 17 18:23:22 2026
-  Chain 3 burn-in started on Jun 17 18:23:22 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:23 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:23 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:23 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:23 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:23 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:23 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:23 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:23 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:24 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:24 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:24 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:24 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:24 2026
-  Chain 2 completed burn-in on Jun 17 18:23:24 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:24 2026
-  Chain 1 completed burn-in on Jun 17 18:23:24 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:24 2026
-  Chain 3 completed burn-in on Jun 17 18:23:24 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:24 2026
-  Chain 4 completed burn-in on Jun 17 18:23:24 2026
-  Chain 1 saved imputation 1 on Jun 17 18:23:24 2026
-  Chain 2 saved imputation 2 on Jun 17 18:23:24 2026
-  Chain 3 saved imputation 3 on Jun 17 18:23:24 2026
-  Chain 4 saved imputation 4 on Jun 17 18:23:24 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:24 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:24 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:24 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:24 2026
-  Chain 1 saved imputation 5 on Jun 17 18:23:24 2026
-  Chain 2 saved imputation 6 on Jun 17 18:23:24 2026
-  Chain 3 saved imputation 7 on Jun 17 18:23:24 2026
-  Chain 4 saved imputation 8 on Jun 17 18:23:24 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:25 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:25 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:25 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:25 2026
-  Chain 1 saved imputation 9 on Jun 17 18:23:25 2026
-  Chain 2 saved imputation 10 on Jun 17 18:23:25 2026
-  Chain 3 saved imputation 11 on Jun 17 18:23:25 2026
-  Chain 4 saved imputation 12 on Jun 17 18:23:25 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:25 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:25 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:25 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:25 2026
-  Chain 1 saved imputation 13 on Jun 17 18:23:25 2026
-  Chain 2 saved imputation 14 on Jun 17 18:23:25 2026
-  Chain 3 saved imputation 15 on Jun 17 18:23:25 2026
-  Chain 4 saved imputation 16 on Jun 17 18:23:25 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:25 2026
-  Chain 1 saved imputation 17 on Jun 17 18:23:25 2026
-  Chain 1 finished on Jun 17 18:23:25 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:25 2026
-  Chain 2 saved imputation 18 on Jun 17 18:23:25 2026
-  Chain 2 finished on Jun 17 18:23:25 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:25 2026
-  Chain 3 saved imputation 19 on Jun 17 18:23:25 2026
-  Chain 3 finished on Jun 17 18:23:25 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:25 2026
-  Chain 4 saved imputation 20 on Jun 17 18:23:25 2026
-  Chain 4 finished on Jun 17 18:23:25 2026
+  Chain 2 burn-in started on Aug 15 17:44:22 2026
+  Chain 3 burn-in started on Aug 15 17:44:22 2026
+  Chain 4 burn-in started on Aug 15 17:44:22 2026
+  Chain 1 burn-in started on Aug 15 17:44:22 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:23 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:23 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:23 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:23 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:23 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:23 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:23 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:23 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:24 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:24 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:24 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:24 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:24 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:24 2026
+  Chain 1 completed burn-in on Aug 15 17:44:24 2026
+  Chain 3 completed burn-in on Aug 15 17:44:24 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:24 2026
+  Chain 4 completed burn-in on Aug 15 17:44:24 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:24 2026
+  Chain 2 completed burn-in on Aug 15 17:44:24 2026
+  Chain 3 saved imputation 3 on Aug 15 17:44:24 2026
+  Chain 1 saved imputation 1 on Aug 15 17:44:24 2026
+  Chain 4 saved imputation 4 on Aug 15 17:44:24 2026
+  Chain 2 saved imputation 2 on Aug 15 17:44:24 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:24 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:24 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:24 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:24 2026
+  Chain 1 saved imputation 5 on Aug 15 17:44:24 2026
+  Chain 3 saved imputation 7 on Aug 15 17:44:24 2026
+  Chain 4 saved imputation 8 on Aug 15 17:44:24 2026
+  Chain 2 saved imputation 6 on Aug 15 17:44:24 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:24 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:24 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:24 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:24 2026
+  Chain 1 saved imputation 9 on Aug 15 17:44:24 2026
+  Chain 3 saved imputation 11 on Aug 15 17:44:24 2026
+  Chain 2 saved imputation 10 on Aug 15 17:44:24 2026
+  Chain 4 saved imputation 12 on Aug 15 17:44:24 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:25 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:25 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:25 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:25 2026
+  Chain 3 saved imputation 15 on Aug 15 17:44:25 2026
+  Chain 1 saved imputation 13 on Aug 15 17:44:25 2026
+  Chain 2 saved imputation 14 on Aug 15 17:44:25 2026
+  Chain 4 saved imputation 16 on Aug 15 17:44:25 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:25 2026
+  Chain 3 saved imputation 19 on Aug 15 17:44:25 2026
+  Chain 3 finished on Aug 15 17:44:25 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:25 2026
+  Chain 1 saved imputation 17 on Aug 15 17:44:25 2026
+  Chain 1 finished on Aug 15 17:44:25 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:25 2026
+  Chain 2 saved imputation 18 on Aug 15 17:44:25 2026
+  Chain 2 finished on Aug 15 17:44:25 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:25 2026
+  Chain 4 saved imputation 20 on Aug 15 17:44:25 2026
+  Chain 4 finished on Aug 15 17:44:25 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -784,26 +785,26 @@ BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
         convergence detection across all chains.
 
   Comparing iterations across 4 chains     Highest Rhat   Parameter #  
-                          251 to 500             1.050             7  
-                          501 to 1000            1.024             7  
-                          751 to 1500            1.013             7  
-                         1001 to 2000            1.011             7  
-                         1251 to 2500            1.007             7  
-                         1501 to 3000            1.005             7  
-                         1751 to 3500            1.008             7  
-                         2001 to 4000            1.004             7  
-                         2251 to 4500            1.003            17  
-                         2501 to 5000            1.004             7  
-                         2751 to 5500            1.002            32  
-                         3001 to 6000            1.002            27  
-                         3251 to 6500            1.003            27  
-                         3501 to 7000            1.002            21  
-                         3751 to 7500            1.003            21  
+                          251 to 500             1.017            30  
+                          501 to 1000            1.013            22  
+                          751 to 1500            1.011             7  
+                         1001 to 2000            1.012            32  
+                         1251 to 2500            1.006             7  
+                         1501 to 3000            1.005            32  
+                         1751 to 3500            1.007            32  
+                         2001 to 4000            1.004            32  
+                         2251 to 4500            1.003            32  
+                         2501 to 5000            1.004            32  
+                         2751 to 5500            1.003            32  
+                         3001 to 6000            1.002             7  
+                         3251 to 6500            1.002            32  
+                         3501 to 7000            1.001            32  
+                         3751 to 7500            1.002             7  
                          4001 to 8000            1.002             7  
                          4251 to 8500            1.002             7  
                          4501 to 9000            1.002             7  
                          4751 to 9500            1.002             7  
-                         5001 to 10000           1.002             7  
+                         5001 to 10000           1.001             7  
 
 
 METROPOLIS-HASTINGS ACCEPTANCE RATES:
@@ -811,11 +812,11 @@ METROPOLIS-HASTINGS ACCEPTANCE RATES:
   Chain 1:
 
     Variable                            Type    Probability   Target Value 
-    yjt(dpddcent)                  parameter          0.476          0.500 
-    els                           imputation          0.512          0.500 
-    age                            parameter          0.488          0.500 
-    inflam                        imputation          0.497          0.500 
-    inflam                         parameter          0.542          0.500 
+    yjt(dpdd-6)                    parameter          0.473          0.500 
+    els                           imputation          0.510          0.500 
+    age                            parameter          0.517          0.500 
+    inflam                        imputation          0.506          0.500 
+    inflam                         parameter          0.451          0.500 
 
   NOTE: Suppressing printing of 3 chains.
         Use keyword 'tuneinfo' in options to override.
@@ -828,7 +829,7 @@ DATA INFORMATION:
 
                       Pattern #:       1     2     3     4     5
                           miss % --------------------------------
-                 dpddcent = 12.1       -     M     -     -     M  
+                     dpdd = 12.1       -     M     -     -     M  
                    female =  0.0       -     -     -     -     -  
                       els =  4.0       -     -     -     M     M  
                       age =  0.0       -     -     -     -     -  
@@ -853,7 +854,7 @@ MODEL INFORMATION:
     Grand Mean Centered:    age inflam
 
   MODELS
-    [1]  yjt(dpddcent) ~ Intercept inflam els female age
+    [1]  yjt(dpdd-6) ~ Intercept inflam els female age
 
 
  WARNING MESSAGES:
@@ -867,8 +868,8 @@ MODEL FIT:
   INFORMATION CRITERIA
 
     Conditional Likelihood
-      DIC2                  1633.429
-      WAIC                  1647.930
+      DIC2                  1671.986
+      WAIC                  1686.577
 
 
 IMPUTED DATA SUMMARIES:
@@ -879,11 +880,12 @@ IMPUTED DATA SUMMARIES:
 Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
                                 ------------------------------------------------------------------------------
 
-  dpddcent                            0.788      4.505     -2.053     -0.016      2.646     -5.916     23.870 
+  dpdd                                6.165      4.507      3.328      5.365      8.014     -0.591     29.306 
+  dpdd.yjt                           -0.934      4.028     -3.421     -0.691      1.658    -10.057     11.792 
   female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
-  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.388      0.488      0.000      0.000      1.000      0.000      1.000 
   age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
-  inflam                              0.026      2.849     -1.900     -0.447      1.631     -5.865     15.157 
+  inflam                              0.026      2.848     -1.900     -0.447      1.632     -5.874     15.157 
 
                                 ------------------------------------------------------------------------------
 
@@ -901,7 +903,7 @@ OUTCOME MODEL ESTIMATES:
   NOTE: Estimate column based on posterior median.
 
 
-Outcome Variable:  yjt(dpddcent)
+Outcome Variable:  yjt(dpdd-6)
 
 Grand Mean Centered: age inflam
 
@@ -909,30 +911,30 @@ Grand Mean Centered: age inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 Variances:                      
-  Residual Var.                      13.514      1.220     11.383     16.152        ---        ---   6302.530 
+  Residual Var.                      15.398      1.405     12.916     18.431        ---        ---   6618.879 
 
 Coefficients:                   
-  Intercept                          -0.046      0.365     -0.745      0.681      0.013      0.908   3976.749 
-  inflam                              0.349      0.082      0.185      0.510     17.901      0.000   5634.549 
-  els                                -0.336      0.482     -1.272      0.623      0.472      0.492   6437.266 
-  female                             -0.239      0.477     -1.175      0.693      0.248      0.618   7951.495 
-  age                                 0.006      0.042     -0.076      0.088      0.017      0.895   7153.834 
+  Intercept                          -0.693      0.392     -1.470      0.071      3.148      0.076   4097.152 
+  inflam                              0.371      0.088      0.200      0.547     17.936      0.000   6140.322 
+  els                                -0.379      0.520     -1.392      0.633      0.518      0.472   7357.808 
+  female                             -0.254      0.514     -1.272      0.760      0.251      0.616   7522.158 
+  age                                 0.007      0.045     -0.084      0.096      0.022      0.881   6815.390 
 
 Transformation:                 
-  Yeo-Johnson (lambda)                0.693      0.036      0.623      0.764        ---        ---   1203.833 
+  Yeo-Johnson (lambda)                0.695      0.036      0.622      0.764        ---        ---   1182.954 
 
 Standard Deviations:            
-  Residual SD                         3.676      0.165      3.374      4.019        ---        ---   6313.815 
+  Residual SD                         3.924      0.178      3.594      4.293        ---        ---   6660.543 
 
 Standardized Coefficients:      
-  inflam                              0.259      0.058      0.139      0.369     19.543      0.000   5531.387 
-  els                                -0.043      0.061     -0.161      0.078      0.476      0.490   6410.007 
-  female                             -0.030      0.060     -0.146      0.087      0.250      0.617   7962.466 
-  age                                 0.009      0.062     -0.112      0.129      0.017      0.895   7167.851 
+  inflam                              0.259      0.058      0.141      0.369     19.616      0.000   5855.610 
+  els                                -0.045      0.062     -0.165      0.075      0.522      0.470   7356.567 
+  female                             -0.030      0.060     -0.148      0.089      0.253      0.615   7530.844 
+  age                                 0.009      0.062     -0.115      0.131      0.023      0.880   6826.659 
 
 Proportion Variance Explained   
-  by Coefficients                     0.079      0.030      0.029      0.147        ---        ---   5956.921 
-  by Residual Variation               0.921      0.030      0.853      0.971        ---        ---   5956.921 
+  by Coefficients                     0.080      0.031      0.029      0.148        ---        ---   6263.274 
+  by Residual Variation               0.920      0.031      0.852      0.971        ---        ---   6263.274 
 
                                 ------------------------------------------------------------------------------
 
@@ -951,12 +953,12 @@ Complete predictor: female
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.355      0.076     -0.504     -0.208     22.054      0.000   3668.960 
+Grand Mean                           -0.354      0.076     -0.505     -0.205     21.624      0.000   4140.924 
 
 Level 1:                                                                                                      
-  els                                 0.044      0.093     -0.137      0.224      0.222      0.637   2460.625 
-  age                                -0.028      0.014     -0.055     -0.002      4.384      0.036   4094.895 
-  inflam                              0.013      0.027     -0.042      0.066      0.212      0.646   4000.285 
+  els                                 0.044      0.090     -0.131      0.220      0.237      0.627   2306.089 
+  age                                -0.028      0.014     -0.056     -0.001      4.181      0.041   4248.659 
+  inflam                              0.012      0.028     -0.042      0.066      0.201      0.654   3807.435 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -970,12 +972,12 @@ Missing predictor:  els
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.296      0.078     -0.447     -0.144     14.359      0.000   3122.357 
+Grand Mean                           -0.296      0.078     -0.450     -0.144     14.253      0.000   3550.668 
 
 Level 1:                                                                                                      
-  female                              0.043      0.092     -0.136      0.225      0.217      0.641   2242.739 
-  age                                -0.038      0.014     -0.066     -0.010      6.892      0.009   3731.991 
-  inflam                              0.046      0.028     -0.009      0.100      2.760      0.097   3391.348 
+  female                              0.045      0.092     -0.137      0.228      0.232      0.630   2208.115 
+  age                                -0.037      0.014     -0.065     -0.010      7.188      0.007   3623.340 
+  inflam                              0.046      0.028     -0.008      0.100      2.788      0.095   3298.082 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -989,13 +991,13 @@ Complete predictor: age
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           45.595      0.330     44.934     46.217  19115.153      0.000   1996.882 
+Grand Mean                           45.580      0.330     44.952     46.244  19133.085      0.000   1976.279 
 
 Level 1:                                                                                                      
-  female                             -0.837      0.398     -1.614     -0.053      4.415      0.036   6596.718 
-  els                                -1.104      0.402     -1.878     -0.302      7.537      0.006   5939.983 
-  inflam                              0.187      0.120     -0.051      0.424      2.417      0.120   7214.132 
-  Residual Var.                      29.714      2.568     25.237     35.203        ---        ---   7932.094 
+  female                             -0.830      0.406     -1.603     -0.012      4.146      0.042   5487.815 
+  els                                -1.108      0.403     -1.877     -0.315      7.543      0.006   5806.417 
+  inflam                              0.187      0.120     -0.044      0.428      2.476      0.116   6316.952 
+  Residual Var.                      29.766      2.621     25.248     35.394        ---        ---   8457.155 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -1006,70 +1008,79 @@ Missing predictor:  inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                            0.034      0.173     -0.300      0.371      0.032      0.857   1660.051 
+Grand Mean                            0.026      0.170     -0.306      0.369      0.032      0.858   1879.399 
 
 Level 1:                                                                                                      
-  female                              0.098      0.218     -0.333      0.520      0.208      0.648   5299.721 
-  els                                 0.360      0.213     -0.070      0.769      2.832      0.092   4479.413 
-  age                                 0.051      0.032     -0.013      0.113      2.462      0.117   6526.028 
-  Residual Var.                       7.942      0.682      6.721      9.411        ---        ---   7509.002 
+  female                              0.102      0.220     -0.340      0.522      0.201      0.654   5281.368 
+  els                                 0.360      0.215     -0.070      0.777      2.795      0.095   5060.179 
+  age                                 0.050      0.032     -0.013      0.113      2.420      0.120   6363.556 
+  Residual Var.                       7.932      0.691      6.752      9.444        ---        ---   6554.356 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
 
+pdf 
+  2 
+pdf 
+  2 
+ [1] "id"             "female"         "els"            "age"           
+ [5] "crp"            "il6"            "tnf"            "ifn"           
+ [9] "inflam"         "dpdd"           "hdd"            "hvydrink"      
+[13] "dpdd.yjt"       "female.latent"  "els.latent"     "dpdd.residual" 
+[17] "dpdd.predicted"
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:31 2026
-  Chain 2 burn-in started on Jun 17 18:23:31 2026
-  Chain 4 burn-in started on Jun 17 18:23:31 2026
-  Chain 3 burn-in started on Jun 17 18:23:31 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:32 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:32 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:32 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:32 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:32 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:32 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:32 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:32 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:33 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:33 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:33 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:33 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:33 2026
-  Chain 2 completed burn-in on Jun 17 18:23:33 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:33 2026
-  Chain 1 completed burn-in on Jun 17 18:23:33 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:33 2026
-  Chain 3 completed burn-in on Jun 17 18:23:33 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:33 2026
-  Chain 4 completed burn-in on Jun 17 18:23:33 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:34 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:34 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:34 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:34 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:34 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:34 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:34 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:34 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:34 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:34 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:34 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:34 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:34 2026
-  Chain 2 finished on Jun 17 18:23:34 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:34 2026
-  Chain 1 finished on Jun 17 18:23:34 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:34 2026
-  Chain 3 finished on Jun 17 18:23:34 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:34 2026
-  Chain 4 finished on Jun 17 18:23:34 2026
+  Chain 1 burn-in started on Aug 15 17:44:36 2026
+  Chain 2 burn-in started on Aug 15 17:44:36 2026
+  Chain 4 burn-in started on Aug 15 17:44:36 2026
+  Chain 3 burn-in started on Aug 15 17:44:36 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:37 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:37 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:37 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:37 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:37 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:37 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:37 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:37 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:38 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:38 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:38 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:38 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:38 2026
+  Chain 3 completed burn-in on Aug 15 17:44:38 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:38 2026
+  Chain 4 completed burn-in on Aug 15 17:44:38 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:39 2026
+  Chain 1 completed burn-in on Aug 15 17:44:39 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:39 2026
+  Chain 2 completed burn-in on Aug 15 17:44:39 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:39 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:39 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:39 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:39 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:39 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:39 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:39 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:39 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:39 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:39 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:39 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:39 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:39 2026
+  Chain 3 finished on Aug 15 17:44:39 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:39 2026
+  Chain 4 finished on Aug 15 17:44:39 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:39 2026
+  Chain 1 finished on Aug 15 17:44:39 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:39 2026
+  Chain 2 finished on Aug 15 17:44:39 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -1111,26 +1122,26 @@ BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
         convergence detection across all chains.
 
   Comparing iterations across 4 chains     Highest Rhat   Parameter #  
-                          251 to 500             1.028            41  
-                          501 to 1000            1.014            20  
-                          751 to 1500            1.016            20  
-                         1001 to 2000            1.005            33  
-                         1251 to 2500            1.006            20  
-                         1501 to 3000            1.007            20  
-                         1751 to 3500            1.003            41  
-                         2001 to 4000            1.004            41  
-                         2251 to 4500            1.004            41  
-                         2501 to 5000            1.003            41  
-                         2751 to 5500            1.003            41  
-                         3001 to 6000            1.004            33  
-                         3251 to 6500            1.004            33  
-                         3501 to 7000            1.002            33  
-                         3751 to 7500            1.002            41  
+                          251 to 500             1.029            37  
+                          501 to 1000            1.013             7  
+                          751 to 1500            1.014            41  
+                         1001 to 2000            1.009             7  
+                         1251 to 2500            1.007            20  
+                         1501 to 3000            1.006             7  
+                         1751 to 3500            1.006             7  
+                         2001 to 4000            1.004             7  
+                         2251 to 4500            1.003            37  
+                         2501 to 5000            1.006             7  
+                         2751 to 5500            1.003             7  
+                         3001 to 6000            1.003             7  
+                         3251 to 6500            1.003            37  
+                         3501 to 7000            1.002             7  
+                         3751 to 7500            1.003             7  
                          4001 to 8000            1.002             7  
-                         4251 to 8500            1.002            41  
-                         4501 to 9000            1.001            20  
-                         4751 to 9500            1.001            20  
-                         5001 to 10000           1.001            28  
+                         4251 to 8500            1.003             7  
+                         4501 to 9000            1.003             7  
+                         4751 to 9500            1.002            41  
+                         5001 to 10000           1.002            41  
 
 
 METROPOLIS-HASTINGS ACCEPTANCE RATES:
@@ -1138,12 +1149,12 @@ METROPOLIS-HASTINGS ACCEPTANCE RATES:
   Chain 1:
 
     Variable                            Type    Probability   Target Value 
-    yjt(dpddcent)                  parameter          0.416          0.500 
-    yjt(inflam)                   imputation          0.510          0.500 
-    yjt(inflam)                    parameter          0.540          0.500 
-    els                           imputation          0.502          0.500 
-    age                            parameter          0.552          0.500 
-    inflam                         parameter          0.518          0.500 
+    yjt(dpdd-6)                    parameter          0.529          0.500 
+    yjt(inflam)                   imputation          0.499          0.500 
+    yjt(inflam)                    parameter          0.504          0.500 
+    els                           imputation          0.481          0.500 
+    age                            parameter          0.525          0.500 
+    inflam                         parameter          0.531          0.500 
 
   NOTE: Suppressing printing of 3 chains.
         Use keyword 'tuneinfo' in options to override.
@@ -1157,7 +1168,7 @@ DATA INFORMATION:
                       Pattern #:       1     2     3     4     5
                           miss % --------------------------------
                    inflam =  6.1       -     -     M     -     -  
-                 dpddcent = 12.1       -     M     -     -     M  
+                     dpdd = 12.1       -     M     -     -     M  
                    female =  0.0       -     -     -     -     -  
                       els =  4.0       -     -     -     M     M  
                       age =  0.0       -     -     -     -     -  
@@ -1180,7 +1191,7 @@ MODEL INFORMATION:
     Grand Mean Centered:    age inflam
 
   MODELS
-    [1]  yjt(dpddcent) ~ Intercept inflam els female age
+    [1]  yjt(dpdd-6) ~ Intercept inflam els female age
     [2]  yjt(inflam) ~ Intercept els female age
 
 
@@ -1195,8 +1206,8 @@ MODEL FIT:
   INFORMATION CRITERIA
 
     Conditional Likelihood
-      DIC2                  3074.633
-      WAIC                  3096.611
+      DIC2                  3112.480
+      WAIC                  3134.071
 
 
 IMPUTED DATA SUMMARIES:
@@ -1207,8 +1218,10 @@ IMPUTED DATA SUMMARIES:
 Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
                                 ------------------------------------------------------------------------------
 
-  dpddcent                            0.790      4.507     -2.053     -0.014      2.651     -5.938     23.890 
-  inflam                              0.028      2.851     -1.902     -0.472      1.609     -5.275     15.171 
+  dpdd                                6.165      4.508      3.328      5.364      8.011     -0.591     29.294 
+  dpdd.yjt                           -0.933      4.028     -3.421     -0.692      1.656    -10.051     11.799 
+  inflam                              0.029      2.852     -1.901     -0.471      1.611     -5.265     15.171 
+  inflam.yjt                         -0.507      2.690     -2.280     -0.500      1.381     -7.449      8.878 
   female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
   els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
   age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
@@ -1226,7 +1239,7 @@ CORRELATIONS AMONG RESIDUALS:
 Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-  yjt(dpddcent), yjt(inflam)          0.027      0.081     -0.131      0.185      0.119      0.730   9967.028 
+  yjt(dpdd-6), yjt(inflam)            0.027      0.081     -0.132      0.188      0.113      0.736  10070.767 
 
                                 ------------------------------------------------------------------------------
 
@@ -1238,7 +1251,7 @@ OUTCOME MODEL ESTIMATES:
   NOTE: Estimate column based on posterior median.
 
 
-Outcome Variable:  yjt(dpddcent)
+Outcome Variable:  yjt(dpdd-6)
 
 Grand Mean Centered: age inflam
 
@@ -1246,30 +1259,30 @@ Grand Mean Centered: age inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 Variances:                      
-  Residual Var.                      13.562      1.233     11.408     16.228        ---        ---   7026.408 
+  Residual Var.                      15.399      1.407     12.970     18.471        ---        ---   7041.754 
 
 Coefficients:                   
-  Intercept                          -0.037      0.367     -0.762      0.689      0.009      0.924   4654.533 
-  inflam                              0.346      0.082      0.187      0.506     17.975      0.000   6580.163 
-  els                                -0.347      0.486     -1.289      0.621      0.500      0.480   6954.424 
-  female                             -0.240      0.479     -1.169      0.706      0.248      0.619   7587.227 
-  age                                 0.007      0.042     -0.076      0.089      0.026      0.871   7355.872 
+  Intercept                          -0.693      0.390     -1.480      0.054      3.193      0.074   4347.944 
+  inflam                              0.369      0.088      0.195      0.540     17.788      0.000   6498.828 
+  els                                -0.370      0.521     -1.374      0.652      0.506      0.477   6875.961 
+  female                             -0.253      0.514     -1.269      0.737      0.248      0.619   7708.076 
+  age                                 0.006      0.045     -0.083      0.096      0.020      0.889   7313.253 
 
 Transformation:                 
-  Yeo-Johnson (lambda)                0.693      0.036      0.619      0.762        ---        ---   1589.828 
+  Yeo-Johnson (lambda)                0.696      0.037      0.619      0.765        ---        ---   1378.966 
 
 Standard Deviations:            
-  Residual SD                         3.683      0.166      3.378      4.028        ---        ---   7011.994 
+  Residual SD                         3.924      0.178      3.601      4.298        ---        ---   7024.225 
 
 Standardized Coefficients:      
-  inflam                              0.257      0.058      0.140      0.366     19.571      0.000   6238.078 
-  els                                -0.044      0.061     -0.163      0.078      0.504      0.478   6983.740 
-  female                             -0.030      0.060     -0.144      0.088      0.249      0.618   7619.432 
-  age                                 0.010      0.062     -0.110      0.129      0.026      0.871   7318.798 
+  inflam                              0.258      0.058      0.137      0.366     19.390      0.000   6307.400 
+  els                                -0.044      0.062     -0.164      0.077      0.511      0.475   6844.488 
+  female                             -0.030      0.060     -0.148      0.087      0.250      0.617   7727.057 
+  age                                 0.008      0.062     -0.113      0.131      0.020      0.888   7312.460 
 
 Proportion Variance Explained   
-  by Coefficients                     0.079      0.030      0.029      0.146        ---        ---   6793.572 
-  by Residual Variation               0.921      0.030      0.854      0.971        ---        ---   6793.572 
+  by Coefficients                     0.079      0.030      0.029      0.146        ---        ---   6800.398 
+  by Residual Variation               0.921      0.030      0.854      0.971        ---        ---   6800.398 
 
                                 ------------------------------------------------------------------------------
 
@@ -1283,28 +1296,28 @@ Grand Mean Centered: age
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 Variances:                      
-  Residual Var.                       7.256      0.633      6.162      8.659        ---        ---   6063.214 
+  Residual Var.                       7.248      0.634      6.151      8.632        ---        ---   7287.588 
 
 Coefficients:                   
-  Intercept                          -0.806      0.259     -1.320     -0.306      9.765      0.002   4356.347 
-  els                                 0.602      0.344     -0.075      1.276      3.064      0.080   6486.400 
-  female                              0.175      0.338     -0.486      0.839      0.276      0.599   7974.944 
-  age                                 0.038      0.030     -0.021      0.097      1.643      0.200   7122.367 
+  Intercept                          -0.800      0.252     -1.303     -0.311     10.112      0.001   4888.440 
+  els                                 0.601      0.333     -0.052      1.254      3.254      0.071   6922.917 
+  female                              0.164      0.340     -0.496      0.826      0.236      0.627   8330.923 
+  age                                 0.038      0.029     -0.018      0.095      1.657      0.198   6431.838 
 
 Transformation:                 
-  Yeo-Johnson (lambda)                0.716      0.045      0.625      0.801        ---        ---   1579.489 
+  Yeo-Johnson (lambda)                0.717      0.043      0.631      0.799        ---        ---   1569.584 
 
 Standard Deviations:            
-  Residual SD                         2.694      0.117      2.482      2.943        ---        ---   6072.485 
+  Residual SD                         2.692      0.117      2.480      2.938        ---        ---   7291.071 
 
 Standardized Coefficients:      
-  els                                 0.108      0.061     -0.013      0.223      3.130      0.077   6532.870 
-  female                              0.031      0.059     -0.085      0.147      0.278      0.598   8014.277 
-  age                                 0.079      0.061     -0.043      0.197      1.672      0.196   7085.612 
+  els                                 0.108      0.059     -0.009      0.221      3.325      0.068   6962.089 
+  female                              0.029      0.060     -0.087      0.144      0.238      0.626   8307.688 
+  age                                 0.078      0.060     -0.038      0.195      1.684      0.194   6507.109 
 
 Proportion Variance Explained   
-  by Coefficients                     0.023      0.017      0.003      0.067        ---        ---   8343.563 
-  by Residual Variation               0.977      0.017      0.933      0.997        ---        ---   8343.563 
+  by Coefficients                     0.023      0.016      0.003      0.065        ---        ---   8171.209 
+  by Residual Variation               0.977      0.016      0.935      0.997        ---        ---   8171.209 
 
                                 ------------------------------------------------------------------------------
 
@@ -1323,11 +1336,11 @@ Complete predictor: female
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.354      0.076     -0.502     -0.208     21.917      0.000   4392.741 
+Grand Mean                           -0.354      0.076     -0.504     -0.207     21.862      0.000   4186.463 
 
 Level 1:                                                                                                      
-  els                                 0.051      0.092     -0.125      0.233      0.329      0.566   2367.702 
-  age                                -0.027      0.014     -0.055     -0.000      3.755      0.053   4028.239 
+  els                                 0.054      0.092     -0.123      0.235      0.353      0.552   2568.303 
+  age                                -0.027      0.014     -0.055     -0.001      3.947      0.047   3927.384 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -1341,11 +1354,11 @@ Missing predictor:  els
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           -0.292      0.078     -0.443     -0.137     14.130      0.000   3568.190 
+Grand Mean                           -0.290      0.077     -0.439     -0.138     14.017      0.000   3655.602 
 
 Level 1:                                                                                                      
-  female                              0.052      0.091     -0.125      0.236      0.327      0.567   2330.661 
-  age                                -0.035      0.014     -0.063     -0.008      6.601      0.010   3804.603 
+  female                              0.055      0.092     -0.129      0.237      0.347      0.556   2369.711 
+  age                                -0.035      0.014     -0.063     -0.008      6.243      0.012   3413.900 
   Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
 Thresholds:                                                                                                   
   Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
@@ -1359,12 +1372,12 @@ Complete predictor: age
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                           45.587      0.336     44.942     46.261  18448.711      0.000   1744.873 
+Grand Mean                           45.589      0.331     44.935     46.225  19020.452      0.000   1973.068 
 
 Level 1:                                                                                                      
-  female                             -0.803      0.406     -1.593     -0.005      3.906      0.048   6629.324 
-  els                                -1.057      0.404     -1.835     -0.252      6.773      0.009   6131.626 
-  Residual Var.                      29.968      2.596     25.488     35.635        ---        ---   9205.346 
+  female                             -0.820      0.410     -1.613     -0.015      3.989      0.046   6180.509 
+  els                                -1.058      0.406     -1.851     -0.264      6.802      0.009   5456.708 
+  Residual Var.                      29.977      2.655     25.295     35.850        ---        ---   8803.897 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -1378,10 +1391,10 @@ Means Model:        inflam
 Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
                                 ------------------------------------------------------------------------------
 
-Grand Mean                            0.031      0.173     -0.322      0.360      0.024      0.878   2028.998 
+Grand Mean                            0.027      0.171     -0.307      0.378      0.024      0.878   1997.887 
 
 Level 1:                                                                                                      
-  Residual Var.                       8.091      0.722      6.839      9.681        ---        ---   5908.144 
+  Residual Var.                       8.092      0.716      6.857      9.660        ---        ---   6766.443 
                                                                                                               
                                 ------------------------------------------------------------------------------
 
@@ -1389,274 +1402,1386 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:40 2026
-  Chain 3 burn-in started on Jun 17 18:23:40 2026
-  Chain 2 burn-in started on Jun 17 18:23:40 2026
-  Chain 4 burn-in started on Jun 17 18:23:40 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:40 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:40 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:40 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:40 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:40 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:40 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:40 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:40 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:41 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:41 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:41 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:41 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:41 2026
-  Chain 3 completed burn-in on Jun 17 18:23:41 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:41 2026
-  Chain 1 completed burn-in on Jun 17 18:23:41 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:41 2026
-  Chain 4 completed burn-in on Jun 17 18:23:41 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:41 2026
-  Chain 2 completed burn-in on Jun 17 18:23:41 2026
-  Chain 3 saved imputation 3 on Jun 17 18:23:41 2026
-  Chain 1 saved imputation 1 on Jun 17 18:23:41 2026
-  Chain 4 saved imputation 4 on Jun 17 18:23:41 2026
-  Chain 2 saved imputation 2 on Jun 17 18:23:41 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:41 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:41 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:41 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:41 2026
-  Chain 3 saved imputation 7 on Jun 17 18:23:41 2026
-  Chain 1 saved imputation 5 on Jun 17 18:23:41 2026
-  Chain 4 saved imputation 8 on Jun 17 18:23:41 2026
-  Chain 2 saved imputation 6 on Jun 17 18:23:41 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:41 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:41 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:41 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:41 2026
-  Chain 3 saved imputation 11 on Jun 17 18:23:41 2026
-  Chain 1 saved imputation 9 on Jun 17 18:23:41 2026
-  Chain 4 saved imputation 12 on Jun 17 18:23:41 2026
-  Chain 2 saved imputation 10 on Jun 17 18:23:41 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:41 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:41 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:41 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:41 2026
-  Chain 3 saved imputation 15 on Jun 17 18:23:41 2026
-  Chain 1 saved imputation 13 on Jun 17 18:23:41 2026
-  Chain 4 saved imputation 16 on Jun 17 18:23:41 2026
-  Chain 2 saved imputation 14 on Jun 17 18:23:41 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:42 2026
-  Chain 1 saved imputation 17 on Jun 17 18:23:42 2026
-  Chain 1 finished on Jun 17 18:23:42 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:42 2026
-  Chain 3 saved imputation 19 on Jun 17 18:23:42 2026
-  Chain 3 finished on Jun 17 18:23:42 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:42 2026
-  Chain 4 saved imputation 20 on Jun 17 18:23:42 2026
-  Chain 4 finished on Jun 17 18:23:42 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:42 2026
-  Chain 2 saved imputation 18 on Jun 17 18:23:42 2026
-  Chain 2 finished on Jun 17 18:23:42 2026
+  Chain 1 burn-in started on Aug 15 17:44:46 2026
+  Chain 2 burn-in started on Aug 15 17:44:46 2026
+  Chain 3 burn-in started on Aug 15 17:44:46 2026
+  Chain 4 burn-in started on Aug 15 17:44:46 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:46 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:46 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:46 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:46 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:46 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:46 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:46 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:46 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:47 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:47 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:47 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:47 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:47 2026
+  Chain 1 completed burn-in on Aug 15 17:44:47 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:47 2026
+  Chain 3 completed burn-in on Aug 15 17:44:47 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:47 2026
+  Chain 4 completed burn-in on Aug 15 17:44:47 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:47 2026
+  Chain 2 completed burn-in on Aug 15 17:44:47 2026
+  Chain 1 saved imputation 1 on Aug 15 17:44:47 2026
+  Chain 3 saved imputation 3 on Aug 15 17:44:47 2026
+  Chain 4 saved imputation 4 on Aug 15 17:44:47 2026
+  Chain 2 saved imputation 2 on Aug 15 17:44:47 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:47 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:47 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:47 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:47 2026
+  Chain 1 saved imputation 5 on Aug 15 17:44:47 2026
+  Chain 3 saved imputation 7 on Aug 15 17:44:47 2026
+  Chain 4 saved imputation 8 on Aug 15 17:44:47 2026
+  Chain 2 saved imputation 6 on Aug 15 17:44:47 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:47 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:47 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:47 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:47 2026
+  Chain 1 saved imputation 9 on Aug 15 17:44:47 2026
+  Chain 3 saved imputation 11 on Aug 15 17:44:47 2026
+  Chain 4 saved imputation 12 on Aug 15 17:44:47 2026
+  Chain 2 saved imputation 10 on Aug 15 17:44:47 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:47 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:47 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:47 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:47 2026
+  Chain 3 saved imputation 15 on Aug 15 17:44:47 2026
+  Chain 1 saved imputation 13 on Aug 15 17:44:47 2026
+  Chain 4 saved imputation 16 on Aug 15 17:44:47 2026
+  Chain 2 saved imputation 14 on Aug 15 17:44:47 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:47 2026
+  Chain 3 saved imputation 19 on Aug 15 17:44:47 2026
+  Chain 3 finished on Aug 15 17:44:47 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:47 2026
+  Chain 1 saved imputation 17 on Aug 15 17:44:47 2026
+  Chain 1 finished on Aug 15 17:44:47 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:47 2026
+  Chain 4 saved imputation 20 on Aug 15 17:44:47 2026
+  Chain 4 finished on Aug 15 17:44:47 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:47 2026
+  Chain 2 saved imputation 18 on Aug 15 17:44:47 2026
+  Chain 2 finished on Aug 15 17:44:47 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.038            31  
+                          501 to 1000            1.012            20  
+                          751 to 1500            1.007            31  
+                         1001 to 2000            1.006            31  
+                         1251 to 2500            1.005            21  
+                         1501 to 3000            1.005            26  
+                         1751 to 3500            1.003            26  
+                         2001 to 4000            1.004            31  
+                         2251 to 4500            1.004            26  
+                         2501 to 5000            1.002            26  
+                         2751 to 5500            1.001            17  
+                         3001 to 6000            1.001            26  
+                         3251 to 6500            1.002            15  
+                         3501 to 7000            1.002            17  
+                         3751 to 7500            1.001            31  
+                         4001 to 8000            1.001            34  
+                         4251 to 8500            1.001            31  
+                         4501 to 9000            1.001            20  
+                         4751 to 9500            1.001            16  
+                         5001 to 10000           1.001            31  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    els                           imputation          0.501          0.500 
+    age                            parameter          0.533          0.500 
+    inflam                        imputation          0.518          0.500 
+    inflam                         parameter          0.507          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                     dpdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age inflam
+
+  DEFINED VARIABLES
+    [1]  dpddnorm = ln(dpdd + 1) 
+
+  MODELS
+    [1]  ln(dpdd+1) ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  611.715
+      WAIC                  626.326
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  dpdd                                6.190      4.665      3.279      5.331      8.016     -0.032     31.811 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.023      2.850     -1.903     -0.449      1.629     -5.939     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  ln(dpdd+1) 
+
+Grand Mean Centered: age inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.434      0.040      0.366      0.521        ---        ---   7273.776 
+
+Coefficients:                   
+  Intercept                           1.796      0.062      1.678      1.919    847.102      0.000   6430.933 
+  inflam                              0.064      0.015      0.036      0.093     19.269      0.000   5923.768 
+  els                                -0.051      0.086     -0.226      0.114      0.366      0.545   6972.749 
+  female                             -0.023      0.086     -0.191      0.152      0.072      0.788   7220.523 
+  age                                 0.001      0.008     -0.014      0.015      0.005      0.943   7048.263 
+
+Standard Deviations:            
+  Residual SD                         0.659      0.030      0.605      0.722        ---        ---   7284.883 
+
+Standardized Coefficients:      
+  inflam                              0.268      0.058      0.149      0.372     21.231      0.000   5608.271 
+  els                                -0.036      0.061     -0.157      0.080      0.370      0.543   6982.013 
+  female                             -0.016      0.060     -0.132      0.104      0.072      0.788   7199.197 
+  age                                 0.005      0.062     -0.113      0.124      0.005      0.942   7045.582 
+
+Proportion Variance Explained   
+  by Coefficients                     0.082      0.031      0.031      0.149        ---        ---   6027.038 
+  by Residual Variation               0.918      0.031      0.851      0.969        ---        ---   6027.038 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.355      0.077     -0.507     -0.203     21.240      0.000   4105.801 
+
+Level 1:                                                                                                      
+  els                                 0.044      0.093     -0.139      0.227      0.223      0.637   2157.760 
+  age                                -0.028      0.014     -0.055     -0.001      4.000      0.045   4030.394 
+  inflam                              0.011      0.028     -0.044      0.065      0.167      0.682   3375.322 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.294      0.078     -0.446     -0.137     14.091      0.000   3283.223 
+
+Level 1:                                                                                                      
+  female                              0.044      0.093     -0.137      0.227      0.224      0.636   1864.738 
+  age                                -0.038      0.014     -0.065     -0.011      7.362      0.007   3780.847 
+  inflam                              0.045      0.027     -0.007      0.099      2.749      0.097   3274.862 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.593      0.333     44.935     46.252  18740.511      0.000   1998.677 
+
+Level 1:                                                                                                      
+  female                             -0.818      0.400     -1.604     -0.037      4.213      0.040   6708.269 
+  els                                -1.113      0.402     -1.896     -0.307      7.607      0.006   6179.309 
+  inflam                              0.190      0.118     -0.038      0.424      2.633      0.105   7813.318 
+  Residual Var.                      29.756      2.602     25.065     35.326        ---        ---   9080.018 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.016      0.177     -0.330      0.377      0.008      0.928   1550.923 
+
+Level 1:                                                                                                      
+  female                              0.089      0.217     -0.341      0.526      0.177      0.674   4945.668 
+  els                                 0.355      0.212     -0.066      0.763      2.794      0.095   4747.639 
+  age                                 0.051      0.032     -0.012      0.114      2.523      0.112   6622.849 
+  Residual Var.                       7.959      0.698      6.757      9.478        ---        ---   7369.024 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
 
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:47 2026
-  Chain 2 burn-in started on Jun 17 18:23:47 2026
-  Chain 3 burn-in started on Jun 17 18:23:47 2026
-  Chain 4 burn-in started on Jun 17 18:23:47 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:47 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:47 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:47 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:47 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:47 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:47 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:47 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:47 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:48 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:48 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:48 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:48 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:48 2026
-  Chain 2 completed burn-in on Jun 17 18:23:48 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:48 2026
-  Chain 1 completed burn-in on Jun 17 18:23:48 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:48 2026
-  Chain 3 completed burn-in on Jun 17 18:23:48 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:48 2026
-  Chain 4 completed burn-in on Jun 17 18:23:48 2026
-  Chain 2 saved imputation 2 on Jun 17 18:23:48 2026
-  Chain 1 saved imputation 1 on Jun 17 18:23:48 2026
-  Chain 3 saved imputation 3 on Jun 17 18:23:48 2026
-  Chain 4 saved imputation 4 on Jun 17 18:23:48 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:48 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:48 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:48 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:48 2026
-  Chain 2 saved imputation 6 on Jun 17 18:23:48 2026
-  Chain 1 saved imputation 5 on Jun 17 18:23:48 2026
-  Chain 4 saved imputation 8 on Jun 17 18:23:48 2026
-  Chain 3 saved imputation 7 on Jun 17 18:23:48 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:48 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:48 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:48 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:48 2026
-  Chain 1 saved imputation 9 on Jun 17 18:23:48 2026
-  Chain 2 saved imputation 10 on Jun 17 18:23:48 2026
-  Chain 4 saved imputation 12 on Jun 17 18:23:48 2026
-  Chain 3 saved imputation 11 on Jun 17 18:23:48 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:48 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:48 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:48 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:48 2026
-  Chain 1 saved imputation 13 on Jun 17 18:23:48 2026
-  Chain 2 saved imputation 14 on Jun 17 18:23:48 2026
-  Chain 3 saved imputation 15 on Jun 17 18:23:48 2026
-  Chain 4 saved imputation 16 on Jun 17 18:23:48 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:48 2026
-  Chain 1 saved imputation 17 on Jun 17 18:23:48 2026
-  Chain 1 finished on Jun 17 18:23:48 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:48 2026
-  Chain 2 saved imputation 18 on Jun 17 18:23:48 2026
-  Chain 2 finished on Jun 17 18:23:48 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:48 2026
-  Chain 3 saved imputation 19 on Jun 17 18:23:48 2026
-  Chain 3 finished on Jun 17 18:23:48 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:48 2026
-  Chain 4 saved imputation 20 on Jun 17 18:23:48 2026
-  Chain 4 finished on Jun 17 18:23:48 2026
+  Chain 2 burn-in started on Aug 15 17:44:54 2026
+  Chain 3 burn-in started on Aug 15 17:44:54 2026
+  Chain 4 burn-in started on Aug 15 17:44:54 2026
+  Chain 1 burn-in started on Aug 15 17:44:54 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:44:54 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:44:54 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:44:54 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:44:54 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:44:55 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:44:55 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:44:55 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:44:55 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:44:55 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:44:55 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:44:55 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:44:55 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:44:55 2026
+  Chain 1 completed burn-in on Aug 15 17:44:55 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:44:55 2026
+  Chain 4 completed burn-in on Aug 15 17:44:55 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:44:55 2026
+  Chain 3 completed burn-in on Aug 15 17:44:55 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:44:55 2026
+  Chain 2 completed burn-in on Aug 15 17:44:55 2026
+  Chain 4 saved imputation 4 on Aug 15 17:44:55 2026
+  Chain 1 saved imputation 1 on Aug 15 17:44:55 2026
+  Chain 3 saved imputation 3 on Aug 15 17:44:55 2026
+  Chain 2 saved imputation 2 on Aug 15 17:44:55 2026
+  Chain 4 completed iteration 625 on Aug 15 17:44:55 2026
+  Chain 1 completed iteration 625 on Aug 15 17:44:55 2026
+  Chain 3 completed iteration 625 on Aug 15 17:44:55 2026
+  Chain 2 completed iteration 625 on Aug 15 17:44:55 2026
+  Chain 4 saved imputation 8 on Aug 15 17:44:55 2026
+  Chain 1 saved imputation 5 on Aug 15 17:44:55 2026
+  Chain 3 saved imputation 7 on Aug 15 17:44:55 2026
+  Chain 2 saved imputation 6 on Aug 15 17:44:55 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:44:55 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:44:55 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:44:55 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:44:55 2026
+  Chain 4 saved imputation 12 on Aug 15 17:44:55 2026
+  Chain 1 saved imputation 9 on Aug 15 17:44:55 2026
+  Chain 3 saved imputation 11 on Aug 15 17:44:55 2026
+  Chain 2 saved imputation 10 on Aug 15 17:44:55 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:44:55 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:44:55 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:44:55 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:44:55 2026
+  Chain 4 saved imputation 16 on Aug 15 17:44:56 2026
+  Chain 1 saved imputation 13 on Aug 15 17:44:56 2026
+  Chain 3 saved imputation 15 on Aug 15 17:44:56 2026
+  Chain 2 saved imputation 14 on Aug 15 17:44:56 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:44:56 2026
+  Chain 4 saved imputation 20 on Aug 15 17:44:56 2026
+  Chain 4 finished on Aug 15 17:44:56 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:44:56 2026
+  Chain 1 saved imputation 17 on Aug 15 17:44:56 2026
+  Chain 1 finished on Aug 15 17:44:56 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:44:56 2026
+  Chain 3 saved imputation 19 on Aug 15 17:44:56 2026
+  Chain 3 finished on Aug 15 17:44:56 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:44:56 2026
+  Chain 2 saved imputation 18 on Aug 15 17:44:56 2026
+  Chain 2 finished on Aug 15 17:44:56 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.018            26  
+                          501 to 1000            1.011            21  
+                          751 to 1500            1.012            31  
+                         1001 to 2000            1.013            31  
+                         1251 to 2500            1.003            22  
+                         1501 to 3000            1.004            21  
+                         1751 to 3500            1.006            21  
+                         2001 to 4000            1.004            26  
+                         2251 to 4500            1.005            15  
+                         2501 to 5000            1.003            21  
+                         2751 to 5500            1.003            26  
+                         3001 to 6000            1.003            26  
+                         3251 to 6500            1.002            26  
+                         3501 to 7000            1.001            26  
+                         3751 to 7500            1.002            26  
+                         4001 to 8000            1.002            26  
+                         4251 to 8500            1.002            26  
+                         4501 to 9000            1.002            26  
+                         4751 to 9500            1.002            26  
+                         5001 to 10000           1.002            26  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    els                           imputation          0.483          0.500 
+    age                            parameter          0.520          0.500 
+    inflam                        imputation          0.487          0.500 
+    inflam                         parameter          0.455          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                     dpdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age inflam
+
+  DEFINED VARIABLES
+    [1]  dpddnorm = (1 / (dpdd + 1)) 
+
+  MODELS
+    [1]  1/(dpdd+1) ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  -82.332
+      WAIC                  -67.607
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  dpdd                               13.774    181.332      2.763      4.988      7.739   -367.127   2763.285 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.014      2.852     -1.912     -0.454      1.622     -6.124     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  1/(dpdd+1) 
+
+Grand Mean Centered: age inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.042      0.004      0.035      0.050        ---        ---   6853.936 
+
+Coefficients:                   
+  Intercept                           0.222      0.019      0.185      0.259    136.027      0.000   6916.043 
+  inflam                             -0.018      0.005     -0.027     -0.009     15.078      0.000   5909.134 
+  els                                 0.010      0.027     -0.043      0.062      0.130      0.719   7337.934 
+  female                             -0.008      0.027     -0.061      0.045      0.091      0.763   7766.946 
+  age                                 0.000      0.002     -0.004      0.005      0.039      0.843   7544.827 
+
+Standard Deviations:            
+  Residual SD                         0.204      0.009      0.187      0.223        ---        ---   6819.155 
+
+Standardized Coefficients:      
+  inflam                             -0.245      0.060     -0.357     -0.120     16.184      0.000   5537.319 
+  els                                 0.022      0.061     -0.099      0.142      0.130      0.718   7346.953 
+  female                             -0.019      0.061     -0.136      0.100      0.092      0.761   7760.257 
+  age                                 0.013      0.063     -0.112      0.134      0.039      0.843   7534.672 
+
+Proportion Variance Explained   
+  by Coefficients                     0.071      0.030      0.024      0.138        ---        ---   5930.042 
+  by Residual Variation               0.929      0.030      0.862      0.976        ---        ---   5930.042 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.355      0.075     -0.500     -0.206     22.204      0.000   4211.358 
+
+Level 1:                                                                                                      
+  els                                 0.043      0.094     -0.137      0.230      0.216      0.642   2508.244 
+  age                                -0.028      0.014     -0.055     -0.001      4.130      0.042   3849.170 
+  inflam                              0.014      0.027     -0.040      0.066      0.240      0.624   3490.195 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.291      0.079     -0.449     -0.137     13.553      0.000   2994.034 
+
+Level 1:                                                                                                      
+  female                              0.045      0.094     -0.138      0.231      0.228      0.633   2361.838 
+  age                                -0.038      0.014     -0.066     -0.011      7.344      0.007   3512.711 
+  inflam                              0.044      0.028     -0.010      0.099      2.532      0.112   3336.848 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.578      0.331     44.938     46.212  18952.927      0.000   2300.247 
+
+Level 1:                                                                                                      
+  female                             -0.827      0.404     -1.622     -0.020      4.151      0.042   6360.994 
+  els                                -1.121      0.409     -1.916     -0.314      7.494      0.006   5801.708 
+  inflam                              0.198      0.119     -0.035      0.426      2.745      0.098   7503.687 
+  Residual Var.                      29.729      2.602     25.130     35.169        ---        ---   8878.258 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.017      0.173     -0.338      0.350      0.005      0.942   1846.971 
+
+Level 1:                                                                                                      
+  female                              0.107      0.216     -0.321      0.525      0.231      0.631   5180.578 
+  els                                 0.352      0.216     -0.085      0.756      2.605      0.107   4453.365 
+  age                                 0.052      0.032     -0.010      0.115      2.697      0.101   6853.245 
+  Residual Var.                       7.946      0.681      6.740      9.412        ---        ---   7446.452 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
 
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:23:54 2026
-  Chain 4 burn-in started on Jun 17 18:23:54 2026
-  Chain 3 burn-in started on Jun 17 18:23:54 2026
-  Chain 2 burn-in started on Jun 17 18:23:54 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:23:54 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:23:54 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:23:54 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:23:54 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:23:54 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:23:54 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:23:54 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:23:54 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:23:54 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:23:54 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:23:54 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:23:54 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:23:55 2026
-  Chain 1 completed burn-in on Jun 17 18:23:55 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:23:55 2026
-  Chain 4 completed burn-in on Jun 17 18:23:55 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:23:55 2026
-  Chain 3 completed burn-in on Jun 17 18:23:55 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:23:55 2026
-  Chain 2 completed burn-in on Jun 17 18:23:55 2026
-  Chain 1 saved imputation 1 on Jun 17 18:23:55 2026
-  Chain 4 saved imputation 4 on Jun 17 18:23:55 2026
-  Chain 3 saved imputation 3 on Jun 17 18:23:55 2026
-  Chain 2 saved imputation 2 on Jun 17 18:23:55 2026
-  Chain 1 completed iteration 625 on Jun 17 18:23:55 2026
-  Chain 4 completed iteration 625 on Jun 17 18:23:55 2026
-  Chain 3 completed iteration 625 on Jun 17 18:23:55 2026
-  Chain 2 completed iteration 625 on Jun 17 18:23:55 2026
-  Chain 1 saved imputation 5 on Jun 17 18:23:55 2026
-  Chain 4 saved imputation 8 on Jun 17 18:23:55 2026
-  Chain 3 saved imputation 7 on Jun 17 18:23:55 2026
-  Chain 2 saved imputation 6 on Jun 17 18:23:55 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:23:55 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:23:55 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:23:55 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:23:55 2026
-  Chain 1 saved imputation 9 on Jun 17 18:23:55 2026
-  Chain 4 saved imputation 12 on Jun 17 18:23:55 2026
-  Chain 3 saved imputation 11 on Jun 17 18:23:55 2026
-  Chain 2 saved imputation 10 on Jun 17 18:23:55 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:23:55 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:23:55 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:23:55 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:23:55 2026
-  Chain 1 saved imputation 13 on Jun 17 18:23:55 2026
-  Chain 4 saved imputation 16 on Jun 17 18:23:55 2026
-  Chain 3 saved imputation 15 on Jun 17 18:23:55 2026
-  Chain 2 saved imputation 14 on Jun 17 18:23:55 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:23:55 2026
-  Chain 1 saved imputation 17 on Jun 17 18:23:55 2026
-  Chain 1 finished on Jun 17 18:23:55 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:23:55 2026
-  Chain 4 saved imputation 20 on Jun 17 18:23:55 2026
-  Chain 4 finished on Jun 17 18:23:55 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:23:55 2026
-  Chain 3 saved imputation 19 on Jun 17 18:23:55 2026
-  Chain 3 finished on Jun 17 18:23:55 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:23:55 2026
-  Chain 2 saved imputation 18 on Jun 17 18:23:55 2026
-  Chain 2 finished on Jun 17 18:23:55 2026
+  Chain 1 burn-in started on Aug 15 17:45:03 2026
+  Chain 2 burn-in started on Aug 15 17:45:03 2026
+  Chain 4 burn-in started on Aug 15 17:45:03 2026
+  Chain 3 burn-in started on Aug 15 17:45:03 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:45:03 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:45:03 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:45:03 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:45:03 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:45:04 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:45:04 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:45:04 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:45:04 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:45:04 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:45:04 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:45:04 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:45:04 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:45:04 2026
+  Chain 1 completed burn-in on Aug 15 17:45:04 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:45:04 2026
+  Chain 4 completed burn-in on Aug 15 17:45:04 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:45:04 2026
+  Chain 3 completed burn-in on Aug 15 17:45:04 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:45:04 2026
+  Chain 2 completed burn-in on Aug 15 17:45:04 2026
+  Chain 1 saved imputation 1 on Aug 15 17:45:04 2026
+  Chain 4 saved imputation 4 on Aug 15 17:45:04 2026
+  Chain 3 saved imputation 3 on Aug 15 17:45:04 2026
+  Chain 2 saved imputation 2 on Aug 15 17:45:04 2026
+  Chain 1 completed iteration 625 on Aug 15 17:45:04 2026
+  Chain 4 completed iteration 625 on Aug 15 17:45:04 2026
+  Chain 3 completed iteration 625 on Aug 15 17:45:04 2026
+  Chain 2 completed iteration 625 on Aug 15 17:45:04 2026
+  Chain 1 saved imputation 5 on Aug 15 17:45:04 2026
+  Chain 4 saved imputation 8 on Aug 15 17:45:04 2026
+  Chain 2 saved imputation 6 on Aug 15 17:45:04 2026
+  Chain 3 saved imputation 7 on Aug 15 17:45:04 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:45:04 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:45:04 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:45:04 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:45:04 2026
+  Chain 1 saved imputation 9 on Aug 15 17:45:04 2026
+  Chain 4 saved imputation 12 on Aug 15 17:45:04 2026
+  Chain 3 saved imputation 11 on Aug 15 17:45:04 2026
+  Chain 2 saved imputation 10 on Aug 15 17:45:04 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:45:04 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:45:05 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:45:05 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:45:05 2026
+  Chain 1 saved imputation 13 on Aug 15 17:45:05 2026
+  Chain 4 saved imputation 16 on Aug 15 17:45:05 2026
+  Chain 3 saved imputation 15 on Aug 15 17:45:05 2026
+  Chain 2 saved imputation 14 on Aug 15 17:45:05 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:45:05 2026
+  Chain 1 saved imputation 17 on Aug 15 17:45:05 2026
+  Chain 1 finished on Aug 15 17:45:05 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:45:05 2026
+  Chain 3 saved imputation 19 on Aug 15 17:45:05 2026
+  Chain 3 finished on Aug 15 17:45:05 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:45:05 2026
+  Chain 4 saved imputation 20 on Aug 15 17:45:05 2026
+  Chain 4 finished on Aug 15 17:45:05 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:45:05 2026
+  Chain 2 saved imputation 18 on Aug 15 17:45:05 2026
+  Chain 2 finished on Aug 15 17:45:05 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.027            26  
+                          501 to 1000            1.015            15  
+                          751 to 1500            1.012            31  
+                         1001 to 2000            1.004            17  
+                         1251 to 2500            1.004            26  
+                         1501 to 3000            1.004            17  
+                         1751 to 3500            1.003            31  
+                         2001 to 4000            1.002            31  
+                         2251 to 4500            1.003            31  
+                         2501 to 5000            1.002            31  
+                         2751 to 5500            1.003            21  
+                         3001 to 6000            1.002            21  
+                         3251 to 6500            1.001            26  
+                         3501 to 7000            1.002            21  
+                         3751 to 7500            1.002            26  
+                         4001 to 8000            1.001            21  
+                         4251 to 8500            1.002            31  
+                         4501 to 9000            1.001            31  
+                         4751 to 9500            1.001            31  
+                         5001 to 10000           1.001            31  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    els                           imputation          0.513          0.500 
+    age                            parameter          0.479          0.500 
+    inflam                        imputation          0.503          0.500 
+    inflam                         parameter          0.529          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                     dpdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age inflam
+
+  DEFINED VARIABLES
+    [1]  dpddnorm = sqrt(dpdd) 
+
+  MODELS
+    [1]  sqrt(dpdd) ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  806.459
+      WAIC                  818.115
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  dpdd                                6.163      4.508      3.296      5.386      8.052      0.000     29.214 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.023      2.848     -1.901     -0.449      1.629     -5.900     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  sqrt(dpdd) 
+
+Grand Mean Centered: age inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.838      0.076      0.707      1.003        ---        ---   7455.265 
+
+Coefficients:                   
+  Intercept                           2.343      0.085      2.176      2.507    764.355      0.000   6955.114 
+  inflam                              0.090      0.021      0.049      0.130     19.112      0.000   6512.407 
+  els                                -0.085      0.121     -0.326      0.153      0.486      0.486   6841.361 
+  female                             -0.034      0.119     -0.271      0.198      0.083      0.773   7377.722 
+  age                                 0.001      0.011     -0.019      0.023      0.017      0.896   7234.480 
+
+Standard Deviations:            
+  Residual SD                         0.916      0.041      0.841      1.001        ---        ---   7481.722 
+
+Standardized Coefficients:      
+  inflam                              0.268      0.058      0.149      0.376     20.982      0.000   6063.625 
+  els                                -0.043      0.061     -0.164      0.077      0.489      0.484   6826.685 
+  female                             -0.017      0.060     -0.135      0.098      0.084      0.772   7350.240 
+  age                                 0.008      0.062     -0.114      0.132      0.017      0.896   7231.003 
+
+Proportion Variance Explained   
+  by Coefficients                     0.083      0.031      0.032      0.153        ---        ---   6325.861 
+  by Residual Variation               0.917      0.031      0.847      0.968        ---        ---   6325.861 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.357      0.077     -0.507     -0.211     21.722      0.000   3993.761 
+
+Level 1:                                                                                                      
+  els                                 0.045      0.093     -0.135      0.228      0.239      0.625   2166.512 
+  age                                -0.027      0.014     -0.055     -0.001      3.863      0.049   4093.957 
+  inflam                              0.012      0.028     -0.043      0.064      0.173      0.677   3548.550 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.295      0.078     -0.450     -0.145     14.348      0.000   3580.463 
+
+Level 1:                                                                                                      
+  female                              0.046      0.094     -0.140      0.229      0.239      0.625   2072.323 
+  age                                -0.038      0.014     -0.066     -0.010      7.250      0.007   3462.174 
+  inflam                              0.046      0.027     -0.007      0.100      2.884      0.089   3428.172 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.591      0.335     44.931     46.216  18530.442      0.000   1937.207 
+
+Level 1:                                                                                                      
+  female                             -0.813      0.404     -1.596     -0.033      4.052      0.044   6371.837 
+  els                                -1.116      0.403     -1.915     -0.324      7.657      0.006   5632.358 
+  inflam                              0.191      0.119     -0.042      0.426      2.547      0.110   7586.076 
+  Residual Var.                      29.787      2.631     25.192     35.454        ---        ---   8300.181 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.028      0.170     -0.314      0.361      0.025      0.875   1728.276 
+
+Level 1:                                                                                                      
+  female                              0.091      0.219     -0.348      0.514      0.169      0.681   4756.342 
+  els                                 0.366      0.214     -0.052      0.781      2.918      0.088   4459.094 
+  age                                 0.051      0.032     -0.011      0.115      2.505      0.114   5684.890 
+  Residual Var.                       7.935      0.688      6.742      9.413        ---        ---   6740.276 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
 
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:24:00 2026
-  Chain 2 burn-in started on Jun 17 18:24:00 2026
-  Chain 3 burn-in started on Jun 17 18:24:00 2026
-  Chain 4 burn-in started on Jun 17 18:24:00 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:24:01 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:24:01 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:24:01 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:24:01 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:24:01 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:24:01 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:24:01 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:24:01 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:24:01 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:24:01 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:24:01 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:24:01 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:24:02 2026
-  Chain 1 completed burn-in on Jun 17 18:24:02 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:24:02 2026
-  Chain 4 completed burn-in on Jun 17 18:24:02 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:24:02 2026
-  Chain 3 completed burn-in on Jun 17 18:24:02 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:24:02 2026
-  Chain 2 completed burn-in on Jun 17 18:24:02 2026
-  Chain 4 saved imputation 4 on Jun 17 18:24:02 2026
-  Chain 1 saved imputation 1 on Jun 17 18:24:02 2026
-  Chain 3 saved imputation 3 on Jun 17 18:24:02 2026
-  Chain 2 saved imputation 2 on Jun 17 18:24:02 2026
-  Chain 4 completed iteration 625 on Jun 17 18:24:02 2026
-  Chain 1 completed iteration 625 on Jun 17 18:24:02 2026
-  Chain 3 completed iteration 625 on Jun 17 18:24:02 2026
-  Chain 2 completed iteration 625 on Jun 17 18:24:02 2026
-  Chain 1 saved imputation 5 on Jun 17 18:24:02 2026
-  Chain 4 saved imputation 8 on Jun 17 18:24:02 2026
-  Chain 3 saved imputation 7 on Jun 17 18:24:02 2026
-  Chain 2 saved imputation 6 on Jun 17 18:24:02 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:24:02 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:24:02 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:24:02 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:24:02 2026
-  Chain 4 saved imputation 12 on Jun 17 18:24:02 2026
-  Chain 1 saved imputation 9 on Jun 17 18:24:02 2026
-  Chain 3 saved imputation 11 on Jun 17 18:24:02 2026
-  Chain 2 saved imputation 10 on Jun 17 18:24:02 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:24:02 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:24:02 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:24:02 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:24:02 2026
-  Chain 4 saved imputation 16 on Jun 17 18:24:02 2026
-  Chain 1 saved imputation 13 on Jun 17 18:24:02 2026
-  Chain 3 saved imputation 15 on Jun 17 18:24:02 2026
-  Chain 2 saved imputation 14 on Jun 17 18:24:02 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:24:02 2026
-  Chain 4 saved imputation 20 on Jun 17 18:24:02 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:24:02 2026
-  Chain 1 saved imputation 17 on Jun 17 18:24:02 2026
-  Chain 4 finished on Jun 17 18:24:02 2026
-  Chain 1 finished on Jun 17 18:24:02 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:24:02 2026
-  Chain 3 saved imputation 19 on Jun 17 18:24:02 2026
-  Chain 3 finished on Jun 17 18:24:02 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:24:02 2026
-  Chain 2 saved imputation 18 on Jun 17 18:24:02 2026
-  Chain 2 finished on Jun 17 18:24:02 2026
+  Chain 2 burn-in started on Aug 15 17:45:12 2026
+  Chain 3 burn-in started on Aug 15 17:45:12 2026
+  Chain 4 burn-in started on Aug 15 17:45:12 2026
+  Chain 1 burn-in started on Aug 15 17:45:12 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:45:12 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:45:12 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:45:12 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:45:12 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:45:12 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:45:12 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:45:12 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:45:12 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:45:13 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:45:13 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:45:13 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:45:13 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:45:13 2026
+  Chain 3 completed burn-in on Aug 15 17:45:13 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:45:13 2026
+  Chain 1 completed burn-in on Aug 15 17:45:13 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:45:13 2026
+  Chain 4 completed burn-in on Aug 15 17:45:13 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:45:13 2026
+  Chain 2 completed burn-in on Aug 15 17:45:13 2026
+  Chain 3 saved imputation 3 on Aug 15 17:45:13 2026
+  Chain 1 saved imputation 1 on Aug 15 17:45:13 2026
+  Chain 4 saved imputation 4 on Aug 15 17:45:13 2026
+  Chain 2 saved imputation 2 on Aug 15 17:45:13 2026
+  Chain 3 completed iteration 625 on Aug 15 17:45:13 2026
+  Chain 1 completed iteration 625 on Aug 15 17:45:13 2026
+  Chain 4 completed iteration 625 on Aug 15 17:45:13 2026
+  Chain 2 completed iteration 625 on Aug 15 17:45:13 2026
+  Chain 3 saved imputation 7 on Aug 15 17:45:13 2026
+  Chain 1 saved imputation 5 on Aug 15 17:45:13 2026
+  Chain 2 saved imputation 6 on Aug 15 17:45:13 2026
+  Chain 4 saved imputation 8 on Aug 15 17:45:13 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:45:13 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:45:13 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:45:13 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:45:13 2026
+  Chain 3 saved imputation 11 on Aug 15 17:45:13 2026
+  Chain 1 saved imputation 9 on Aug 15 17:45:13 2026
+  Chain 2 saved imputation 10 on Aug 15 17:45:13 2026
+  Chain 4 saved imputation 12 on Aug 15 17:45:13 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:45:13 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:45:13 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:45:13 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:45:13 2026
+  Chain 3 saved imputation 15 on Aug 15 17:45:13 2026
+  Chain 1 saved imputation 13 on Aug 15 17:45:13 2026
+  Chain 2 saved imputation 14 on Aug 15 17:45:13 2026
+  Chain 4 saved imputation 16 on Aug 15 17:45:13 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:45:13 2026
+  Chain 3 saved imputation 19 on Aug 15 17:45:13 2026
+  Chain 3 finished on Aug 15 17:45:13 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:45:13 2026
+  Chain 1 saved imputation 17 on Aug 15 17:45:13 2026
+  Chain 1 finished on Aug 15 17:45:13 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:45:13 2026
+  Chain 2 saved imputation 18 on Aug 15 17:45:13 2026
+  Chain 2 finished on Aug 15 17:45:13 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:45:13 2026
+  Chain 4 saved imputation 20 on Aug 15 17:45:13 2026
+  Chain 4 finished on Aug 15 17:45:13 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.023            26  
+                          501 to 1000            1.015            31  
+                          751 to 1500            1.006            17  
+                         1001 to 2000            1.008            31  
+                         1251 to 2500            1.006            21  
+                         1501 to 3000            1.005            31  
+                         1751 to 3500            1.005            31  
+                         2001 to 4000            1.003            31  
+                         2251 to 4500            1.004            31  
+                         2501 to 5000            1.003            31  
+                         2751 to 5500            1.003            31  
+                         3001 to 6000            1.003            31  
+                         3251 to 6500            1.001            22  
+                         3501 to 7000            1.002            23  
+                         3751 to 7500            1.001            14  
+                         4001 to 8000            1.001            21  
+                         4251 to 8500            1.001            14  
+                         4501 to 9000            1.001            14  
+                         4751 to 9500            1.001            26  
+                         5001 to 10000           1.001            14  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    els                           imputation          0.509          0.500 
+    age                            parameter          0.469          0.500 
+    inflam                        imputation          0.492          0.500 
+    inflam                         parameter          0.544          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              297
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5
+                          miss % --------------------------------
+                     dpdd = 12.1       -     M     -     -     M  
+                   female =  0.0       -     -     -     -     -  
+                      els =  4.0       -     -     -     M     M  
+                      age =  0.0       -     -     -     -     -  
+                   inflam =  6.1       -     -     M     -     -  
+                                 --------------------------------
+                                 %  78.1  11.8   6.1   3.7   0.3
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         6
+    Predictor Models:       18
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  inflam
+    Incomplete ordinal:     els
+
+  CENTERED PREDICTORS
+    Grand Mean Centered:    age inflam
+
+  DEFINED VARIABLES
+    [1]  dpddnorm = (1 / sqrt(dpdd + 1)) 
+
+  MODELS
+    [1]  1/sqrt(dpdd+1) ~ Intercept inflam els female age
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  -200.743
+      WAIC                  -188.629
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  dpdd                            41543.134  7.158e+05      3.186      5.256      8.026     -0.002  1.234e+07 
+  female                              0.364      0.482      0.000      0.000      1.000      0.000      1.000 
+  els                                 0.389      0.488      0.000      0.000      1.000      0.000      1.000 
+  age                                45.589      5.659     42.000     46.000     49.000     26.000     62.000 
+  inflam                              0.018      2.852     -1.908     -0.452      1.625     -6.093     15.157 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  No residual correlations.
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  1/sqrt(dpdd+1)
+
+Grand Mean Centered: age inflam
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                       0.028      0.003      0.024      0.034        ---        ---   7016.777 
+
+Coefficients:                   
+  Intercept                           0.435      0.016      0.406      0.466    777.144      0.000   6708.159 
+  inflam                             -0.016      0.004     -0.023     -0.008     17.591      0.000   5411.892 
+  els                                 0.011      0.022     -0.032      0.053      0.244      0.621   7277.490 
+  female                             -0.000      0.022     -0.044      0.043      0.000      0.984   7129.714 
+  age                                 0.000      0.002     -0.004      0.004      0.006      0.940   7653.028 
+
+Standard Deviations:            
+  Residual SD                         0.167      0.008      0.154      0.183        ---        ---   7013.095 
+
+Standardized Coefficients:      
+  inflam                             -0.261      0.059     -0.372     -0.138     19.083      0.000   5209.186 
+  els                                 0.030      0.061     -0.089      0.148      0.246      0.620   7306.702 
+  female                             -0.001      0.060     -0.119      0.117      0.000      0.984   7048.370 
+  age                                 0.005      0.062     -0.113      0.125      0.006      0.940   7533.928 
+
+Proportion Variance Explained   
+  by Coefficients                     0.079      0.031      0.029      0.148        ---        ---   5750.772 
+  by Residual Variation               0.921      0.031      0.852      0.971        ---        ---   5750.772 
+
+                                ------------------------------------------------------------------------------
+
+
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.353      0.076     -0.501     -0.205     21.717      0.000   4072.648 
+
+Level 1:                                                                                                      
+  els                                 0.048      0.093     -0.135      0.228      0.266      0.606   2385.060 
+  age                                -0.028      0.014     -0.055     -0.000      3.986      0.046   3621.775 
+  inflam                              0.013      0.027     -0.041      0.064      0.204      0.652   3467.061 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  els        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           -0.294      0.080     -0.455     -0.141     13.752      0.000   3466.849 
+
+Level 1:                                                                                                      
+  female                              0.048      0.092     -0.135      0.230      0.264      0.608   2340.145 
+  age                                -0.038      0.014     -0.065     -0.011      7.208      0.007   3397.923 
+  inflam                              0.045      0.027     -0.009      0.099      2.750      0.097   3261.049 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           45.568      0.327     44.924     46.216  19443.280      0.000   1977.575 
+
+Level 1:                                                                                                      
+  female                             -0.818      0.402     -1.597     -0.031      4.097      0.043   5934.018 
+  els                                -1.112      0.403     -1.904     -0.324      7.577      0.006   5892.573 
+  inflam                              0.195      0.119     -0.039      0.426      2.662      0.103   6542.604 
+  Residual Var.                      29.702      2.610     25.134     35.590        ---        ---   8280.380 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  inflam     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.012      0.172     -0.330      0.347      0.003      0.954   1669.489 
+
+Level 1:                                                                                                      
+  female                              0.102      0.216     -0.325      0.524      0.218      0.641   5080.070 
+  els                                 0.360      0.212     -0.061      0.767      2.829      0.093   4485.166 
+  age                                 0.052      0.032     -0.009      0.115      2.681      0.102   6640.854 
+  Residual Var.                       7.928      0.691      6.772      9.470        ---        ---   7011.956 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
 
 Wrote:
   /Users/craig/Dropbox/Research/Applied Data Modeling in Blimp/Figures/Figure 3.11.pdf

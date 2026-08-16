@@ -1,0 +1,1172 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 17:51:09 2026
+  Chain 2 burn-in started on Aug 15 17:51:09 2026
+  Chain 3 burn-in started on Aug 15 17:51:09 2026
+  Chain 4 burn-in started on Aug 15 17:51:09 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:51:09 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:51:09 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:51:09 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:51:09 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:51:10 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:51:10 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:51:10 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:51:10 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:51:10 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:51:10 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:51:10 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:51:10 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:51:11 2026
+  Chain 1 completed burn-in on Aug 15 17:51:11 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:51:11 2026
+  Chain 4 completed burn-in on Aug 15 17:51:11 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:51:11 2026
+  Chain 3 completed burn-in on Aug 15 17:51:11 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:51:11 2026
+  Chain 2 completed burn-in on Aug 15 17:51:11 2026
+  Chain 1 completed iteration 625 on Aug 15 17:51:11 2026
+  Chain 4 completed iteration 625 on Aug 15 17:51:11 2026
+  Chain 3 completed iteration 625 on Aug 15 17:51:11 2026
+  Chain 2 completed iteration 625 on Aug 15 17:51:11 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:51:11 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:51:11 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:51:11 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:51:11 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:51:12 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:51:12 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:51:12 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:51:12 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:51:12 2026
+  Chain 4 finished on Aug 15 17:51:12 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:51:12 2026
+  Chain 1 finished on Aug 15 17:51:12 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:51:12 2026
+  Chain 3 finished on Aug 15 17:51:12 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:51:12 2026
+  Chain 2 finished on Aug 15 17:51:12 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.031            35  
+                          501 to 1000            1.011            16  
+                          751 to 1500            1.007            40  
+                         1001 to 2000            1.007            38  
+                         1251 to 2500            1.003            33  
+                         1501 to 3000            1.002            38  
+                         1751 to 3500            1.002            42  
+                         2001 to 4000            1.001            32  
+                         2251 to 4500            1.001            32  
+                         2501 to 5000            1.001            42  
+                         2751 to 5500            1.002            42  
+                         3001 to 6000            1.001            52  
+                         3251 to 6500            1.001            14  
+                         3501 to 7000            1.001            43  
+                         3751 to 7500            1.002            43  
+                         4001 to 8000            1.001            43  
+                         4251 to 8500            1.001            29  
+                         4501 to 9000            1.001            32  
+                         4751 to 9500            1.001            27  
+                         5001 to 10000           1.001            27  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    discrim                       imputation          0.508          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              639
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                   victim = 41.0       -     M     -     M     -     M     -     M     -     M  
+                 familism =  5.0       -     -     -     -     -     -     M     -     -     M  
+              internalize = 27.1       -     -     M     M     -     -     -     M     M     -  
+                   female =  0.0       -     -     -     -     -     -     -     -     -     -  
+                      age =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  discrim = 12.1       -     -     -     -     M     M     -     M     M     -  
+                                 --------------------------------------------------------------
+                                 %  35.7  25.5  13.5   8.8   5.0   3.0   2.0   1.9   1.7   1.3
+
+  NOTE: Suppressing printing of 3 missing data patterns.
+        These patterns consist of 1.7% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         18
+    Generated Parameters:   1
+    Predictor Models:       11
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  discrim
+
+  MODELS
+    [1]  familism ~ Intercept victim@a1f discrim female age
+    [2]  internalize ~ Intercept familism@b1 victim discrim age female
+    [3]  victim ~ Intercept discrim@a1v female age
+
+  GENERATED PARAMETERS
+    [1]  indirect = a1v*a1f*b1
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  12204.345
+      WAIC                  12388.395
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  familism                           27.765      5.915     24.232     29.000     31.988      4.996     40.877 
+  internalize                        14.594     10.471      7.478     12.873     20.377    -12.072     60.074 
+  victim                              2.311      3.801      0.000      1.057      3.805     -8.357     20.001 
+  female                              0.529      0.500      0.000      1.000      1.000      0.000      1.000 
+  age                                15.629      1.068     15.000     16.000     17.000     14.000     17.000 
+  discrim                            13.578      3.842     11.000     13.000     15.019      4.508     31.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  familism, internalize               0.000      0.056     -0.111      0.110      0.000      0.995   9643.875 
+  familism, victim                   -0.001      0.056     -0.111      0.108      0.000      0.987   9980.319 
+  internalize, victim                 0.001      0.055     -0.108      0.108      0.000      0.997  10053.709 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  familism   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      31.734      1.885     28.311     35.660        ---        ---   8143.795 
+
+Coefficients:                   
+  Intercept                          33.652      3.512     26.890     40.451     91.767      0.000   8279.364 
+  victim                             -0.320      0.075     -0.465     -0.171     18.156      0.000   4682.213 
+  discrim                            -0.305      0.067     -0.436     -0.178     20.921      0.000   4574.449 
+  female                             -0.412      0.468     -1.339      0.495      0.755      0.385   7970.868 
+  age                                -0.050      0.221     -0.471      0.379      0.050      0.823   8550.954 
+
+Standard Deviations:            
+  Residual SD                         5.633      0.167      5.321      5.972        ---        ---   8141.676 
+
+Standardized Coefficients:      
+  victim                             -0.205      0.047     -0.291     -0.110     18.949      0.000   4677.707 
+  discrim                            -0.197      0.042     -0.277     -0.115     21.934      0.000   4461.062 
+  female                             -0.034      0.039     -0.111      0.041      0.758      0.384   7975.235 
+  age                                -0.009      0.039     -0.084      0.067      0.050      0.822   8545.221 
+
+Proportion Variance Explained   
+  by Coefficients                     0.105      0.026      0.060      0.159        ---        ---   5319.554 
+  by Residual Variation               0.895      0.026      0.841      0.940        ---        ---   5319.554 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  internalize
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      68.857      4.783     60.345     79.240        ---        ---   4721.693 
+
+Coefficients:                   
+  Intercept                          13.393      6.364      0.929     25.844      4.458      0.035   5204.496 
+  familism                           -0.573      0.072     -0.714     -0.430     62.341      0.000   4891.524 
+  victim                              0.572      0.126      0.321      0.814     20.413      0.000   3624.670 
+  discrim                             0.697      0.115      0.472      0.924     37.003      0.000   3856.120 
+  age                                 0.246      0.373     -0.476      0.982      0.441      0.507   5446.150 
+  female                              4.518      0.796      2.969      6.057     32.226      0.000   4883.589 
+
+Standard Deviations:            
+  Residual SD                         8.298      0.287      7.768      8.902        ---        ---   4721.379 
+
+Standardized Coefficients:      
+  familism                           -0.322      0.038     -0.394     -0.245     69.753      0.000   4730.200 
+  victim                              0.207      0.045      0.117      0.290     21.193      0.000   3539.691 
+  discrim                             0.255      0.040      0.174      0.333     39.632      0.000   3871.579 
+  age                                 0.025      0.038     -0.048      0.100      0.442      0.506   5451.609 
+  female                              0.215      0.037      0.141      0.285     34.235      0.000   4889.381 
+
+Proportion Variance Explained   
+  by Coefficients                     0.378      0.034      0.309      0.444        ---        ---   3845.105 
+  by Residual Variation               0.622      0.034      0.556      0.691        ---        ---   3845.105 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  victim     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      13.815      1.014     11.995     15.975        ---        ---   4210.659 
+
+Coefficients:                   
+  Intercept                           2.354      2.909     -3.344      8.043      0.657      0.418   3680.381 
+  discrim                             0.214      0.051      0.113      0.312     17.724      0.000   3267.927 
+  female                              0.051      0.378     -0.685      0.787      0.018      0.892   4225.303 
+  age                                -0.189      0.182     -0.552      0.164      1.093      0.296   3719.486 
+
+Standard Deviations:            
+  Residual SD                         3.717      0.136      3.463      3.997        ---        ---   4214.101 
+
+Standardized Coefficients:      
+  discrim                             0.215      0.049      0.116      0.307     19.051      0.000   3245.627 
+  female                              0.007      0.049     -0.089      0.103      0.019      0.891   4216.815 
+  age                                -0.053      0.050     -0.152      0.046      1.104      0.293   3749.729 
+
+Proportion Variance Explained   
+  by Coefficients                     0.053      0.022      0.019      0.103        ---        ---   3341.977 
+  by Residual Variation               0.947      0.022      0.897      0.981        ---        ---   3341.977 
+
+                                ------------------------------------------------------------------------------
+
+
+
+GENERATED PARAMETERS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  indirect                            0.038      0.013      0.016      0.069      8.285      0.004   4335.187 
+
+                                ------------------------------------------------------------------------------
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.075      0.050     -0.023      0.173      2.259      0.133   4508.010 
+
+Level 1:                                                                                                      
+  age                                 0.016      0.047     -0.074      0.107      0.126      0.723   4778.658 
+  discrim                             0.027      0.014     -0.000      0.054      3.867      0.049   3666.910 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           15.630      0.042     15.546     15.713  1.356e+05      0.000   9315.148 
+
+Level 1:                                                                                                      
+  female                              0.019      0.053     -0.087      0.124      0.128      0.720   7043.756 
+  discrim                             0.015      0.012     -0.008      0.039      1.654      0.198   6970.811 
+  Residual Var.                       1.138      0.064      1.022      1.272        ---        ---   9623.579 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  discrim    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           13.580      0.160     13.265     13.889   7191.473      0.000   6143.873 
+
+Level 1:                                                                                                      
+  female                              0.396      0.196      0.004      0.781      4.032      0.045   4855.318 
+  age                                 0.194      0.151     -0.094      0.497      1.673      0.196   5066.707 
+  Residual Var.                      14.534      0.872     12.960     16.376        ---        ---   4968.572 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 17:51:19 2026
+  Chain 4 burn-in started on Aug 15 17:51:19 2026
+  Chain 3 burn-in started on Aug 15 17:51:19 2026
+  Chain 2 burn-in started on Aug 15 17:51:19 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:51:20 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:51:20 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:51:20 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:51:20 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:51:20 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:51:20 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:51:20 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:51:20 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:51:20 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:51:20 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:51:20 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:51:20 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:51:21 2026
+  Chain 2 completed burn-in on Aug 15 17:51:21 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:51:21 2026
+  Chain 4 completed burn-in on Aug 15 17:51:21 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:51:21 2026
+  Chain 3 completed burn-in on Aug 15 17:51:21 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:51:21 2026
+  Chain 1 completed burn-in on Aug 15 17:51:21 2026
+  Chain 2 completed iteration 625 on Aug 15 17:51:21 2026
+  Chain 4 completed iteration 625 on Aug 15 17:51:21 2026
+  Chain 1 completed iteration 625 on Aug 15 17:51:21 2026
+  Chain 3 completed iteration 625 on Aug 15 17:51:21 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:51:21 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:51:21 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:51:21 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:51:21 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:51:21 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:51:21 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:51:21 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:51:21 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:51:22 2026
+  Chain 4 finished on Aug 15 17:51:22 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:51:22 2026
+  Chain 2 finished on Aug 15 17:51:22 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:51:22 2026
+  Chain 1 finished on Aug 15 17:51:22 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:51:22 2026
+  Chain 3 finished on Aug 15 17:51:22 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.021            17  
+                          501 to 1000            1.006            36  
+                          751 to 1500            1.004            24  
+                         1001 to 2000            1.004            29  
+                         1251 to 2500            1.003            29  
+                         1501 to 3000            1.002            17  
+                         1751 to 3500            1.002            38  
+                         2001 to 4000            1.002            23  
+                         2251 to 4500            1.001            49  
+                         2501 to 5000            1.001            32  
+                         2751 to 5500            1.001            36  
+                         3001 to 6000            1.001            30  
+                         3251 to 6500            1.001            23  
+                         3501 to 7000            1.001            51  
+                         3751 to 7500            1.001            32  
+                         4001 to 8000            1.001            36  
+                         4251 to 8500            1.001            32  
+                         4501 to 9000            1.001            27  
+                         4751 to 9500            1.001            17  
+                         5001 to 10000           1.001            27  
+
+
+DATA INFORMATION:
+
+  Sample Size:              639
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                  discrim = 12.1       -     -     -     -     M     M     -     M     M     -  
+                   victim = 41.0       -     M     -     M     -     M     -     M     -     M  
+                 familism =  5.0       -     -     -     -     -     -     M     -     -     M  
+              internalize = 27.1       -     -     M     M     -     -     -     M     M     -  
+                   female =  0.0       -     -     -     -     -     -     -     -     -     -  
+                      age =  0.0       -     -     -     -     -     -     -     -     -     -  
+                                 --------------------------------------------------------------
+                                 %  35.7  25.5  13.5   8.8   5.0   3.0   2.0   1.9   1.7   1.3
+
+  NOTE: Suppressing printing of 3 missing data patterns.
+        These patterns consist of 1.7% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         22
+    Generated Parameters:   3
+    Predictor Models:       0
+
+  PREDICTORS
+    Fixed variables:        female age
+
+  MODELS
+
+   mediation:
+    [1]  familism ~ Intercept victim@a1f discrim female age
+    [2]  internalize ~ Intercept familism@b1 victim discrim age female
+    [3]  victim ~ Intercept discrim@a1v female age
+
+   predictors:
+    [4]  discrim ~ Intercept age female
+
+  GENERATED PARAMETERS
+    [1]  indirect = a1v*a1f*b1
+    [2]  sd_ratio = sqrt(discrim.totalvar/internalize.totalvar)
+    [3]  indirect_std = indirect*sd_ratio
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  15756.192
+      WAIC                  15968.459
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  familism                           27.765      5.916     24.233     29.000     31.987      4.995     40.882 
+  internalize                        14.587     10.468      7.471     12.869     20.368    -12.161     60.059 
+  victim                              2.311      3.803      0.000      1.054      3.805     -8.384     20.001 
+  discrim                            13.578      3.845     11.000     13.000     15.020      4.476     31.000 
+  female                              0.529      0.500      0.000      1.000      1.000      0.000      1.000 
+  age                                15.629      1.068     15.000     16.000     17.000     14.000     17.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  familism, internalize               0.001      0.056     -0.109      0.108      0.000      0.998   9713.118 
+  familism, victim                   -0.001      0.056     -0.111      0.107      0.000      0.986   9887.449 
+  familism, discrim                   0.000      0.056     -0.107      0.110      0.000      0.993   9772.597 
+  internalize, victim                 0.000      0.056     -0.110      0.109      0.000      0.997   9663.436 
+  internalize, discrim               -0.000      0.056     -0.111      0.109      0.000      0.991   9811.287 
+  victim, discrim                     0.001      0.057     -0.111      0.110      0.000      0.991   9810.212 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+  mediation block:
+
+Outcome Variable:  familism   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      31.728      1.890     28.300     35.655        ---        ---   8033.344 
+
+Coefficients:                   
+  Intercept                          33.609      3.482     26.725     40.356     92.885      0.000   8250.306 
+  victim                             -0.320      0.074     -0.462     -0.171     18.668      0.000   4624.150 
+  discrim                            -0.305      0.067     -0.437     -0.176     21.003      0.000   6608.942 
+  female                             -0.400      0.468     -1.314      0.520      0.749      0.387   8355.080 
+  age                                -0.044      0.220     -0.473      0.389      0.041      0.840   8128.188 
+
+Standard Deviations:            
+  Residual SD                         5.633      0.167      5.320      5.971        ---        ---   8033.115 
+
+Standardized Coefficients:      
+  victim                             -0.205      0.046     -0.293     -0.110     19.352      0.000   4567.957 
+  discrim                            -0.197      0.042     -0.279     -0.114     21.946      0.000   6486.401 
+  female                             -0.033      0.039     -0.110      0.044      0.751      0.386   8341.262 
+  age                                -0.008      0.039     -0.085      0.069      0.041      0.840   8114.155 
+
+Proportion Variance Explained   
+  by Coefficients                     0.105      0.026      0.059      0.160        ---        ---   5648.265 
+  by Residual Variation               0.895      0.026      0.840      0.941        ---        ---   5648.265 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  internalize
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      68.956      4.803     60.210     79.134        ---        ---   5122.098 
+
+Coefficients:                   
+  Intercept                          13.280      6.214      1.136     25.348      4.599      0.032   5644.585 
+  familism                           -0.571      0.073     -0.713     -0.426     61.406      0.000   4950.301 
+  victim                              0.572      0.126      0.321      0.815     20.650      0.000   3251.107 
+  discrim                             0.701      0.114      0.470      0.923     37.445      0.000   4481.038 
+  age                                 0.247      0.361     -0.452      0.958      0.474      0.491   5774.663 
+  female                              4.527      0.795      2.965      6.057     32.360      0.000   5309.332 
+
+Standard Deviations:            
+  Residual SD                         8.304      0.288      7.760      8.896        ---        ---   5105.923 
+
+Standardized Coefficients:      
+  familism                           -0.321      0.038     -0.394     -0.242     69.417      0.000   4941.170 
+  victim                              0.206      0.045      0.117      0.292     21.393      0.000   3294.032 
+  discrim                             0.256      0.040      0.174      0.332     40.067      0.000   4407.306 
+  age                                 0.025      0.036     -0.046      0.097      0.475      0.491   5783.481 
+  female                              0.215      0.037      0.142      0.285     34.354      0.000   5389.018 
+
+Proportion Variance Explained   
+  by Coefficients                     0.378      0.035      0.308      0.443        ---        ---   4082.180 
+  by Residual Variation               0.622      0.035      0.557      0.692        ---        ---   4082.180 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  victim     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      13.810      1.031     12.025     16.072        ---        ---   3836.452 
+
+Coefficients:                   
+  Intercept                           2.409      2.895     -3.203      8.004      0.677      0.410   3812.054 
+  discrim                             0.213      0.052      0.114      0.316     17.047      0.000   3172.751 
+  female                              0.047      0.381     -0.683      0.793      0.016      0.898   4312.966 
+  age                                -0.193      0.182     -0.548      0.166      1.118      0.290   3634.012 
+
+Standard Deviations:            
+  Residual SD                         3.716      0.138      3.468      4.009        ---        ---   3852.778 
+
+Standardized Coefficients:      
+  discrim                             0.215      0.050      0.115      0.311     18.292      0.000   3185.512 
+  female                              0.006      0.049     -0.089      0.103      0.016      0.899   4315.587 
+  age                                -0.054      0.050     -0.151      0.046      1.126      0.289   3661.094 
+
+Proportion Variance Explained   
+  by Coefficients                     0.053      0.022      0.018      0.104        ---        ---   3187.793 
+  by Residual Variation               0.947      0.022      0.896      0.982        ---        ---   3187.793 
+
+                                ------------------------------------------------------------------------------
+
+
+  predictors block:
+
+Outcome Variable:  discrim    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      14.744      0.875     13.144     16.564        ---        ---   8024.920 
+
+Coefficients:                   
+  Intercept                          10.124      2.361      5.436     14.790     18.359      0.000   7574.674 
+  age                                 0.200      0.151     -0.097      0.499      1.773      0.183   7593.803 
+  female                              0.620      0.322     -0.005      1.264      3.750      0.053   8026.399 
+
+Standard Deviations:            
+  Residual SD                         3.840      0.114      3.625      4.070        ---        ---   8027.771 
+
+Standardized Coefficients:      
+  age                                 0.055      0.041     -0.027      0.136      1.789      0.181   7611.048 
+  female                              0.080      0.041     -0.001      0.163      3.793      0.051   8052.434 
+
+Proportion Variance Explained   
+  by Coefficients                     0.012      0.009      0.001      0.035        ---        ---   7800.895 
+  by Residual Variation               0.988      0.009      0.965      0.999        ---        ---   7800.895 
+
+                                ------------------------------------------------------------------------------
+
+
+
+GENERATED PARAMETERS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  indirect                            0.037      0.014      0.016      0.070      7.997      0.005   4607.342 
+  sd_ratio                            0.367      0.016      0.337      0.399    548.728      0.000   6324.514 
+  indirect_std                        0.014      0.005      0.006      0.025      8.119      0.004   4601.822 
+
+                                ------------------------------------------------------------------------------
+
+
+ITERATION HISTORY:
+
+  Chain 1 burn-in started on Aug 15 17:51:29 2026
+  Chain 2 burn-in started on Aug 15 17:51:29 2026
+  Chain 4 burn-in started on Aug 15 17:51:29 2026
+  Chain 3 burn-in started on Aug 15 17:51:29 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:51:29 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:51:29 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:51:29 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:51:29 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:51:30 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:51:30 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:51:30 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:51:30 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:51:30 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:51:30 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:51:30 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:51:30 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:51:31 2026
+  Chain 4 completed burn-in on Aug 15 17:51:31 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:51:31 2026
+  Chain 1 completed burn-in on Aug 15 17:51:31 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:51:31 2026
+  Chain 3 completed burn-in on Aug 15 17:51:31 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:51:31 2026
+  Chain 2 completed burn-in on Aug 15 17:51:31 2026
+  Chain 4 saved imputation 4 on Aug 15 17:51:31 2026
+  Chain 1 saved imputation 1 on Aug 15 17:51:31 2026
+  Chain 3 saved imputation 3 on Aug 15 17:51:31 2026
+  Chain 2 saved imputation 2 on Aug 15 17:51:31 2026
+  Chain 4 completed iteration 625 on Aug 15 17:51:31 2026
+  Chain 1 completed iteration 625 on Aug 15 17:51:31 2026
+  Chain 3 completed iteration 625 on Aug 15 17:51:31 2026
+  Chain 2 completed iteration 625 on Aug 15 17:51:31 2026
+  Chain 4 saved imputation 8 on Aug 15 17:51:31 2026
+  Chain 1 saved imputation 5 on Aug 15 17:51:31 2026
+  Chain 3 saved imputation 7 on Aug 15 17:51:31 2026
+  Chain 2 saved imputation 6 on Aug 15 17:51:31 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:51:31 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:51:31 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:51:31 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:51:31 2026
+  Chain 4 saved imputation 12 on Aug 15 17:51:31 2026
+  Chain 1 saved imputation 9 on Aug 15 17:51:31 2026
+  Chain 3 saved imputation 11 on Aug 15 17:51:31 2026
+  Chain 2 saved imputation 10 on Aug 15 17:51:31 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:51:31 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:51:31 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:51:31 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:51:31 2026
+  Chain 4 saved imputation 16 on Aug 15 17:51:31 2026
+  Chain 1 saved imputation 13 on Aug 15 17:51:31 2026
+  Chain 3 saved imputation 15 on Aug 15 17:51:31 2026
+  Chain 2 saved imputation 14 on Aug 15 17:51:31 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:51:32 2026
+  Chain 4 saved imputation 20 on Aug 15 17:51:32 2026
+  Chain 4 finished on Aug 15 17:51:32 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:51:32 2026
+  Chain 1 saved imputation 17 on Aug 15 17:51:32 2026
+  Chain 1 finished on Aug 15 17:51:32 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:51:32 2026
+  Chain 3 saved imputation 19 on Aug 15 17:51:32 2026
+  Chain 3 finished on Aug 15 17:51:32 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:51:32 2026
+  Chain 2 saved imputation 18 on Aug 15 17:51:32 2026
+  Chain 2 finished on Aug 15 17:51:32 2026
+
+
+---------------------------------------------------------------------------
+
+                                   Blimp
+                                 4.1.0.b11
+
+             Blimp was developed with funding from Institute of
+           Education Sciences awards R305D150056 and R305D190002.
+
+            Craig K. Enders, P.I. Email: cenders@psych.ucla.edu
+           Brian T. Keller, Co-P.I. Email: btkeller@missouri.edu
+                 Han Du, Co-P.I. Email: hdu@psych.ucla.edu
+                 Roy Levy, Co-P.I. Email: roy.levy@asu.edu
+
+              Programming and Blimp Studio by Brian T. Keller
+
+                   There is no expressed license given.
+
+---------------------------------------------------------------------------
+
+
+ALGORITHMIC OPTIONS SPECIFIED:
+
+  Imputation method:                 Fully Bayesian model-based
+  MCMC algorithm:                    Full conditional Metropolis sampler with
+                                       Auto-Derived Conditional Distributions
+  Default Priors:
+    Multilevel covariance matrices:  Not applicable, single-level imputation
+    Outcome covariance matrices:     Zero matrix, df = -(p + 1) (PRIOR2)
+    Predictor model variances:       Unit sum of squares, df = 2 (XPRIOR1)
+  Chain Starting Values:             Random starting values
+
+
+  NOTE: The default prior for regression coefficients 
+        in categorical models is 'normal( 0.0, 5.0)'
+
+  NOTE: For complete list of priors include 'pinfo' in the options.
+
+
+BURN-IN POTENTIAL SCALE REDUCTION (PSR) OUTPUT:
+
+  NOTE: Rank-normalized Rhat (Vehtari et al., 2021) is being used.
+        This applies rank normalization and chain folding for robust
+        convergence detection across all chains.
+
+  Comparing iterations across 4 chains     Highest Rhat   Parameter #  
+                          251 to 500             1.031            35  
+                          501 to 1000            1.011            16  
+                          751 to 1500            1.007            40  
+                         1001 to 2000            1.007            38  
+                         1251 to 2500            1.003            33  
+                         1501 to 3000            1.002            38  
+                         1751 to 3500            1.002            42  
+                         2001 to 4000            1.001            32  
+                         2251 to 4500            1.001            32  
+                         2501 to 5000            1.001            42  
+                         2751 to 5500            1.002            42  
+                         3001 to 6000            1.001            52  
+                         3251 to 6500            1.001            14  
+                         3501 to 7000            1.001            43  
+                         3751 to 7500            1.002            43  
+                         4001 to 8000            1.001            43  
+                         4251 to 8500            1.001            29  
+                         4501 to 9000            1.001            32  
+                         4751 to 9500            1.001            27  
+                         5001 to 10000           1.001            27  
+
+
+METROPOLIS-HASTINGS ACCEPTANCE RATES:
+
+  Chain 1:
+
+    Variable                            Type    Probability   Target Value 
+    discrim                       imputation          0.508          0.500 
+
+  NOTE: Suppressing printing of 3 chains.
+        Use keyword 'tuneinfo' in options to override.
+
+
+DATA INFORMATION:
+
+  Sample Size:              639
+  Missing Data Info:
+
+                      Pattern #:       1     2     3     4     5     6     7     8     9    10
+                          miss % --------------------------------------------------------------
+                   victim = 41.0       -     M     -     M     -     M     -     M     -     M  
+                 familism =  5.0       -     -     -     -     -     -     M     -     -     M  
+              internalize = 27.1       -     -     M     M     -     -     -     M     M     -  
+                   female =  0.0       -     -     -     -     -     -     -     -     -     -  
+                      age =  0.0       -     -     -     -     -     -     -     -     -     -  
+                  discrim = 12.1       -     -     -     -     M     M     -     M     M     -  
+                                 --------------------------------------------------------------
+                                 %  35.7  25.5  13.5   8.8   5.0   3.0   2.0   1.9   1.7   1.3
+
+  NOTE: Suppressing printing of 3 missing data patterns.
+        These patterns consist of 1.7% of the data.
+        Use keyword 'allpatterns' in options to print all patterns.
+
+
+MODEL INFORMATION:
+
+  NUMBER OF PARAMETERS
+    Outcome Models:         18
+    Generated Parameters:   1
+    Predictor Models:       11
+
+  PREDICTORS
+    Complete continuous:    age
+    Complete ordinal:       female
+    Incomplete continuous:  discrim
+
+  MODELS
+    [1]  familism ~ Intercept victim@a1f discrim female age
+    [2]  internalize ~ Intercept familism@b1 victim discrim age female
+    [3]  victim ~ Intercept discrim@a1v female age
+
+  GENERATED PARAMETERS
+    [1]  indirect = a1v*a1f*b1
+
+
+ WARNING MESSAGES:
+
+  No warning messages.
+
+
+MODEL FIT:
+
+
+  INFORMATION CRITERIA
+
+    Conditional Likelihood
+      DIC2                  12204.345
+      WAIC                  12388.395
+
+
+IMPUTED DATA SUMMARIES:
+
+  NOTE: Imputed data summaries are averaged across 10000 data sets.
+
+
+Variables                              Mean     StdDev        25%        50%        75%        Min        Max 
+                                ------------------------------------------------------------------------------
+
+  familism                           27.765      5.915     24.232     29.000     31.988      4.996     40.877 
+  internalize                        14.594     10.471      7.478     12.873     20.377    -12.072     60.074 
+  victim                              2.311      3.801      0.000      1.057      3.805     -8.357     20.001 
+  female                              0.529      0.500      0.000      1.000      1.000      0.000      1.000 
+  age                                15.629      1.068     15.000     16.000     17.000     14.000     17.000 
+  discrim                            13.578      3.842     11.000     13.000     15.019      4.508     31.000 
+
+                                ------------------------------------------------------------------------------
+
+
+
+CORRELATIONS AMONG RESIDUALS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Correlations                       Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  familism, internalize               0.000      0.056     -0.111      0.110      0.000      0.995   9643.875 
+  familism, victim                   -0.001      0.056     -0.111      0.108      0.000      0.987   9980.319 
+  internalize, victim                 0.001      0.055     -0.108      0.108      0.000      0.997  10053.709 
+
+                                ------------------------------------------------------------------------------
+
+
+
+OUTCOME MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Outcome Variable:  familism   
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      31.734      1.885     28.311     35.660        ---        ---   8143.795 
+
+Coefficients:                   
+  Intercept                          33.652      3.512     26.890     40.451     91.767      0.000   8279.364 
+  victim                             -0.320      0.075     -0.465     -0.171     18.156      0.000   4682.213 
+  discrim                            -0.305      0.067     -0.436     -0.178     20.921      0.000   4574.449 
+  female                             -0.412      0.468     -1.339      0.495      0.755      0.385   7970.868 
+  age                                -0.050      0.221     -0.471      0.379      0.050      0.823   8550.954 
+
+Standard Deviations:            
+  Residual SD                         5.633      0.167      5.321      5.972        ---        ---   8141.676 
+
+Standardized Coefficients:      
+  victim                             -0.205      0.047     -0.291     -0.110     18.949      0.000   4677.707 
+  discrim                            -0.197      0.042     -0.277     -0.115     21.934      0.000   4461.062 
+  female                             -0.034      0.039     -0.111      0.041      0.758      0.384   7975.235 
+  age                                -0.009      0.039     -0.084      0.067      0.050      0.822   8545.221 
+
+Proportion Variance Explained   
+  by Coefficients                     0.105      0.026      0.060      0.159        ---        ---   5319.554 
+  by Residual Variation               0.895      0.026      0.841      0.940        ---        ---   5319.554 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  internalize
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      68.857      4.783     60.345     79.240        ---        ---   4721.693 
+
+Coefficients:                   
+  Intercept                          13.393      6.364      0.929     25.844      4.458      0.035   5204.496 
+  familism                           -0.573      0.072     -0.714     -0.430     62.341      0.000   4891.524 
+  victim                              0.572      0.126      0.321      0.814     20.413      0.000   3624.670 
+  discrim                             0.697      0.115      0.472      0.924     37.003      0.000   3856.120 
+  age                                 0.246      0.373     -0.476      0.982      0.441      0.507   5446.150 
+  female                              4.518      0.796      2.969      6.057     32.226      0.000   4883.589 
+
+Standard Deviations:            
+  Residual SD                         8.298      0.287      7.768      8.902        ---        ---   4721.379 
+
+Standardized Coefficients:      
+  familism                           -0.322      0.038     -0.394     -0.245     69.753      0.000   4730.200 
+  victim                              0.207      0.045      0.117      0.290     21.193      0.000   3539.691 
+  discrim                             0.255      0.040      0.174      0.333     39.632      0.000   3871.579 
+  age                                 0.025      0.038     -0.048      0.100      0.442      0.506   5451.609 
+  female                              0.215      0.037      0.141      0.285     34.235      0.000   4889.381 
+
+Proportion Variance Explained   
+  by Coefficients                     0.378      0.034      0.309      0.444        ---        ---   3845.105 
+  by Residual Variation               0.622      0.034      0.556      0.691        ---        ---   3845.105 
+
+                                ------------------------------------------------------------------------------
+
+
+
+Outcome Variable:  victim     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+Variances:                      
+  Residual Var.                      13.815      1.014     11.995     15.975        ---        ---   4210.659 
+
+Coefficients:                   
+  Intercept                           2.354      2.909     -3.344      8.043      0.657      0.418   3680.381 
+  discrim                             0.214      0.051      0.113      0.312     17.724      0.000   3267.927 
+  female                              0.051      0.378     -0.685      0.787      0.018      0.892   4225.303 
+  age                                -0.189      0.182     -0.552      0.164      1.093      0.296   3719.486 
+
+Standard Deviations:            
+  Residual SD                         3.717      0.136      3.463      3.997        ---        ---   4214.101 
+
+Standardized Coefficients:      
+  discrim                             0.215      0.049      0.116      0.307     19.051      0.000   3245.627 
+  female                              0.007      0.049     -0.089      0.103      0.019      0.891   4216.815 
+  age                                -0.053      0.050     -0.152      0.046      1.104      0.293   3749.729 
+
+Proportion Variance Explained   
+  by Coefficients                     0.053      0.022      0.019      0.103        ---        ---   3341.977 
+  by Residual Variation               0.947      0.022      0.897      0.981        ---        ---   3341.977 
+
+                                ------------------------------------------------------------------------------
+
+
+
+GENERATED PARAMETERS:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+  indirect                            0.038      0.013      0.016      0.069      8.285      0.004   4335.187 
+
+                                ------------------------------------------------------------------------------
+
+
+PREDICTOR MODEL ESTIMATES:
+
+  Summaries based on 10000 iterations using 4 chains.
+  NOTE: Estimate column based on posterior median.
+
+
+
+Complete predictor: female     
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                            0.075      0.050     -0.023      0.173      2.259      0.133   4508.010 
+
+Level 1:                                                                                                      
+  age                                 0.016      0.047     -0.074      0.107      0.126      0.723   4778.658 
+  discrim                             0.027      0.014     -0.000      0.054      3.867      0.049   3666.910 
+  Residual Var.                       1.000      0.000      1.000      1.000        ---        ---        --- 
+Thresholds:                                                                                                   
+  Tau 1                               0.000      0.000      0.000      0.000        ---        ---        --- 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Complete predictor: age        
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           15.630      0.042     15.546     15.713  1.356e+05      0.000   9315.148 
+
+Level 1:                                                                                                      
+  female                              0.019      0.053     -0.087      0.124      0.128      0.720   7043.756 
+  discrim                             0.015      0.012     -0.008      0.039      1.654      0.198   6970.811 
+  Residual Var.                       1.138      0.064      1.022      1.272        ---        ---   9623.579 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+
+Missing predictor:  discrim    
+
+Parameters                         Estimate     StdDev       2.5%      97.5%      ChiSq     PValue      N_Eff 
+                                ------------------------------------------------------------------------------
+
+Grand Mean                           13.580      0.160     13.265     13.889   7191.473      0.000   6143.873 
+
+Level 1:                                                                                                      
+  female                              0.396      0.196      0.004      0.781      4.032      0.045   4855.318 
+  age                                 0.194      0.151     -0.094      0.497      1.673      0.196   5066.707 
+  Residual Var.                      14.534      0.872     12.960     16.376        ---        ---   4968.572 
+                                                                                                              
+                                ------------------------------------------------------------------------------
+
+
+Warning messages:
+1: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+2: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+3: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+pdf 
+  2 
+Warning messages:
+1: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+2: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+3: Predictor 'age' is modeled as continuous but has only 4 distinct value(s). If it is categorical, declare it as ORDINAL or NOMINAL in the model and re-fit. (The plot displays category means.) 
+pdf 
+  2 

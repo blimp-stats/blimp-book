@@ -3,56 +3,56 @@
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:16:32 2026
-  Chain 2 burn-in started on Jun 17 18:16:32 2026
-  Chain 4 burn-in started on Jun 17 18:16:32 2026
-  Chain 3 burn-in started on Jun 17 18:16:32 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:16:32 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:16:32 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:16:32 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:16:32 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:16:32 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:16:32 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:16:32 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:16:32 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:16:33 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:16:33 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:16:33 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:16:33 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:16:33 2026
-  Chain 4 completed burn-in on Jun 17 18:16:33 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:16:33 2026
-  Chain 3 completed burn-in on Jun 17 18:16:33 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:16:33 2026
-  Chain 2 completed burn-in on Jun 17 18:16:33 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:16:33 2026
-  Chain 1 completed burn-in on Jun 17 18:16:33 2026
-  Chain 4 completed iteration 625 on Jun 17 18:16:33 2026
-  Chain 3 completed iteration 625 on Jun 17 18:16:33 2026
-  Chain 1 completed iteration 625 on Jun 17 18:16:33 2026
-  Chain 2 completed iteration 625 on Jun 17 18:16:33 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:16:33 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:16:33 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:16:33 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:16:33 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:16:33 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:16:33 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:16:33 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:16:33 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:16:33 2026
-  Chain 4 finished on Jun 17 18:16:33 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:16:33 2026
-  Chain 1 finished on Jun 17 18:16:33 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:16:33 2026
-  Chain 3 finished on Jun 17 18:16:33 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:16:33 2026
-  Chain 2 finished on Jun 17 18:16:33 2026
+  Chain 3 burn-in started on Aug 15 17:36:14 2026
+  Chain 1 burn-in started on Aug 15 17:36:14 2026
+  Chain 4 burn-in started on Aug 15 17:36:14 2026
+  Chain 2 burn-in started on Aug 15 17:36:14 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:14 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:36:14 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:36:14 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:36:14 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:14 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:36:14 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:36:14 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:36:14 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:36:14 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:36:14 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:14 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:36:14 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:36:15 2026
+  Chain 3 completed burn-in on Aug 15 17:36:15 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:36:15 2026
+  Chain 4 completed burn-in on Aug 15 17:36:15 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:36:15 2026
+  Chain 2 completed burn-in on Aug 15 17:36:15 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:15 2026
+  Chain 1 completed burn-in on Aug 15 17:36:15 2026
+  Chain 1 completed iteration 625 on Aug 15 17:36:15 2026
+  Chain 3 completed iteration 625 on Aug 15 17:36:15 2026
+  Chain 4 completed iteration 625 on Aug 15 17:36:15 2026
+  Chain 2 completed iteration 625 on Aug 15 17:36:15 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:36:15 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:36:15 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:36:15 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:36:15 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:36:15 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:36:15 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:36:15 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:36:15 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:36:15 2026
+  Chain 3 finished on Aug 15 17:36:15 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:15 2026
+  Chain 1 finished on Aug 15 17:36:15 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:36:15 2026
+  Chain 4 finished on Aug 15 17:36:15 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:36:15 2026
+  Chain 2 finished on Aug 15 17:36:15 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -326,56 +326,56 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:16:38 2026
-  Chain 2 burn-in started on Jun 17 18:16:38 2026
-  Chain 4 burn-in started on Jun 17 18:16:38 2026
-  Chain 3 burn-in started on Jun 17 18:16:38 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:16:38 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:16:38 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:16:38 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:16:38 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:16:38 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:16:38 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:16:38 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:16:38 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:16:38 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:16:38 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:16:38 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:16:38 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:16:39 2026
-  Chain 1 completed burn-in on Jun 17 18:16:39 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:16:39 2026
-  Chain 2 completed burn-in on Jun 17 18:16:39 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:16:39 2026
-  Chain 4 completed burn-in on Jun 17 18:16:39 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:16:39 2026
-  Chain 3 completed burn-in on Jun 17 18:16:39 2026
-  Chain 4 completed iteration 625 on Jun 17 18:16:39 2026
-  Chain 1 completed iteration 625 on Jun 17 18:16:39 2026
-  Chain 2 completed iteration 625 on Jun 17 18:16:39 2026
-  Chain 3 completed iteration 625 on Jun 17 18:16:39 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:16:39 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:16:39 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:16:39 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:16:39 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:16:39 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:16:39 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:16:39 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:16:39 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:16:39 2026
-  Chain 4 finished on Jun 17 18:16:39 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:16:39 2026
-  Chain 1 finished on Jun 17 18:16:39 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:16:39 2026
-  Chain 2 finished on Jun 17 18:16:39 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:16:39 2026
-  Chain 3 finished on Jun 17 18:16:39 2026
+  Chain 1 burn-in started on Aug 15 17:36:20 2026
+  Chain 2 burn-in started on Aug 15 17:36:20 2026
+  Chain 4 burn-in started on Aug 15 17:36:20 2026
+  Chain 3 burn-in started on Aug 15 17:36:20 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:36:20 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:36:20 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:36:20 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:20 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:36:21 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:36:21 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:21 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:36:21 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:36:21 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:36:21 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:21 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:36:21 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:36:21 2026
+  Chain 4 completed burn-in on Aug 15 17:36:21 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:21 2026
+  Chain 1 completed burn-in on Aug 15 17:36:21 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:36:21 2026
+  Chain 2 completed burn-in on Aug 15 17:36:21 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:36:21 2026
+  Chain 3 completed burn-in on Aug 15 17:36:21 2026
+  Chain 4 completed iteration 625 on Aug 15 17:36:21 2026
+  Chain 1 completed iteration 625 on Aug 15 17:36:21 2026
+  Chain 2 completed iteration 625 on Aug 15 17:36:21 2026
+  Chain 3 completed iteration 625 on Aug 15 17:36:21 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:36:21 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:36:21 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:36:21 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:36:21 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:36:22 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:36:22 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:36:22 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:36:22 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:36:22 2026
+  Chain 4 finished on Aug 15 17:36:22 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:22 2026
+  Chain 1 finished on Aug 15 17:36:22 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:36:22 2026
+  Chain 2 finished on Aug 15 17:36:22 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:36:22 2026
+  Chain 3 finished on Aug 15 17:36:22 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -668,56 +668,56 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 2 burn-in started on Jun 17 18:16:43 2026
-  Chain 3 burn-in started on Jun 17 18:16:43 2026
-  Chain 4 burn-in started on Jun 17 18:16:43 2026
-  Chain 1 burn-in started on Jun 17 18:16:43 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:16:43 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:16:43 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:16:43 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:16:43 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:16:43 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:16:43 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:16:43 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:16:43 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:16:44 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:16:44 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:16:44 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:16:44 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:16:44 2026
-  Chain 3 completed burn-in on Jun 17 18:16:44 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:16:44 2026
-  Chain 1 completed burn-in on Jun 17 18:16:44 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:16:44 2026
-  Chain 4 completed burn-in on Jun 17 18:16:44 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:16:44 2026
-  Chain 2 completed burn-in on Jun 17 18:16:44 2026
-  Chain 3 completed iteration 625 on Jun 17 18:16:44 2026
-  Chain 1 completed iteration 625 on Jun 17 18:16:44 2026
-  Chain 4 completed iteration 625 on Jun 17 18:16:44 2026
-  Chain 2 completed iteration 625 on Jun 17 18:16:44 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:16:44 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:16:44 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:16:44 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:16:44 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:16:44 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:16:44 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:16:44 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:16:44 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:16:44 2026
-  Chain 3 finished on Jun 17 18:16:44 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:16:44 2026
-  Chain 1 finished on Jun 17 18:16:44 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:16:44 2026
-  Chain 4 finished on Jun 17 18:16:44 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:16:44 2026
-  Chain 2 finished on Jun 17 18:16:44 2026
+  Chain 1 burn-in started on Aug 15 17:36:26 2026
+  Chain 4 burn-in started on Aug 15 17:36:26 2026
+  Chain 3 burn-in started on Aug 15 17:36:26 2026
+  Chain 2 burn-in started on Aug 15 17:36:26 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:36:26 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:36:26 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:26 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:36:26 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:27 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:36:27 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:36:27 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:36:27 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:27 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:36:27 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:36:27 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:36:27 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:27 2026
+  Chain 1 completed burn-in on Aug 15 17:36:27 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:36:27 2026
+  Chain 4 completed burn-in on Aug 15 17:36:27 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:36:27 2026
+  Chain 3 completed burn-in on Aug 15 17:36:27 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:36:27 2026
+  Chain 2 completed burn-in on Aug 15 17:36:27 2026
+  Chain 1 completed iteration 625 on Aug 15 17:36:27 2026
+  Chain 4 completed iteration 625 on Aug 15 17:36:27 2026
+  Chain 3 completed iteration 625 on Aug 15 17:36:27 2026
+  Chain 2 completed iteration 625 on Aug 15 17:36:27 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:36:28 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:36:28 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:36:28 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:36:28 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:36:28 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:36:28 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:36:28 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:36:28 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:28 2026
+  Chain 1 finished on Aug 15 17:36:28 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:36:28 2026
+  Chain 4 finished on Aug 15 17:36:28 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:36:28 2026
+  Chain 3 finished on Aug 15 17:36:28 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:36:28 2026
+  Chain 2 finished on Aug 15 17:36:28 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -1006,56 +1006,56 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:16:48 2026
-  Chain 2 burn-in started on Jun 17 18:16:48 2026
-  Chain 4 burn-in started on Jun 17 18:16:48 2026
-  Chain 3 burn-in started on Jun 17 18:16:48 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:16:48 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:16:48 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:16:48 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:16:48 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:16:49 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:16:49 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:16:49 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:16:49 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:16:49 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:16:49 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:16:49 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:16:49 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:16:49 2026
-  Chain 4 completed burn-in on Jun 17 18:16:49 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:16:49 2026
-  Chain 3 completed burn-in on Jun 17 18:16:49 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:16:49 2026
-  Chain 1 completed burn-in on Jun 17 18:16:49 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:16:49 2026
-  Chain 2 completed burn-in on Jun 17 18:16:49 2026
-  Chain 4 completed iteration 625 on Jun 17 18:16:49 2026
-  Chain 3 completed iteration 625 on Jun 17 18:16:49 2026
-  Chain 1 completed iteration 625 on Jun 17 18:16:49 2026
-  Chain 2 completed iteration 625 on Jun 17 18:16:49 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:16:49 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:16:49 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:16:49 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:16:49 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:16:49 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:16:49 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:16:49 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:16:49 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:16:50 2026
-  Chain 4 finished on Jun 17 18:16:50 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:16:50 2026
-  Chain 3 finished on Jun 17 18:16:50 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:16:50 2026
-  Chain 1 finished on Jun 17 18:16:50 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:16:50 2026
-  Chain 2 finished on Jun 17 18:16:50 2026
+  Chain 1 burn-in started on Aug 15 17:36:32 2026
+  Chain 2 burn-in started on Aug 15 17:36:32 2026
+  Chain 4 burn-in started on Aug 15 17:36:32 2026
+  Chain 3 burn-in started on Aug 15 17:36:32 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:32 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:36:32 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:36:32 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:36:32 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:36:33 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:33 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:36:33 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:36:33 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:33 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:36:33 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:36:33 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:36:33 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:36:33 2026
+  Chain 3 completed burn-in on Aug 15 17:36:33 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:33 2026
+  Chain 1 completed burn-in on Aug 15 17:36:33 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:36:33 2026
+  Chain 2 completed burn-in on Aug 15 17:36:33 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:36:33 2026
+  Chain 4 completed burn-in on Aug 15 17:36:33 2026
+  Chain 3 completed iteration 625 on Aug 15 17:36:33 2026
+  Chain 1 completed iteration 625 on Aug 15 17:36:33 2026
+  Chain 2 completed iteration 625 on Aug 15 17:36:33 2026
+  Chain 4 completed iteration 625 on Aug 15 17:36:33 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:36:33 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:36:33 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:36:33 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:36:33 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:36:34 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:36:34 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:36:34 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:36:34 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:34 2026
+  Chain 1 finished on Aug 15 17:36:34 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:36:34 2026
+  Chain 2 finished on Aug 15 17:36:34 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:36:34 2026
+  Chain 4 finished on Aug 15 17:36:34 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:36:34 2026
+  Chain 3 finished on Aug 15 17:36:34 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -1365,76 +1365,76 @@ Level 1:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:16:53 2026
-  Chain 2 burn-in started on Jun 17 18:16:53 2026
-  Chain 4 burn-in started on Jun 17 18:16:53 2026
-  Chain 3 burn-in started on Jun 17 18:16:53 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:16:54 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:16:54 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:16:54 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:16:54 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:16:54 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:16:54 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:16:54 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:16:54 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:16:54 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:16:54 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:16:54 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:16:54 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:16:54 2026
-  Chain 4 completed burn-in on Jun 17 18:16:54 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:16:54 2026
-  Chain 2 completed burn-in on Jun 17 18:16:54 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:16:54 2026
-  Chain 1 completed burn-in on Jun 17 18:16:54 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:16:54 2026
-  Chain 3 completed burn-in on Jun 17 18:16:54 2026
-  Chain 4 saved imputation 4 on Jun 17 18:16:54 2026
-  Chain 4 completed iteration 625 on Jun 17 18:16:55 2026
-  Chain 1 saved imputation 1 on Jun 17 18:16:55 2026
-  Chain 2 saved imputation 2 on Jun 17 18:16:55 2026
-  Chain 3 saved imputation 3 on Jun 17 18:16:55 2026
-  Chain 1 completed iteration 625 on Jun 17 18:16:55 2026
-  Chain 2 completed iteration 625 on Jun 17 18:16:55 2026
-  Chain 3 completed iteration 625 on Jun 17 18:16:55 2026
-  Chain 4 saved imputation 8 on Jun 17 18:16:55 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:16:55 2026
-  Chain 1 saved imputation 5 on Jun 17 18:16:55 2026
-  Chain 2 saved imputation 6 on Jun 17 18:16:55 2026
-  Chain 3 saved imputation 7 on Jun 17 18:16:55 2026
-  Chain 4 saved imputation 12 on Jun 17 18:16:55 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:16:55 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:16:55 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:16:55 2026
-  Chain 1 saved imputation 9 on Jun 17 18:16:55 2026
-  Chain 2 saved imputation 10 on Jun 17 18:16:55 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:16:55 2026
-  Chain 3 saved imputation 11 on Jun 17 18:16:55 2026
-  Chain 4 saved imputation 16 on Jun 17 18:16:55 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:16:55 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:16:55 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:16:55 2026
-  Chain 1 saved imputation 13 on Jun 17 18:16:55 2026
-  Chain 2 saved imputation 14 on Jun 17 18:16:55 2026
-  Chain 3 saved imputation 15 on Jun 17 18:16:55 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:16:55 2026
-  Chain 4 saved imputation 20 on Jun 17 18:16:55 2026
-  Chain 4 finished on Jun 17 18:16:55 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:16:55 2026
-  Chain 1 saved imputation 17 on Jun 17 18:16:55 2026
-  Chain 1 finished on Jun 17 18:16:55 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:16:55 2026
-  Chain 2 saved imputation 18 on Jun 17 18:16:55 2026
-  Chain 2 finished on Jun 17 18:16:55 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:16:55 2026
-  Chain 3 saved imputation 19 on Jun 17 18:16:55 2026
-  Chain 3 finished on Jun 17 18:16:55 2026
+  Chain 1 burn-in started on Aug 15 17:36:38 2026
+  Chain 4 burn-in started on Aug 15 17:36:38 2026
+  Chain 2 burn-in started on Aug 15 17:36:38 2026
+  Chain 3 burn-in started on Aug 15 17:36:38 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:36:38 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:36:38 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:38 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:36:38 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:38 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:36:38 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:36:38 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:36:38 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:36:39 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:36:39 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:36:39 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:39 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:36:39 2026
+  Chain 2 completed burn-in on Aug 15 17:36:39 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:36:39 2026
+  Chain 3 completed burn-in on Aug 15 17:36:39 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:39 2026
+  Chain 1 completed burn-in on Aug 15 17:36:39 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:36:39 2026
+  Chain 4 completed burn-in on Aug 15 17:36:39 2026
+  Chain 2 saved imputation 2 on Aug 15 17:36:39 2026
+  Chain 3 saved imputation 3 on Aug 15 17:36:39 2026
+  Chain 1 saved imputation 1 on Aug 15 17:36:39 2026
+  Chain 4 saved imputation 4 on Aug 15 17:36:39 2026
+  Chain 2 completed iteration 625 on Aug 15 17:36:39 2026
+  Chain 1 completed iteration 625 on Aug 15 17:36:39 2026
+  Chain 3 completed iteration 625 on Aug 15 17:36:39 2026
+  Chain 4 completed iteration 625 on Aug 15 17:36:39 2026
+  Chain 2 saved imputation 6 on Aug 15 17:36:39 2026
+  Chain 3 saved imputation 7 on Aug 15 17:36:39 2026
+  Chain 1 saved imputation 5 on Aug 15 17:36:39 2026
+  Chain 4 saved imputation 8 on Aug 15 17:36:39 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:36:39 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:36:39 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:36:39 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:36:39 2026
+  Chain 2 saved imputation 10 on Aug 15 17:36:39 2026
+  Chain 1 saved imputation 9 on Aug 15 17:36:39 2026
+  Chain 3 saved imputation 11 on Aug 15 17:36:39 2026
+  Chain 4 saved imputation 12 on Aug 15 17:36:39 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:36:39 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:36:39 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:36:39 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:36:39 2026
+  Chain 2 saved imputation 14 on Aug 15 17:36:39 2026
+  Chain 1 saved imputation 13 on Aug 15 17:36:39 2026
+  Chain 3 saved imputation 15 on Aug 15 17:36:39 2026
+  Chain 4 saved imputation 16 on Aug 15 17:36:39 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:36:39 2026
+  Chain 2 saved imputation 18 on Aug 15 17:36:39 2026
+  Chain 2 finished on Aug 15 17:36:39 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:39 2026
+  Chain 1 saved imputation 17 on Aug 15 17:36:39 2026
+  Chain 1 finished on Aug 15 17:36:39 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:36:39 2026
+  Chain 3 saved imputation 19 on Aug 15 17:36:39 2026
+  Chain 3 finished on Aug 15 17:36:39 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:36:39 2026
+  Chain 4 saved imputation 20 on Aug 15 17:36:39 2026
+  Chain 4 finished on Aug 15 17:36:39 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -1705,26 +1705,30 @@ Level 1:
                                 ------------------------------------------------------------------------------
 
 
+pdf 
+  2 
+pdf 
+  2 
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:17:01 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:17:01 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:17:01 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:17:01 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:17:02 2026
-  Chain 1 completed burn-in on Jun 17 18:17:02 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:17:02 2026
-  Chain 1 completed iteration 5000 on Jun 17 18:17:02 2026
-  Chain 1 completed iteration 7500 on Jun 17 18:17:03 2026
-  Chain 1 completed iteration 10000 on Jun 17 18:17:03 2026
-  Chain 1 finished on Jun 17 18:17:03 2026
+  Chain 1 burn-in started on Aug 15 17:36:50 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:36:51 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:36:51 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:36:51 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:36:51 2026
+  Chain 1 completed burn-in on Aug 15 17:36:51 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:36:51 2026
+  Chain 1 completed iteration 5000 on Aug 15 17:36:52 2026
+  Chain 1 completed iteration 7500 on Aug 15 17:36:52 2026
+  Chain 1 completed iteration 10000 on Aug 15 17:36:52 2026
+  Chain 1 finished on Aug 15 17:36:52 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.
@@ -2005,56 +2009,56 @@ Wrote:
 
 ITERATION HISTORY:
 
-  Chain 1 burn-in started on Jun 17 18:17:06 2026
-  Chain 2 burn-in started on Jun 17 18:17:06 2026
-  Chain 4 burn-in started on Jun 17 18:17:06 2026
-  Chain 3 burn-in started on Jun 17 18:17:06 2026
-  Chain 1 burn-in iteration 2500 completed on Jun 17 18:17:10 2026
-  Chain 3 burn-in iteration 2500 completed on Jun 17 18:17:10 2026
-  Chain 2 burn-in iteration 2500 completed on Jun 17 18:17:10 2026
-  Chain 4 burn-in iteration 2500 completed on Jun 17 18:17:10 2026
-  Chain 2 burn-in iteration 5000 completed on Jun 17 18:17:14 2026
-  Chain 3 burn-in iteration 5000 completed on Jun 17 18:17:14 2026
-  Chain 1 burn-in iteration 5000 completed on Jun 17 18:17:15 2026
-  Chain 4 burn-in iteration 5000 completed on Jun 17 18:17:15 2026
-  Chain 2 burn-in iteration 7500 completed on Jun 17 18:17:18 2026
-  Chain 3 burn-in iteration 7500 completed on Jun 17 18:17:19 2026
-  Chain 1 burn-in iteration 7500 completed on Jun 17 18:17:19 2026
-  Chain 4 burn-in iteration 7500 completed on Jun 17 18:17:19 2026
-  Chain 2 burn-in iteration 10000 completed on Jun 17 18:17:23 2026
-  Chain 2 completed burn-in on Jun 17 18:17:23 2026
-  Chain 1 burn-in iteration 10000 completed on Jun 17 18:17:23 2026
-  Chain 1 completed burn-in on Jun 17 18:17:23 2026
-  Chain 3 burn-in iteration 10000 completed on Jun 17 18:17:23 2026
-  Chain 3 completed burn-in on Jun 17 18:17:23 2026
-  Chain 4 burn-in iteration 10000 completed on Jun 17 18:17:24 2026
-  Chain 4 completed burn-in on Jun 17 18:17:24 2026
-  Chain 2 completed iteration 625 on Jun 17 18:17:24 2026
-  Chain 1 completed iteration 625 on Jun 17 18:17:25 2026
-  Chain 3 completed iteration 625 on Jun 17 18:17:25 2026
-  Chain 2 completed iteration 1250 on Jun 17 18:17:25 2026
-  Chain 4 completed iteration 625 on Jun 17 18:17:25 2026
-  Chain 1 completed iteration 1250 on Jun 17 18:17:26 2026
-  Chain 3 completed iteration 1250 on Jun 17 18:17:26 2026
-  Chain 2 completed iteration 1875 on Jun 17 18:17:26 2026
-  Chain 4 completed iteration 1250 on Jun 17 18:17:27 2026
-  Chain 1 completed iteration 1875 on Jun 17 18:17:27 2026
-  Chain 3 completed iteration 1875 on Jun 17 18:17:27 2026
-  Chain 2 completed iteration 2500 on Jun 17 18:17:28 2026
-  Chain 2 finished on Jun 17 18:17:28 2026
-  Chain 4 completed iteration 1875 on Jun 17 18:17:28 2026
-  Chain 1 completed iteration 2500 on Jun 17 18:17:29 2026
-  Chain 1 finished on Jun 17 18:17:29 2026
-  Chain 3 completed iteration 2500 on Jun 17 18:17:29 2026
-  Chain 3 finished on Jun 17 18:17:29 2026
-  Chain 4 completed iteration 2500 on Jun 17 18:17:29 2026
-  Chain 4 finished on Jun 17 18:17:29 2026
+  Chain 1 burn-in started on Aug 15 17:36:57 2026
+  Chain 3 burn-in started on Aug 15 17:36:57 2026
+  Chain 2 burn-in started on Aug 15 17:36:57 2026
+  Chain 4 burn-in started on Aug 15 17:36:57 2026
+  Chain 1 burn-in iteration 2500 completed on Aug 15 17:37:01 2026
+  Chain 4 burn-in iteration 2500 completed on Aug 15 17:37:01 2026
+  Chain 2 burn-in iteration 2500 completed on Aug 15 17:37:01 2026
+  Chain 3 burn-in iteration 2500 completed on Aug 15 17:37:01 2026
+  Chain 1 burn-in iteration 5000 completed on Aug 15 17:37:05 2026
+  Chain 4 burn-in iteration 5000 completed on Aug 15 17:37:05 2026
+  Chain 2 burn-in iteration 5000 completed on Aug 15 17:37:06 2026
+  Chain 3 burn-in iteration 5000 completed on Aug 15 17:37:06 2026
+  Chain 1 burn-in iteration 7500 completed on Aug 15 17:37:09 2026
+  Chain 4 burn-in iteration 7500 completed on Aug 15 17:37:10 2026
+  Chain 2 burn-in iteration 7500 completed on Aug 15 17:37:10 2026
+  Chain 3 burn-in iteration 7500 completed on Aug 15 17:37:11 2026
+  Chain 1 burn-in iteration 10000 completed on Aug 15 17:37:14 2026
+  Chain 1 completed burn-in on Aug 15 17:37:14 2026
+  Chain 4 burn-in iteration 10000 completed on Aug 15 17:37:14 2026
+  Chain 4 completed burn-in on Aug 15 17:37:14 2026
+  Chain 2 burn-in iteration 10000 completed on Aug 15 17:37:15 2026
+  Chain 2 completed burn-in on Aug 15 17:37:15 2026
+  Chain 1 completed iteration 625 on Aug 15 17:37:15 2026
+  Chain 4 completed iteration 625 on Aug 15 17:37:16 2026
+  Chain 2 completed iteration 625 on Aug 15 17:37:16 2026
+  Chain 3 burn-in iteration 10000 completed on Aug 15 17:37:16 2026
+  Chain 3 completed burn-in on Aug 15 17:37:16 2026
+  Chain 1 completed iteration 1250 on Aug 15 17:37:16 2026
+  Chain 4 completed iteration 1250 on Aug 15 17:37:17 2026
+  Chain 2 completed iteration 1250 on Aug 15 17:37:18 2026
+  Chain 1 completed iteration 1875 on Aug 15 17:37:18 2026
+  Chain 3 completed iteration 625 on Aug 15 17:37:18 2026
+  Chain 4 completed iteration 1875 on Aug 15 17:37:18 2026
+  Chain 2 completed iteration 1875 on Aug 15 17:37:19 2026
+  Chain 1 completed iteration 2500 on Aug 15 17:37:19 2026
+  Chain 1 finished on Aug 15 17:37:19 2026
+  Chain 3 completed iteration 1250 on Aug 15 17:37:19 2026
+  Chain 4 completed iteration 2500 on Aug 15 17:37:20 2026
+  Chain 4 finished on Aug 15 17:37:20 2026
+  Chain 2 completed iteration 2500 on Aug 15 17:37:20 2026
+  Chain 2 finished on Aug 15 17:37:20 2026
+  Chain 3 completed iteration 1875 on Aug 15 17:37:21 2026
+  Chain 3 completed iteration 2500 on Aug 15 17:37:22 2026
+  Chain 3 finished on Aug 15 17:37:22 2026
 
 
 ---------------------------------------------------------------------------
 
                                    Blimp
-                              4.0.5-nightly15
+                                 4.1.0.b11
 
              Blimp was developed with funding from Institute of
            Education Sciences awards R305D150056 and R305D190002.

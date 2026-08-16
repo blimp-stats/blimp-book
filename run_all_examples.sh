@@ -7,6 +7,8 @@
 # Excludes "6.8 Analyze Blimp Latent Imputations.R" by design (it locates
 # imps.csv via rstudioapi, which only works inside RStudio).
 # Each script's console output (and any errors) goes to run_logs/<name>.log.
+# The diagnostics sections also write "<n> Distribution Plot.pdf" and
+# "<n> Residuals Plot.pdf" into run_logs/ for every script.
 #
 # Usage:
 #   cd to the repo, then:   bash run_all_examples.sh
@@ -30,9 +32,18 @@ if [[ ! -x "$RSCRIPT" ]]; then
   exit 1
 fi
 
+total=0
+for d in "${DIRS[@]}"; do
+  [[ -d "$ROOT/$d" ]] || continue
+  while IFS= read -r -d '' f; do
+    [[ "$(basename "$f")" =~ $EXCLUDE_REGEX ]] || total=$((total+1))
+  done < <(find "$ROOT/$d" -maxdepth 1 -name "*.R" -print0)
+done
+
 echo "Rscript : $RSCRIPT"
 echo "Repo    : $ROOT"
 echo "Logs    : $LOG_DIR"
+echo "Queued  : $total scripts"
 echo
 
 ok=0; fail=0; failed_list=()

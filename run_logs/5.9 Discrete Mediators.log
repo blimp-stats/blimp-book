@@ -1,0 +1,8 @@
+! Setting executable does not persist on exit.
+Error in file(file, "rt") : 
+  cannot open the connection to 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv'
+Calls: read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open URL 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/alcoholuse.csv': HTTP status was '404 Not Found'
+Execution halted

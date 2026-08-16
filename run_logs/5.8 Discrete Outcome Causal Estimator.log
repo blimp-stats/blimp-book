@@ -1,0 +1,12 @@
+! Setting executable does not persist on exit.
+→ Checking for Blimp Update...
+ERROR: Variable 'relqual' in the ORDINAL command is not in the data.
+Error:
+! Blimp had an error. Check output.
+Backtrace:
+    ▆
+ 1. └─rblimp::rblimp(...)
+ 2.   └─rblimp:::throw_error("Blimp had an error. Check output.")
+ 3.     └─cli::cli_abort(...)
+ 4.       └─rlang::abort(...)
+Execution halted
