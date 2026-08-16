@@ -28,45 +28,45 @@ loneliness <- read.csv(data_url)
 
 # unconstrained with occasion-specific slopes
 mod1 <- rblimp(
-  data = loneliness,             		# R data frame
-  latent = 'anxdep lonely',          		# define latent variables
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
   model = '
-    anxdep1w = anxdep1 - (a01 + anxdep);  	# definition variable
-    anxdep2w = anxdep2 - (a02 + anxdep); 	# definition variable
-    anxdep3w = anxdep3 - (a03 + anxdep); 	# definition variable
-    lonely1w = lonely1 - (b01 + lonely); 	# definition variable
-    lonely2w = lonely2 - (b02 + lonely); 	# definition variable
-    lonely3w = lonely3 - (b03 + lonely); 	# definition variable
-    between.person: 					# model block label
-    anxdep ~~ lonely;  				# random intercepts
-    within.person: 					# model block label
-    anxdep1 ~ intercept@a01 anxdep@1; 		# equations with labels
+    anxdep1w = anxdep1 - (a01 + anxdep);         # definition variable
+    anxdep2w = anxdep2 - (a02 + anxdep);         # definition variable
+    anxdep3w = anxdep3 - (a03 + anxdep);         # definition variable
+    lonely1w = lonely1 - (b01 + lonely);         # definition variable
+    lonely2w = lonely2 - (b02 + lonely);         # definition variable
+    lonely3w = lonely3 - (b03 + lonely);         # definition variable
+    between.person:                              # model block label
+    anxdep ~~ lonely;                            # random intercepts
+    within.person:                               # model block label
+    anxdep1 ~ intercept@a01 anxdep@1;            # equations with labels
     anxdep2 ~ intercept@a02 anxdep1w@a12 lonely1w@a22 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a13 lonely2w@a23 anxdep@1;
     anxdep4 ~ intercept@a04 anxdep3w@a14 lonely3w@a24 anxdep@1;
     lonely1 ~ intercept@b01 lonely@1;
     lonely2 ~ intercept@b02 lonely1w@b12 anxdep1w@b22 lonely@1;
     lonely3 ~ intercept@b03 lonely2w@b13 anxdep2w@b23 lonely@1;
-    lonely4 ~ intercept@b04 lonely3w@b14 anxdep3w@b24 lonely@1;  
-    anxdep1 ~~ lonely1; 				# residual correlation
-    anxdep2 ~~ lonely2; 				# residual correlation
-    anxdep3 ~~ lonely3; 				# residual correlation
-    anxdep4 ~~ lonely4;', 				# residual correlation
-  waldtest = 'a12 = a13; a13 = a14; a22 = a23; a23 = a24; 
+    lonely4 ~ intercept@b04 lonely3w@b14 anxdep3w@b24 lonely@1;
+    anxdep1 ~~ lonely1;                          # residual correlation
+    anxdep2 ~~ lonely2;                          # residual correlation
+    anxdep3 ~~ lonely3;                          # residual correlation
+    anxdep4 ~~ lonely4;',                        # residual correlation
+  waldtest = 'a12 = a13; a13 = a14; a22 = a23; a23 = a24;
   b12 = b13; b13 = b14; b22 = b23; b23 = b24;',  # test equality of slopes
-  seed = 90291,               			# random number seed
-  burn = 10000,               			# warm-up iterations
-  iter = 10000                			# analysis iterations
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000                                   # analysis iterations
 )
 
-output(mod1)               		      # print output
+output(mod1)                                     # print output
 
 # equality constraints on occasion-specific slopes
 mod2 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
+    anxdep1w = anxdep1 - (a01 + anxdep);         # definition variables
     anxdep2w = anxdep2 - (a02 + anxdep);
     anxdep3w = anxdep3 - (a03 + anxdep);
     lonely1w = lonely1 - (b01 + lonely);
@@ -74,7 +74,7 @@ mod2 <- rblimp(
     lonely3w = lonely3 - (b03 + lonely);
     between.person:
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
@@ -88,22 +88,43 @@ mod2 <- rblimp(
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
     anxdep4 ~~ lonely4;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  parameters = '
+    sdw_lonely1 = sqrt(lonely1.totalvar - lonely.totalvar);
+    sdw_lonely2 = sqrt(lonely2.totalvar - lonely.totalvar);
+    sdw_lonely3 = sqrt(lonely3.totalvar - lonely.totalvar);
+    sdw_lonely4 = sqrt(lonely4.totalvar - lonely.totalvar);
+    sdw_anxdep1 = sqrt(anxdep1.totalvar - anxdep.totalvar);
+    sdw_anxdep2 = sqrt(anxdep2.totalvar - anxdep.totalvar);
+    sdw_anxdep3 = sqrt(anxdep3.totalvar - anxdep.totalvar);
+    sdw_anxdep4 = sqrt(anxdep4.totalvar - anxdep.totalvar);
+    a1std_t2 = a1 * sdw_anxdep1 / sdw_anxdep2;
+    a1std_t3 = a1 * sdw_anxdep2 / sdw_anxdep3;
+    a1std_t4 = a1 * sdw_anxdep3 / sdw_anxdep4;
+    b1std_t2 = b1 * sdw_lonely1 / sdw_lonely2;
+    b1std_t3 = b1 * sdw_lonely2 / sdw_lonely3;
+    b1std_t4 = b1 * sdw_lonely3 / sdw_lonely4;
+    a2std_t2 = a2 * sdw_lonely1 / sdw_anxdep2;
+    a2std_t3 = a2 * sdw_lonely2 / sdw_anxdep3;
+    a2std_t4 = a2 * sdw_lonely3 / sdw_anxdep4;
+    b2std_t2 = b2 * sdw_anxdep1 / sdw_lonely2;
+    b2std_t3 = b2 * sdw_anxdep2 / sdw_lonely3;
+    b2std_t4 = b2 * sdw_anxdep3 / sdw_lonely4;',
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-output(mod2)
+output(mod2)                                     # print output
 
 # condensed syntax with loops
 mod3 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
     { t in 1:3 } : anxdep[t]w = anxdep[t] - (a0[t] + anxdep);
     { t in 1:3 } : lonely[t]w = lonely[t] - (b0[t] + lonely);
     between.person:
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1;
     { t in 2:4 } : anxdep[t] ~ intercept@a0[t] anxdep[t-1]w@a1 lonely[t-1]w@a2 anxdep@1;
     lonely1 ~ intercept@b01 lonely@1;
@@ -111,27 +132,27 @@ mod3 <- rblimp(
     covariances:
     { t in 1:4 } : anxdep[t] ~~ lonely[t];',
   parameters = '
-    { t in 1:4 } : varw_lonely[t] = lonely[t].totalvar - lonely.totalvar;
-    { t in 1:4 } : varw_anxdep[t] = anxdep[t].totalvar - anxdep.totalvar;
-    { t in 2:4 } : a1stdw_t[t] = a1 * sqrt(varw_anxdep[t-1]) / sqrt(varw_anxdep[t]);
-    { t in 2:4 } : b1stdw_t[t] = b1 * sqrt(varw_lonely[t-1]) / sqrt(varw_lonely[t]);
-    { t in 2:4 } : a2stdw_t[t] = a2 * sqrt(varw_lonely[t-1]) / sqrt(varw_anxdep[t]);
-    { t in 2:4 } : b2stdw_t[t] = b2 * sqrt(varw_anxdep[t-1]) / sqrt(varw_lonely[t]);',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+    { t in 1:4 } : sdw_lonely[t] = sqrt(lonely[t].totalvar - lonely.totalvar);
+    { t in 1:4 } : sdw_anxdep[t] = sqrt(anxdep[t].totalvar - anxdep.totalvar);
+    { t in 2:4 } : a1std_t[t] = a1 * sdw_anxdep[t-1] / sdw_anxdep[t];
+    { t in 2:4 } : b1std_t[t] = b1 * sdw_lonely[t-1] / sdw_lonely[t];
+    { t in 2:4 } : a2std_t[t] = a2 * sdw_lonely[t-1] / sdw_anxdep[t];
+    { t in 2:4 } : b2std_t[t] = b2 * sdw_anxdep[t-1] / sdw_lonely[t];',
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-output(mod3)
+output(mod3)                                     # print output
 
 #------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
-mod3 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+mod4 <- rblimp(
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
+    anxdep1w = anxdep1 - (a01 + anxdep);         # definition variables
     anxdep2w = anxdep2 - (a02 + anxdep);
     anxdep3w = anxdep3 - (a03 + anxdep);
     lonely1w = lonely1 - (b01 + lonely);
@@ -139,7 +160,7 @@ mod3 <- rblimp(
     lonely3w = lonely3 - (b03 + lonely);
     between.person:
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
@@ -153,27 +174,38 @@ mod3 <- rblimp(
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
     anxdep4 ~~ lonely4;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000,
-  nimps = 20)
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000,                                  # analysis iterations
+  nimps = 20)                                    # save 20 imputed data sets
 
-output(mod3)
+output(mod4)                                     # print output
 
-distribution_plot(mod3)
-residuals_plot(mod3)
+distribution_plot(mod4)                          # plot observed and imputed distributions
+residuals_plot(mod4)                             # plot residuals
 
+# save distribution plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.10 Distribution Plot.pdf", width = 8.5, height = 11)
+plots <- distribution_plot(mod4)                 # plot observed and imputed distributions
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
+
+# save residual plots to pdf
+pdf("/Users/craig/Documents/GitHub/blimp-book/run_logs/6.10 Residuals Plot.pdf", width = 8.5, height = 11)
+plots <- residuals_plot(mod4)                    # plot residuals
+for (p in plots) print(p)                        # print plots to pdf
+dev.off()                                        # close pdf file
 
 #------------------------------------------------------------------------------#
 # FIT RICLPM MODEL WITH BETWEEN-PERSON PREDICTOR ----
 #------------------------------------------------------------------------------#
 
 # sex predicting between-person stable differences
-mod4 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+mod5 <- rblimp(
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
+    anxdep1w = anxdep1 - (a01 + anxdep);         # definition variables
     anxdep2w = anxdep2 - (a02 + anxdep);
     anxdep3w = anxdep3 - (a03 + anxdep);
     lonely1w = lonely1 - (b01 + lonely);
@@ -182,7 +214,7 @@ mod4 <- rblimp(
     between.person:
     female -> anxdep lonely;
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep@1;
@@ -196,18 +228,18 @@ mod4 <- rblimp(
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
     anxdep4 ~~ lonely4;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-output(mod4)
+output(mod5)                                     # print output
 
 # occasion-specific sex differences
-mod5 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep + female*a31);  
+mod6 <- rblimp(
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
+    anxdep1w = anxdep1 - (a01 + anxdep + female*a31);
     anxdep2w = anxdep2 - (a02 + anxdep + female*a32);
     anxdep3w = anxdep3 - (a03 + anxdep + female*a33);
     lonely1w = lonely1 - (b01 + lonely + female*b31);
@@ -215,7 +247,7 @@ mod5 <- rblimp(
     lonely3w = lonely3 - (b03 + lonely + female*b33);
     between.person:
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1 female@a31;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 female@a32 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 female@a33 anxdep@1;
@@ -230,18 +262,18 @@ mod5 <- rblimp(
     anxdep3 ~~ lonely3;
     anxdep4 ~~ lonely4;',
   waldtest = 'a32 = a33; a33 = a34; b32 = b33; b33 = b34;',  # test equality of slopes
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-output(mod5)
+output(mod6)                                     # print output
 
 # sex moderating carryover effects
-mod6 <- rblimp(
-  data = loneliness,
-  latent = 'anxdep lonely',
-  model = ' 
-    anxdep1w = anxdep1 - (a01 + anxdep);  # definition variables
+mod7 <- rblimp(
+  data = loneliness,                             # R data frame
+  latent = 'anxdep lonely',                      # define latent variables
+  model = '
+    anxdep1w = anxdep1 - (a01 + anxdep);         # definition variables
     anxdep2w = anxdep2 - (a02 + anxdep);
     anxdep3w = anxdep3 - (a03 + anxdep);
     lonely1w = lonely1 - (b01 + lonely);
@@ -250,7 +282,7 @@ mod6 <- rblimp(
     between.person:
     female -> anxdep lonely;
     anxdep ~~ lonely;
-    within.person: 
+    within.person:
     anxdep1 ~ intercept@a01 anxdep@1;
     anxdep2 ~ intercept@a02 anxdep1w@a1 lonely1w@a2 anxdep1w*female@a3 anxdep@1;
     anxdep3 ~ intercept@a03 anxdep2w@a1 lonely2w@a2 anxdep2w*female@a3 anxdep@1;
@@ -264,11 +296,8 @@ mod6 <- rblimp(
     anxdep2 ~~ lonely2;
     anxdep3 ~~ lonely3;
     anxdep4 ~~ lonely4;',
-  seed = 90291,
-  burn = 10000,
-  iter = 10000)
+  seed = 90291,                                  # random number seed
+  burn = 10000,                                  # warm-up iterations
+  iter = 10000)                                  # analysis iterations
 
-output(mod6)
-
-
-
+output(mod7)                                     # print output

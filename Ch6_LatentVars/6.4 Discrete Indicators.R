@@ -46,7 +46,7 @@ mod1 <- rblimp(
   iter = 20000)                                  # analysis iterations
 
 output(mod1)                                     # print output
-round(standardized(mod1),3)                      # print standardized estimates in one table
+standardized(mod1)                               # print standardized estimates in one table
 posterior_plot(mod1, 'wrkbehave')                # plot parameter distributions
 
 #------------------------------------------------------------------------------#

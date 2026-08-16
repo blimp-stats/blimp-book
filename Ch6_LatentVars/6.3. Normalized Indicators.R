@@ -20,7 +20,7 @@ set_blimp('/applications/blimp/blimp-nightly')
 data_url <- 'https://raw.githubusercontent.com/blimp-stats/blimp-book/main/data/inflammation.csv'
 
 # create data frame from github data
-inflamm <- read.csv(data_url)
+inflammation <- read.csv(data_url)
 
 #------------------------------------------------------------------------------#
 # TRANSFORMED INDICATORS ----
@@ -45,7 +45,7 @@ mod1 <- rblimp(
 )
 
 output(mod1)                                     # print output
-round(standardized(mod1),3)                      # print standardized estimates in one table
+standardized(mod1)                               # print standardized estimates in one table
 posterior_plot(mod1)                             # plot parameter distributions
 
 # log transformed indicators

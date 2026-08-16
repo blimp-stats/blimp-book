@@ -30,19 +30,19 @@ diary <- read.csv(data_url)
 mod1 <- rblimp(
   data = diary,                                  # R data frame
   clusterid = 'person',                          # cluster-level identifier
-  latent = 'person = b0j b1j g0j',               # define latent variables
+  latent = 'person = b0c b1c g0c',               # define latent variables
   center = '
     groupmean = pain;                            # center at latent group means
     grandmean = pain.mean;',                     # center at grand means
   model = '
     level2:                                      # model block label
-    b0j ~ intercept pain.mean;                   # level-2 random intercept
-    b1j ~ intercept;                             # level-2 random slope
-    g0j ~ intercept pain.mean;                   # level-2 scale model
-    b0j b1j g0j ~~ b0j b1j g0j;                  # random effect correlation
+    b0c ~ intercept pain.mean;                   # level-2 random intercept
+    b1c ~ intercept;                             # level-2 random slope
+    g0c ~ intercept pain.mean;                   # level-2 scale model
+    b0c b1c g0c ~~ b0c b1c g0c;                  # random effect correlation
     level1:                                      # model block label
-    posaff ~ intercept@b0j pain@b1j;             # level-1 model
-    var(posaff) ~ intercept@g0j pain;',          # level-1 scale model
+    posaff ~ intercept@b0c pain@b1c;             # level-1 model
+    var(posaff) ~ intercept@g0c pain;',          # level-1 scale model
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000                                   # analysis iterations
@@ -55,24 +55,24 @@ posterior_plot(mod1,'posaff')                    # plot parameter distributions
 mod2 <- rblimp(
   data = diary,                                  # R data frame
   clusterid = 'person',                          # cluster-level identifier
-  latent = 'person = b0j b1j g0j',               # define latent variables
+  latent = 'person = b0c b1c g0c',               # define latent variables
   center = '
     groupmean = pain;                            # center at latent group means
     grandmean = pain.mean;',                     # center at grand means
   model = '
     level2:                                      # model block label
-    b0j ~ intercept pain.mean;                   # level-2 random intercept
-    b1j ~ intercept;                             # level-2 random slope
-    g0j ~ intercept@logvar pain.mean;            # level-2 scale model
-    b0j b1j g0j ~~ b0j b1j g0j;                  # random effect correlation
+    b0c ~ intercept pain.mean;                   # level-2 random intercept
+    b1c ~ intercept;                             # level-2 random slope
+    g0c ~ intercept@logvar pain.mean;            # level-2 scale model
+    b0c b1c g0c ~~ b0c b1c g0c;                  # random effect correlation
     level1:                                      # model block label
-    posaff ~ intercept@b0j pain@b1j;             # level-1 model
-    var(posaff) ~ intercept@g0j pain;',          # level-1 scale model
+    posaff ~ intercept@b0c pain@b1c;             # level-1 model
+    var(posaff) ~ intercept@g0c pain;',          # level-1 scale model
   parameters = '
-    var_total = posaff.totalvar + b0j.totalvar;
-    rsq_l2coeff = b0j.coefvar / var_total;
+    var_total = posaff.totalvar + b0c.totalvar;
+    rsq_l2coeff = b0c.coefvar / var_total;
     rsq_l1coeff = posaff.coefvar / var_total;
-    rsq_l2resid = b0j.residvar / var_total;
+    rsq_l2resid = b0c.residvar / var_total;
     rsq_l1resid = exp(logvar) / var_total;',
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
@@ -82,51 +82,25 @@ mod2 <- rblimp(
 output(mod2)                                     # print output
 
 #------------------------------------------------------------------------------#
-# MULTILEVEL LATENT VARIABLE SPECIFICATION ----
-#------------------------------------------------------------------------------#
-
-# base model
-mod1 <- rblimp(
-  data = diary,                                  # R data frame
-  clusterid = 'person',                          # cluster-level identifier
-  latent = 'person = b0j b1j g0j',               # define latent variables
-  center = '
-    groupmean = pain;                            # center at latent group means
-    grandmean = pain.mean;',                     # center at grand means
-  model = '
-    level2:                                      # model block label
-    b0j ~ intercept pain.mean;                   # level-2 random intercept
-    b1j ~ intercept;                             # level-2 random slope
-    g0j ~ intercept pain.mean;                   # level-2 scale model
-    b0j b1j g0j ~~ b0j b1j g0j;                  # random effect correlation
-    level1:                                      # model block label
-    posaff ~ intercept@b0j pain@b1j;             # level-1 model
-    var(posaff) ~ intercept@g0j pain;',          # level-1 scale model
-  seed = 90291,                                  # random number seed
-  burn = 10000,                                  # warm-up iterations
-  iter = 10000                                   # analysis iterations
-)
-
-#------------------------------------------------------------------------------#
 # GRAPHICAL DIAGNOSTICS WITH MULTIPLE IMPUTATIONS ----
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
   data = diary,                                  # R data frame
   clusterid = 'person',                          # cluster-level identifier
-  latent = 'person = b0j b1j g0j',               # define latent variables
+  latent = 'person = b0c b1c g0c',               # define latent variables
   center = '
     groupmean = pain;                            # center at latent group means
     grandmean = pain.mean;',                     # center at grand means
   model = '
     level2:                                      # model block label
-    b0j ~ intercept pain.mean;                   # level-2 random intercept
-    b1j ~ intercept;                             # level-2 random slope
-    g0j ~ intercept pain.mean;                   # level-2 scale model
-    b0j b1j g0j ~~ b0j b1j g0j;                  # random effect correlation
+    b0c ~ intercept pain.mean;                   # level-2 random intercept
+    b1c ~ intercept;                             # level-2 random slope
+    g0c ~ intercept pain.mean;                   # level-2 scale model
+    b0c b1c g0c ~~ b0c b1c g0c;                  # random effect correlation
     level1:                                      # model block label
-    posaff ~ intercept@b0j pain@b1j;             # level-1 model
-    var(posaff) ~ intercept@g0j pain;',          # level-1 scale model
+    posaff ~ intercept@b0c pain@b1c;             # level-1 model
+    var(posaff) ~ intercept@g0c pain;',          # level-1 scale model
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations

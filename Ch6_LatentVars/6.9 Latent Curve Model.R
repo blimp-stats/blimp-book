@@ -45,7 +45,7 @@ ggplot(plotdat, aes(x = visit, y = severity)) +
 
 # full specification
 mod1 <- rblimp(
-  data = medtrial,                             # R data frame
+  data = medtrial,                               # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:                                  # model block label
@@ -67,7 +67,7 @@ output(mod1)                                     # print output
 
 # simplified specification
 mod2 <- rblimp(
-  data = medtrial,                             # R data frame
+  data = medtrial,                               # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -110,7 +110,7 @@ ggplot(plottraj, aes(x = visit, y = severity.predicted)) +
 #------------------------------------------------------------------------------#
 
 mod3 <- rblimp(
-  data = medtrial,                             # R data frame
+  data = medtrial,                               # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -152,7 +152,7 @@ ggplot(plottrajtx, aes(x = visit, y = severity.predicted, color = factor(drug), 
 #------------------------------------------------------------------------------#
 
 mod4 <- rblimp(
-  data = medtrial,                             # R data frame
+  data = medtrial,                               # R data frame
   latent = 'baseline linear',                    # define latent variables
   model = '
     structural:
@@ -190,7 +190,7 @@ dev.off()                                        # close pdf file
 #------------------------------------------------------------------------------#
 
 mod5 <- rblimp(
-  data = medtrial,                             # R data frame
+  data = medtrial,                               # R data frame
   latent = 'baseline linear quad',               # define latent variables
   model = '
     structural:
@@ -213,8 +213,8 @@ output(mod5)                                     # print output
 #------------------------------------------------------------------------------#
 
 mod6 <- rblimp(
-  data = medtrial,                             # R data frame
-  latent = 'baseline growth',               # define latent variables
+  data = medtrial,                               # R data frame
+  latent = 'baseline growth',                    # define latent variables
   model = '
     structural:
     intercept -> baseline growth;

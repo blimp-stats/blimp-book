@@ -41,6 +41,7 @@ mod1 <- rblimp(
 )
 
 output(mod1)                                     # print output
+names(mod1)
 
 #------------------------------------------------------------------------------#
 # HETEROGENEOUS WITHIN-CLUSTER VARIATION MODEL ----
@@ -58,7 +59,7 @@ mod2 <- rblimp(
   seed = 90291,                                  # random number seed
   burn = 10000,                                  # warm-up iterations
   iter = 10000,                                  # analysis iterations
-  options = 'hev'
+  options = 'hev'                                # heterogeneous variance option
 )
 
 output(mod2)                                     # print output

@@ -48,7 +48,7 @@ mod1 <- rblimp(
   latent = 'person = b0c b1c b2c a0c a1c a2c',   # define latent variables
   model = '
     level2:                                      # model block label
-    intercept -> b0c b1c b2c a0c a1c a2c;        # latent variable means
+    intercept -> b0c b1c b2c@b2_mean a0c a1c a2c@a2_mean;  # latent variable means
     b0c b1c b2c a0c a1c a2c ~~ b0c b1c b2c a0c a1c a2c;  # random effect correlations
     level1:                                      # model block label
     lag_posaff = posaff.lag - b0c;               # definition variable
@@ -56,6 +56,11 @@ mod1 <- rblimp(
     posaff ~ intercept@b0c lag_posaff@b1c lag_pain@b2c;  # level-1 model
     pain ~ intercept@a0c lag_pain@a1c lag_posaff@a2c;  # level-1 model
     posaff ~~ pain;',                            # level-1 residual correlation
+  parameters = '
+    sdw_pain = sqrt(pain.totalvar);              # within-person SD
+    sdw_posaff = sqrt(posaff.totalvar);          # within-person SD
+    b2_std = b2_mean * sdw_pain / sdw_posaff;    # pain -> posaff spillover
+    a2_std = a2_mean * sdw_posaff / sdw_pain;',  # posaff -> pain spillover
   seed = 90291,                                  # random number seed
   burn = 20000,                                  # warm-up iterations
   iter = 20000                                   # analysis iterations
