@@ -239,10 +239,19 @@ rp <- residuals_plot(
   label_family = "Minion Pro"
 )
 
-fig3_7 <- rp$drinker.1.binned / rp$drinker.1.agetryalc / rp$drinker.1.age +
+pA <- rp$drinker.1.binned +
+  scale_y_continuous(breaks = round(seq(-0.15, 0.15, by = 0.05),2))
+
+fig3_7 <- pA / rp$drinker.1.age +
   plot_annotation(tag_levels = "A") &
   book_theme &
   caps_axes &
   labs(title = NULL)
+
+# fig3_7 <- rp$drinker.1.binned / rp$drinker.1.age +
+#   plot_annotation(tag_levels = "A") &
+#   book_theme &
+#   caps_axes &
+#   labs(title = NULL)
 
 save_fig(fig3_7, "Figure 3.7", width = 8.5, height = 11)
