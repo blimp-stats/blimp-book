@@ -287,3 +287,15 @@ test_that("math functions reconstruct with grand-mean centering; unknown functio
   expect_null(suppressMessages(
     .residuals_lm_diagnostics(imp, "y", c("x", "z", "mystery(x)"), character(0), FALSE)))
 })
+
+
+test_that("transformed-outcome designs are found whether labeled by base or wrapper", {
+  stub <- function(rows) methods::new("blimp_mock", imputations = list(),
+    average_imp = NULL, variance_imp = NULL, syntax = list(),
+    estimates = matrix(0, length(rows), 1, dimnames = list(rows, "Estimate")))
+  base <- c("dpdd ~ Intercept", "dpdd ~ inflam", "dpdd residual variance")
+  wrap <- c("yjt(dpdd - 6) ~ Intercept", "yjt(dpdd - 6) ~ inflam", "dpdd residual variance")
+  expect_equal(.model_design_terms(stub(base), "dpdd"), "inflam")   # base label
+  expect_equal(.model_design_terms(stub(wrap), "dpdd"), "inflam")   # wrapper reduces to base
+  expect_null(.model_design_terms(stub(base), "other"))            # non-matching DV
+})

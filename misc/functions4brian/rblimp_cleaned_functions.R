@@ -3546,10 +3546,23 @@ print.residuals_plot <- function(x, ...) {
 .model_design_terms <- function(model, dv) {
   rn <- tryCatch(rownames(model@estimates), error = function(e) NULL)
   if (is.null(rn) || !length(rn)) return(NULL)
-  pre  <- paste0(dv, " ~ ")
-  rows <- rn[startsWith(rn, pre) & !endsWith(rn, " (standardized)")]
+  # Coefficient rows "<lhs> ~ <term>" (one "~"), excluding standardized copies.
+  cand <- rn[grepl(" ~ ", rn, fixed = TRUE) & !endsWith(rn, " (standardized)")]
+  if (!length(cand)) return(NULL)
+  # Reduce each row's LHS to its base variable so a transformed outcome matches by
+  # its base: "yjt(dpdd - 6) ~ inflam" and "dpdd ~ inflam" both reduce to "dpdd".
+  # This mirrors how the DV itself is detected from the saved <dv>.* columns, so
+  # the design is found whether Blimp labels the coefficient by base or by wrapper.
+  lhs_base <- function(row) {
+    lhs <- trimws(sub(" ~ .*$", "", row))
+    lhs <- sub("^\\s*[A-Za-z0-9._]+:\\s*", "", lhs)                 # drop "block:" label
+    lhs <- sub("^[A-Za-z_][A-Za-z0-9_.]*\\((.*)\\)$", "\\1", lhs)   # strip a transform wrapper
+    m   <- regmatches(lhs, regexpr("[A-Za-z][A-Za-z0-9._]*", lhs))
+    if (length(m)) m else NA_character_
+  }
+  rows <- cand[vapply(cand, function(r) identical(lhs_base(r), dv), logical(1))]
   if (!length(rows)) return(NULL)
-  terms <- substring(rows, nchar(pre) + 1L)
+  terms <- sub("^[^~]*~[ ]*", "", rows)                            # RHS after the first "~"
   terms[terms != "Intercept"]
 }
 
@@ -3618,7 +3631,7 @@ print.residuals_plot <- function(x, ...) {
 # Rebuilds the model-scale values of a single fixed-effects term from an
 # imputation's saved columns, by evaluating the term as an expression over those
 # columns. Arithmetic (`+ - * ^` and parentheses) and a whitelist of elementwise
-# math functions (ln/log/log10/log2/exp/sqrt/abs) are supported, so a plain
+# math/link/centering functions (see the `funs` list below) are supported, so a plain
 # predictor, a nominal dummy, an interaction ("a*b"), a polynomial ("x^2"), an
 # inline sum score ("x1+...+x7"), a grouped interaction ("m*(x1+...+x7)") and a
 # transformed predictor ("ln(x1 + 100)") all rebuild. Variables that Blimp
@@ -3634,8 +3647,21 @@ print.residuals_plot <- function(x, ...) {
 
 #' @keywords internal
 .resolve_design_term <- function(term, data, nominal_vars, center_map = numeric(0)) {
-  funs <- list(ln = log, log = log, log10 = log10, log2 = log2,
-               exp = exp, sqrt = sqrt, abs = abs)
+  # Blimp's single-argument, parameter-free math/link/centering functions
+  # (function-reference.md), each mapped to its exact R equivalent. Multi-argument
+  # forms (e.g. yjt(x, lambda), center(x, idvar), min(x, y)) and estimated-parameter
+  # transforms (yjt/iyjt) are not listed, so they fall through to NULL (refuse);
+  # RNG and recoding functions are not predictors. The colspace guard confirms
+  # every rebuild, so extending this list is safe.
+  funs <- list(
+    abs = abs, sqrt = sqrt, exp = exp, expm1 = expm1,
+    log = log, ln = log, log1p = log1p, log10 = log10, log2 = log2,
+    sin = sin, cos = cos, tan = tan, asin = asin, acos = acos, atan = atan,
+    phi = stats::pnorm, iphi = stats::qnorm, probit = stats::qnorm,
+    logit = stats::qlogis, sigm = stats::plogis,
+    center = function(x) x - mean(x, na.rm = TRUE),
+    stand  = function(x) (x - mean(x, na.rm = TRUE)) / stats::sd(x, na.rm = TRUE),
+    scale  = function(x) (x - mean(x, na.rm = TRUE)) / stats::sd(x, na.rm = TRUE))
   expr <- tryCatch(parse(text = term)[[1]], error = function(e) NULL)
   if (is.null(expr)) return(NULL)
   ev <- function(e) {

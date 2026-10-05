@@ -60,13 +60,25 @@ read9 ~ read1*lproblev.2    }
 equations for other variables (`esl ~ ...`, `read1 ~ ...`) are ignored because
 they are not `read9 ~` rows.
 
+The match is by the outcome's **base** variable, not an exact string, so a
+**transformed outcome** is handled whichever way Blimp labels its coefficient
+rows: each row's left-hand side is reduced to its base variable (stripping a
+transform wrapper the same way the DV is detected from the saved `<dv>.*`
+columns), so `yjt(dpdd - 6) ~ inflam` and `dpdd ~ inflam` both match `dv = dpdd`.
+That keeps outcome transforms (`yjt()`, `ln()`, `sqrt()` on the DV — common in the
+book) from losing their influence panels. Note this is about a transform on the
+*outcome*; a transform on a *predictor* is handled in §2.
+
 ## 2. How each column's values are sourced
 
 `.resolve_design_term(term, data, nominal_vars, center_map)` rebuilds one term's
 model-scale values by evaluating it as an expression over the saved columns.
-Arithmetic (`+ - * ^`, parentheses) and a **whitelist of elementwise math
-functions** (`ln`/`log`/`log10`/`log2`/`exp`/`sqrt`/`abs`) are supported; names
-resolve via `.resolve_atom`. Predictors enter as their **observed/imputed values**
+Arithmetic (`+ - * ^`, parentheses) and a **whitelist of Blimp's single-argument,
+parameter-free functions** are supported, each mapped to its exact R equivalent:
+`abs sqrt exp expm1 log/ln log1p log10 log2 sin cos tan asin acos atan`,
+`phi`(→`pnorm`) `iphi`/`probit`(→`qnorm`) `logit`(→`qlogis`) `sigm`(→`plogis`),
+and `center`/`stand`/`scale`. Names resolve via `.resolve_atom`. Predictors enter
+as their **observed/imputed values**
 — verified, not assumed; the saved `.latent` propensity columns are NOT the
 regressors:
 
@@ -78,12 +90,24 @@ regressors:
 - **polynomial `x^k`** → the base column raised to the k-th power
 - **inline sum score `x1+x2+...+x7`** (how Blimp expands an un-named `x1:+:x7`) →
   elementwise sum of the columns
-- **transformed predictor `ln(x+100)`, `exp(x)`, `sqrt(x)`, …** → the whitelisted
+- **transformed predictor `ln(x+100)`, `logit(p)`, `sqrt(x)`, …** → the whitelisted
   function applied to the (centered, see below) argument
 - **named composite or latent factor** → its saved column (observed if present,
   else `<name>.latent`)
 - **unknown/non-whitelisted function, or an unresolvable name** → `NULL`:
   un-sourceable, which makes the whole design non-reconstructable
+
+What is deliberately **not** reconstructed (all refuse → absent, never wrong),
+checked against Blimp's full `function-reference.md`: `yjt`/`iyjt` (Yeo-Johnson —
+depends on an estimated λ not yet read from the estimates; the only commonly-used
+one in this bucket); the two-argument group forms `center(x, id)` / `stand(x, id)`
+and `min(x, y)` / `max(x, y)` (grouped centering is multilevel, which never reaches
+leverage anyway); scalar summaries (`mean`/`sd`/`median` as a lone term are
+collinear with the intercept); and recoding / RNG / constant helpers
+(`ifelse` `switch` `missing` `bernoulli` `normal` `uniform` `vec` `_pi` …), which
+are not predictors — if one is used to build a variable via `TRANSFORM`, that
+variable is a saved column and resolves by name. Extending the whitelist to a new
+parameter-free function is one line, and the colspace guard keeps it honest.
 
 **Centering.** Blimp grand-mean centers the variables on its `center` line, and
 `.center_constants(model)` reads each one's constant from the `"<var> Grand Mean"`
