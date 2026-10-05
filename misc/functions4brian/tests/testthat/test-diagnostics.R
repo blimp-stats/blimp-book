@@ -195,3 +195,95 @@ test_that("every panel from every fixture actually renders", {
     expect_silent(lapply(distribution_plot(m), .builds))
   }
 })
+
+
+# --- leverage/Cook's design is the fitted design (the interaction-drop fix) ---
+
+test_that("leverage design includes interactions; dropping one is refused", {
+  set.seed(11); n <- 200; M <- 4; x <- rnorm(n); z <- rnorm(n)
+  mk <- function() { pred <- 2 + 0.5 * x - 0.3 * z + 0.4 * (x * z)
+    data.frame(y = pred + rnorm(n), x = x, z = z,
+               y.residual = rnorm(n), y.predicted = pred, check.names = FALSE) }
+  imp <- replicate(M, mk(), simplify = FALSE)
+
+  dg <- .residuals_lm_diagnostics(imp, "y", c("x", "z", "x*z"), character(0), FALSE)
+  expect_false(is.null(dg))
+  expect_equal(dg$p, 4L)                      # intercept + x + z + x*z
+
+  # dropping the product leaves y.predicted outside the design's span -> refuse
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", c("x", "z"), character(0), FALSE)))
+  # an unknown (non-whitelisted) function has no rebuild rule -> refuse
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", c("x", "z", "x*z", "mystery(x)"), character(0), FALSE)))
+})
+
+
+test_that("polynomial terms reconstruct as powers of the saved column", {
+  set.seed(12); n <- 200; M <- 3; x <- rnorm(n, 5, 2)
+  mk <- function() { pred <- 1 + 0.7 * x - 0.2 * x^2
+    data.frame(y = pred + rnorm(n), x = x,
+               y.residual = rnorm(n), y.predicted = pred, check.names = FALSE) }
+  imp <- replicate(M, mk(), simplify = FALSE)
+
+  dg <- .residuals_lm_diagnostics(imp, "y", c("x", "x^2"), character(0), FALSE)
+  expect_false(is.null(dg)); expect_equal(dg$p, 3L)
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", "x", character(0), FALSE)))   # drop square -> refuse
+})
+
+
+test_that("nominal predictors enter as observed dummies, not latent propensities", {
+  set.seed(13); n <- 300; M <- 3; g <- sample(0:2, n, TRUE)
+  mk <- function() { pred <- 1 + 1.5 * (g == 1) - 0.8 * (g == 2)
+    data.frame(y = pred + rnorm(n), grp = g,
+               "grp.1.latent" = rnorm(n), "grp.2.latent" = rnorm(n),  # present, NOT the regressor
+               y.residual = rnorm(n), y.predicted = pred, check.names = FALSE) }
+  imp <- replicate(M, mk(), simplify = FALSE)
+
+  dg <- .residuals_lm_diagnostics(imp, "y", c("grp.1", "grp.2"), "grp", FALSE)
+  expect_false(is.null(dg)); expect_equal(dg$p, 3L)
+  X <- .build_design_matrix(imp[[1]], c("grp.1", "grp.2"), "grp")
+  expect_equal(unname(X[, "grp.1"]), as.numeric(g == 1))   # observed dummy, not grp.1.latent
+})
+
+
+test_that("inline sums and grouped interactions rebuild; function calls refuse", {
+  set.seed(14); n <- 300; M <- 3
+  a <- rnorm(n); b <- rnorm(n); mm <- rbinom(n, 1, .5)
+  mk <- function() { s <- a + b; pred <- 1 + 0.5 * mm + 0.3 * s - 0.2 * mm * s
+    data.frame(y = pred + rnorm(n), x1 = a, x2 = b, m = mm,
+               y.residual = rnorm(n), y.predicted = pred, check.names = FALSE) }
+  imp <- replicate(M, mk(), simplify = FALSE)
+
+  # unnamed sum score + grouped interaction, as Blimp expands them in @estimates
+  dg <- .residuals_lm_diagnostics(imp, "y",
+          c("m", "x1+x2", "m*(x1+x2)"), character(0), FALSE)
+  expect_false(is.null(dg)); expect_equal(dg$p, 4L)   # int + m + (x1+x2) + m*(x1+x2)
+
+  # an unknown (non-whitelisted) function -> refuse structurally
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", c("m", "x1+x2", "mystery(x1)"), character(0), FALSE)))
+})
+
+
+test_that("math functions reconstruct with grand-mean centering; unknown functions refuse", {
+  set.seed(15); n <- 300; M <- 3; x <- runif(n, 1, 9); z <- rnorm(n); gm <- 5
+  mk <- function() { pred <- 1 + 0.8 * log((x - gm) + 10) - 0.5 * z   # ln of centered x
+    data.frame(y = pred + rnorm(n), x = x, z = z,
+               y.residual = rnorm(n), y.predicted = pred, check.names = FALSE) }
+  imp <- replicate(M, mk(), simplify = FALSE)
+
+  # ln(x+10) with x grand-mean-centered at gm -> reproduces predicted exactly
+  dg <- .residuals_lm_diagnostics(imp, "y", c("ln(x+10)", "z"),
+                                  character(0), FALSE, c(x = gm))
+  expect_false(is.null(dg)); expect_equal(dg$p, 3L)
+
+  # without the centering constant the rebuilt function column is wrong -> refused
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", c("ln(x+10)", "z"), character(0), FALSE)))
+
+  # a function outside the whitelist has no rebuild rule -> refused
+  expect_null(suppressMessages(
+    .residuals_lm_diagnostics(imp, "y", c("x", "z", "mystery(x)"), character(0), FALSE)))
+})

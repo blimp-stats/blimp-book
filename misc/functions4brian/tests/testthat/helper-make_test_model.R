@@ -56,6 +56,21 @@ methods::setClass(
                variance_imp = vimp, syntax = syntax, estimates = estimates)
 }
 
+# Build an @estimates matrix whose ROWNAMES enumerate each DV's fixed-effects
+# design, mirroring Blimp's coefficient table ("<dv> ~ Intercept", "<dv> ~ <term>").
+# residuals_plot reads only these rownames to source the leverage/Cook's design,
+# so the Estimate values are placeholders. `design` is a named list dv -> terms;
+# `extra` adds any non-design rows (e.g. the count dispersion parameter).
+.mk_estimates <- function(design, extra = NULL) {
+  rows <- unlist(lapply(names(design), function(dv)
+    c(paste0(dv, " ~ Intercept"), paste0(dv, " ~ ", design[[dv]]))),
+    use.names = FALSE)
+  rows <- c(rows, names(extra))
+  m <- matrix(c(rep(0, length(rows) - length(extra)), as.numeric(extra)),
+              ncol = 1, dimnames = list(rows, "Estimate"))
+  m
+}
+
 #' Build a synthetic rblimp-style model for one diagnostic branch.
 #'
 #' @param type one of: "continuous", "ordinal", "binary", "multinomial",
@@ -80,7 +95,9 @@ make_test_model <- function(type = "continuous", M = 20, n = 400, J = 40,
         dpdd.residual = rnorm(n), dpdd.predicted = x + z,
         check.names = FALSE)
       .assemble_mock(mk, M, list(model = "dpdd ~ inflam els female age",
-                                 ordinal = "els female", center = "inflam age"))
+                                 ordinal = "els female", center = "inflam age"),
+                     estimates = .mk_estimates(list(
+                       dpdd = c("inflam", "els", "female", "age"))))
     },
 
     ## ---- ordinal OUTCOME (synthetic; no dedicated book script) --------------
@@ -95,7 +112,8 @@ make_test_model <- function(type = "continuous", M = 20, n = 400, J = 40,
         "ordsev.2.probability" = plogis(rnorm(n)),
         "ordsev.3.probability" = plogis(rnorm(n)),
         check.names = FALSE)
-      .assemble_mock(mk, M, list(model = "ordsev ~ x", ordinal = "ordsev"))
+      .assemble_mock(mk, M, list(model = "ordsev ~ x", ordinal = "ordsev"),
+                     estimates = .mk_estimates(list(ordsev = "x")))
     },
 
     ## ---- binary nominal outcome (3.2) ---------------------------------------
@@ -149,7 +167,8 @@ make_test_model <- function(type = "continuous", M = 20, n = 400, J = 40,
         dpdd.residual = rnorm(n) * exp(0.2 * x), dpdd.predicted = x,
         "var.dpdd.predicted" = 0.4 * x,   # per-case log-variance
         check.names = FALSE)
-      .assemble_mock(mk, M, list(model = "dpdd ~ inflam", ordinal = ""))
+      .assemble_mock(mk, M, list(model = "dpdd ~ inflam", ordinal = ""),
+                     estimates = .mk_estimates(list(dpdd = "inflam")))
     },
 
     ## ---- Yeo-Johnson (3.6): yjt() DV reduces to <base>.residual/.predicted --
@@ -161,7 +180,8 @@ make_test_model <- function(type = "continuous", M = 20, n = 400, J = 40,
         "dpddcent.yjt" = x + rnorm(n),
         check.names = FALSE)
       .assemble_mock(mk, M, list(model = "yjt(dpddcent) ~ inflam",
-                                 ordinal = ""))
+                                 ordinal = ""),
+                     estimates = .mk_estimates(list(dpddcent = "inflam")))
     },
 
     ## ---- factor / measurement model (Ch6): f.latent + `->` loadings ---------
@@ -175,7 +195,10 @@ make_test_model <- function(type = "continuous", M = 20, n = 400, J = 40,
         x2.residual = rnorm(n), x2.predicted = f,
         x3.residual = rnorm(n), x3.predicted = f,
         check.names = FALSE)
-      .assemble_mock(mk, M, list(model = "inflamlat -> x1 x2 x3"))
+      .assemble_mock(mk, M, list(model = "inflamlat -> x1 x2 x3"),
+                     estimates = .mk_estimates(list(x1 = "inflamlat",
+                                                    x2 = "inflamlat",
+                                                    x3 = "inflamlat")))
     },
 
     ## ---- MLM random intercept (7.2): probsolve[school] ----------------------

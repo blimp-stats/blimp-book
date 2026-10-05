@@ -1824,7 +1824,8 @@ residuals_plot <- function(
     is_multilevel <- length(dv_clusters) > 0 || !is.null(clusterid_col)
     if (!is_multilevel) {
       diag <- .residuals_lm_diagnostics(
-        imp_list, dv, predictors_list[[dv]], nominal_vars, verbose
+        imp_list, dv, .model_design_terms(model, dv), nominal_vars, verbose,
+        .center_constants(model)
       )
       if (!is.null(diag)) {
         plots[[paste0(dv, ".leverage")]] <- .residuals_leverage(diag, dv, style)
@@ -3530,41 +3531,156 @@ print.residuals_plot <- function(x, ...) {
 
 
 
-# Internal: design matrix builder ==============================================
+# Internal: fixed-effects design terms from the fitted estimates ===============
 #
-# Builds the design matrix used for leverage and Cook's distance. Continuous,
-# ORDINAL, COUNT, and binary NOMINAL predictors are used as-is (raw averaged
-# values). NOMINAL predictors with more than 2 distinct integer levels are
-# dummy-expanded with the lowest level as the reference category. Averaged
-# values for NOMINAL predictors are rounded to integers for the dummy
-# comparison so that cases with imputed values still slot into a single
-# category.
+# The leverage/Cook's design matrix must be the SAME fixed-effects design Blimp
+# fit, so its terms are read from the estimates table rather than re-parsed from
+# the model syntax. For DV `dv`, every coefficient row "<dv> ~ <term>" names one
+# design column, already expanded by Blimp into the exact terms it estimated:
+# nominal-category dummies as "<v>.<k>", interactions as "a*b", polynomials as
+# "x^k". The Intercept row (added by the builder) and the "(standardized)" /
+# residual-variance / R2 rows are not design columns and are dropped. Returns the
+# ordered term labels, or NULL when the object carries no estimates.
 
 #' @keywords internal
-.build_design_matrix <- function(data, predictors, nominal_vars) {
-  cols <- list(intercept = rep(1, nrow(data)))
+.model_design_terms <- function(model, dv) {
+  rn <- tryCatch(rownames(model@estimates), error = function(e) NULL)
+  if (is.null(rn) || !length(rn)) return(NULL)
+  pre  <- paste0(dv, " ~ ")
+  rows <- rn[startsWith(rn, pre) & !endsWith(rn, " (standardized)")]
+  if (!length(rows)) return(NULL)
+  terms <- substring(rows, nchar(pre) + 1L)
+  terms[terms != "Intercept"]
+}
 
-  for (pred in predictors) {
-    col <- .resolve_predictor_col(data, pred)
-    if (is.na(col)) next
-    x <- data[[col]]
 
-    is_nominal_multi <- pred %in% nominal_vars &&
-      length(unique(round(x[is.finite(x)]))) > 2
 
-    if (is_nominal_multi) {
-      rounded <- round(x)
-      lvls    <- sort(unique(rounded[is.finite(rounded)]))
-      # Reference category is the lowest level (lvls[1]), left implicit by
-      # dummy-coding only the non-reference levels lvls[-1].
-      for (lev in lvls[-1]) {
-        cols[[paste0(pred, ".", lev)]] <- as.numeric(rounded == lev)
-      }
-    } else {
-      cols[[pred]] <- x
-    }
+# Internal: grand-mean centering constants ======================================
+#
+# Blimp centers the predictors on its `center` line at their GRAND MEAN before
+# they enter the model, and reports each one as a "<var> Grand Mean" row in the
+# estimates table. A linear term's centering is absorbed by the intercept and
+# does not matter for leverage, but a term INSIDE a nonlinear function (e.g.
+# `ln(x1 + 100)`) must use the centered value, so the exact constant is needed.
+# Returns a named vector `var -> grand mean` for the centered variables that have
+# a grand-mean estimate; variables not listed here enter uncentered.
+
+#' @keywords internal
+.center_constants <- function(model) {
+  sx  <- model@syntax
+  cen <- if ((inherits(sx, "blimp_syntax") || is.list(sx)) &&
+             "center" %in% names(sx)) sx$center else NULL
+  if (is.null(cen) || !nzchar(cen)) return(numeric(0))
+  # keep variable tokens, dropping any groupmean=/grandmean= labels and separators
+  cen  <- gsub("\\b(group|grand)mean\\s*=", " ", cen)
+  cen  <- gsub("[;=]", " ", cen)
+  vars <- unique(strsplit(trimws(cen), "\\s+")[[1]])
+  vars <- vars[nzchar(vars)]
+  rn   <- tryCatch(rownames(model@estimates), error = function(e) NULL)
+  out  <- numeric(0)
+  for (v in vars) {
+    row <- paste0(v, " Grand Mean")
+    if (!is.null(rn) && row %in% rn) out[v] <- model@estimates[row, "Estimate"]
   }
+  out
+}
 
+
+
+# Internal: resolve one variable name to a model-scale column ==================
+#
+# A bare name in a fitted term maps to saved values that enter as the
+# OBSERVED/imputed value (verified against Blimp's saved fitted values, not the
+# latent propensities): a nominal-category name "<v>.<k>" becomes the observed
+# dummy 1(round(<v>) == k); any other name resolves to its saved column (observed
+# column if present, else the latent factor score "<name>.latent"). NULL if the
+# name has no saved column.
+
+#' @keywords internal
+.resolve_atom <- function(nm, data, nominal_vars, center_map = numeric(0)) {
+  cat <- regmatches(nm, regexec("^(.+)\\.([0-9]+)$", nm))[[1]]
+  if (length(cat) == 3L && cat[2] %in% nominal_vars && cat[2] %in% names(data)) {
+    return(as.numeric(round(data[[cat[2]]]) == as.integer(cat[3])))
+  }
+  col <- .resolve_predictor_col(data, nm)
+  if (is.na(col)) return(NULL)
+  v <- data[[col]]
+  # grand-mean center when Blimp did (needed for nonlinear terms; a no-op for the
+  # column space of a linear term, so harmless there)
+  if (nm %in% names(center_map)) v <- v - center_map[[nm]]
+  v
+}
+
+
+
+# Internal: one design column for a fitted term ================================
+#
+# Rebuilds the model-scale values of a single fixed-effects term from an
+# imputation's saved columns, by evaluating the term as an expression over those
+# columns. Arithmetic (`+ - * ^` and parentheses) and a whitelist of elementwise
+# math functions (ln/log/log10/log2/exp/sqrt/abs) are supported, so a plain
+# predictor, a nominal dummy, an interaction ("a*b"), a polynomial ("x^2"), an
+# inline sum score ("x1+...+x7"), a grouped interaction ("m*(x1+...+x7)") and a
+# transformed predictor ("ln(x1 + 100)") all rebuild. Variables that Blimp
+# grand-mean centered are centered here too (via `center_map`), which is required
+# INSIDE a nonlinear function and a no-op for the column space of a linear term.
+#
+# An unknown function, a multi-argument call, or an unresolvable name returns
+# NULL: the term is un-sourceable, which makes the whole design non-reconstructable
+# and suppresses the influence panels. The reconstruction is always confirmed
+# against the saved fitted values (see .residuals_lm_diagnostics), so a wrong
+# rebuild (e.g. a function whose centering is not reproduced) refuses rather than
+# mislead.
+
+#' @keywords internal
+.resolve_design_term <- function(term, data, nominal_vars, center_map = numeric(0)) {
+  funs <- list(ln = log, log = log, log10 = log10, log2 = log2,
+               exp = exp, sqrt = sqrt, abs = abs)
+  expr <- tryCatch(parse(text = term)[[1]], error = function(e) NULL)
+  if (is.null(expr)) return(NULL)
+  ev <- function(e) {
+    if (is.numeric(e)) return(as.numeric(e))
+    if (is.name(e))    return(.resolve_atom(as.character(e), data, nominal_vars, center_map))
+    if (is.call(e)) {
+      op <- as.character(e[[1]])
+      if (op == "(" && length(e) == 2L) return(ev(e[[2]]))
+      if (op == "-" && length(e) == 2L) {                 # unary minus
+        a <- ev(e[[2]]); if (is.null(a)) return(NULL); return(-a)
+      }
+      if (op %in% c("+", "-", "*", "^") && length(e) == 3L) {
+        a <- ev(e[[2]]); b <- ev(e[[3]])
+        if (is.null(a) || is.null(b)) return(NULL)
+        return(switch(op, "+" = a + b, "-" = a - b, "*" = a * b, "^" = a ^ b))
+      }
+      if (op %in% names(funs) && length(e) == 2L) {        # whitelisted math function
+        a <- ev(e[[2]]); if (is.null(a)) return(NULL)
+        return(funs[[op]](a))
+      }
+      return(NULL)                                         # unknown call -> refuse
+    }
+    NULL
+  }
+  ev(expr)
+}
+
+
+
+# Internal: design matrix builder ==============================================
+#
+# Builds the leverage/Cook's design matrix for one imputation from the fitted
+# term list (.model_design_terms): intercept plus one column per term, each
+# sourced by .resolve_design_term. Returns NULL if ANY term cannot be rebuilt
+# from saved columns, so leverage/Cook's are produced only when the exact fitted
+# design is recoverable.
+
+#' @keywords internal
+.build_design_matrix <- function(data, terms, nominal_vars, center_map = numeric(0)) {
+  cols <- list(Intercept = rep(1, nrow(data)))
+  for (term in terms) {
+    v <- .resolve_design_term(term, data, nominal_vars, center_map)
+    if (is.null(v)) return(NULL)
+    cols[[term]] <- v
+  }
   do.call(cbind, cols)
 }
 
@@ -3589,12 +3705,27 @@ print.residuals_plot <- function(x, ...) {
 # benchmark the standardized residual index uses. The residual e_i and leverage
 # h_ii remain per-imputation; only the variance scale is shared, so all three
 # residual/influence diagnostics standardize by one common sigma.
+#
+# `terms` is the fitted fixed-effects design (from .model_design_terms). Before
+# using a rebuilt X, its column space is checked against Blimp's saved fitted
+# values: the saved <dv>.predicted must be reproduced by X (it is a linear
+# combination of the true design columns), or the design is missing/mis-sourcing
+# a term and NULL is returned -- influence is emitted only when the exact fitted
+# design is recovered, never from an approximation.
 
 #' @keywords internal
-.residuals_lm_diagnostics <- function(imp_list, dv, predictors, nominal_vars, verbose) {
+.residuals_lm_diagnostics <- function(imp_list, dv, terms, nominal_vars, verbose,
+                                      center_map = numeric(0)) {
+  if (is.null(terms)) {
+    if (verbose) message("Skipping leverage/Cook's D for `", dv,
+                         "`: no fixed-effects design found in the estimates.")
+    return(NULL)
+  }
   n   <- nrow(imp_list[[1]])
   M   <- length(imp_list)
   rc  <- paste0(dv, ".residual")
+  pc  <- paste0(dv, ".predicted")
+  has_pred <- pc %in% names(imp_list[[1]])
   lev <- matrix(NA_real_, n, M)
   ck  <- matrix(NA_real_, n, M)
   p_used <- NA_integer_
@@ -3609,7 +3740,12 @@ print.residuals_plot <- function(x, ...) {
   # Compute leverage and Cook's D within each imputation, then average per case.
   for (t in seq_len(M)) {
     d  <- imp_list[[t]]
-    X  <- .build_design_matrix(d, predictors, nominal_vars)
+    X  <- .build_design_matrix(d, terms, nominal_vars, center_map)
+    if (is.null(X)) {
+      if (verbose) message("Skipping leverage/Cook's D for `", dv,
+                           "`: fitted design not reconstructable from saved columns.")
+      return(NULL)
+    }
     e  <- d[[rc]]
     keep <- stats::complete.cases(X) & is.finite(e)
     Xk <- X[keep, , drop = FALSE]
@@ -3617,6 +3753,21 @@ print.residuals_plot <- function(x, ...) {
     nn <- length(ek)
     p  <- ncol(Xk)
     if (nn <= p) next
+
+    # Column-space guard: the rebuilt design must reproduce the saved fitted
+    # values. If <dv>.predicted is not (numerically) in the span of Xk, a design
+    # column is missing or mis-sourced -- emit nothing rather than a wrong plot.
+    if (has_pred) {
+      y   <- d[[pc]][keep]
+      fit <- tryCatch(stats::lm.fit(Xk, y), error = function(err) NULL)
+      if (is.null(fit)) next
+      if (max(abs(fit$residuals)) > 5e-3 * (stats::sd(y) + 1e-8)) {
+        if (verbose) message("Skipping leverage/Cook's D for `", dv,
+                             "`: rebuilt design does not reproduce ", pc, ".")
+        return(NULL)
+      }
+    }
+
     XtX_inv <- tryCatch(solve(crossprod(Xk)), error = function(err) NULL)
     if (is.null(XtX_inv)) next
     h  <- rowSums((Xk %*% XtX_inv) * Xk)
